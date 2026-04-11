@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ammar H. Khan — Economic Policy & Development Finance</title>
+<meta name="description" content="CEO of NCGCL, policy advisor, journalist, and professor. 72 articles on fiscal policy, energy, development finance, and capital markets.">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: #FFFFFF;
+  color: #2D2D2D;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.header-section {
+  padding: 3rem 0;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.bio-card {
+  background: #FAFAFA;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.bio-content h1 {
+  font-family: Georgia, serif;
+  font-size: 38px;
+  font-weight: 400;
+  color: #1A1A1A;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.bio-content .title {
+  font-size: 16px;
+  color: #666666;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.3px;
+}
+
+.bio-content p {
+  font-size: 15px;
+  color: #3D3D3D;
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+
+.credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.credential-item {
+  padding-left: 20px;
+  position: relative;
+}
+
+.credential-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 4px;
+  height: 4px;
+  background: #999999;
+  border-radius: 50%;
+}
+
+.credential-item strong {
+  font-weight: 600;
+  color: #1A1A1A;
+  display: block;
+  font-size: 14px;
+  margin-bottom: 0.25rem;
+}
+
+.credential-item span {
+  font-size: 13px;
+  color: #666666;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+  padding: 2rem 0;
+  border-top: 1px solid #E5E5E5;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-family: Georgia, serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: #1A1A1A;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #999999;
+  font-weight: 500;
+}
+
+.tab-navigation {
+  display: flex;
+  gap: 2rem;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.tab-btn {
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  color: #999999;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.tab-btn:hover {
+  color: #2D2D2D;
+}
+
+.tab-btn.active {
+  color: #1A1A1A;
+  border-bottom-color: #1A1A1A;
+}
+
+.tab-content {
+  display: none;
+  padding: 2rem 0;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.nav-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #D5D5D5;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #FFFFFF;
+  color: #2D2D2D;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.search-container input:focus {
+  outline: none;
+  border-color: #999999;
+}
+
+.search-container input::placeholder {
+  color: #999999;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  background: #FFFFFF;
+  border: 1px solid #D5D5D5;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #666666;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.filter-btn:hover {
+  background: #F5F5F5;
+  border-color: #999999;
+}
+
+.filter-btn.active {
+  background: #2D2D2D;
+  color: #FFFFFF;
+  border-color: #2D2D2D;
+}
+
+.content-header {
+  margin: 0 0 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.content-header h2 {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #1A1A1A;
+  margin-bottom: 0.5rem;
+}
+
+.content-header p {
+  font-size: 14px;
+  color: #666666;
+}
+
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.article-card {
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+
+.article-card:hover {
+  border-color: #999999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.article-badge {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #666666;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: inline-block;
+}
+
+.article-title {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #1A1A1A;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.article-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #F0F0F0;
+  font-size: 13px;
+}
+
+.article-publication {
+  color: #1A1A1A;
+  font-weight: 600;
+}
+
+.article-date {
+  color: #999999;
+}
+
+.article-description {
+  font-size: 14px;
+  color: #555555;
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid #F0F0F0;
+}
+
+.article-category {
+  font-size: 12px;
+  color: #666666;
+  font-weight: 500;
+}
+
+.article-link {
+  font-size: 13px;
+  color: #2D2D2D;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.article-link:hover {
+  color: #666666;
+}
+
+.dashboards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.dashboard-card {
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.25s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card:hover {
+  border-color: #999999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-preview {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #F5F5F5 0%, #EBEBEB 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999999;
+  font-size: 48px;
+}
+
+.dashboard-content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-title {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #1A1A1A;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-category {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #999999;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.dashboard-description {
+  font-size: 14px;
+  color: #555555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.dashboard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #F0F0F0;
+}
+
+.dashboard-date {
+  font-size: 12px;
+  color: #999999;
+}
+
+.dashboard-link {
+  font-size: 13px;
+  color: #2D2D2D;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.dashboard-link:hover {
+  color: #666666;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999999;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999999;
+}
+
+.footer {
+  margin-top: 3rem;
+  padding: 2rem 0;
+  border-top: 1px solid #E5E5E5;
+  text-align: center;
+  font-size: 13px;
+  color: #999999;
+}
+
+.footer a {
+  color: #2D2D2D;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .bio-card {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .nav-section {
+    flex-direction: column;
+  }
+
+  .filter-pills {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .articles-grid,
+  .dashboards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bio-content h1 {
+    font-size: 28px;
+  }
+
+  .tab-navigation {
+    gap: 1.5rem;
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="header-section">
+  <div class="container">
+    <div class="bio-card">
+      <div class="bio-content">
+        <h1>Ammar H. Khan</h1>
+        <p class="title">CEO · NCGCL | Policy Advisor | Journalist</p>
+        <p>Economic policy, development finance, and catalytic capital for Pakistan's growth. Chairman of National Credit Guarantee Company and contributor to economic discourse through journalism and institutional work.</p>
+      </div>
+      <div class="credentials">
+        <div class="credential-item">
+          <strong>Current roles</strong>
+          <span>CEO, NCGCL</span>
+        </div>
+        <div class="credential-item">
+          <strong>Advisor</strong>
+          <span>Pakistan Power Ministry</span>
+        </div>
+        <div class="credential-item">
+          <strong>Professor</strong>
+          <span>Institute of Business Administration</span>
+        </div>
+        <div class="credential-item">
+          <strong>Journalist</strong>
+          <span>Economic correspondent, Dawn</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-number">72</div>
+      <div class="stat-label">Published articles</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">12</div>
+      <div class="stat-label">Research areas</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">2</div>
+      <div class="stat-label">Regular publications</div>
+    </div>
+  </div>
+
+  <div class="tab-navigation">
+    <button class="tab-btn active" data-tab="articles">Articles & Essays</button>
+    <button class="tab-btn" data-tab="dashboards">Dashboards & Artifacts</button>
+  </div>
+
+  <!-- ARTICLES TAB -->
+  <div id="articles" class="tab-content active">
+    <div class="nav-section">
+      <div class="search-container">
+        <input type="text" id="search" placeholder="Search by title, topic, or publication...">
+      </div>
+      <div class="filter-pills">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="dawn">Dawn</button>
+        <button class="filter-btn" data-filter="thenews">The News</button>
+      </div>
+    </div>
+
+    <div class="content-header">
+      <h2>Work & Research</h2>
+      <p>72 articles spanning fiscal policy, energy, development finance, and capital markets</p>
+    </div>
+
+    <div class="articles-grid" id="articlesGrid"></div>
+  </div>
+
+  <!-- DASHBOARDS TAB -->
+  <div id="dashboards" class="tab-content">
+    <div class="content-header">
+      <h2>Dashboards & Interactive Artifacts</h2>
+      <p>Data-driven visualizations and decision-support tools</p>
+    </div>
+
+    <div class="dashboards-grid" id="dashboardsGrid"></div>
+
+    <div class="empty-state" id="emptyDashboards">
+      <div class="empty-state-icon">📊</div>
+      <p>Dashboards and interactive artifacts will be published here as they're created.</p>
+      <p style="font-size: 13px; margin-top: 0.5rem;">These include analytics, forecasting models, policy simulations, and data visualizations.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2026 Ammar H. Khan. All articles link to their original publications. | <a href="https://github.com/ammar/ammar.github.io" target="_blank">GitHub</a></p>
+  </div>
+</div>
+
+<script>
+const articles = [
+  { title: "After death and taxes, the biggest certainty in Pakistan is the annual spike in prices of basic commodities during Ramazan", publication: "Dawn", url: "https://www.dawn.com/news/1977459", date: "2026-03-02", category: "Fiscal Policy", subcategory: "Consumer Pricing", type: "dawn", description: "Annual spike in Ramazan commodity prices and structural causes" },
+  { title: "Debt loops and baby bonds", publication: "Dawn", url: "https://www.dawn.com/news/1976953", date: "2026-03-02", category: "Social Policy", subcategory: "Child Finance", type: "dawn", description: "Financial accounts at birth could keep children from poverty and create domestic investor base" },
+  { title: "Containing the price spike of Ramazan", publication: "Dawn", url: "https://www.dawn.com/news/1976820", date: "2026-03-01", category: "Fiscal Policy", subcategory: "Consumer Pricing", type: "dawn", description: "Analysis of Ramazan price increases and policy solutions" },
+  { title: "The South belt's potential for manufacturing", publication: "Dawn", url: "https://www.dawn.com/news/1961087", date: "2025-12-15", category: "Trade Policy", subcategory: "Industrial Policy", type: "dawn", description: "South-first export-oriented industrial strategy for Pakistan" },
+  { title: "How to hunt a duck curve", publication: "Dawn", url: "https://www.dawn.com/news/1956880", date: "2025-11-24", category: "Energy", subcategory: "Electricity Markets", type: "dawn", description: "Dynamic tariff structures to manage demand-supply curves" },
+  { title: "Tax less for capital growth", publication: "Dawn", url: "https://www.dawn.com/news/1950014", date: "2025-10-20", category: "Fiscal Policy", subcategory: "Tax Policy", type: "dawn", description: "Investment in lieu of taxes program through corporate/salary tax reductions" },
+  { title: "Why are multinationals exiting Pakistan?", publication: "Dawn", url: "https://www.dawn.com/news/1949540", date: "2025-10-19", category: "Trade Policy", subcategory: "FDI", type: "dawn", description: "Analysis of multinational divestments and regulatory environment" },
+  { title: "Exporting surplus power as AI compute", publication: "Dawn", url: "https://www.dawn.com/news/1945227", date: "2025-09-29", category: "Energy", subcategory: "Power Export", type: "dawn", description: "Leveraging surplus power capacity for compute export strategy" },
+  { title: "Massive taxes and the NFC conundrum", publication: "Dawn", url: "https://www.dawn.com/news/1943694", date: "2025-09-22", category: "Fiscal Policy", subcategory: "Tax Policy", type: "dawn", description: "Pakistan's fiscal problems and provincial fiscal devolution" },
+  { title: "Pricing electricity correctly", publication: "Dawn", url: "https://www.dawn.com/news/1927016", date: "2025-07-28", category: "Energy", subcategory: "Tariff", type: "dawn", description: "Demand-led decentralised pricing policy for electricity" },
+  { title: "Digging deeper development holes to nowhere", publication: "Dawn", url: "https://www.dawn.com/news/1917433", date: "2025-06-16", category: "Infrastructure", subcategory: "PSDP", type: "dawn", description: "Capital misallocation in Pakistan's development projects" },
+  { title: "Converting surplus MWs into jobs", publication: "Dawn", url: "https://www.dawn.com/news/1916164", date: "2025-06-10", category: "Energy", subcategory: "Industrial Growth", type: "dawn", description: "Linking industrial growth to power pricing decisions" },
+  { title: "Unfairly burdening compliant consumers", publication: "Dawn", url: "https://www.dawn.com/news/1914932", date: "2025-06-02", category: "Energy", subcategory: "Power Sector", type: "dawn", description: "K-Electric recovery loss allowance and default risks" },
+  { title: "Net-metering saga: Much ado about the 0.83 per cent", publication: "Dawn", url: "https://www.dawn.com/news/1899873", date: "2025-03-24", category: "Energy", subcategory: "Renewable Energy", type: "dawn", description: "Revised net-metering regulations and surplus electricity pricing" },
+  { title: "What is the cost of cash?", publication: "Dawn", url: "https://www.dawn.com/news/1898369", date: "2025-03-17", category: "Fiscal Policy", subcategory: "Monetary Policy", type: "dawn", description: "Estimated direct cost of cash system at Rs76bn annually" },
+  { title: "Rekodiq's golden promises", publication: "Dawn", url: "https://www.dawn.com/news/1886434", date: "2025-01-20", category: "Commodities", subcategory: "Mining", type: "dawn", description: "Rekodiq copper-gold mine production timeline and market timing" },
+  { title: "Power at the margin", publication: "Dawn", url: "https://www.dawn.com/news/1881883", date: "2024-12-30", category: "Energy", subcategory: "Electricity Markets", type: "dawn", description: "Dynamic market-oriented pricing mechanism for power utilization" },
+  { title: "Harvesting the sun for industrial growth", publication: "Dawn", url: "https://www.dawn.com/news/1877645", date: "2024-12-09", category: "Energy", subcategory: "Solar Energy", type: "dawn", description: "Distributed solar surplus and marginal price electricity for industries" },
+  { title: "The rise and rise of the KSE-100", publication: "Dawn", url: "https://www.dawn.com/news/1876146", date: "2024-12-02", category: "Capital Markets", subcategory: "Equity Markets", type: "dawn", description: "Government dependency among top PSX-listed companies" },
+  { title: "Economic growth and judicial overreach", publication: "Dawn", url: "https://www.dawn.com/news/1872946", date: "2024-11-18", category: "Fiscal Policy", subcategory: "Credit Policy", type: "dawn", description: "Judicial intervention in lending and private sector credit growth" },
+  { title: "Fuelling hope with shale and tight gas", publication: "The News", url: "https://www.thenews.com.pk/print/1366830", date: "2025-08-01", category: "Energy", subcategory: "Oil & Gas", type: "thenews", description: "US-Pakistan trade accord and shale/tight gas development" },
+  { title: "The price of passive shareholding", publication: "The News", url: "https://www.thenews.com.pk/print/1364001", date: "2025-07-13", category: "Capital Markets", subcategory: "Privatisation", type: "thenews", description: "KE auction and passive shareholding outcomes" },
+  { title: "Analysis: A steady hand on the tiller", publication: "The News", url: "https://www.thenews.com.pk/print/1319736", date: "2025-06-10", category: "Fiscal Policy", subcategory: "Economic Management", type: "thenews", description: "Budget execution and fiscal discipline" },
+  { title: "Analysis: IMF deal sealed — is growth next?", publication: "The News", url: "https://www.thenews.com.pk/print/1295735", date: "2025-03-27", category: "Fiscal Policy", subcategory: "IMF Program", type: "thenews", description: "IMF RSF arrangement and climate resilience focus" },
+  { title: "Incentivising consumption", publication: "The News", url: "https://www.thenews.com.pk/print/1249301", date: "2024-11-10", category: "Fiscal Policy", subcategory: "Consumption", type: "thenews", description: "Surplus fiscal space and consumption incentives" },
+  { title: "Let technology save the tax system", publication: "The News", url: "https://www.thenews.com.pk/print/1234902", date: "2024-09-29", category: "Fiscal Policy", subcategory: "Tax Collection", type: "thenews", description: "Technology solution for improving tax collection" },
+  { title: "Electrifying the future", publication: "The News", url: "https://www.thenews.com.pk/print/1221096", date: "2024-08-18", category: "Energy", subcategory: "Electric Transport", type: "thenews", description: "Electrification strategy for economic growth" },
+  { title: "The future is electric", publication: "The News", url: "https://www.thenews.com.pk/print/1209458", date: "2024-07-14", category: "Energy", subcategory: "Electric Transport", type: "thenews", description: "Electric and hybrid public transportation infrastructure" },
+  { title: "Budget 2024-25: heavy on taxes, light on reforms", publication: "The News", url: "https://www.thenews.com.pk/print/1204710", date: "2024-06-29", category: "Fiscal Policy", subcategory: "Budget Analysis", type: "thenews", description: "Tax burden on compliant segments without tax base expansion" },
+  { title: "Chasing capital", publication: "The News", url: "https://www.thenews.com.pk/print/1202588", date: "2024-06-23", category: "Capital Markets", subcategory: "FDI", type: "thenews", description: "Foreign investment attraction strategies" },
+  { title: "Breaking the backbone: Tax on the salaried", publication: "The News", url: "https://www.thenews.com.pk/print/1200650", date: "2024-06-15", category: "Fiscal Policy", subcategory: "Income Tax", type: "thenews", description: "Tax incidence on salaried segment up 25-40%" },
+  { title: "Pakistan's perpetual fiscal déjà vu", publication: "The News", url: "https://www.thenews.com.pk/print/1198489", date: "2024-06-09", category: "Fiscal Policy", subcategory: "Tax Policy", type: "thenews", description: "Structural inability to exceed 10% tax-to-GDP ratio" },
+  { title: "Inflation and taxes", publication: "The News", url: "https://www.thenews.com.pk/print/1193274", date: "2024-05-26", category: "Fiscal Policy", subcategory: "Indirect Taxes", type: "thenews", description: "Indirect taxes comprise 60% of total revenue" },
+  { title: "Net metering: Watt's the fuss all about?", publication: "The News", url: "https://www.thenews.com.pk/print/1191452", date: "2024-05-21", category: "Energy", subcategory: "Solar Energy", type: "thenews", description: "Net metering for 113,000 households analysis" },
+  { title: "Restructuring electricity tariffs", publication: "The News", url: "https://www.thenews.com.pk/print/1190604", date: "2024-05-19", category: "Energy", subcategory: "Tariff", type: "thenews", description: "Tariff restructuring mechanisms" },
+  { title: "The power paradox", publication: "The News", url: "https://www.thenews.com.pk/print/1182994", date: "2024-04-28", category: "Energy", subcategory: "Electricity Markets", type: "thenews", description: "Lower electricity prices stimulating industrial growth" },
+  { title: "The future is electric", publication: "The News", url: "https://www.thenews.com.pk/print/1178008", date: "2024-04-14", category: "Energy", subcategory: "Electric Transport", type: "thenews", description: "Electric public transportation rollout" },
+  { title: "Capitalizing on coal", publication: "The News", url: "https://www.thenews.com.pk/print/1174071", date: "2024-03-31", category: "Energy", subcategory: "Coal", type: "thenews", description: "Government borrowing from banks and coal policy" },
+  { title: "A plan for electricity prices", publication: "The News", url: "https://www.thenews.com.pk/print/1168930", date: "2024-03-17", category: "Energy", subcategory: "Tariff", type: "thenews", description: "Long-term electricity pricing strategy" },
+  { title: "News Analysis: Reform now to break IMF cycle", publication: "The News", url: "https://www.thenews.com.pk/print/1168695", date: "2024-03-16", category: "Fiscal Policy", subcategory: "IMF Program", type: "thenews", description: "Structural reforms to avoid repeated IMF programs" },
+  { title: "Energy fallacies", publication: "The News", url: "https://www.thenews.com.pk/print/1163703", date: "2024-03-03", category: "Energy", subcategory: "Policy", type: "thenews", description: "Energy pricing distortions and incentive misalignment" },
+  { title: "Why getting IMF involved in polls is a bad idea", publication: "The News", url: "https://www.thenews.com.pk/print/1160573", date: "2024-02-23", category: "Fiscal Policy", subcategory: "IMF", type: "thenews", description: "IMF involvement in electoral process analysis" },
+  { title: "Fixing energy to fix growth", publication: "The News", url: "https://www.thenews.com.pk/print/1158706", date: "2024-02-18", category: "Energy", subcategory: "Economic Growth", type: "thenews", description: "Energy sector competitiveness and export capacity" },
+  { title: "The promise of free electricity", publication: "The News", url: "https://www.thenews.com.pk/print/1154371", date: "2024-02-04", category: "Energy", subcategory: "Policy", type: "thenews", description: "Political promises of free electricity and reality" },
+  { title: "Lazy manifestos", publication: "The News", url: "https://www.thenews.com.pk/print/1149832", date: "2024-01-21", category: "Fiscal Policy", subcategory: "Tax Policy", type: "thenews", description: "Government refusal to undertake tax reforms" },
+  { title: "The (informal) wedding economy", publication: "The News", url: "https://www.thenews.com.pk/print/1145455", date: "2024-01-07", category: "Economics", subcategory: "Informal Economy", type: "thenews", description: "Rs110 billion annual wedding economy analysis" },
+  { title: "A new year to fix the economy", publication: "The News", url: "https://www.thenews.com.pk/print/1141186", date: "2023-12-24", category: "Fiscal Policy", subcategory: "Economic Reform", type: "thenews", description: "Disconnect between policy discourse and implementation" },
+  { title: "More money, more problems", publication: "The News", url: "https://www.thenews.com.pk/print/1136776", date: "2023-12-10", category: "Fiscal Policy", subcategory: "Debt", type: "thenews", description: "Government debt reliance for fiscal funding" },
+  { title: "A coherent energy plan", publication: "The News", url: "https://www.thenews.com.pk/print/1132512", date: "2023-11-26", category: "Energy", subcategory: "Policy", type: "thenews", description: "Competitive energy market framework" },
+  { title: "The privilege of identity", publication: "The News", url: "https://www.thenews.com.pk/print/1128169", date: "2023-11-12", category: "Social Policy", subcategory: "Migration", type: "thenews", description: "Afghan refugee policy and identity privilege" },
+  { title: "Higher for longer", publication: "The News", url: "https://www.thenews.com.pk/print/1123790", date: "2023-10-29", category: "Economics", subcategory: "Global Economy", type: "thenews", description: "Global spending spree and interest rate implications since 2010" },
+  { title: "Capital market death", publication: "The News", url: "https://www.thenews.com.pk/print/1119297", date: "2023-10-15", category: "Capital Markets", subcategory: "Equity Markets", type: "thenews", description: "Depth of capital markets and economic characteristics" },
+  { title: "It's over", publication: "The News", url: "https://www.thenews.com.pk/print/1114876", date: "2023-10-01", category: "Fiscal Policy", subcategory: "Exchange Rate", type: "thenews", description: "Obsession with rupee-dollar exchange rate" },
+  { title: "Escaping the low-growth trap", publication: "The News", url: "https://www.thenews.com.pk/print/1110701", date: "2023-09-17", category: "Economics", subcategory: "Growth Strategy", type: "thenews", description: "Pakistan's consumption-heavy low-growth trap" },
+  { title: "Need for radical ideas", publication: "The News", url: "https://www.thenews.com.pk/print/1106254", date: "2023-09-03", category: "Economics", subcategory: "Economic Policy", type: "thenews", description: "Radical economic policy solutions needed" },
+  { title: "News Analysis: How to make electricity affordable", publication: "The News", url: "https://www.thenews.com.pk/print/1104195", date: "2023-08-27", category: "Energy", subcategory: "Affordability", type: "thenews", description: "Electricity affordability amid 25%+ inflation" },
+  { title: "Is copper the new oil?", publication: "The News", url: "https://www.thenews.com.pk/print/1101839", date: "2023-08-20", category: "Commodities", subcategory: "Metals", type: "thenews", description: "Copper demand in energy transition" },
+  { title: "Transportation puzzle", publication: "The News", url: "https://www.thenews.com.pk/print/1097604", date: "2023-08-06", category: "Energy", subcategory: "Transportation", type: "thenews", description: "Transportation accounts for 1/3 of energy consumption" },
+  { title: "Situationer: Refinery project is much needed but MoUs are dime a dozen", publication: "The News", url: "https://www.thenews.com.pk/print/1095292", date: "2023-07-29", category: "Energy", subcategory: "Refining", type: "thenews", description: "400,000 bpd refining capacity stagnation" },
+  { title: "Electrocuting the consumer", publication: "The News", url: "https://www.thenews.com.pk/print/1093176", date: "2023-07-23", category: "Energy", subcategory: "Tariff", type: "thenews", description: "Electricity tariff hikes and consumer burden" },
+  { title: "News Analysis: No check on rogue loan apps preying on the poor", publication: "The News", url: "https://www.thenews.com.pk/print/1090258", date: "2023-07-14", category: "Finance", subcategory: "FinTech", type: "thenews", description: "Unregulated digital loan apps targeting vulnerable segments" },
+  { title: "News Analysis: Protecting their TERF", publication: "The News", url: "https://www.thenews.com.pk/print/1088637", date: "2023-07-09", category: "Finance", subcategory: "Monetary Policy", type: "thenews", description: "SBP Temporary Economic Refinance Facility analysis" },
+  { title: "Solarizing household energy", publication: "The News", url: "https://www.thenews.com.pk/print/1088548", date: "2023-07-09", category: "Energy", subcategory: "Solar Energy", type: "thenews", description: "Household solar adoption amid electricity tariff increases" },
+  { title: "A generational exodus", publication: "The News", url: "https://www.thenews.com.pk/print/1084318", date: "2023-06-25", category: "Economics", subcategory: "Migration", type: "thenews", description: "Capital flight and skilled emigration trends" },
+  { title: "A bleak future", publication: "The News", url: "https://www.thenews.com.pk/print/1079184", date: "2023-06-11", category: "Economics", subcategory: "Economic Policy", type: "thenews", description: "Pessimistic economic outlook from policy decisions" },
+  { title: "Budget 2023-24: more debt for the people", publication: "The News", url: "https://www.thenews.com.pk/print/1078778", date: "2023-06-10", category: "Fiscal Policy", subcategory: "Budget Analysis", type: "thenews", description: "Budget 2023-24 debt servicing and allocation analysis" },
+  { title: "A fiscal disaster", publication: "The News", url: "https://www.thenews.com.pk/print/1078456", date: "2023-06-09", category: "Fiscal Policy", subcategory: "Economic Growth", type: "thenews", description: "3.5% growth target vs 3.5%+ population growth" },
+  { title: "News Analysis: Budget 2023-24: Why not to tax reserves of listed, unlisted firms", publication: "The News", url: "https://www.thenews.com.pk/print/1075587", date: "2023-05-31", category: "Fiscal Policy", subcategory: "Corporate Tax", type: "thenews", description: "Reserve taxation and corporate effective tax rates" },
+  { title: "A nutrition disaster", publication: "The News", url: "https://www.thenews.com.pk/print/1074507", date: "2023-05-28", category: "Social Policy", subcategory: "Nutrition", type: "thenews", description: "Malnutrition of 34 million children in Pakistan" },
+];
+
+const dashboards = [
+  { title: "Pakistan Labour Intensity Analytics", category: "Employment", description: "Interactive PBS Sensitive Price Index analysis by construction occupation", date: "2025-08-10", url: "#" },
+  { title: "Steel Market Intelligence Forecast", category: "Commodities", description: "Six-product, four-region forecasting model with scenario analysis", date: "2025-07-25", url: "#" },
+];
+
+let currentFilter = "all";
+let currentSearch = "";
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function filterArticles() {
+  const grid = document.getElementById('articlesGrid');
+  let filtered = articles.filter(article => {
+    const matchesFilter = currentFilter === 'all' || article.type === currentFilter;
+    const matchesSearch = currentSearch === '' || 
+      article.title.toLowerCase().includes(currentSearch.toLowerCase()) ||
+      article.publication.toLowerCase().includes(currentSearch.toLowerCase()) ||
+      article.category.toLowerCase().includes(currentSearch.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="no-results">No articles match your filters.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(article => `
+    <div class="article-card">
+      <span class="article-badge">${article.category}</span>
+      <h3 class="article-title">${article.title}</h3>
+      <div class="article-meta">
+        <span class="article-publication">${article.publication}</span>
+        <span class="article-date">${formatDate(article.date)}</span>
+      </div>
+      <p class="article-description">${article.description}</p>
+      <div class="article-footer">
+        <span class="article-category">${article.subcategory}</span>
+        <a href="${article.url}" target="_blank" class="article-link">Read →</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderDashboards() {
+  const grid = document.getElementById('dashboardsGrid');
+  const empty = document.getElementById('emptyDashboards');
+  
+  if (dashboards.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+  
+  grid.innerHTML = dashboards.map(dashboard => `
+    <div class="dashboard-card">
+      <div class="dashboard-preview">📈</div>
+      <div class="dashboard-content">
+        <div class="dashboard-category">${dashboard.category}</div>
+        <h3 class="dashboard-title">${dashboard.title}</h3>
+        <p class="dashboard-description">${dashboard.description}</p>
+        <div class="dashboard-footer">
+          <span class="dashboard-date">${formatDate(dashboard.date)}</span>
+          <a href="${dashboard.url}" class="dashboard-link">View →</a>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  currentSearch = e.target.value;
+  filterArticles();
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    filterArticles();
+  });
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    
+    btn.classList.add('active');
+    const tabId = btn.dataset.tab;
+    document.getElementById(tabId).classList.add('active');
+  });
+});
+
+filterArticles();
+renderDashboards();
+</script>
+
+</body>
+</html>
