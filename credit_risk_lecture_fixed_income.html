@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Risk Assessment in Fixed Income — FIN-453 Lecture</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --white: #FFFFFF;
+  --off-white: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --accent-light: #F5EAD8;
+  --text: #1A1A1A;
+  --muted: #666666;
+  --hint: #999999;
+  --green: #52B788;
+  --green-light: #E8F5EE;
+  --red: #9B2335;
+  --red-light: #FDECEA;
+  --amber: #C8923A;
+  --amber-light: #FEF3E2;
+  --navy: #1B2A4A;
+  --navy-mid: #2C3E6B;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; background:#FFFFFF; color:#2D2D2D; line-height:1.6; font-size:15px; }
+.page-header { background: var(--navy); padding: 3rem 2rem 2.5rem; }
+.page-header-inner { max-width: 1100px; margin: 0 auto; }
+.course-tag { display:inline-block; background: rgba(200,146,58,0.25); color: #E8B46A; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:4px 12px; border-radius:4px; margin-bottom:1.25rem; }
+.page-title { font-family: Georgia, serif; font-size: 42px; font-weight: 400; color: #FFFFFF; line-height: 1.15; margin-bottom: 0.75rem; }
+.page-subtitle { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 2rem; max-width: 680px; line-height: 1.6; }
+.header-meta { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+.meta-item { display:flex; flex-direction:column; gap:2px; }
+.meta-label { font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.08em; }
+.meta-value { font-size:14px; color:rgba(255,255,255,0.8); font-weight:500; }
+.main-nav { background: #FFFFFF; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.nav-inner { max-width:1100px; margin:0 auto; padding:0 2rem; display:flex; gap:0; }
+.nav-btn { background:none; border:none; padding:1rem 1.25rem; font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color: var(--hint); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition: all 0.2s; white-space:nowrap; }
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
+.content-section { display:none; }
+.content-section.active { display:block; }
+.container { max-width:1100px; margin:0 auto; padding:3rem 2rem; }
+h2.sec-title { font-family: Georgia, serif; font-size:28px; font-weight:400; color: var(--navy); margin-bottom:0.5rem; }
+h3.sub-title { font-family: Georgia, serif; font-size:20px; font-weight:400; color: var(--text); margin-bottom:0.75rem; margin-top:2rem; }
+h4.block-title { font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color: var(--muted); margin-bottom:0.75rem; }
+p.body-text { font-size:14px; color:#3D3D3D; line-height:1.75; margin-bottom:1rem; }
+.sec-label { font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color: var(--hint); margin-bottom:0.5rem; }
+.divider { border:none; border-top:1px solid var(--border); margin: 2.5rem 0; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; }
+.four-col { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.panel { background: var(--off-white); border:1px solid var(--border); border-radius:8px; padding:1.5rem; }
+.panel-white { background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:1.5rem; }
+.kpi { background:#FFFFFF; border:1px solid var(--border); border-radius:8px; padding:1.25rem; text-align:center; }
+.kpi:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.kpi-num { font-family:Georgia,serif; font-size:28px; color: var(--text); }
+.kpi-label { font-size:11px; color: var(--hint); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; }
+.kpi-sub { font-size:12px; color: var(--muted); margin-top:4px; }
+.insight-box { border:1px solid var(--border); border-radius:6px; padding:1.25rem; }
+.insight-box.green { border-top: 3px solid var(--green); background: var(--green-light); }
+.insight-box.amber { border-top: 3px solid var(--amber); background: var(--amber-light); }
+.insight-box.red { border-top: 3px solid var(--red); background: var(--red-light); }
+.insight-box.navy { border-top: 3px solid var(--navy); background: #F0F3FB; }
+.insight-num { font-family:Georgia,serif; font-size:26px; color: var(--text); line-height:1; margin-bottom:6px; }
+.insight-text { font-size:13px; color: var(--muted); line-height:1.5; }
+.verdict-box { background: var(--off-white); border:1px solid var(--border); border-left:4px solid var(--accent); padding:1.5rem; border-radius:4px; margin:2rem 0; }
+.verdict-box.green { border-left-color: var(--green); }
+.verdict-box.red { border-left-color: var(--red); }
+.verdict-label { font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color: var(--hint); margin-bottom:0.5rem; }
+.verdict-text { font-size:14px; color:#2D2D2D; line-height:1.7; }
+.caution-box { background: var(--amber-light); border:1px solid #E8C87A; border-radius:6px; padding:1.25rem 1.5rem; margin:1rem 0; }
+.caution-box p { font-size:13.5px; color:#5A3A0A; line-height:1.7; margin:0; }
+.warning-box { background: var(--red-light); border:1px solid #F0AAAA; border-radius:6px; padding:1.25rem 1.5rem; margin:1rem 0; }
+.warning-box p { font-size:13.5px; color: var(--red); line-height:1.7; margin:0; }
+.good-box { background: var(--green-light); border:1px solid #A0D9B8; border-radius:6px; padding:1.25rem 1.5rem; margin:1rem 0; }
+.good-box p { font-size:13.5px; color:#1A5C3A; line-height:1.7; margin:0; }
+table.data-table { width:100%; border-collapse:collapse; font-size:13px; }
+table.data-table th { font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color: var(--text); padding:0.75rem 1rem; border-bottom:1px solid var(--border); background: var(--off-white); text-align:left; }
+table.data-table td { padding:0.75rem 1rem; border-bottom:1px solid #F0F0F0; color:#2D2D2D; }
+table.data-table tr:last-child td { border-bottom:none; }
+table.data-table tr:hover td { background: #FAFAFA; }
+table.data-table td.num { text-align:right; font-variant-numeric:tabular-nums; }
+table.data-table th.num { text-align:right; }
+.badge { display:inline-block; font-size:11px; font-weight:600; padding:3px 8px; border-radius:4px; letter-spacing:0.04em; }
+.badge.green { background: var(--green-light); color: #1A5C3A; }
+.badge.amber { background: var(--amber-light); color: #7A4D10; }
+.badge.red { background: var(--red-light); color: var(--red); }
+.badge.navy { background: #E8EDF8; color: var(--navy); }
+.badge.gray { background:#F0F0F0; color: #555; }
+.ratio-row { display:flex; justify-content:space-between; align-items:center; padding:0.625rem 0; border-bottom:1px solid #F0F0F0; }
+.ratio-row:last-child { border-bottom:none; }
+.ratio-name { font-size:13px; color: var(--text); }
+.ratio-formula { font-size:11px; color: var(--hint); font-style:italic; }
+.ratio-benchmark { font-size:12px; font-weight:600; }
+.framework-card { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.framework-card-header { background: var(--navy); padding:1rem 1.25rem; }
+.framework-card-header h4 { color:#FFFFFF; font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; }
+.framework-card-header p { color:rgba(255,255,255,0.6); font-size:12px; margin-top:4px; }
+.framework-card-body { padding:1.25rem; background: var(--off-white); }
+.framework-item { display:flex; gap:10px; margin-bottom:0.75rem; align-items:flex-start; }
+.framework-item:last-child { margin-bottom:0; }
+.fwicon { width:20px; height:20px; min-width:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; margin-top:1px; }
+.fwicon.green { background: var(--green); color:#fff; }
+.fwicon.red { background: var(--red); color:#fff; }
+.fwicon.amber { background: var(--amber); color:#fff; }
+.fwicon.navy { background: var(--navy); color:#fff; }
+.fw-text { font-size:13px; color:#3D3D3D; line-height:1.5; }
+.red-flag-list { list-style:none; padding:0; }
+.red-flag-list li { display:flex; align-items:flex-start; gap:10px; padding:0.625rem 0; border-bottom:1px solid #F0F0F0; font-size:13px; color:#3D3D3D; line-height:1.5; }
+.red-flag-list li:last-child { border-bottom:none; }
+.rflag { color: var(--red); font-size:14px; min-width:16px; margin-top:1px; }
+.green-flag-list { list-style:none; padding:0; }
+.green-flag-list li { display:flex; align-items:flex-start; gap:10px; padding:0.625rem 0; border-bottom:1px solid #F0F0F0; font-size:13px; color:#3D3D3D; line-height:1.5; }
+.green-flag-list li:last-child { border-bottom:none; }
+.gflag { color: var(--green); font-size:14px; min-width:16px; margin-top:1px; }
+.case-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); padding:2rem; border-radius:8px; margin-bottom:2rem; }
+.case-header.daewoo { background: linear-gradient(135deg, #1B2A4A 0%, #243869 100%); }
+.case-header.tahur { background: linear-gradient(135deg, #1A3A2A 0%, #2C5C40 100%); }
+.case-header.euro { background: linear-gradient(135deg, #0A2A3A 0%, #1A4A5C 100%); }
+.case-name { font-family:Georgia,serif; font-size:26px; color:#FFFFFF; font-weight:400; margin-bottom:4px; }
+.case-sub { font-size:13px; color:rgba(255,255,255,0.6); margin-bottom:1.5rem; }
+.case-terms { display:flex; gap:1.5rem; flex-wrap:wrap; }
+.case-term { display:flex; flex-direction:column; gap:2px; }
+.ct-label { font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.4); }
+.ct-val { font-size:14px; color:rgba(255,255,255,0.9); font-weight:600; }
+.spread-bar-wrap { margin:1.5rem 0; }
+.spread-bar-label { font-size:12px; color: var(--muted); margin-bottom:6px; display:flex; justify-content:space-between; }
+.spread-bar { height:32px; background: var(--border); border-radius:4px; overflow:hidden; display:flex; position:relative; }
+.spread-kibor { height:100%; background: var(--navy); display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff; font-weight:600; }
+.spread-credit { height:100%; display:flex; align-items:center; justify-content:center; font-size:11px; color:#fff; font-weight:600; }
+.spread-credit.amber { background: var(--amber); }
+.spread-credit.green { background: var(--green); }
+.spread-credit.red { background: var(--red); }
+.score-circle { width:64px; height:64px; border-radius:50%; border:3px solid; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+.score-circle.high { border-color: var(--red); }
+.score-circle.medium { border-color: var(--amber); }
+.score-circle.low { border-color: var(--green); }
+.score-num { font-family:Georgia,serif; font-size:18px; font-weight:400; }
+.score-label { font-size:9px; text-transform:uppercase; letter-spacing:0.06em; color: var(--hint); }
+.tab-nav { display:flex; gap:0; border-bottom:1px solid var(--border); margin:2rem 0 0; }
+.tab-btn { background:none; border:none; padding:0.875rem 1.25rem; font-size:12px; font-weight:600; letter-spacing:0.06em; color: var(--hint); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; text-transform:uppercase; transition:all 0.2s; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
+.tab-pane { display:none; padding:2rem 0; }
+.tab-pane.active { display:block; }
+.timeline-strip { display:flex; gap:0; margin:1.5rem 0; }
+.ts-item { flex:1; padding:0.875rem 1rem; border:1px solid var(--border); border-right:none; font-size:12px; background:#FFFFFF; }
+.ts-item:last-child { border-right:1px solid var(--border); border-radius:0 6px 6px 0; }
+.ts-item:first-child { border-radius:6px 0 0 6px; }
+.ts-label { font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color: var(--hint); margin-bottom:3px; }
+.ts-val { font-size:14px; font-weight:600; color: var(--text); }
+.comp-table-wrap { overflow-x:auto; margin:1.5rem 0; }
+.comp-table { width:100%; border-collapse:collapse; font-size:13px; }
+.comp-table th { background: var(--navy); color:#FFFFFF; padding:0.75rem 1rem; font-size:11px; letter-spacing:0.07em; text-transform:uppercase; font-weight:600; text-align:left; }
+.comp-table td { padding:0.75rem 1rem; border-bottom:1px solid var(--border); }
+.comp-table tr:last-child td { border-bottom:none; }
+.comp-table td:first-child { font-weight:500; color: var(--navy); background: #F5F7FC; }
+.comp-table tr:hover td { background:#FAFAFA; }
+.comp-table tr:hover td:first-child { background: #EEF1F9; }
+.emphasis { font-weight:500; color: var(--navy); }
+.footnote { font-size:12px; color: var(--hint); margin-top:1rem; font-style:italic; }
+.risk-meter { display:flex; gap:4px; align-items:center; }
+.rm-dot { width:10px; height:10px; border-radius:50%; background: var(--border); }
+.rm-dot.filled.green { background: var(--green); }
+.rm-dot.filled.amber { background: var(--amber); }
+.rm-dot.filled.red { background: var(--red); }
+.sukuk-structure { background:#F0F3FB; border:1px solid #C5D0E8; border-radius:8px; padding:1.5rem; margin:1.5rem 0; }
+.sukuk-structure h4 { font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color: var(--navy); margin-bottom:1rem; }
+.struct-flow { display:flex; align-items:center; gap:0; flex-wrap:wrap; }
+.struct-box { background:#FFFFFF; border:1px solid #C5D0E8; border-radius:6px; padding:0.625rem 0.875rem; font-size:12px; color: var(--navy); font-weight:500; text-align:center; }
+.struct-arrow { padding:0 8px; color: var(--hint); font-size:16px; }
+.highlight { background: var(--amber-light); padding:2px 6px; border-radius:3px; font-weight:500; color: #7A4D10; }
+@media (max-width:768px) {
+  .two-col, .three-col, .four-col { grid-template-columns:1fr; }
+  .page-title { font-size:28px; }
+  .nav-inner { overflow-x:auto; gap:0; }
+  .nav-btn { padding:0.875rem 0.875rem; font-size:11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="course-tag">FIN-453 · Fixed Income Investments · IBA Karachi</div>
+    <h1 class="page-title">Credit Risk Assessment<br>in Fixed Income Markets</h1>
+    <p class="page-subtitle">A practitioner's framework for evaluating debt instruments, applied to three live sukuk transactions in Pakistan's capital markets. Bridging theory with current market evidence.</p>
+    <div class="header-meta">
+      <div class="meta-item"><span class="meta-label">Module</span><span class="meta-value">Credit Risk & Sukuk Analysis</span></div>
+      <div class="meta-item"><span class="meta-label">Instruments</span><span class="meta-value">DPEBSL · At-Tahur · Euro Oil</span></div>
+      <div class="meta-item"><span class="meta-label">Market Context</span><span class="meta-value">Pakistan — Oct 2025 to Mar 2026</span></div>
+      <div class="meta-item"><span class="meta-label">6M KIBOR (ref.)</span><span class="meta-value">≈ 11.05% (Oct 2025)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN NAVIGATION -->
+<div class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('framework',this)">I. Framework</button>
+    <button class="nav-btn" onclick="showSection('ratios',this)">II. Ratio Toolkit</button>
+    <button class="nav-btn" onclick="showSection('daewoo',this)">III. DPEBSL</button>
+    <button class="nav-btn" onclick="showSection('tahur',this)">IV. At-Tahur</button>
+    <button class="nav-btn" onclick="showSection('euro',this)">V. Euro Oil</button>
+    <button class="nav-btn" onclick="showSection('compare',this)">VI. Comparative</button>
+  </div>
+</div>
+
+<!-- SECTION I: FRAMEWORK -->
+<div id="framework" class="content-section active">
+<div class="container">
+  <div class="sec-label">Section I</div>
+  <h2 class="sec-title">The Credit Risk Assessment Framework</h2>
+  <p class="body-text">Credit risk is the probability that a borrower fails to meet its contractual obligations — whether in interest, principal, or both. In fixed income analysis, the analyst's job is to answer one fundamental question: <em>given the promised cash flows, is the offered spread compensation sufficient for the risk carried?</em> What follows is a practitioner's framework, structured around five domains.</p>
+
+  <hr class="divider">
+  <h3 class="sub-title" style="margin-top:0;">The 5C Framework — Modified for Fixed Income</h3>
+  <p class="body-text">The classic 5C framework (Character, Capacity, Capital, Collateral, Conditions) was developed for bank lending but remains the most durable mental model in credit analysis. For fixed income instruments, each dimension carries specific analytical depth.</p>
+
+  <div class="three-col" style="margin-top:1.5rem;">
+    <div class="framework-card">
+      <div class="framework-card-header">
+        <h4>1 — Character</h4>
+        <p>Governance & Track Record</p>
+      </div>
+      <div class="framework-card-body">
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text">Management pedigree and sector experience. Who runs the company and what is their track record on debt repayment?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text">Board composition and independence. Are there independent directors? Any governance red flags?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text">Related party transactions. Are significant revenues or costs routed through connected entities?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text">Regulatory compliance history. Any defaults, reschedulings, or disputes with lenders?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text">For sukuk: Shariah structure quality — is it substance-over-form or purely documentary compliance?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="framework-card">
+      <div class="framework-card-header">
+        <h4>2 — Capacity</h4>
+        <p>Cash Flow Generation</p>
+      </div>
+      <div class="framework-card-body">
+        <div class="framework-item">
+          <div class="fwicon green">✓</div>
+          <span class="fw-text">Operating cash flow coverage of debt service: the single most important metric. EBITDA or CFO coverage of interest + principal due.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon green">✓</div>
+          <span class="fw-text">Revenue quality: recurring vs. one-off, diversified vs. concentrated. Government-contracted revenue is higher quality than commercial.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon green">✓</div>
+          <span class="fw-text">Margin trajectory: expanding or compressing? Is cost inflation outpacing pricing power?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon green">✓</div>
+          <span class="fw-text">Free cash flow = Operating Cash Flow − Maintenance Capex. This is the real number that services debt.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon green">✓</div>
+          <span class="fw-text">Working capital cycle: Days Receivable + Days Inventory − Days Payable. A worsening cycle can create a cash squeeze even in profitable companies.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="framework-card">
+      <div class="framework-card-header">
+        <h4>3 — Capital</h4>
+        <p>Balance Sheet Strength</p>
+      </div>
+      <div class="framework-card-body">
+        <div class="framework-item">
+          <div class="fwicon amber">✓</div>
+          <span class="fw-text">Leverage ratios: Total Debt/Equity, Net Debt/EBITDA. For short-term instruments, the liquidity position matters more than long-term solvency.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon amber">✓</div>
+          <span class="fw-text">Equity buffer: Does the company have sufficient equity to absorb losses before defaulting on debt?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon amber">✓</div>
+          <span class="fw-text">Debt maturity profile: Is there a refinancing cliff? Are bullet maturities concentrated?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon amber">✓</div>
+          <span class="fw-text">Contingent liabilities: Guarantees, off-balance-sheet items, pension obligations, or litigation.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon amber">✓</div>
+          <span class="fw-text">Asset tangibility: Hard assets (PPE, land) are more defensible collateral than receivables or intangibles.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:1.5rem;">
+    <div class="framework-card">
+      <div class="framework-card-header">
+        <h4>4 — Collateral</h4>
+        <p>Security Package & Recovery</p>
+      </div>
+      <div class="framework-card-body">
+        <div class="framework-item">
+          <div class="fwicon red">✓</div>
+          <span class="fw-text"><strong>Secured vs. unsecured:</strong> Secured debt recovers more in default. The nature of collateral determines recovery rates — property and plant are superior to receivables which are superior to biological assets or inventory.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon red">✓</div>
+          <span class="fw-text"><strong>Ranking:</strong> Is this a first-ranking charge or a pari passu arrangement with other creditors?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon red">✓</div>
+          <span class="fw-text"><strong>Margin/coverage:</strong> What is the collateral-to-exposure ratio? A 25% margin means PKR 1.25 of collateral backs PKR 1.00 of debt — this is the minimum standard, not comfortable.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon red">✓</div>
+          <span class="fw-text"><strong>Enforcement risk:</strong> How quickly can the security be enforced under Pakistan's legal framework? Receivables are easier to enforce than land, which has legal and time delays.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon red">✓</div>
+          <span class="fw-text"><strong>Structural enhancements:</strong> Escrow accounts, Debt Payment Accounts (DPA), collection routing, and lien arrangements can significantly strengthen an otherwise weak security package.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="framework-card">
+      <div class="framework-card-header">
+        <h4>5 — Conditions</h4>
+        <p>Macro, Sector & Deal Terms</p>
+      </div>
+      <div class="framework-card-body">
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text"><strong>Macro environment:</strong> Interest rate trajectory affects both the company's cost of debt and the investor's reinvestment yield. In Pakistan, rate normalization post-2023 peak is a key factor.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text"><strong>Sector risk:</strong> Each sector has unique risk drivers — regulatory pricing risk (OMCs), commodity risk (dairy), government contract dependency (transport).</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text"><strong>Deal structure:</strong> Bullet vs. amortizing? Working capital vs. capex? Amortizing is lower risk as it reduces exposure over time.</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text"><strong>Covenant package:</strong> Are there financial maintenance covenants (ICR floors, leverage caps) and/or affirmative covenants (reporting, lien restrictions)?</span>
+        </div>
+        <div class="framework-item">
+          <div class="fwicon navy">✓</div>
+          <span class="fw-text"><strong>Rating agency perspective:</strong> What is the difference between entity rating (long-term creditworthiness) and instrument rating (this specific deal)?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h3 class="sub-title" style="margin-top:0;">Red Flags in Credit Analysis</h3>
+  <p class="body-text">Red flags are signals that warrant deeper investigation or higher required spreads. No single red flag is necessarily disqualifying — but multiple red flags in the same transaction should raise the alarm significantly.</p>
+
+  <div class="two-col">
+    <div class="panel-white">
+      <div class="block-title" style="color:var(--red);">Financial Red Flags</div>
+      <ul class="red-flag-list">
+        <li><span class="rflag">▲</span> Receivables growing faster than revenue — possible aggressive revenue recognition</li>
+        <li><span class="rflag">▲</span> Negative free cash flow despite positive reported earnings</li>
+        <li><span class="rflag">▲</span> Declining ICR or DSCR trend over 3+ periods</li>
+        <li><span class="rflag">▲</span> Short-term debt funding long-term assets — maturity mismatch</li>
+        <li><span class="rflag">▲</span> Revenue concentrated in unrealized/forecasted segments</li>
+        <li><span class="rflag">▲</span> Bullet repayment on working capital facility — rollover risk</li>
+        <li><span class="rflag">▲</span> Working capital chronically negative or worsening</li>
+        <li><span class="rflag">▲</span> High leverage (Net Debt/EBITDA > 4x) for cyclical industries</li>
+      </ul>
+    </div>
+    <div class="panel-white">
+      <div class="block-title" style="color:var(--red);">Structural & Governance Red Flags</div>
+      <ul class="red-flag-list">
+        <li><span class="rflag">▲</span> Unsecured instrument in a capital-intensive company — high loss-given-default</li>
+        <li><span class="rflag">▲</span> First-time credit rating — no rating agency track record</li>
+        <li><span class="rflag">▲</span> Concentrated ownership with weak independent board presence</li>
+        <li><span class="rflag">▲</span> Proceeds used for "general working capital" without specific deployment plan</li>
+        <li><span class="rflag">▲</span> Weak covenant package — no ICR maintenance covenants</li>
+        <li><span class="rflag">▲</span> Related party revenues forming large share of total revenue</li>
+        <li><span class="rflag">▲</span> Group-level complexity that obscures consolidated exposure</li>
+        <li><span class="rflag">▲</span> Biological assets, intangibles, or hard-to-value items as primary collateral</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h3 class="sub-title" style="margin-top:0;">Duration, Spread, and Pricing — The Quantitative Side</h3>
+  <div class="two-col">
+    <div>
+      <p class="body-text">For short-term instruments (6–12 months), interest rate risk is minimal. Modified Duration for a 6-month bullet instrument is approximately:</p>
+      <div class="panel" style="font-family:Georgia,serif; font-size:16px; text-align:center; margin:1rem 0; background:#F0F3FB; border-color:#C5D0E8;">
+        MD = (Macaulay Duration) / (1 + YTM/k) ≈ <span style="color:var(--navy); font-size:20px;">0.47 years</span>
+      </div>
+      <p class="body-text">This means a 100 bps parallel shift in KIBOR changes the bond price by approximately 0.47%. The <strong>DV01</strong> (price change per 1 bps move) on a PKR 1,000,000 certificate at ~12% YTM is roughly PKR 47. Duration risk is therefore not the primary concern here — <strong>credit risk dominates</strong>.</p>
+      <p class="body-text">For the amortizing instrument (At-Tahur), weighted average duration is higher — approximately 0.72–0.75 years — reflecting the longer weighted average life of principal outstanding.</p>
+    </div>
+    <div>
+      <p class="body-text">The <strong>credit spread</strong> (KIBOR + X bps) can be decomposed into three components for analytical clarity:</p>
+      <div class="panel-white" style="margin:1rem 0;">
+        <table class="data-table">
+          <tr><th>Component</th><th>Description</th><th>Typical Range (ST PKR)</th></tr>
+          <tr><td>Credit Risk Premium</td><td>Compensation for probability of default × loss given default</td><td>50–100 bps</td></tr>
+          <tr><td>Liquidity Premium</td><td>Private placement vs. listed, thin secondary market</td><td>50–100 bps</td></tr>
+          <tr><td>Structure Premium</td><td>Unsecured (+), bullet (+), weak covenants (+)</td><td>0–100 bps</td></tr>
+          <tr><td><strong>Total Spread (A1)</strong></td><td>Sum of components for a short-term A1 sukuk</td><td><strong>100–300 bps</strong></td></tr>
+        </table>
+      </div>
+      <div class="caution-box">
+        <p><strong>Pakistan-specific context:</strong> The SBP policy rate peaked at 22% in June 2023 and was cut to 12% by January 2025, with further easing to ~11% by early 2026. The 6M KIBOR reflects this easing — at ~11.05% in Oct 2025 vs. ~23% at peak. The fall in base rates dramatically compressed the all-in cost of capital, making capital market sukuk more attractive versus bank financing.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION II: RATIO TOOLKIT -->
+<div id="ratios" class="content-section">
+<div class="container">
+  <div class="sec-label">Section II</div>
+  <h2 class="sec-title">The Credit Analyst's Ratio Toolkit</h2>
+  <p class="body-text">Ratios are shortcuts — they compress large amounts of financial information into a single number that can be compared across time and peers. The following tables provide formula, interpretation, and investment-grade benchmarks for each key ratio. Benchmarks should be treated as starting points, not absolute rules — sector context matters enormously.</p>
+
+  <hr class="divider">
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab(event,'coverage-tab')">Coverage</button>
+    <button class="tab-btn" onclick="showTab(event,'leverage-tab')">Leverage</button>
+    <button class="tab-btn" onclick="showTab(event,'liquidity-tab')">Liquidity</button>
+    <button class="tab-btn" onclick="showTab(event,'profitability-tab')">Profitability</button>
+    <button class="tab-btn" onclick="showTab(event,'scorecard-tab')">Scorecard Applied</button>
+  </div>
+
+  <div id="coverage-tab" class="tab-pane active">
+    <h3 class="sub-title" style="margin-top:0;">Coverage Ratios — Can They Service the Debt?</h3>
+    <p class="body-text">Coverage ratios measure whether operating earnings are sufficient to cover the cost of debt. These are the most directly relevant ratios for assessing short-term default probability.</p>
+    <table class="data-table">
+      <tr>
+        <th>Ratio</th>
+        <th>Formula</th>
+        <th>Minimum (IG)</th>
+        <th>Comfortable (IG)</th>
+        <th>Interpretation</th>
+      </tr>
+      <tr>
+        <td><strong>Interest Coverage Ratio (ICR)</strong></td>
+        <td class="num">EBIT / Finance Cost</td>
+        <td class="num"><span class="badge amber">1.5×</span></td>
+        <td class="num"><span class="badge green">3×+</span></td>
+        <td>Core measure of capacity. Below 1.5× is distress territory. Note: some analysts use EBITDA for capital-intensive sectors.</td>
+      </tr>
+      <tr>
+        <td><strong>Debt Service Coverage (DSCR)</strong></td>
+        <td class="num">(EBITDA − Tax − Capex) / (Interest + Principal)</td>
+        <td class="num"><span class="badge amber">1.2×</span></td>
+        <td class="num"><span class="badge green">2×+</span></td>
+        <td>Stricter than ICR as it includes principal repayment. Most relevant for amortizing structures. A DSCR below 1.0× means the company cannot service debt from operations alone.</td>
+      </tr>
+      <tr>
+        <td><strong>Cash Interest Coverage</strong></td>
+        <td class="num">Operating Cash Flow / Cash Finance Paid</td>
+        <td class="num"><span class="badge amber">1.5×</span></td>
+        <td class="num"><span class="badge green">2.5×+</span></td>
+        <td>Uses actual cash flows rather than accrual earnings. More conservative and less susceptible to accounting manipulation.</td>
+      </tr>
+      <tr>
+        <td><strong>Fixed Charge Coverage</strong></td>
+        <td class="num">(EBIT + Lease Pmts) / (Interest + Lease Pmts)</td>
+        <td class="num"><span class="badge amber">1.5×</span></td>
+        <td class="num"><span class="badge green">2.5×+</span></td>
+        <td>Important for companies with significant operating lease obligations (e.g., transport companies with leased vehicles and terminals).</td>
+      </tr>
+    </table>
+    <div class="caution-box" style="margin-top:1.5rem;">
+      <p><strong>Key nuance for Pakistan:</strong> With policy rates at 22% in 2023, many companies saw ICRs collapse. The 2024–2026 rate normalization cycle has significantly improved coverage ratios. When benchmarking, always contextualise against the rate environment — an ICR of 2.5× at 22% rates implies far stronger underlying earnings power than the same ratio at 11% rates.</p>
+    </div>
+  </div>
+
+  <div id="leverage-tab" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Leverage Ratios — How Indebted Is the Company?</h3>
+    <p class="body-text">Leverage ratios assess the magnitude of debt relative to the company's earnings capacity and equity buffer. Higher leverage means less cushion for creditors in a downturn.</p>
+    <table class="data-table">
+      <tr>
+        <th>Ratio</th>
+        <th>Formula</th>
+        <th>Caution Zone</th>
+        <th>Comfortable (IG)</th>
+        <th>Interpretation</th>
+      </tr>
+      <tr>
+        <td><strong>Net Debt / EBITDA</strong></td>
+        <td class="num">(Total Debt − Cash) / EBITDA</td>
+        <td class="num"><span class="badge amber">3–4×</span></td>
+        <td class="num"><span class="badge green">&lt;2.5×</span></td>
+        <td>The gold standard leverage metric. Measures how many years of operating profit it would take to repay all net debt. Below 2.5× is generally investment grade. Cyclical sectors need lower tolerance.</td>
+      </tr>
+      <tr>
+        <td><strong>Total Debt / Equity (Gearing)</strong></td>
+        <td class="num">Total Debt / Shareholders' Equity</td>
+        <td class="num"><span class="badge amber">1.5–2×</span></td>
+        <td class="num"><span class="badge green">&lt;1×</span></td>
+        <td>Measures financial leverage. Asset-heavy businesses (infrastructure, utilities) tolerate higher gearing. Service businesses should be closer to 0.5×.</td>
+      </tr>
+      <tr>
+        <td><strong>Total Debt / Total Assets</strong></td>
+        <td class="num">Total Debt / Total Assets</td>
+        <td class="num"><span class="badge amber">50–60%</span></td>
+        <td class="num"><span class="badge green">&lt;40%</span></td>
+        <td>Asset-funded perspective. Tells you what fraction of assets are financed by debt — creditor's equity cushion in liquidation.</td>
+      </tr>
+      <tr>
+        <td><strong>Long-term Debt / Equity</strong></td>
+        <td class="num">LT Debt / Equity</td>
+        <td class="num"><span class="badge amber">0.8–1.2×</span></td>
+        <td class="num"><span class="badge green">&lt;0.5×</span></td>
+        <td>Isolates structural (long-term) leverage from short-term financing. Short-term working capital facilities distort total D/E.</td>
+      </tr>
+    </table>
+    <div class="warning-box" style="margin-top:1.5rem;">
+      <p><strong>Leverage alert:</strong> For short-term (6-month) sukuk specifically, the relevant leverage question is NOT the long-term capital structure — it's the current liquidity position. A company with high long-term leverage but strong short-term liquidity (cash, receivables, revolving lines) can comfortably repay a 6-month bullet. This is why you must always look at Current Ratio alongside leverage.</p>
+    </div>
+  </div>
+
+  <div id="liquidity-tab" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Liquidity Ratios — Can They Repay in the Short Term?</h3>
+    <p class="body-text">For short-duration instruments, liquidity analysis is often more important than long-term solvency. A company may be fundamentally solvent but illiquid at the point of repayment.</p>
+    <table class="data-table">
+      <tr>
+        <th>Ratio</th>
+        <th>Formula</th>
+        <th>Minimum</th>
+        <th>Comfortable</th>
+        <th>Interpretation</th>
+      </tr>
+      <tr>
+        <td><strong>Current Ratio</strong></td>
+        <td class="num">Current Assets / Current Liabilities</td>
+        <td class="num"><span class="badge amber">1.0×</span></td>
+        <td class="num"><span class="badge green">1.5×+</span></td>
+        <td>Basic liquidity test. Below 1.0× means current liabilities exceed short-term assets — immediate liquidity stress. Note: current assets include receivables and inventory which may not be immediately liquid.</td>
+      </tr>
+      <tr>
+        <td><strong>Quick Ratio</strong></td>
+        <td class="num">(Cash + Receivables) / Current Liabilities</td>
+        <td class="num"><span class="badge amber">0.7×</span></td>
+        <td class="num"><span class="badge green">1.0×+</span></td>
+        <td>Strips out inventory. More conservative — measures ability to pay from near-liquid assets. Critical for companies with large inventory holdings.</td>
+      </tr>
+      <tr>
+        <td><strong>Cash Conversion Cycle (CCC)</strong></td>
+        <td class="num">Inventory Days + Receivable Days − Payable Days</td>
+        <td class="num"><span class="badge amber">&gt;60 days</span></td>
+        <td class="num"><span class="badge green">&lt;30 days</span></td>
+        <td>Measures how efficiently the company converts investments in inventory/receivables into cash. A shorter (or negative) CCC means less working capital is trapped in operations.</td>
+      </tr>
+      <tr>
+        <td><strong>Net Working Capital (NWC)</strong></td>
+        <td class="num">Current Assets − Current Liabilities</td>
+        <td class="num"><span class="badge amber">Negative</span></td>
+        <td class="num"><span class="badge green">Positive</span></td>
+        <td>The absolute cushion of short-term assets above obligations. Negative NWC signals potential rollover risk for current debt maturities.</td>
+      </tr>
+    </table>
+    <div class="caution-box" style="margin-top:1.5rem;">
+      <p><strong>Receivables quality:</strong> Large receivable balances (especially from government entities in Pakistan) require scrutiny. Government-owed receivables can take months to collect, and in some sectors (power, public transport) they are subject to circular debt dynamics. Always ask: <em>Are receivables from creditworthy, diversified counterparties? What is the average collection period?</em></p>
+    </div>
+  </div>
+
+  <div id="profitability-tab" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Profitability — The Engine That Services Debt</h3>
+    <p class="body-text">Profitability ratios matter in credit analysis because they determine the cushion available to absorb shocks before debt service is impaired. However, accounting profits can be manipulated — always triangulate with cash flow metrics.</p>
+    <table class="data-table">
+      <tr>
+        <th>Ratio</th>
+        <th>Formula</th>
+        <th>Industry Benchmark</th>
+        <th>Red Flag</th>
+        <th>Interpretation</th>
+      </tr>
+      <tr>
+        <td><strong>Gross Margin</strong></td>
+        <td class="num">Gross Profit / Revenue</td>
+        <td class="num">Sector-specific</td>
+        <td class="num"><span class="badge red">Declining</span></td>
+        <td>Reflects pricing power and direct cost control. Commoditized sectors (OMCs: ~4%) vs. value-added (dairy: ~24%). Compression signals competitive pressure or cost inflation.</td>
+      </tr>
+      <tr>
+        <td><strong>EBITDA Margin</strong></td>
+        <td class="num">EBITDA / Revenue</td>
+        <td class="num">Sector-specific</td>
+        <td class="num"><span class="badge red">&lt;5%</span></td>
+        <td>Operating efficiency metric. Very thin EBITDA margins (below 5%) mean small revenue shocks translate immediately to debt coverage problems.</td>
+      </tr>
+      <tr>
+        <td><strong>Net Margin</strong></td>
+        <td class="num">PAT / Revenue</td>
+        <td class="num">Sector-specific</td>
+        <td class="num"><span class="badge red">&lt;2%</span></td>
+        <td>Bottom-line profitability after all charges including finance cost and taxes. Watch for finance cost distortion — a company with a 1.5% net margin but 5% EBITDA margin is heavily penalized by debt costs.</td>
+      </tr>
+      <tr>
+        <td><strong>Return on Equity (ROE)</strong></td>
+        <td class="num">PAT / Shareholders' Equity</td>
+        <td class="num">15–20%</td>
+        <td class="num"><span class="badge amber">&lt;8%</span></td>
+        <td>For credit analysts, ROE matters because it signals management's ability to generate returns — companies with sustainable ROE above cost of equity are healthier credits.</td>
+      </tr>
+      <tr>
+        <td><strong>Asset Turnover</strong></td>
+        <td class="num">Revenue / Total Assets</td>
+        <td class="num">Sector-specific</td>
+        <td class="num"><span class="badge amber">Declining</span></td>
+        <td>Efficiency of asset utilization. Declining asset turnover with flat revenue signals asset bloat — a risk factor in working capital intensive businesses.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="scorecard-tab" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Quick Scorecard Applied to Three Transactions</h3>
+    <p class="body-text">This scorecard applies the ratio toolkit to the three case study transactions. Traffic-light ratings reflect the analyst's judgment relative to investment-grade benchmarks.</p>
+    <div class="comp-table-wrap">
+      <table class="comp-table">
+        <tr>
+          <th>Metric</th>
+          <th style="text-align:center;">DPEBSL (CY24)</th>
+          <th style="text-align:center;">At-Tahur (FY25)</th>
+          <th style="text-align:center;">Euro Oil (6MFY26)</th>
+          <th>IG Benchmark</th>
+        </tr>
+        <tr>
+          <td>ICR</td>
+          <td style="text-align:center;"><span class="badge amber">2.91×</span></td>
+          <td style="text-align:center;"><span class="badge amber">3.6×</span></td>
+          <td style="text-align:center;"><span class="badge green">4.10×</span></td>
+          <td>&gt;3× comfortable</td>
+        </tr>
+        <tr>
+          <td>DSCR</td>
+          <td style="text-align:center;"><span class="badge amber">1.94×</span></td>
+          <td style="text-align:center;"><span class="badge amber">2.46×</span></td>
+          <td style="text-align:center;"><span class="badge green">3.46×</span></td>
+          <td>&gt;2× comfortable</td>
+        </tr>
+        <tr>
+          <td>Net Debt / EBITDA</td>
+          <td style="text-align:center;"><span class="badge green">~2.1×</span></td>
+          <td style="text-align:center;"><span class="badge green">~0.5×</span></td>
+          <td style="text-align:center;"><span class="badge green">~1.3×</span></td>
+          <td>&lt;2.5×</td>
+        </tr>
+        <tr>
+          <td>Debt / Equity</td>
+          <td style="text-align:center;"><span class="badge green">0.46×</span></td>
+          <td style="text-align:center;"><span class="badge green">0.23×</span></td>
+          <td style="text-align:center;"><span class="badge amber">1.12×</span></td>
+          <td>&lt;1× comfortable</td>
+        </tr>
+        <tr>
+          <td>Current Ratio</td>
+          <td style="text-align:center;"><span class="badge green">1.09×</span></td>
+          <td style="text-align:center;"><span class="badge green">1.24×</span></td>
+          <td style="text-align:center;"><span class="badge amber">~1.0×</span></td>
+          <td>&gt;1.2×</td>
+        </tr>
+        <tr>
+          <td>EBITDA Margin</td>
+          <td style="text-align:center;"><span class="badge green">~10.4%</span></td>
+          <td style="text-align:center;"><span class="badge green">15.7%</span></td>
+          <td style="text-align:center;"><span class="badge red">2.97%</span></td>
+          <td>&gt;10% comfortable</td>
+        </tr>
+        <tr>
+          <td>Net Margin</td>
+          <td style="text-align:center;"><span class="badge amber">5.6%</span></td>
+          <td style="text-align:center;"><span class="badge amber">5.0%</span></td>
+          <td style="text-align:center;"><span class="badge amber">1.5%</span></td>
+          <td>&gt;5%</td>
+        </tr>
+        <tr>
+          <td>Security</td>
+          <td style="text-align:center;"><span class="badge red">Unsecured</span></td>
+          <td style="text-align:center;"><span class="badge amber">Secured (Bio+CA)</span></td>
+          <td style="text-align:center;"><span class="badge green">Secured (CA+DPA)</span></td>
+          <td>Secured preferred</td>
+        </tr>
+        <tr>
+          <td>Repayment</td>
+          <td style="text-align:center;"><span class="badge amber">6M Bullet</span></td>
+          <td style="text-align:center;"><span class="badge green">Quarterly Amort.</span></td>
+          <td style="text-align:center;"><span class="badge amber">6M Bullet</span></td>
+          <td>Amortizing preferred</td>
+        </tr>
+        <tr>
+          <td>Rating Track Record</td>
+          <td style="text-align:center;"><span class="badge green">Established</span></td>
+          <td style="text-align:center;"><span class="badge green">Established</span></td>
+          <td style="text-align:center;"><span class="badge red">Initial (March 2026)</span></td>
+          <td>Established preferred</td>
+        </tr>
+        <tr>
+          <td>Spread Offered</td>
+          <td style="text-align:center;"><span class="badge navy">6MK + 250 bps</span></td>
+          <td style="text-align:center;"><span class="badge navy">3MK + 130 bps</span></td>
+          <td style="text-align:center;"><span class="badge navy">6MK + 150 bps</span></td>
+          <td>Context-dependent</td>
+        </tr>
+      </table>
+    </div>
+    <p class="footnote">* At-Tahur ICR uses EBIT/Finance Cost = 3.6× (from IM); Euro Oil ICR = 4.10× per annualized 6MFY26 data. All figures sourced directly from respective IMs.</p>
+  </div>
+</div>
+</div>
+
+<!-- SECTION III: DPEBSL CASE STUDY -->
+<div id="daewoo" class="content-section">
+<div class="container">
+  <div class="sec-label">Case Study I</div>
+  <div class="case-header daewoo">
+    <div class="case-name">Daewoo Pakistan Express Bus Services Limited</div>
+    <div class="case-sub">Short Term, Rated, Unsecured, Privately Placed Sukuk — October 2025</div>
+    <div class="case-terms">
+      <div class="case-term"><span class="ct-label">Issue Size</span><span class="ct-val">PKR 2,000 Mn</span></div>
+      <div class="case-term"><span class="ct-label">Tenor</span><span class="ct-val">6 Months (Bullet)</span></div>
+      <div class="case-term"><span class="ct-label">Rate</span><span class="ct-val">6M KIBOR + 250 bps</span></div>
+      <div class="case-term"><span class="ct-label">All-in (indicative)</span><span class="ct-val">≈ 13.55%</span></div>
+      <div class="case-term"><span class="ct-label">Security</span><span class="ct-val">Unsecured</span></div>
+      <div class="case-term"><span class="ct-label">Entity Rating</span><span class="ct-val">A- / A2 (PACRA)</span></div>
+      <div class="case-term"><span class="ct-label">Instrument Rating</span><span class="ct-val">A-1 (Expected)</span></div>
+      <div class="case-term"><span class="ct-label">Structure</span><span class="ct-val">Musharakah</span></div>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTabCase(event,'dae-biz','dae')">Business Profile</button>
+    <button class="tab-btn" onclick="showTabCase(event,'dae-fin','dae')">Financial Analysis</button>
+    <button class="tab-btn" onclick="showTabCase(event,'dae-struct','dae')">Deal Structure</button>
+    <button class="tab-btn" onclick="showTabCase(event,'dae-spread','dae')">Spread & Duration</button>
+    <button class="tab-btn" onclick="showTabCase(event,'dae-verdict','dae')">Verdict</button>
+  </div>
+
+  <div id="dae-biz" class="tab-pane active">
+    <h3 class="sub-title" style="margin-top:0;">Character Assessment: Business Profile</h3>
+    <div class="two-col">
+      <div>
+        <p class="body-text">DPEBSL is a 27-year-old transport and logistics conglomerate — one of the most recognizable brands in Pakistan's intercity travel. Originally established in 1997 by GM Korea, it was acquired by Asia Pak Investments in 2011 and has since transformed from a pure bus operator into a multi-segment transport, logistics, and waste management group.</p>
+        <p class="body-text">The company's <em>ultimate</em> controlling shareholder is Mr. Sheharyar Arshad Chishty — a former Citigroup/Nomura investment banker who advised on USD 60 billion of M&A transactions. This caliber of sponsorship is a strong positive signal on governance and financial sophistication.</p>
+        <p class="body-text"><strong>Crucially, the same group controls K-Electric</strong> (66.4% via KES Power → IGCF SPV → K-Power Holdings → Sage Ventures → Asia Pak). This group-level linkage is a double-edged sword: it represents scale and resources, but also concentration risk and potential related-party complications.</p>
+      </div>
+      <div>
+        <h4 class="block-title">Revenue Segments (CY25 Forecast)</h4>
+        <div style="position:relative;height:200px;margin-bottom:1.5rem;"><canvas id="daeRevChart"></canvas></div>
+        <div class="three-col" style="gap:0.75rem;">
+          <div class="insight-box navy">
+            <div class="insight-num">~70%</div>
+            <div class="insight-text">Mass transit market share (7 of 10 O&M contracts)</div>
+          </div>
+          <div class="insight-box amber">
+            <div class="insight-num">6.4M</div>
+            <div class="insight-text">Intercity passengers served annually (CY24)</div>
+          </div>
+          <div class="insight-box green">
+            <div class="insight-num">~48%</div>
+            <div class="insight-text">Revenue backed by government O&M contracts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <h4 class="block-title">Business Segment Deep Dive</h4>
+    <div class="three-col">
+      <div class="panel-white" style="border-top:3px solid var(--navy);">
+        <div style="font-size:13px; font-weight:600; color:var(--navy); margin-bottom:6px;">Intercity Bus (45.1% of Revenue)</div>
+        <p style="font-size:13px; color:var(--muted); line-height:1.6;">Pakistan's #1 intercity operator. 370+ buses, 61 terminals, 31 cities. Revenue PKR 11.5Bn. Occupancy improving: 73% (CY23) → 73% (CY24) → 74% est. (CY25). Tickets priced in line with fuel costs — good pass-through mechanism.</p>
+      </div>
+      <div class="panel-white" style="border-top:3px solid var(--green);">
+        <div style="font-size:13px; font-weight:600; color:#1A5C3A; margin-bottom:6px;">Urban Transport O&M (48.2% of Revenue)</div>
+        <p style="font-size:13px; color:var(--muted); line-height:1.6;">7 government-awarded O&M contracts (Lahore, Multan, Karachi Green/Orange, Peshawar BRT 1&2). <span class="highlight">This is quasi-government revenue with guaranteed km-based payments.</span> Avg. contract life ~5 years. PKR 13.3Bn revenue. This segment de-risks the credit significantly.</p>
+      </div>
+      <div class="panel-white" style="border-top:3px solid var(--amber);">
+        <div style="font-size:13px; font-weight:600; color:var(--amber); margin-bottom:6px;">Waste Management (New, Forecasted)</div>
+        <p style="font-size:13px; color:var(--muted); line-height:1.6;">Suthra Punjab Programme — managing 22 Tehsils. Operations started May 2025. CY25 forecast embeds PKR 21Bn from this segment. <span style="color:var(--red); font-weight:600;">Critical risk: this is largely a forecasted revenue stream for a business that only began in May 2025.</span> Monthly billings PKR 3–4Bn by mid-2025.</p>
+      </div>
+    </div>
+    <div class="warning-box">
+      <p><strong>Analyst's Note — Revenue Composition Risk:</strong> The CY25 forecast of PKR 51Bn includes ~PKR 21Bn from waste management, a business that commenced operations in May 2025 — just months before this sukuk was marketed (Oct 2025). The IM acknowledges this, noting "full project operations began in May 2025." For a 6-month sukuk being repaid in June 2026, the question is not CY25 annual revenue — it is whether cash flows in H1 2026 are sufficient for bullet repayment. The O&M contracts provide a reliable anchor.</p>
+    </div>
+  </div>
+
+  <div id="dae-fin" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Financial Analysis — Key Ratios (CY21–CY24)</h3>
+    <div class="four-col">
+      <div class="kpi"><div class="kpi-num">2.91×</div><div class="kpi-label">ICR CY24</div><div class="kpi-sub" style="color:var(--amber);">Improving → 3.19× (6MCY25)</div></div>
+      <div class="kpi"><div class="kpi-num">1.94×</div><div class="kpi-label">DSCR CY24</div><div class="kpi-sub" style="color:var(--amber);">Adequate</div></div>
+      <div class="kpi"><div class="kpi-num">0.46×</div><div class="kpi-label">D/E CY24</div><div class="kpi-sub" style="color:var(--green);">Conservative</div></div>
+      <div class="kpi"><div class="kpi-num">17.1%</div><div class="kpi-label">Gross Margin CY24</div><div class="kpi-sub" style="color:var(--green);">Recovering</div></div>
+    </div>
+    <div style="margin:1.5rem 0;">
+      <div style="position:relative;height:260px;"><canvas id="daeFinChart"></canvas></div>
+    </div>
+    <hr class="divider">
+    <h4 class="block-title">Balance Sheet Quality</h4>
+    <div class="two-col">
+      <div>
+        <table class="data-table">
+          <tr><th>Item (PKR Mn)</th><th class="num">CY22</th><th class="num">CY23</th><th class="num">CY24</th></tr>
+          <tr><td>Net Sales</td><td class="num">18,778</td><td class="num">23,253</td><td class="num">26,065</td></tr>
+          <tr><td>Gross Profit</td><td class="num">3,016</td><td class="num">3,353</td><td class="num">4,462</td></tr>
+          <tr><td>EBIT</td><td class="num">1,766</td><td class="num">1,846</td><td class="num">2,715</td></tr>
+          <tr><td>Finance Cost</td><td class="num">(847)</td><td class="num">(1,023)</td><td class="num">(932)</td></tr>
+          <tr><td>PAT</td><td class="num">1,265</td><td class="num">345</td><td class="num">1,448</td></tr>
+          <tr><td>Total Assets</td><td class="num">17,826</td><td class="num">16,779</td><td class="num">25,491</td></tr>
+          <tr><td>Equity</td><td class="num">6,796</td><td class="num">7,165</td><td class="num">10,956</td></tr>
+          <tr><td>Total Debt</td><td class="num">~5,100</td><td class="num">~3,400</td><td class="num">6,800</td></tr>
+          <tr><td><strong>Receivables</strong></td><td class="num">2,030</td><td class="num">2,410</td><td class="num"><strong>5,850</strong></td></tr>
+          <tr><td>Trade Payables</td><td class="num">4,087</td><td class="num">3,918</td><td class="num">5,763</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="warning-box">
+          <p><strong>Receivables spike — requires explanation:</strong> Receivables jumped from PKR 2,410 Mn (CY23) to PKR 5,850 Mn (CY24) — a 143% increase while revenue grew only 12%. This is the single most significant analytical flag in the DPEBSL financials. The most likely explanation is the new waste management O&M contracts generating government receivables (which collect slowly in Pakistan). If these are legitimate O&M receivables from solvent government entities, they are high-quality but slow-pay. If they include disputed or contested amounts, this is a serious risk.</p>
+        </div>
+        <div class="caution-box">
+          <p><strong>PAT Volatility:</strong> PAT fell dramatically from PKR 1,265 Mn (CY22) to PKR 345 Mn (CY23) — an 73% decline — before recovering to PKR 1,448 Mn (CY24). The CY23 dip coincided with peak interest rates (finance cost rose to PKR 1,023 Mn). This illustrates rate sensitivity: at peak rates, the interest burden nearly consumed all operating profit. With KIBOR now at ~11%, this risk has significantly reduced.</p>
+        </div>
+        <div class="good-box">
+          <p><strong>Positive trajectory:</strong> Revenue grew at 28% CAGR (2021–2024). ICR improved from 2.08× (CY22) to 2.91× (CY24) to 3.19× (6MCY25). Equity base nearly doubled from PKR 5.5Bn (CY21) to PKR 10.9Bn (CY24) through retained earnings — organic capital accumulation without equity dilution.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dae-struct" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Deal Structure — The Musharakah Framework</h3>
+    <div class="sukuk-structure">
+      <h4>Shariah Structure: Musharakah (Shirkat-ul-Aqd)</h4>
+      <div class="struct-flow">
+        <div class="struct-box">Sukuk Holders<br><small style="color:var(--hint);">QIBs only</small></div>
+        <div class="struct-arrow">→</div>
+        <div class="struct-box">Transfer Payment<br><small style="color:var(--hint);">PKR 2,000 Mn</small></div>
+        <div class="struct-arrow">→</div>
+        <div class="struct-box">Pak Oman<br><small style="color:var(--hint);">Investment Agent</small></div>
+        <div class="struct-arrow">→</div>
+        <div class="struct-box">Enter Musharakah<br><small style="color:var(--hint);">Shirkat-ul-Aqd</small></div>
+        <div class="struct-arrow">→</div>
+        <div class="struct-box">DPEBSL<br><small style="color:var(--hint);">Issuer/Partner</small></div>
+      </div>
+      <div class="struct-flow" style="margin-top:10px;">
+        <div class="struct-box">Sukuk Holders<br><small style="color:var(--hint);">Receive pro-rata</small></div>
+        <div class="struct-arrow">←</div>
+        <div class="struct-box">Profit + Principal<br><small style="color:var(--hint);">At maturity</small></div>
+        <div class="struct-arrow">←</div>
+        <div class="struct-box">Pak Oman<br><small style="color:var(--hint);">Distributes</small></div>
+        <div class="struct-arrow">←</div>
+        <div class="struct-box">Profit + Share Value<br><small style="color:var(--hint);">DPEBSL pays</small></div>
+        <div class="struct-arrow">←</div>
+        <div class="struct-box">DPEBSL Operations<br><small style="color:var(--hint);">Generates profit</small></div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div>
+        <h4 class="block-title">Structure Assessment</h4>
+        <table class="data-table">
+          <tr><th>Dimension</th><th>Assessment</th><th>Risk Implication</th></tr>
+          <tr><td>Security</td><td><span class="badge red">Unsecured</span></td><td>No first call on assets in default. Pure recourse to company earnings and goodwill.</td></tr>
+          <tr><td>Tenor</td><td><span class="badge amber">6M Bullet</span></td><td>Rollover risk if company's liquidity deteriorates near maturity</td></tr>
+          <tr><td>Profit structure</td><td><span class="badge amber">Pay at maturity</span></td><td>No periodic cash flow to signal deterioration early. Full exposure until redemption.</td></tr>
+          <tr><td>Issue size</td><td><span class="badge amber">PKR 2,000 Mn</span></td><td>~3.1% of CY24 annual revenue — manageable relative to scale</td></tr>
+          <tr><td>Face value</td><td><span class="badge navy">PKR 1,000,000/cert</span></td><td>Minimum ticket — filters out retail investors, all QIBs</td></tr>
+          <tr><td>Green shoe</td><td><span class="badge amber">PKR 1,000 Mn</span></td><td>Demand signal: if green shoe exercised, total exposure PKR 2,000 Mn</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="warning-box">
+          <p><strong>The Unsecured Problem:</strong> This is the most critical structural weakness. In a default scenario, the sukuk holders would rank <em>pari passu</em> with other unsecured creditors — with no preferential claim on specific assets. Given DPEBSL's asset base includes PPE of PKR 15.8Bn (CY24), the company is not asset-poor. The decision to issue unsecured likely reflects the company's preference to avoid creating a lien on operating assets (buses, terminals) that would restrict operational flexibility.</p>
+        </div>
+        <div class="caution-box">
+          <p><strong>Advisors & Arrangers:</strong> Pak Oman Investment Company (POICL) + KTrade Securities + KASB act as Joint Lead Advisors. Pak Oman is also the Investment Agent — this dual role is standard practice in Pakistan's sukuk market but investors should note it creates a structural conflict of interest that relies on contractual ring-fencing to manage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dae-spread" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Spread & Duration Analysis</h3>
+    <div class="two-col">
+      <div>
+        <h4 class="block-title">Spread Decomposition</h4>
+        <div class="spread-bar-wrap">
+          <div class="spread-bar-label"><span>Rate Components</span><span>Total: ~13.55% p.a.</span></div>
+          <div class="spread-bar" style="height:40px;">
+            <div class="spread-kibor" style="width:81.5%;">6M KIBOR: 11.05%</div>
+            <div class="spread-credit amber" style="width:18.5%;">+250 bps</div>
+          </div>
+        </div>
+        <table class="data-table" style="margin-top:1rem;">
+          <tr><th>Spread Component</th><th class="num">Est. Contribution</th><th>Rationale</th></tr>
+          <tr><td>Credit Risk Premium</td><td class="num">80–100 bps</td><td>A- entity. Moderate operating risk. Transport sector.</td></tr>
+          <tr><td>Liquidity Premium</td><td class="num">70–80 bps</td><td>Private placement, limited secondary market</td></tr>
+          <tr><td>Structure Premium</td><td class="num">70–80 bps</td><td>Unsecured (+50) + bullet (+20) vs. secured amortizing</td></tr>
+          <tr><td><strong>Total Spread</strong></td><td class="num"><strong>250 bps</strong></td><td>Reflected in pricing</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4 class="block-title">Duration and Price Sensitivity</h4>
+        <div class="panel">
+          <table class="data-table">
+            <tr><th>Metric</th><th class="num">Value</th></tr>
+            <tr><td>Tenor</td><td class="num">6 months (bullet)</td></tr>
+            <tr><td>YTM (indicative)</td><td class="num">13.55%</td></tr>
+            <tr><td>Macaulay Duration</td><td class="num">~0.50 years</td></tr>
+            <tr><td>Modified Duration</td><td class="num">~0.467 years</td></tr>
+            <tr><td>DV01 (per PKR 1Mn)</td><td class="num">~PKR 44</td></tr>
+            <tr><td>Price Change for +100 bps KIBOR shift</td><td class="num">~−0.47%</td></tr>
+          </table>
+          <div class="caution-box" style="margin-top:1rem;">
+            <p><strong>Key takeaway:</strong> Duration is minimal. The dominant risk in this instrument is credit risk (default probability) — not interest rate risk. A 100 bps rate move costs the investor less than 0.5% in mark-to-market value, which pales against the loss in default scenarios (typically 40–60% for unsecured creditors).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <h4 class="block-title">Spread Adequacy Assessment</h4>
+    <p class="body-text">The 250 bps spread is the widest of the three transactions. Is it adequate compensation for the unsecured, bullet structure on an A1-rated issuer? The analysis below frames this question through expected value:</p>
+    <div class="panel-white">
+      <div class="two-col">
+        <div>
+          <p style="font-size:13px; color:var(--muted); font-weight:600; margin-bottom:0.5rem;">PROBABILITY OF DEFAULT (1-year, A1 short-term)</p>
+          <p style="font-size:13px; color:#3D3D3D; line-height:1.7;">For an A1-rated entity globally, 1-year PD is approximately 0.05–0.10%. However, Pakistan's sovereign rating (B3/CCC+) and general credit environment imply a local-market calibration. A reasonable analyst estimate for A-rated Pakistani corporates is 0.50–1.50% (1-year PD).</p>
+        </div>
+        <div>
+          <p style="font-size:13px; color:var(--muted); font-weight:600; margin-bottom:0.5rem;">LOSS GIVEN DEFAULT (LGD) — UNSECURED</p>
+          <p style="font-size:13px; color:#3D3D3D; line-height:1.7;">Unsecured creditors in Pakistani corporate restructurings typically recover 20–40% (LGD of 60–80%). For DPEBSL, the strong asset base (PPE PKR 15.8Bn) suggests recovery could be above average — perhaps 40–50% (LGD 50–60%).</p>
+        </div>
+      </div>
+      <div class="verdict-box" style="margin:1rem 0 0;">
+        <div class="verdict-label">Expected Loss = PD × LGD (6 months, half-year adjustment)</div>
+        <div class="verdict-text">EL = 0.75% (mid PD) × 55% (mid LGD) × 0.5 (6M) = <strong>0.21%</strong> or ~21 bps annualized. The 250 bps spread provides approximately 11.9× coverage of expected loss. Even applying a 3× buffer for uncertainty, <strong>the spread appears adequate</strong>, though the unsecured structure means investors bear the full severity risk in a tail scenario.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dae-verdict" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Analyst Verdict — DPEBSL</h3>
+    <div class="two-col" style="margin-bottom:1.5rem;">
+      <div>
+        <h4 class="block-title" style="color:var(--green);">Strengths (Buy Case)</h4>
+        <ul class="green-flag-list">
+          <li><span class="gflag">✓</span> 27-year operating track record. Recognized national brand with high customer loyalty.</li>
+          <li><span class="gflag">✓</span> ~48% revenue from government-contracted O&M projects — quasi-guaranteed cash flows.</li>
+          <li><span class="gflag">✓</span> Revenue diversification across intercity, urban transit, logistics, and waste management.</li>
+          <li><span class="gflag">✓</span> D/E of 0.46× is conservative. Company is not over-leveraged relative to its asset base.</li>
+          <li><span class="gflag">✓</span> Sophisticated sponsor (ex-Citigroup/Nomura IB background) with strong governance incentives.</li>
+          <li><span class="gflag">✓</span> Issue size (PKR 2Bn) is modest relative to PKR 26Bn revenue — only 7.7% of annual top-line.</li>
+          <li><span class="gflag">✓</span> Improving coverage trajectory: ICR 2.08× (CY22) → 3.19× (6MCY25) as rates decline.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="block-title" style="color:var(--red);">Risks (Cautionary Case)</h4>
+        <ul class="red-flag-list">
+          <li><span class="rflag">▲</span> Unsecured structure — full loss of principal in a tail default scenario.</li>
+          <li><span class="rflag">▲</span> Receivables spike (PKR 2.4Bn → PKR 5.9Bn) demands explanation. Potential government receivables slowdown risk.</li>
+          <li><span class="rflag">▲</span> CY25 forecast depends heavily on waste management revenue that only commenced May 2025.</li>
+          <li><span class="rflag">▲</span> Group complexity: DPEBSL is within a conglomerate holding K-Electric. Group pressures could divert resources.</li>
+          <li><span class="rflag">▲</span> Bullet repayment — rollover risk if investor sentiment shifts or KIBOR rebounds.</li>
+          <li><span class="rflag">▲</span> Operating leverage in transport: fuel cost, driver wages, and maintenance are largely fixed — revenue downturns flow directly to EBIT.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="verdict-box green">
+      <div class="verdict-label">Investment Verdict — DPEBSL ST Sukuk</div>
+      <div class="verdict-text">For a QIB investor with short-term PKR deployment needs, DPEBSL represents an <strong>acceptable credit risk at 6MK + 250 bps</strong>. The A1 instrument rating, strong brand franchise, and government O&M revenue anchor provide reasonable comfort for a 6-month horizon. The 250 bps spread over KIBOR adequately compensates for the unsecured structure and the construction risk in the waste management segment. The primary risk is <em>not</em> fundamental insolvency but rather a liquidity squeeze at bullet maturity — unlikely but not dismissible given the receivables concentration. <strong>Condition for comfort: confirmation that the receivables spike reflects collectible government O&M payments, not disputed claims.</strong></div>
+    </div>
+    <div class="panel" style="margin-top:1.5rem;">
+      <div class="block-title">Discussion Questions for Class</div>
+      <ol style="font-size:13px; color:#3D3D3D; line-height:2; padding-left:1.5rem;">
+        <li>How does the unsecured structure change the investor's risk calculus versus a secured instrument at the same spread?</li>
+        <li>The receivables jumped 143% in one year. What are the three most plausible explanations? Which is most concerning?</li>
+        <li>DPEBSL's waste management segment is new and large. How would you stress-test the CY25 revenue forecast?</li>
+        <li>The group structure includes K-Electric. Does this make DPEBSL safer (access to group resources) or riskier (group leverage, capital diversion)?</li>
+      </ol>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION IV: AT-TAHUR CASE STUDY -->
+<div id="tahur" class="content-section">
+<div class="container">
+  <div class="sec-label">Case Study II</div>
+  <div class="case-header tahur">
+    <div class="case-name">At-Tahur Limited (PREMA)</div>
+    <div class="case-sub">Rated, Listed, Secured & Privately Placed Sukuk — February 2026</div>
+    <div class="case-terms">
+      <div class="case-term"><span class="ct-label">Issue Size</span><span class="ct-val">PKR 900 Mn</span></div>
+      <div class="case-term"><span class="ct-label">Tenor</span><span class="ct-val">~12M (Quarterly Amort.)</span></div>
+      <div class="case-term"><span class="ct-label">Rate</span><span class="ct-val">3M KIBOR + 130 bps</span></div>
+      <div class="case-term"><span class="ct-label">All-in (indicative)</span><span class="ct-val">≈ 11.80%</span></div>
+      <div class="case-term"><span class="ct-label">Security</span><span class="ct-val">Ranking Charge: CA + Bio Assets</span></div>
+      <div class="case-term"><span class="ct-label">Entity Rating</span><span class="ct-val">A- / A2 (VIS, Jul 2025)</span></div>
+      <div class="case-term"><span class="ct-label">Instrument Rating</span><span class="ct-val">A1 (Preliminary)</span></div>
+      <div class="case-term"><span class="ct-label">Listing</span><span class="ct-val">PSX (Section 5C)</span></div>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTabCase(event,'tah-biz','tah')">Business Profile</button>
+    <button class="tab-btn" onclick="showTabCase(event,'tah-fin','tah')">Financial Analysis</button>
+    <button class="tab-btn" onclick="showTabCase(event,'tah-struct','tah')">Deal Structure</button>
+    <button class="tab-btn" onclick="showTabCase(event,'tah-spread','tah')">Spread & Duration</button>
+    <button class="tab-btn" onclick="showTabCase(event,'tah-verdict','tah')">Verdict</button>
+  </div>
+
+  <div id="tah-biz" class="tab-pane active">
+    <h3 class="sub-title" style="margin-top:0;">Business Profile — Pakistan's Premium Dairy Play</h3>
+    <div class="two-col">
+      <div>
+        <p class="body-text">At-Tahur Limited, trading under the <strong>PREMA</strong> brand, is a vertically integrated dairy operation — from Australian and Dutch herd to consumer packaging — based in District Kasur, Punjab. Founded in 2007, it represents one of the few institutionally run dairy farms in a sector dominated by small-holder producers.</p>
+        <p class="body-text">The company's value proposition is <em>traceability</em>: a direct farm-to-table model where milk is processed at an on-site facility, eliminating third-party aggregation risks. This is strategically important as Pakistan's packaged milk penetration remains at only ~8.5% of total consumption — suggesting a long runway for branded packaged dairy.</p>
+        <p class="body-text"><strong>PSX listing (2018)</strong> is a material governance positive. As a public company, At-Tahur files audited financial statements, is subject to PSX disclosure requirements, and has a visible equity valuation. This transparency materially reduces information asymmetry versus the other two (unlisted) issuers in this comparison.</p>
+      </div>
+      <div>
+        <div class="four-col" style="gap:0.75rem; margin-bottom:1rem;">
+          <div class="insight-box green"><div class="insight-num">~7,000</div><div class="insight-text">Herd size (animals)</div></div>
+          <div class="insight-box amber"><div class="insight-num">26,000+</div><div class="insight-text">MT annual production</div></div>
+          <div class="insight-box navy"><div class="insight-num">4,000+</div><div class="insight-text">Retail outlets</div></div>
+          <div class="insight-box green"><div class="insight-num">30 L/day</div><div class="insight-text">Average yield per cow</div></div>
+        </div>
+        <div class="panel-white" style="border-top:3px solid var(--green);">
+          <div style="font-size:12px; font-weight:600; color:#1A5C3A; margin-bottom:8px;">Pasteurized vs. UHT — The Strategic Bet</div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.6;">Pasteurized milk commands a premium but requires refrigeration and has a shorter shelf life (~7 days). UHT (ultra-high temperature) has a 3-month shelf life but destroys nutritional proteins. PREMA has bet on the pasteurized segment — currently ~3% of processed milk — betting on a consumer health-consciousness shift. This is a high-margin, low-volume strategy that requires patient capital and a cold chain. If the bet is right, the company captures premium pricing power. If wrong, it remains a niche operator.</p>
+        </div>
+      </div>
+    </div>
+    <div class="caution-box">
+      <p><strong>Sales Tax Headwind (Critical):</strong> The government imposed an 18% sales tax on packaged milk in FY25. The IM explicitly acknowledges this hurt revenue growth: "The imposition of 18% sales tax on milk products adversely impacted the Company's sales growth, as consumers shifted to cheaper, untaxed loose milk." FY25 revenue was PKR 10,651 Mn — essentially flat versus FY24's PKR 10,562 Mn despite volume expansion. The company projects recovery via herd expansion and policy normalization. This is a regulatory risk that is sector-wide but asymmetrically hits premium packaged players more than commodity loose milk.</p>
+    </div>
+  </div>
+
+  <div id="tah-fin" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Financial Analysis — Strong Fundamentals, Tax Headwind</h3>
+    <div class="four-col">
+      <div class="kpi"><div class="kpi-num">3.6×</div><div class="kpi-label">ICR FY25</div><div class="kpi-sub" style="color:var(--green);">Rising → 6.6× (FY26E)</div></div>
+      <div class="kpi"><div class="kpi-num">0.23×</div><div class="kpi-label">D/E FY25</div><div class="kpi-sub" style="color:var(--green);">Exceptionally low</div></div>
+      <div class="kpi"><div class="kpi-num">23.6%</div><div class="kpi-label">Gross Margin FY25</div><div class="kpi-sub" style="color:var(--green);">Strong</div></div>
+      <div class="kpi"><div class="kpi-num">PKR 360M</div><div class="kpi-label">Net Working Capital</div><div class="kpi-sub" style="color:var(--green);">Positive (FY25)</div></div>
+    </div>
+    <div style="margin:1.5rem 0;">
+      <div style="position:relative;height:260px;"><canvas id="tahFinChart"></canvas></div>
+    </div>
+    <hr class="divider">
+    <div class="two-col">
+      <div>
+        <h4 class="block-title">Key Financial Metrics (FY23–FY25)</h4>
+        <table class="data-table">
+          <tr><th>Item (PKR Mn)</th><th class="num">FY23</th><th class="num">FY24</th><th class="num">FY25</th></tr>
+          <tr><td>Net Revenue</td><td class="num">10,191</td><td class="num">10,562</td><td class="num">10,651</td></tr>
+          <tr><td>Gross Profit</td><td class="num">2,852</td><td class="num">2,407</td><td class="num">2,518</td></tr>
+          <tr><td>EBITDA</td><td class="num">~2,177</td><td class="num">~1,660</td><td class="num">~1,672</td></tr>
+          <tr><td>Finance Cost</td><td class="num">(226)</td><td class="num">(283)</td><td class="num">(245)</td></tr>
+          <tr><td>PAT</td><td class="num">1,248</td><td class="num">353</td><td class="num">528</td></tr>
+          <tr><td>Total Assets</td><td class="num">7,290</td><td class="num">7,606</td><td class="num">8,825</td></tr>
+          <tr><td>Net Assets (Equity)</td><td class="num">4,803</td><td class="num">5,174</td><td class="num">6,106</td></tr>
+          <tr><td>Total Debt</td><td class="num">1,228</td><td class="num">1,036</td><td class="num">1,402</td></tr>
+          <tr><td>Current Ratio</td><td class="num">0.77×</td><td class="num">0.91×</td><td class="num">1.24×</td></tr>
+        </table>
+        <p class="footnote">EBITDA estimated at 15.7% of revenue per FY25 margin; FY23 at 21.3% margin.</p>
+      </div>
+      <div>
+        <div class="good-box">
+          <p><strong>Capital structure is pristine:</strong> Net Debt/EBITDA of approximately 0.5× (FY25) is amongst the lowest in Pakistan's listed universe. With PKR 6.1Bn in equity supporting only PKR 1.4Bn of debt, the company has massive headroom to absorb shocks. The sukuk (PKR 900Mn) would raise D/E from 0.23× to ~0.38× — still very conservative.</p>
+        </div>
+        <div class="caution-box">
+          <p><strong>FY24 PAT collapse:</strong> PAT fell from PKR 1,248 Mn (FY23) to PKR 353 Mn (FY24) — a 72% decline — primarily driven by gross margin compression (30.1% → 22.8%). Rising input costs (feed, energy, packaging) squeezed margins. The recovery to PKR 528 Mn (FY25) is partial — suggesting continued margin pressure from the sales tax impact.</p>
+        </div>
+        <div class="caution-box">
+          <p><strong>Projections appear optimistic:</strong> FY26E projects revenue of PKR 13,843 Mn (+30% YoY) and PAT of PKR 1,696 Mn (+221% YoY). This is a very aggressive ramp. Q1 FY26 data (PKR 2,740 Mn revenue = 19.8% run-rate ahead of FY25) suggests early momentum, but the full-year projection demands sustained 30% growth — above recent trend.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tah-struct" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Deal Structure — Amortizing with Biological Collateral</h3>
+    <div class="two-col">
+      <div>
+        <h4 class="block-title">Redemption Schedule</h4>
+        <table class="data-table">
+          <tr><th>Period</th><th>Principal Repaid</th><th>Outstanding</th><th>Mark-up</th></tr>
+          <tr><td>Q1 (Grace Period)</td><td class="num">—</td><td class="num">PKR 900 Mn</td><td class="num">PKR 26.3 Mn</td></tr>
+          <tr><td>Q2</td><td class="num">PKR 200 Mn</td><td class="num">PKR 700 Mn</td><td class="num">PKR 26.5 Mn</td></tr>
+          <tr><td>Q3</td><td class="num">PKR 300 Mn</td><td class="num">PKR 400 Mn</td><td class="num">PKR 20.6 Mn</td></tr>
+          <tr><td>Q4</td><td class="num">PKR 400 Mn</td><td class="num">—</td><td class="num">PKR 9.5 Mn</td></tr>
+          <tr><td><strong>Total</strong></td><td class="num"><strong>PKR 900 Mn</strong></td><td class="num">—</td><td class="num"><strong>PKR 82.9 Mn</strong></td></tr>
+        </table>
+        <p class="footnote">Assumes 3M KIBOR at 10.5% flat throughout tenor (illustrative).</p>
+        <div class="good-box" style="margin-top:1rem;">
+          <p><strong>Amortization is a structural positive:</strong> The quarterly repayment structure reduces the investor's average exposure. By Q3, PKR 500 Mn (56%) has been repaid. This significantly lowers the refinancing risk associated with bullet structures. It also creates quarterly "checkpoints" — if the company misses a payment, it triggers an early warning signal before full maturity.</p>
+        </div>
+      </div>
+      <div>
+        <h4 class="block-title">Security Deep Dive — Biological Assets as Collateral</h4>
+        <div class="warning-box">
+          <p><strong>What are biological assets?</strong> Per IFRS IAS 41, biological assets include living animals — in this case, the dairy herd. At-Tahur's ~7,000 animals are valued on the balance sheet at fair value through profit and loss. Key risk factors for biological assets as collateral:</p>
+        </div>
+        <table class="data-table">
+          <tr><th>Risk</th><th>Description</th><th>Assessment</th></tr>
+          <tr><td>Disease/Mortality</td><td>Epidemic diseases (FMD, lumpy skin) can decimate herds rapidly</td><td><span class="badge red">Significant</span></td></tr>
+          <tr><td>Valuation volatility</td><td>Fair value changes flow through P&L, affecting equity</td><td><span class="badge amber">Moderate</span></td></tr>
+          <tr><td>Enforceability</td><td>Practical challenge of seizing and liquidating live animals</td><td><span class="badge amber">Moderate</span></td></tr>
+          <tr><td>Biological cycle</td><td>Herd productivity declines with age; requires ongoing replacement</td><td><span class="badge amber">Moderate</span></td></tr>
+          <tr><td>Insurance</td><td>Livestock insurance partially mitigates mortality risk</td><td><span class="badge green">Mitigant</span></td></tr>
+        </table>
+        <div class="caution-box" style="margin-top:1rem;">
+          <p><strong>Collateral quality verdict:</strong> Biological assets are inferior to fixed assets (property/plant) as collateral. The 25% margin (PKR 1.125Bn backing PKR 900Mn) is thin given recovery uncertainties. The current assets component (receivables, inventory) provides more liquid collateral support. Net: the security package is "secured" in name but the quality of collateral warrants investor scrutiny beyond the label.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tah-spread" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Spread & Duration Analysis</h3>
+    <div class="two-col">
+      <div>
+        <h4 class="block-title">Spread Decomposition (3M KIBOR + 130 bps)</h4>
+        <div class="spread-bar-wrap">
+          <div class="spread-bar-label"><span>Rate Components</span><span>Total: ~11.80% p.a.</span></div>
+          <div class="spread-bar" style="height:40px;">
+            <div class="spread-kibor" style="width:89%;">3M KIBOR: 10.50%</div>
+            <div class="spread-credit green" style="width:11%;">+130 bps</div>
+          </div>
+        </div>
+        <table class="data-table" style="margin-top:1rem;">
+          <tr><th>Spread Component</th><th class="num">Est. Contribution</th><th>Rationale</th></tr>
+          <tr><td>Credit Risk Premium</td><td class="num">40–60 bps</td><td>A- entity, low leverage, PSX listed</td></tr>
+          <tr><td>Liquidity Premium</td><td class="num">50–60 bps</td><td>Private placement; listed but illiquid secondary</td></tr>
+          <tr><td>Structure Premium</td><td class="num">10–20 bps</td><td>Secured but biological collateral quality</td></tr>
+          <tr><td>Amortizing discount</td><td class="num">−20 bps</td><td>Quarterly repayment reduces lender risk</td></tr>
+          <tr><td><strong>Total Spread</strong></td><td class="num"><strong>130 bps</strong></td><td>Tightest of three transactions</td></tr>
+        </table>
+        <div class="good-box" style="margin-top:1rem;">
+          <p><strong>3M KIBOR vs 6M KIBOR pricing:</strong> At-Tahur uses 3M KIBOR (reset quarterly), while DPEBSL and Euro Oil use 6M KIBOR (set once at issuance). With rates declining, quarterly resets benefit the company (paying a falling short rate). For the investor, 3M KIBOR provides more frequent repricing — reducing duration risk but also reducing the "locked-in" yield benefit if rates fall.</p>
+        </div>
+      </div>
+      <div>
+        <h4 class="block-title">Duration Analysis (Amortizing Structure)</h4>
+        <div class="panel">
+          <p style="font-size:13px; color:var(--muted); margin-bottom:0.75rem;">Weighted Average Life (WAL) calculation:</p>
+          <table class="data-table">
+            <tr><th>Period (years)</th><th class="num">Repayment (Mn)</th><th class="num">Weight</th><th class="num">Weighted Life</th></tr>
+            <tr><td>0.25 (Q1)</td><td class="num">0</td><td class="num">0%</td><td class="num">0.00</td></tr>
+            <tr><td>0.50 (Q2)</td><td class="num">200</td><td class="num">22.2%</td><td class="num">0.111</td></tr>
+            <tr><td>0.75 (Q3)</td><td class="num">300</td><td class="num">33.3%</td><td class="num">0.250</td></tr>
+            <tr><td>1.00 (Q4)</td><td class="num">400</td><td class="num">44.5%</td><td class="num">0.445</td></tr>
+            <tr><td><strong>WAL</strong></td><td class="num"><strong>900</strong></td><td class="num">100%</td><td class="num"><strong>0.806 years</strong></td></tr>
+          </table>
+          <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+            <table class="data-table">
+              <tr><th>Metric</th><th class="num">Value</th></tr>
+              <tr><td>WAL</td><td class="num">0.806 years</td></tr>
+              <tr><td>YTM (approx.)</td><td class="num">~11.8%</td></tr>
+              <tr><td>Modified Duration</td><td class="num">~0.72 years</td></tr>
+              <tr><td>DV01 (per PKR 1Mn)</td><td class="num">~PKR 68</td></tr>
+              <tr><td>Price Change for +100 bps</td><td class="num">~−0.72%</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="caution-box" style="margin-top:1rem;">
+          <p><strong>Duration comparison:</strong> At-Tahur's modified duration (~0.72 yrs) is 55% higher than the 6M bullet instruments (~0.47 yrs). This means slightly more interest rate sensitivity, but still minimal in absolute terms. The real structural benefit is the amortization profile — it reduces the credit risk (exposure declines over time), not primarily the rate risk.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tah-verdict" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Analyst Verdict — At-Tahur</h3>
+    <div class="two-col" style="margin-bottom:1.5rem;">
+      <div>
+        <h4 class="block-title" style="color:var(--green);">Strengths</h4>
+        <ul class="green-flag-list">
+          <li><span class="gflag">✓</span> Exceptionally low leverage — D/E 0.23×, Net Debt/EBITDA ~0.5×. The company is effectively under-levered for its cash flow profile.</li>
+          <li><span class="gflag">✓</span> PSX listing provides full financial transparency, quarterly reporting, and equity price discovery.</li>
+          <li><span class="gflag">✓</span> Quarterly amortizing structure reduces exposure and provides early-warning payment signals.</li>
+          <li><span class="gflag">✓</span> Strong brand (PREMA) with institutional client base (Tim Hortons, Costa, Serena Hotels, hospitals) reducing commodity-market dependence.</li>
+          <li><span class="gflag">✓</span> High gross margins (23.6%) vs. most Pakistan corporates — pricing power signal in premium dairy.</li>
+          <li><span class="gflag">✓</span> ESG positive: solar installation (1.2 MW), biomass energy switch — aligned with global ESG framework.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="block-title" style="color:var(--red);">Risks</h4>
+        <ul class="red-flag-list">
+          <li><span class="rflag">▲</span> Biological assets as primary collateral — enforceability, disease risk, and valuation volatility.</li>
+          <li><span class="rflag">▲</span> 18% sales tax on packaged milk — a persistent headwind that may not normalize quickly.</li>
+          <li><span class="rflag">▲</span> FY26E revenue projection (+30%) appears aggressive versus recent trend.</li>
+          <li><span class="rflag">▲</span> PAT volatility: collapsed 72% in FY24, partial recovery in FY25. Earnings are sensitive to input costs and regulatory changes.</li>
+          <li><span class="rflag">▲</span> Geographic concentration in Punjab — limited footprint in Karachi and Sindh limits scalability.</li>
+          <li><span class="rflag">▲</span> Small scale relative to UHT giants (Engro, FrieslandCampina, Nestlé) — limited pricing leverage in inputs.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="verdict-box green">
+      <div class="verdict-label">Investment Verdict — At-Tahur ST Sukuk</div>
+      <div class="verdict-text">At-Tahur is the <strong>highest quality credit of the three transactions</strong> on a pure balance sheet basis — exceptionally low leverage, a PSX listing providing transparency, and a secured, amortizing structure. The <strong>3M KIBOR + 130 bps spread (all-in ~11.8%) is the tightest</strong>, which is justified by the structural quality. For QIBs seeking lower-risk deployment, this instrument offers a reasonable risk-adjusted return. The primary concern is whether the biological asset collateral is adequately covered and whether the FY26 growth projections are realistic — if revenue disappoints by 20%, the company still comfortably services debt. <strong>This is a hold-to-maturity instrument for risk-averse QIBs.</strong></div>
+    </div>
+    <div class="panel" style="margin-top:1.5rem;">
+      <div class="block-title">Discussion Questions for Class</div>
+      <ol style="font-size:13px; color:#3D3D3D; line-height:2; padding-left:1.5rem;">
+        <li>How do you value a herd of 7,000 cows as collateral? What assumptions drive the PKR 900 Mn collateral valuation?</li>
+        <li>Compare the risk of 3M KIBOR reset vs. 6M KIBOR lock. Which is better for the investor in a rate-declining environment?</li>
+        <li>At-Tahur's FY24 PAT fell 72%. How would you stress test this against the sukuk repayment schedule?</li>
+        <li>Is 130 bps adequate spread for biological-asset-backed collateral, or should investors demand more for the enforcement uncertainty?</li>
+      </ol>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION V: EURO OIL CASE STUDY -->
+<div id="euro" class="content-section">
+<div class="container">
+  <div class="sec-label">Case Study III</div>
+  <div class="case-header euro">
+    <div class="case-name">Euro Oil (Private) Limited</div>
+    <div class="case-sub">Short-term, Rated, Secured, Privately Placed Sukuk — March 2026</div>
+    <div class="case-terms">
+      <div class="case-term"><span class="ct-label">Issue Size</span><span class="ct-val">PKR 2,000 Mn</span></div>
+      <div class="case-term"><span class="ct-label">Tenor</span><span class="ct-val">6 Months (Bullet)</span></div>
+      <div class="case-term"><span class="ct-label">Rate</span><span class="ct-val">6M KIBOR + 150 bps</span></div>
+      <div class="case-term"><span class="ct-label">All-in (indicative)</span><span class="ct-val">≈ 12.50%</span></div>
+      <div class="case-term"><span class="ct-label">Security</span><span class="ct-val">Ranking Charge + DPA + Collection Routing</span></div>
+      <div class="case-term"><span class="ct-label">Entity Rating</span><span class="ct-val">A- / A2 (PACRA, Mar 2026)</span></div>
+      <div class="case-term"><span class="ct-label">Instrument Rating</span><span class="ct-val">A1 (Expected)</span></div>
+      <div class="case-term"><span class="ct-label">Arranger</span><span class="ct-val">Askari Bank Limited</span></div>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTabCase(event,'eur-biz','eur')">Business Profile</button>
+    <button class="tab-btn" onclick="showTabCase(event,'eur-fin','eur')">Financial Analysis</button>
+    <button class="tab-btn" onclick="showTabCase(event,'eur-struct','eur')">Deal Structure</button>
+    <button class="tab-btn" onclick="showTabCase(event,'eur-spread','eur')">Spread & Duration</button>
+    <button class="tab-btn" onclick="showTabCase(event,'eur-verdict','eur')">Verdict</button>
+  </div>
+
+  <div id="eur-biz" class="tab-pane active">
+    <h3 class="sub-title" style="margin-top:0;">Business Profile — The Fastest-Growing OMC in Pakistan</h3>
+    <div class="two-col">
+      <div>
+        <p class="body-text">Euro Oil is a 7-year-old Oil Marketing Company (OMC) that obtained its OGRA license in 2018. In that brief time, it has grown from a startup to Pakistan's <strong>10th largest OMC</strong> with 1.32% market share — a remarkable trajectory in a sector dominated by established players (PSO, Total, Byco, Shell).</p>
+        <p class="body-text">The business operates across four revenue streams: retail fuels (PMG, HOBC, HSD), industrial/power sales, lubricants (exclusive Petronas distribution), and non-fuel revenue (NFR) from convenience stores, car washes, and service bays at COCO stations.</p>
+        <p class="body-text"><strong>The BB Energy Group angle is significant.</strong> BB Energy, a Singapore-based entity of BB Energy Group (a major international oil trading group operating in Lebanon, Turkey, Australia, Rwanda, and Ghana), acquired a ~20% equity stake. This international sponsorship brings trading expertise, global supply chain relationships, and governance credibility to a young private company. It is also a partial mitigation for the "initial rating" concern.</p>
+      </div>
+      <div>
+        <div style="position:relative;height:200px;margin-bottom:1.5rem;"><canvas id="eurGrowthChart"></canvas></div>
+        <div class="three-col" style="gap:0.75rem;">
+          <div class="insight-box navy"><div class="insight-num">162</div><div class="insight-text">Operational retail sites (Feb 2026)</div></div>
+          <div class="insight-box amber"><div class="insight-num">1.32%</div><div class="insight-text">Market share (7 years)</div></div>
+          <div class="insight-box green"><div class="insight-num">PKR 61.5Bn</div><div class="insight-text">FY25 Revenue</div></div>
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <h4 class="block-title">OMC Sector Context — Thin Margins, High Volumes</h4>
+    <div class="two-col">
+      <div>
+        <p class="body-text">Pakistan's downstream petroleum sector is structurally a low-margin, high-volume business. OGRA regulates retail fuel prices using an import parity framework, meaning OMC margins are effectively regulated. The competitive advantage lies in: (1) storage capacity (those who store more can buy cheap in bulk), (2) network reach (more sites = more throughput), and (3) non-fuel revenue (NFR premium — unregulated margins).</p>
+        <p class="body-text">With annual petroleum consumption exceeding 13 million MT, even a 1% market share translates to PKR 50–60Bn in revenue at current prices. The capital efficiency of the OMC model is moderate: high revenue, thin margins, and working capital-intensive (inventory and receivables fluctuate with international oil prices).</p>
+      </div>
+      <div>
+        <div class="panel-white" style="border-top:3px solid var(--amber);">
+          <div style="font-size:12px; font-weight:600; color:var(--amber); margin-bottom:8px;">The Four Revenue Tiers — Euro Oil's Model</div>
+          <table class="data-table">
+            <tr><th>Segment</th><th>Sites</th><th>Avg. Throughput</th><th>NFR/Month</th></tr>
+            <tr><td>COCO (owned)</td><td class="num">18</td><td class="num">7,500–15,000 L/day</td><td class="num">PKR 300K</td></tr>
+            <tr><td>Mixed Finance</td><td class="num">17</td><td class="num">5,000–10,000 L/day</td><td class="num">7% dealer margin</td></tr>
+            <tr><td>Dealer Operated</td><td class="num">50</td><td class="num">2,000–5,000 L/day</td><td class="num">5% dealer margin</td></tr>
+            <tr><td>Dealer Finance</td><td class="num">77</td><td class="num">1,500–4,500 L/day</td><td class="num">N/A</td></tr>
+          </table>
+        </div>
+        <div class="caution-box" style="margin-top:1rem;">
+          <p><strong>Working capital intensity:</strong> Euro Oil's 6MFY26 current assets were not individually disclosed, but the company carries significant inventory (petroleum products) and receivables (primarily from bulk/industrial clients). Petroleum prices are USD-denominated — any PKR depreciation event inflates the PKR value of inventory and trade finance needs simultaneously.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="eur-fin" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Financial Analysis — High Growth, Thin Margins, Improving Coverage</h3>
+    <div class="four-col">
+      <div class="kpi"><div class="kpi-num">4.10×</div><div class="kpi-label">ICR (6MFY26)</div><div class="kpi-sub" style="color:var(--green);">Strong improvement</div></div>
+      <div class="kpi"><div class="kpi-num">3.46×</div><div class="kpi-label">DSCR (6MFY26)</div><div class="kpi-sub" style="color:var(--green);">Improving fast</div></div>
+      <div class="kpi"><div class="kpi-num">1.12×</div><div class="kpi-label">Gearing</div><div class="kpi-sub" style="color:var(--amber);">Above 1× target</div></div>
+      <div class="kpi"><div class="kpi-num">4.65%</div><div class="kpi-label">Gross Margin (6M)</div><div class="kpi-sub" style="color:var(--amber);">Sector thin</div></div>
+    </div>
+    <div style="margin:1.5rem 0;">
+      <div style="position:relative;height:260px;"><canvas id="eurFinChart"></canvas></div>
+    </div>
+    <hr class="divider">
+    <div class="two-col">
+      <div>
+        <h4 class="block-title">P&L Summary</h4>
+        <table class="data-table">
+          <tr><th>Item (PKR Mn)</th><th class="num">FY24</th><th class="num">FY25</th><th class="num">6MFY26</th></tr>
+          <tr><td>Net Sales</td><td class="num">53,357</td><td class="num">61,487</td><td class="num">31,469</td></tr>
+          <tr><td>Gross Profit</td><td class="num">1,691</td><td class="num">2,390</td><td class="num">1,463</td></tr>
+          <tr><td>Gross Margin</td><td class="num">3.17%</td><td class="num">3.89%</td><td class="num">4.65%</td></tr>
+          <tr><td>EBITDA</td><td class="num">1,162</td><td class="num">1,295</td><td class="num">936</td></tr>
+          <tr><td>Finance Cost</td><td class="num">(504)</td><td class="num">(457)</td><td class="num">(228)</td></tr>
+          <tr><td>PAT</td><td class="num">292</td><td class="num">376</td><td class="num">480</td></tr>
+          <tr><td>Total Assets</td><td class="num">8,673</td><td class="num">11,600</td><td class="num">13,340</td></tr>
+          <tr><td>Equity</td><td class="num">1,902</td><td class="num">2,278</td><td class="num">2,758</td></tr>
+          <tr><td>Total Debt (IBD)</td><td class="num">2,302</td><td class="num">2,383</td><td class="num">2,998</td></tr>
+          <tr><td>Gearing (D/E)</td><td class="num">1.25×</td><td class="num">1.08×</td><td class="num">1.12×</td></tr>
+        </table>
+        <p class="footnote">IBD = Interest Bearing Debt (Short + Long Term). Gearing per IM definition.</p>
+      </div>
+      <div>
+        <div class="good-box">
+          <p><strong>The rate normalization dividend:</strong> Finance cost fell from PKR 504 Mn (FY24) to PKR 228 Mn (6MFY26, 6 months). This ~55% reduction directly drove PAT growth from PKR 292 Mn to PKR 480 Mn (6M only). ICR improvement from 2.31× (FY24) to 4.10× (6MFY26) is substantially a rate story, not an operational story. Analysts must ask: what does the coverage look like if rates re-normalize to 18%? ICR would fall back to approximately 2.3× — still adequate but thin.</p>
+        </div>
+        <div class="warning-box">
+          <p><strong>Initial Credit Rating — The Critical Flag:</strong> Euro Oil's PACRA rating is dated <em>6th March 2026</em> — marked "Initial." This is the company's first-ever public credit rating. No prior rating history means no track record of rating agency discipline. No prior sukuk repayment history in the capital market. For comparison, DPEBSL and At-Tahur have established, reaffirmed ratings that indicate multi-year monitoring. A first-time issuer should typically pay a "novelty premium" in its spread.</p>
+        </div>
+        <div class="caution-box">
+          <p><strong>Thin EBITDA margin risk:</strong> At 2.97% EBITDA margin (FY25), a 1% revenue decline translates to a roughly 33% EBITDA decline. The business model has almost no margin buffer — it depends on volume continuity. Any disruption to petroleum supply chains, OGRA regulatory changes, or significant market share loss would immediately impair coverage ratios.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="eur-struct" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Deal Structure — The Innovative DPA Mechanism</h3>
+    <p class="body-text">Euro Oil's security package is the most structurally innovative of the three transactions. While unsecured or simply charge-backed structures dominate, Askari Bank has engineered a <strong>Debt Payment Account (DPA) with mandatory collection routing</strong> — a mechanism borrowed from project finance practice and applied to a corporate working capital facility.</p>
+    <div class="two-col">
+      <div>
+        <h4 class="block-title">DPA Deposit Schedule</h4>
+        <table class="data-table">
+          <tr><th>Timing (Before Maturity)</th><th class="num">DPA Funding</th><th class="num">Cumulative</th></tr>
+          <tr><td>60 days before</td><td class="num">PKR 500 Mn (25%)</td><td class="num">PKR 500 Mn</td></tr>
+          <tr><td>30 days before</td><td class="num">PKR 500 Mn (25%)</td><td class="num">PKR 1,000 Mn</td></tr>
+          <tr><td>15 days before</td><td class="num">PKR 500 Mn (25%)</td><td class="num">PKR 1,500 Mn</td></tr>
+          <tr><td>7 days before</td><td class="num">PKR 500 Mn (25%)</td><td class="num">PKR 2,000 Mn</td></tr>
+          <tr><td><strong>Total at Maturity</strong></td><td class="num"><strong>PKR 2,000 Mn</strong></td><td class="num">—</td></tr>
+        </table>
+        <div class="good-box" style="margin-top:1rem;">
+          <p><strong>Why DPA is powerful:</strong> The DPA forces Euro Oil to pre-fund repayment from its operating cash flows 60 days before maturity. If the company cannot fund the DPA, this is a 60-day early warning — allowing the investment agent (Pak Oman) to act before formal default. This is a significant structural enhancement that effectively converts a bullet structure into a partially cash-collateralized one in the final 2 months.</p>
+        </div>
+      </div>
+      <div>
+        <h4 class="block-title">Collection Routing Mechanism</h4>
+        <div class="sukuk-structure">
+          <h4>How the Collection Account Works</h4>
+          <div class="struct-flow">
+            <div class="struct-box">Euro Oil<br><small>Operations</small></div>
+            <div class="struct-arrow">→</div>
+            <div class="struct-box">Collections Routed<br><small>to Askari Bank</small></div>
+            <div class="struct-arrow">→</div>
+            <div class="struct-box">Collection Acct<br><small>Under lien</small></div>
+          </div>
+          <div style="margin-top:10px; font-size:12px; color:var(--muted);">
+            <p>• Minimum PKR 8,000 Mn total routing over 6M tenor (4× sukuk size)</p>
+            <p>• ~PKR 1,333 Mn per month minimum throughput</p>
+            <p>• First 4 months: proceeds released to Euro Oil freely</p>
+            <p>• Last 2 months: proceeds fill DPA account per schedule</p>
+            <p>• Shortfall in throughput: Pak Oman can demand additional routing</p>
+          </div>
+        </div>
+        <div class="good-box" style="margin-top:1rem;">
+          <p><strong>4× throughput test:</strong> Requiring PKR 8,000 Mn in collections for a PKR 2,000 Mn sukuk ensures the arranger (Askari Bank) monitors cash flow velocity continuously. At PKR 61.5Bn annual revenue, monthly collections are approximately PKR 5.1Bn — meaning the PKR 1,333 Mn/month minimum throughput represents only 26% of expected collections. This is a low bar, but the monitoring mechanism itself is valuable.</p>
+        </div>
+      </div>
+    </div>
+    <div class="warning-box" style="margin-top:1rem;">
+      <p><strong>Structural conflict — Askari Bank as Arranger + Collection Bank:</strong> Askari Bank arranges the sukuk AND receives the collection account. As the account bank, they have first visibility on cash flow performance and would logically intercept cash before it reaches other creditors if needed. For the sukuk investors (other QIBs), this means Askari has informational and structural advantages. This is not necessarily adverse, but investors should be aware that Askari's bilateral banking exposure (PKR 1,850 Mn limit, PKR 1,433 Mn utilized) gives them a separate senior claim on the company's assets.</p>
+    </div>
+  </div>
+
+  <div id="eur-spread" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Spread & Duration Analysis — Is 150 bps Adequate?</h3>
+    <div class="two-col">
+      <div>
+        <h4 class="block-title">Spread Decomposition (6M KIBOR + 150 bps)</h4>
+        <div class="spread-bar-wrap">
+          <div class="spread-bar-label"><span>Rate Components</span><span>Total: ~12.50% p.a.</span></div>
+          <div class="spread-bar" style="height:40px;">
+            <div class="spread-kibor" style="width:88%;">6M KIBOR: ~11.0%</div>
+            <div class="spread-credit amber" style="width:12%;">+150 bps</div>
+          </div>
+        </div>
+        <table class="data-table" style="margin-top:1rem;">
+          <tr><th>Spread Component</th><th class="num">Required</th><th class="num">Implied (150 bps)</th></tr>
+          <tr><td>Credit Risk Premium</td><td class="num">80–120 bps</td><td class="num">~60 bps</td></tr>
+          <tr><td>Liquidity Premium</td><td class="num">50–70 bps</td><td class="num">~50 bps</td></tr>
+          <tr><td>Structure Premium</td><td class="num">30–60 bps</td><td class="num">~30 bps</td></tr>
+          <tr><td>Initial Rating Premium</td><td class="num">30–50 bps</td><td class="num"><span style="color:var(--red); font-weight:600;">~10 bps?</span></td></tr>
+          <tr><td><strong>Assessment</strong></td><td class="num">200–300 bps</td><td class="num"><span class="badge amber">150 bps — TIGHT</span></td></tr>
+        </table>
+        <div class="warning-box" style="margin-top:1rem;">
+          <p><strong>Spread adequacy concern:</strong> The 150 bps spread appears to undercompensate investors given: (1) initial/first-time rating, (2) private company with less disclosure, (3) thin EBITDA margins, (4) OMC sector regulatory risk. A more rigorous market pricing for this combination of risk factors would likely be 180–220 bps. The DPA mechanism provides partial structural mitigation, but the credit risk premium appears understated.</p>
+        </div>
+      </div>
+      <div>
+        <h4 class="block-title">Duration Analysis (6M Bullet)</h4>
+        <div class="panel">
+          <table class="data-table">
+            <tr><th>Metric</th><th class="num">Value</th></tr>
+            <tr><td>Tenor</td><td class="num">6 months (bullet)</td></tr>
+            <tr><td>YTM (indicative)</td><td class="num">~12.50%</td></tr>
+            <tr><td>Macaulay Duration</td><td class="num">~0.50 years</td></tr>
+            <tr><td>Modified Duration</td><td class="num">~0.470 years</td></tr>
+            <tr><td>DV01 (per PKR 1Mn)</td><td class="num">~PKR 44</td></tr>
+          </table>
+        </div>
+        <div class="panel" style="margin-top:1rem; background:#F0F3FB; border-color:#C5D0E8;">
+          <div style="font-size:12px; font-weight:600; color:var(--navy); margin-bottom:0.5rem;">Rate Re-Normalization Stress Test</div>
+          <p style="font-size:13px; color:#3D3D3D; line-height:1.7;">If SBP re-hikes rates to 18% (2023 peak), and 6M KIBOR rises from 11% to ~18%:</p>
+          <ul style="font-size:13px; color:#3D3D3D; line-height:1.9; padding-left:1rem;">
+            <li>Euro Oil's finance cost (annualized) would rise from ~PKR 456Mn to ~PKR 750Mn</li>
+            <li>ICR would fall from 4.10× to ~2.3× — adequate but significantly worse</li>
+            <li>For the existing 6-month sukuk: investor receives fixed 6MK set at issuance. If KIBOR rises after lock-in, investor loses relative value but receives promised cash flows.</li>
+          </ul>
+          <p style="font-size:12px; color:var(--hint); margin-top:0.5rem;">Key insight: for a 6M instrument, the rate risk from re-normalization is <em>refinancing risk</em> at rollover — not mark-to-market loss on the current instrument.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="eur-verdict" class="tab-pane">
+    <h3 class="sub-title" style="margin-top:0;">Analyst Verdict — Euro Oil</h3>
+    <div class="two-col" style="margin-bottom:1.5rem;">
+      <div>
+        <h4 class="block-title" style="color:var(--green);">Strengths</h4>
+        <ul class="green-flag-list">
+          <li><span class="gflag">✓</span> Rapid growth trajectory — revenue grew from PKR 7.4Bn (FY21) to PKR 61.5Bn (FY25): 8× in 4 years.</li>
+          <li><span class="gflag">✓</span> Strong and improving coverage: ICR 4.10×, DSCR 3.46× (6MFY26) — best coverage ratios of the three.</li>
+          <li><span class="gflag">✓</span> Innovative DPA + collection routing structure provides significantly more security than a simple charge over assets.</li>
+          <li><span class="gflag">✓</span> International shareholder (BB Energy Singapore, ~20%) brings global trading expertise and governance credibility.</li>
+          <li><span class="gflag">✓</span> PKR 2Bn sukuk is only ~3.3% of annual revenue — very manageable relative to scale.</li>
+          <li><span class="gflag">✓</span> Management team from Shell Pakistan (COO), LUMS MBA (CEO) — credible operational leadership.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="block-title" style="color:var(--red);">Risks</h4>
+        <ul class="red-flag-list">
+          <li><span class="rflag">▲</span> <strong>Initial rating</strong> — PACRA "Initial" dated March 2026. No rating history. No prior sukuk repayment track record.</li>
+          <li><span class="rflag">▲</span> Private limited company — no PSX listing, less public disclosure, no equity price transparency.</li>
+          <li><span class="rflag">▲</span> EBITDA margin of ~3% is extremely thin — any operational disruption directly impairs coverage.</li>
+          <li><span class="rflag">▲</span> Gearing of 1.12× is the highest of the three — elevated leverage for a thin-margin commodity trader.</li>
+          <li><span class="rflag">▲</span> OMC regulatory risk: OGRA price notifications, PDL adjustments, and import parity formula changes directly affect margins.</li>
+          <li><span class="rflag">▲</span> 150 bps spread appears to undercompensate for the initial rating and thin margins relative to peers.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="verdict-box" style="border-left-color:var(--amber);">
+      <div class="verdict-label">Investment Verdict — Euro Oil ST Sukuk</div>
+      <div class="verdict-text">Euro Oil is a <strong>high-growth, thin-margin OMC with an innovative security structure but concerning information asymmetries</strong>. The strongest coverage ratios of the three are offset by the initial credit rating, private company status, and the weakest EBITDA margins. The 150 bps spread is arguably 30–70 bps too tight given the novelty premium that first-time issuers should pay. The DPA mechanism is a genuine structural positive that partially compensates. For QIBs, this is a <strong>conditional buy: acceptable if (1) Askari Bank's bilateral exposure provides comfort on monitoring, (2) the investor is comfortable with thin margin dynamics, and (3) the DPA structure is legally robust in practice.</strong> Investors pricing this at 6MK + 150 bps are implicitly trusting the Askari Bank monitoring framework to substitute for rating history.</div>
+    </div>
+    <div class="panel" style="margin-top:1.5rem;">
+      <div class="block-title">Discussion Questions for Class</div>
+      <ol style="font-size:13px; color:#3D3D3D; line-height:2; padding-left:1.5rem;">
+        <li>Should investors require a "first-time issuer premium" of 30–50 bps? How would you quantify this premium?</li>
+        <li>The DPA mechanism requires 4× collections routing. Is this enough monitoring? What would you add to the covenant package?</li>
+        <li>Euro Oil's EBITDA margin is ~3%. A global oil price shock drops revenue by 10% (volume decline). What happens to EBITDA, ICR, and the DPA funding ability?</li>
+        <li>Askari Bank is both arranger and collection account bank. Is this a conflict of interest? How should other QIBs price this risk?</li>
+      </ol>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION VI: COMPARATIVE ANALYSIS -->
+<div id="compare" class="content-section">
+<div class="container">
+  <div class="sec-label">Section VI</div>
+  <h2 class="sec-title">Comparative Analysis — Three Transactions Side by Side</h2>
+  <p class="body-text">The three sukuk presented in this lecture share the same entity rating (A-/A2) and instrument rating (A1) yet are priced differently and carry materially different risk profiles. This section synthesizes the comparative analysis and distills the key lessons for fixed income investors.</p>
+
+  <hr class="divider">
+  <h3 class="sub-title" style="margin-top:0;">The Pricing Paradox — Same Rating, Different Spread</h3>
+  <div style="position:relative;height:280px;margin:1.5rem 0;"><canvas id="spreadCompChart"></canvas></div>
+  <div class="three-col" style="margin:1.5rem 0;">
+    <div class="panel-white" style="border-top:3px solid var(--navy); text-align:center;">
+      <div style="font-size:32px; font-family:Georgia,serif; color:var(--navy); margin-bottom:4px;">250 bps</div>
+      <div style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--hint);">DPEBSL</div>
+      <div style="font-size:13px; color:var(--muted); margin-top:8px;">Compensates for: unsecured structure, bullet repayment, wave management revenue uncertainty</div>
+    </div>
+    <div class="panel-white" style="border-top:3px solid #1A6B40; text-align:center;">
+      <div style="font-size:32px; font-family:Georgia,serif; color:#1A6B40; margin-bottom:4px;">150 bps</div>
+      <div style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--hint);">Euro Oil</div>
+      <div style="font-size:13px; color:var(--muted); margin-top:8px;">Tight given: initial rating, thin margins, private company. DPA partially compensates.</div>
+    </div>
+    <div class="panel-white" style="border-top:3px solid var(--green); text-align:center;">
+      <div style="font-size:32px; font-family:Georgia,serif; color:var(--green); margin-bottom:4px;">130 bps</div>
+      <div style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--hint);">At-Tahur</div>
+      <div style="font-size:13px; color:var(--muted); margin-top:8px;">Tightest spread justified by: low leverage, PSX listing, amortizing, secured. Biological collateral is caveat.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <h3 class="sub-title" style="margin-top:0;">Master Comparison Table</h3>
+  <div class="comp-table-wrap">
+    <table class="comp-table">
+      <tr>
+        <th>Dimension</th>
+        <th>DPEBSL</th>
+        <th>At-Tahur (PREMA)</th>
+        <th>Euro Oil</th>
+      </tr>
+      <tr><td>Sector</td><td>Transport / Logistics / Waste</td><td>Premium Dairy Farming</td><td>Petroleum OMC</td></tr>
+      <tr><td>Issue Size</td><td>PKR 2,000 Mn</td><td>PKR 900 Mn</td><td>PKR 2,000 Mn</td></tr>
+      <tr><td>Tenor</td><td>6M Bullet</td><td>12M Amortizing (Quarterly)</td><td>6M Bullet</td></tr>
+      <tr><td>Pricing</td><td>6MK + 250 bps</td><td>3MK + 130 bps</td><td>6MK + 150 bps</td></tr>
+      <tr><td>All-in Yield (indicative)</td><td>~13.55%</td><td>~11.80%</td><td>~12.50%</td></tr>
+      <tr><td>Security</td><td>Unsecured</td><td>Ranking charge (CA + Bio assets)</td><td>Ranking charge (CA) + DPA</td></tr>
+      <tr><td>Entity Rating</td><td>A-/A2 (PACRA, Dec 2024)</td><td>A-/A2 (VIS, Jul 2025)</td><td>A-/A2 (PACRA, Mar 2026 — Initial)</td></tr>
+      <tr><td>Listing</td><td>OTC (optional)</td><td>PSX (Section 5C)</td><td>Not stated (private)</td></tr>
+      <tr><td>ICR (Latest)</td><td>3.19× (6MCY25)</td><td>6.6× (FY26E) / 3.6× (FY25)</td><td>4.10× (6MFY26)</td></tr>
+      <tr><td>D/E Ratio</td><td>0.51× (6MCY25)</td><td>0.23× (FY25)</td><td>1.12× (6MFY26)</td></tr>
+      <tr><td>EBITDA Margin</td><td>~10.4% (CY24)</td><td>15.7% (FY25)</td><td>2.97% (FY25)</td></tr>
+      <tr><td>Revenue (Latest Annual)</td><td>PKR 26.1Bn (CY24)</td><td>PKR 10.7Bn (FY25)</td><td>PKR 61.5Bn (FY25)</td></tr>
+      <tr><td>Modified Duration</td><td>~0.47 yrs</td><td>~0.72 yrs</td><td>~0.47 yrs</td></tr>
+      <tr><td>DV01 (per PKR 1Mn)</td><td>~PKR 44</td><td>~PKR 68</td><td>~PKR 44</td></tr>
+      <tr><td>Key Strength</td><td>Brand + Govt O&M contracts</td><td>Low leverage + PSX + Amortizing</td><td>Growth + DPA structure + ICR</td></tr>
+      <tr><td>Key Risk</td><td>Unsecured + Receivables spike</td><td>Biological collateral + tax</td><td>Initial rating + thin margins</td></tr>
+      <tr><td>Analyst Rating</td><td><span class="badge amber">Acceptable (conditional)</span></td><td><span class="badge green">Recommended (low risk)</span></td><td><span class="badge amber">Conditional buy</span></td></tr>
+    </table>
+  </div>
+
+  <hr class="divider">
+  <h3 class="sub-title" style="margin-top:0;">The Risk-Return Map</h3>
+  <div style="position:relative;height:340px;margin:1.5rem 0;"><canvas id="riskReturnChart"></canvas></div>
+
+  <hr class="divider">
+  <h3 class="sub-title" style="margin-top:0;">Ten Key Lessons from These Three Transactions</h3>
+  <div class="two-col">
+    <div class="panel-white">
+      <div class="block-title">On Credit Spreads</div>
+      <ol style="font-size:13px; color:#3D3D3D; line-height:2.1; padding-left:1.5rem;">
+        <li><strong>Same rating ≠ same risk.</strong> DPEBSL and Euro Oil both carry A-/A2 entity ratings but have fundamentally different credit profiles. The rating alone is insufficient — structure, security, and sector context must all be analyzed.</li>
+        <li><strong>Spread = Structure + Credit + Liquidity.</strong> Never decompose a spread into only the credit risk component. DPEBSL's 250 bps is primarily a structural (unsecured) premium, not a credit quality premium.</li>
+        <li><strong>Initial ratings command novelty premiums.</strong> Euro Oil at 150 bps for a first-time issuer is arguably mispriced. The market should demand more for the absence of rating history.</li>
+        <li><strong>Amortizing structures should price tighter.</strong> At-Tahur's quarterly amortization reduces investor exposure over time — this is a genuine risk reduction that justifies the tighter 130 bps spread.</li>
+        <li><strong>Rate environment context is non-negotiable.</strong> A 250 bps spread at 13.55% all-in means different things than 250 bps at 24.5% (peak rate). Always frame spread analysis in the absolute yield context.</li>
+      </ol>
+    </div>
+    <div class="panel-white">
+      <div class="block-title">On Credit Risk Assessment</div>
+      <ol style="font-size:13px; color:#3D3D3D; line-height:2.1; padding-left:1.5rem; list-style-type: decimal;" start="6">
+        <li><strong>Short-term instruments require liquidity analysis, not just solvency.</strong> A fundamentally sound company can fail to repay a 6-month bullet due to timing mismatches. Current ratio and NWC are the primary metrics — not D/E.</li>
+        <li><strong>Receivables quality demands scrutiny.</strong> DPEBSL's 143% receivables spike is the most analytically important data point in these three IMs. Context (government O&M receivables) mitigates but does not eliminate the concern.</li>
+        <li><strong>Collateral quality varies enormously.</strong> At-Tahur's biological assets are legally "secured" but practically difficult to enforce at full value. DPA accounts (Euro Oil) are more immediately enforceable than physical assets.</li>
+        <li><strong>Revenue forecasts in new segments require a haircut.</strong> DPEBSL's waste management revenue and At-Tahur's FY26E projections both embed significant growth from new/recent activities. Analysts should haircut forecasted revenues from nascent segments by 30–50% in stress scenarios.</li>
+        <li><strong>Duration risk is minimal here — credit risk dominates.</strong> For all three 6–12 month instruments, modified duration is below 0.75 years. The investor's risk is concentrated entirely in credit default — not interest rate movements. Focus your energy accordingly.</li>
+      </ol>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="verdict-box green">
+    <div class="verdict-label">Synthesized Takeaway — For the Fixed Income Analyst</div>
+    <div class="verdict-text">These three live transactions from Pakistan's debt capital market in 2025–2026 illustrate the core tension of credit investing: <strong>all three instruments carry the same A1 instrument rating, yet they present materially different risk-return profiles.</strong> The analyst who relies only on the rating will be under-compensated for risk in the Euro Oil transaction, adequately compensated in DPEBSL, and likely over-compensated in At-Tahur (which arguably deserves a tighter spread given its pristine balance sheet). The 5C Framework, combined with rigorous ratio analysis and structural assessment, is what distinguishes the informed investor from one who simply reads a rating letter. In Pakistan's evolving sukuk market — growing rapidly from a base of bank-dominated intermediation — these analytical skills are increasingly valuable as the QIB market deepens and pricing becomes more nuanced.</div>
+  </div>
+
+  <div class="panel" style="margin-top:2rem;">
+    <div class="block-title">Final Examination Questions — Integrative</div>
+    <ol style="font-size:13px; color:#3D3D3D; line-height:2.1; padding-left:1.5rem;">
+      <li>You manage a PKR 10Bn fixed income portfolio for an insurance company. You can invest in one of these three sukuk. Rank them by risk-adjusted attractiveness and justify your allocation.</li>
+      <li>Euro Oil's PACRA rating is "Initial." How much additional spread should they have to pay versus an established A-/A2 issuer? Build a quantitative argument using expected loss methodology.</li>
+      <li>DPEBSL's receivables jumped PKR 3.4Bn in one year. Design a due diligence checklist (5 items minimum) to determine whether this is a buy signal (high-quality O&M receivables) or a sell signal (aggressive revenue recognition).</li>
+      <li>At-Tahur is priced at 3M KIBOR + 130 bps while DPEBSL is at 6M KIBOR + 250 bps. The 6M-3M KIBOR spread is approximately 55 bps. On a risk-adjusted basis, calculate the true spread differential between the two instruments and determine which offers better value.</li>
+      <li>Pakistan's SBP announces a surprise 200 bps rate hike. For each of the three instruments, analyse the impact on: (a) mark-to-market price, (b) issuer's ability to repay, and (c) your investment decision at current spreads.</li>
+    </ol>
+  </div>
+</div>
+</div>
+
+<script>
+const chartsInitialized = {};
+
+function showSection(id, btn) {
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (!chartsInitialized[id]) {
+    setTimeout(function(){ initChartsForSection(id); chartsInitialized[id] = true; }, 80);
+  }
+}
+
+function showTab(e, id) {
+  var section = e.currentTarget.closest('.content-section');
+  section.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.remove('active'); });
+  section.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  e.currentTarget.classList.add('active');
+  if (!chartsInitialized['pane_'+id]) {
+    setTimeout(function(){ initChartsInPane(id); chartsInitialized['pane_'+id] = true; }, 80);
+  }
+}
+
+function showTabCase(e, id, prefix) {
+  var section = e.currentTarget.closest('.content-section');
+  section.querySelectorAll('[id^="'+prefix+'-"]').forEach(function(p){ p.classList.remove('active'); });
+  section.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  e.currentTarget.classList.add('active');
+  if (!chartsInitialized['pane_'+id]) {
+    setTimeout(function(){ initChartsInPane(id); chartsInitialized['pane_'+id] = true; }, 80);
+  }
+}
+
+function initChartsInPane(paneId) {
+  if (paneId === 'dae-biz') { initDaeRevChart(); }
+  if (paneId === 'dae-fin') { initDaeFinChart(); }
+  if (paneId === 'tah-fin') { initTahFinChart(); }
+  if (paneId === 'eur-biz') { initEurGrowthChart(); }
+  if (paneId === 'eur-fin') { initEurFinChart(); }
+}
+
+function initChartsForSection(id) {
+  if (id === 'daewoo')  { initDaeRevChart();    chartsInitialized['pane_dae-biz'] = true; }
+  if (id === 'euro')    { initEurGrowthChart(); chartsInitialized['pane_eur-biz'] = true; }
+  if (id === 'compare') { initSpreadChart(); initRiskReturnChart(); }
+  /* tahur default tab (tah-biz) has no chart; charts in tah-fin init lazily on tab click */
+}
+
+function initDaeRevChart() {
+  var el = document.getElementById('daeRevChart');
+  if (!el || el._chart) return;
+  var ch = new Chart(el, {
+    type:'doughnut',
+    data:{
+      labels:['Urban O&M (Govt)','Intercity Bus','Logistics (FastEx)','Waste Mgmt'],
+      datasets:[{data:[48.2,45.1,6.6,0.1],backgroundColor:['#1B2A4A','#C8923A','#52B788','#9B2335'],borderWidth:2,borderColor:'#fff'}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'right',labels:{font:{size:11},boxWidth:12}}}}
+  });
+  el._chart = ch;
+}
+
+function initDaeFinChart() {
+  var el = document.getElementById('daeFinChart');
+  if (!el || el._chart) return;
+  var ch = new Chart(el, {
+    type:'bar',
+    data:{
+      labels:['CY21','CY22','CY23','CY24','6MCY25'],
+      datasets:[
+        {label:'Revenue (PKR Bn)',data:[12.3,18.8,23.3,26.1,18.0],backgroundColor:'rgba(27,42,74,0.7)',yAxisID:'y'},
+        {label:'ICR',data:[1.81,2.08,1.80,2.91,3.19],type:'line',borderColor:'#C8923A',backgroundColor:'transparent',pointBackgroundColor:'#C8923A',yAxisID:'y2',tension:0.3,borderWidth:2,pointRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{y:{title:{display:true,text:'Revenue (PKR Bn)'},beginAtZero:true},y2:{position:'right',title:{display:true,text:'ICR (×)'},beginAtZero:true,max:5,grid:{drawOnChartArea:false}}}}
+  });
+  el._chart = ch;
+}
+
+function initTahFinChart() {
+  var el = document.getElementById('tahFinChart');
+  if (!el || el._chart) return;
+  var ch = new Chart(el, {
+    type:'bar',
+    data:{
+      labels:['FY21','FY22','FY23','FY24','FY25','FY26E'],
+      datasets:[
+        {label:'Gross Margin %',data:[25.0,30.1,28.0,22.8,23.6,29.7],backgroundColor:'rgba(82,183,136,0.7)',yAxisID:'y'},
+        {label:'Net Margin %',data:[5.9,13.1,12.2,3.3,5.0,12.3],backgroundColor:'rgba(200,146,58,0.7)',yAxisID:'y'},
+        {label:'D/E Ratio',data:[0.29,0.35,0.26,0.20,0.23,0.26],type:'line',borderColor:'#9B2335',backgroundColor:'transparent',pointBackgroundColor:'#9B2335',yAxisID:'y2',tension:0.3,borderWidth:2,pointRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{y:{title:{display:true,text:'Margins (%)'},beginAtZero:true,max:40},y2:{position:'right',title:{display:true,text:'D/E (×)'},beginAtZero:true,max:1.0,grid:{drawOnChartArea:false}}}}
+  });
+  el._chart = ch;
+}
+
+function initEurGrowthChart() {
+  var el = document.getElementById('eurGrowthChart');
+  if (!el || el._chart) return;
+  var ch = new Chart(el, {
+    type:'bar',
+    data:{
+      labels:['FY21','FY22','FY23','FY24','FY25'],
+      datasets:[
+        {label:'Revenue (PKR Bn)',data:[7.4,18.0,36.0,53.4,61.5],backgroundColor:'rgba(10,42,58,0.75)',yAxisID:'y'},
+        {label:'Market Share %',data:[0.02,0.46,0.52,1.08,1.32],type:'line',borderColor:'#C8923A',backgroundColor:'transparent',pointBackgroundColor:'#C8923A',yAxisID:'y2',tension:0.3,borderWidth:2,pointRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{y:{title:{display:true,text:'Revenue (PKR Bn)'},beginAtZero:true},y2:{position:'right',title:{display:true,text:'Market Share (%)'},beginAtZero:true,max:2,grid:{drawOnChartArea:false}}}}
+  });
+  el._chart = ch;
+}
+
+function initEurFinChart() {
+  var el = document.getElementById('eurFinChart');
+  if (!el || el._chart) return;
+  var ch = new Chart(el, {
+    type:'bar',
+    data:{
+      labels:['FY24','FY25','6MFY26'],
+      datasets:[
+        {label:'EBITDA Margin %',data:[2.18,2.11,2.97],backgroundColor:'rgba(10,42,58,0.7)',yAxisID:'y'},
+        {label:'Net Margin %',data:[0.55,0.61,1.53],backgroundColor:'rgba(200,146,58,0.7)',yAxisID:'y'},
+        {label:'ICR',data:[2.31,2.83,4.10],type:'line',borderColor:'#52B788',backgroundColor:'transparent',pointBackgroundColor:'#52B788',yAxisID:'y2',tension:0.3,borderWidth:2,pointRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{y:{title:{display:true,text:'Margins (%)'},beginAtZero:true,max:6},y2:{position:'right',title:{display:true,text:'ICR (×)'},beginAtZero:true,max:6,grid:{drawOnChartArea:false}}}}
+  });
+  el._chart = ch;
+}
+
+function initSpreadChart() {
+  var el = document.getElementById('spreadCompChart');
+  if (!el || el._chart) return;
+  var ch = new Chart(el, {
+    type:'bar',
+    data:{
+      labels:['DPEBSL (6M KIBOR)','Euro Oil (6M KIBOR)','At-Tahur (3M KIBOR)'],
+      datasets:[
+        {label:'Benchmark KIBOR',data:[11.05,11.0,10.5],backgroundColor:['rgba(27,42,74,0.8)','rgba(10,42,58,0.8)','rgba(26,58,42,0.8)'],stack:'s'},
+        {label:'Credit Spread',data:[2.50,1.50,1.30],backgroundColor:['#C8923A','#E8A040','#52B788'],stack:'s'}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{x:{stacked:true,title:{display:true,text:'Yield (%)'},max:16},y:{stacked:true}}}
+  });
+  el._chart = ch;
+}
+
+function initRiskReturnChart() {
+  var el = document.getElementById('riskReturnChart');
+  if (!el || el._chart) return;
+  var ch = new Chart(el, {
+    type:'bubble',
+    data:{
+      datasets:[
+        {label:'DPEBSL',data:[{x:2.50,y:2.5,r:22}],backgroundColor:'rgba(27,42,74,0.7)',borderColor:'#1B2A4A'},
+        {label:'Euro Oil',data:[{x:1.50,y:3.2,r:22}],backgroundColor:'rgba(200,146,58,0.7)',borderColor:'#C8923A'},
+        {label:'At-Tahur',data:[{x:1.30,y:1.5,r:14}],backgroundColor:'rgba(82,183,136,0.7)',borderColor:'#52B788'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'top',labels:{font:{size:11},boxWidth:12}},
+        tooltip:{callbacks:{label:function(c){var names=['DPEBSL','Euro Oil','At-Tahur'];return names[c.datasetIndex]+': Spread '+c.parsed.x+'% | Risk Score '+c.parsed.y.toFixed(1);}}}
+      },
+      scales:{
+        x:{title:{display:true,text:'Credit Spread over KIBOR (%)'},min:0.5,max:3.5,ticks:{callback:function(v){return v+'%';}}},
+        y:{title:{display:true,text:'Composite Risk Score (1=safest, 5=riskiest)'},min:0,max:5}
+      }
+    }
+  });
+  el._chart = ch;
+}
+
+window.addEventListener('load', function() {
+  /* Charts initialize lazily when sections are first shown */
+});
+</script>
+</body>
+</html>
