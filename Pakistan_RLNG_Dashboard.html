@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan RLNG Supply Disruption — Interactive Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #FFFFFF;
+    --secondary: #FAFAFA;
+    --border: #E5E5E5;
+    --accent: #C8923A;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --success: #52B788;
+    --warning: #9B2335;
+    --info: #2E6F95;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;
+    background:var(--primary);color:#2D2D2D;line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .container{max-width:1180px;margin:0 auto;padding:0 1.5rem}
+
+  /* HEADER */
+  .hero{padding:3rem 0 2rem;border-bottom:1px solid var(--border)}
+  .kicker{font-size:12px;font-weight:600;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:0.75rem}
+  h1{font-family:Georgia,serif;font-size:42px;font-weight:400;color:var(--text-primary);line-height:1.15;margin-bottom:0.75rem}
+  .hero-sub{font-size:17px;color:var(--text-secondary);max-width:780px;line-height:1.6}
+  .hero-meta{display:flex;gap:2rem;margin-top:1.5rem;font-size:12px;color:var(--text-tertiary);flex-wrap:wrap;letter-spacing:0.04em}
+  .hero-meta strong{color:var(--text-primary);font-weight:600}
+
+  /* NAV */
+  .navbar{position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:100;margin:0 -1.5rem;padding:0 1.5rem}
+  .nav-inner{max-width:1180px;margin:0 auto;display:flex;gap:1.75rem;padding:0.75rem 0;overflow-x:auto;scrollbar-width:none}
+  .nav-inner::-webkit-scrollbar{display:none}
+  .nav-inner a{font-size:13px;color:var(--text-secondary);text-decoration:none;white-space:nowrap;padding:0.25rem 0;border-bottom:2px solid transparent;transition:all 0.2s}
+  .nav-inner a:hover{color:var(--text-primary)}
+  .nav-inner a.active{color:var(--text-primary);border-bottom-color:var(--text-primary)}
+
+  /* SECTIONS */
+  section{padding:3rem 0;border-bottom:1px solid var(--border)}
+  section:last-of-type{border-bottom:none}
+  .section-label{font-size:11px;font-weight:600;letter-spacing:0.12em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:0.5rem}
+  h2.section-title{font-family:Georgia,serif;font-size:30px;font-weight:400;color:var(--text-primary);margin-bottom:0.75rem;line-height:1.2}
+  .section-intro{font-size:15px;color:var(--text-secondary);max-width:780px;margin-bottom:2rem;line-height:1.7}
+
+  /* KPI CARDS */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+  .kpi-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.25rem;transition:all 0.2s}
+  .kpi-card:hover{border-color:var(--accent)}
+  .kpi-num{font-family:Georgia,serif;font-size:28px;font-weight:400;color:var(--text-primary);line-height:1.1}
+  .kpi-label{font-size:11px;color:var(--text-tertiary);margin-top:0.5rem;letter-spacing:0.08em;text-transform:uppercase;line-height:1.4}
+  .kpi-note{font-size:12px;color:var(--text-secondary);margin-top:0.5rem;font-style:italic}
+  .kpi-card.amber{border-top:3px solid var(--accent)}
+  .kpi-card.red{border-top:3px solid var(--warning)}
+  .kpi-card.green{border-top:3px solid var(--success)}
+
+  /* PANELS */
+  .panel{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1.25rem}
+  .panel-title{font-family:Georgia,serif;font-size:18px;font-weight:400;color:var(--text-primary);margin-bottom:1rem;line-height:1.3}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+  .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem}
+
+  /* TABLES */
+  table.est-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:0.5rem}
+  .est-table th{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text-primary);text-align:left;padding:0.65rem 0.75rem;border-bottom:2px solid var(--text-primary);background:#fff;text-transform:uppercase}
+  .est-table th.num,.est-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .est-table td{padding:0.65rem 0.75rem;border-bottom:1px solid var(--border);color:#2D2D2D}
+  .est-table tr:last-child td{border-bottom:none}
+  .est-table tr:hover td{background:#FAFAFA}
+  .est-table tr.total td{font-weight:600;background:#FAFAFA;border-top:1px solid var(--text-primary)}
+
+  /* SCENARIO SELECTOR */
+  .scenario-controls{display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+  .scenario-btn{background:#fff;border:1px solid var(--border);padding:0.65rem 1.15rem;font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;border-radius:6px;transition:all 0.2s;font-family:inherit}
+  .scenario-btn:hover{border-color:var(--text-primary);color:var(--text-primary)}
+  .scenario-btn.active{background:var(--text-primary);border-color:var(--text-primary);color:#fff}
+  .scenario-btn.scenario-100.active{background:var(--warning);border-color:var(--warning)}
+  .scenario-btn.scenario-70.active{background:var(--accent);border-color:var(--accent)}
+  .scenario-btn.scenario-50.active{background:var(--info);border-color:var(--info)}
+
+  .scenario-result{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+  .scenario-result .kpi-card{border-top-width:3px;border-top-style:solid;border-top-color:var(--text-primary);transition:border-color 0.3s}
+
+  /* CALCULATOR */
+  .calc-box{background:#FAFAFA;border:1px solid var(--border);border-radius:8px;padding:1.5rem}
+  .calc-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+  .calc-row label{font-size:13px;color:var(--text-secondary);min-width:180px}
+  .calc-row input[type=range]{flex:1;min-width:200px;accent-color:var(--accent)}
+  .calc-row .val{font-family:Georgia,serif;font-size:20px;color:var(--text-primary);min-width:90px;text-align:right}
+  .calc-output{background:#fff;border:1px solid var(--border);border-radius:6px;padding:1rem;margin-top:1rem;font-size:13px}
+  .calc-output strong{display:block;font-size:22px;font-family:Georgia,serif;color:var(--warning);margin-bottom:0.25rem}
+
+  /* NARRATIVE / CAUTION */
+  .narrative.caution{background:#FFFBF2;border-left:4px solid var(--accent);padding:1.25rem 1.5rem;border-radius:4px;margin:1.5rem 0;font-size:14px;color:#3D3D3D;line-height:1.65}
+  .narrative.caution strong{color:var(--text-primary)}
+  .narrative.data-flag{background:#FAF7F3;border-left:4px solid var(--warning);padding:1.25rem 1.5rem;border-radius:4px;margin:1.5rem 0;font-size:13px;color:#3D3D3D;line-height:1.65}
+  .narrative.data-flag strong{color:var(--warning)}
+
+  /* TIMELINE */
+  .timeline{position:relative;padding-left:1.75rem;margin-top:1rem}
+  .timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:var(--border)}
+  .tl-item{position:relative;padding-bottom:1.5rem}
+  .tl-item::before{content:'';position:absolute;left:-1.75rem;top:4px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--accent)}
+  .tl-item.red::before{border-color:var(--warning)}
+  .tl-item.green::before{border-color:var(--success)}
+  .tl-phase{font-size:11px;font-weight:600;letter-spacing:0.12em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:0.25rem}
+  .tl-title{font-family:Georgia,serif;font-size:17px;color:var(--text-primary);margin-bottom:0.4rem}
+  .tl-body{font-size:13px;color:var(--text-secondary);line-height:1.65}
+
+  /* TRIGGERS */
+  .trigger-card{border:1px solid var(--border);border-radius:8px;padding:1.25rem;border-left:5px solid var(--success)}
+  .trigger-card.amber{border-left-color:var(--accent)}
+  .trigger-card.red{border-left-color:var(--warning)}
+  .trigger-level{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;color:var(--success)}
+  .trigger-card.amber .trigger-level{color:var(--accent)}
+  .trigger-card.red .trigger-level{color:var(--warning)}
+  .trigger-title{font-family:Georgia,serif;font-size:16px;color:var(--text-primary);margin-bottom:0.5rem}
+  .trigger-body{font-size:13px;color:var(--text-secondary);line-height:1.6}
+
+  /* CHART CONTAINERS */
+  .chart-wrap{position:relative;height:320px}
+  .chart-wrap.tall{height:380px}
+
+  /* FOOTER */
+  footer{padding:2.5rem 0 3rem;color:var(--text-tertiary);font-size:12px;line-height:1.7}
+
+  /* RESPONSIVE */
+  @media (max-width:900px){
+    .kpi-grid,.scenario-result{grid-template-columns:repeat(2,1fr)}
+    .two-col,.three-col{grid-template-columns:1fr}
+    h1{font-size:32px}
+    h2.section-title{font-size:24px}
+  }
+  @media (max-width:500px){
+    .kpi-grid,.scenario-result{grid-template-columns:1fr}
+    .hero-meta{gap:1rem}
+  }
+
+  /* DETAILS */
+  details{border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-top:1rem;background:#FAFAFA}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--text-primary);letter-spacing:0.03em}
+  summary:hover{color:var(--accent)}
+  details[open] summary{margin-bottom:0.75rem}
+  details p,details ul{font-size:13px;color:var(--text-secondary);line-height:1.7}
+  details ul{margin-left:1.25rem;margin-top:0.5rem}
+  details li{margin-bottom:0.35rem}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="kicker">Policy Grade · Pakistan Power Sector</div>
+    <h1>RLNG Supply Disruption<br>& Grid Resilience Dashboard</h1>
+    <p class="hero-sub">A public-facing analysis of Pakistan's exposure to re-gasified LNG supply shocks — and the curtailed domestic gas lever that can recover 20–28 GWh/day during disruption. Data: NEPRA monthly generation reports and NTDC SCED curtailment sheets, May–July 2025.</p>
+    <div class="hero-meta">
+      <span><strong>Period:</strong> May–July 2025 (peak summer)</span>
+      <span><strong>Primary sources:</strong> NEPRA, NTDC</span>
+      <span><strong>Last updated:</strong> April 2026</span>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="#summary" class="active">Summary</a>
+      <a href="#dependency">RLNG Dependency</a>
+      <a href="#omo">OMO vs Demand</a>
+      <a href="#cargoes">Cargo Requirements</a>
+      <a href="#gaslever">Gas Lever</a>
+      <a href="#scenarios">Scenarios</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#peak">Peak Hour Analysis</a>
+      <a href="#mitigation">Mitigation</a>
+      <a href="#triggers">Escalation Triggers</a>
+      <a href="#methodology">Methodology</a>
+    </div>
+  </nav>
+
+  <!-- SUMMARY -->
+  <section id="summary">
+    <div class="section-label">Executive Summary</div>
+    <h2 class="section-title">The system is stressed — but the curtailed gas lever changes the math.</h2>
+    <p class="section-intro">RLNG supplied <strong>16–18% of total electricity generation</strong> across June–July 2025. An hourly supply-stack simulation shows a complete RLNG blockade forces <strong>peak shedding of 2,851 MW</strong> at midnight under the full mitigation package. Reallocating <strong>200 mmcfd of domestic gas</strong> from CNG, industrial captive, and non-critical sectors into the dual-fuel CCGT fleet cuts that peak by <strong>25–51% across scenarios</strong> and the daily energy shortfall by a similar margin.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card amber">
+        <div class="kpi-num">16–18%</div>
+        <div class="kpi-label">RLNG share of generation</div>
+        <div class="kpi-note">Jun–Jul 2025, verified against NEPRA</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-num">3,823 MW</div>
+        <div class="kpi-label">Peak hourly RLNG load</div>
+        <div class="kpi-note">00:00 — when solar is gone and demand stays high</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">20 GWh</div>
+        <div class="kpi-label">Daily curtailed gas recoverable</div>
+        <div class="kpi-note">Central estimate, 200 mmcfd reallocation</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-num">2,851 MW</div>
+        <div class="kpi-label">Peak shed — 100% blockade, w/ gas lever</div>
+        <div class="kpi-note">Down from 3,823 MW without gas (−25%)</div>
+      </div>
+    </div>
+
+    <div class="narrative caution">
+      <strong>Why the gas lever is the first-order policy action.</strong> Unlike coal substitution, reallocated gas flows into the <em>same</em> RLNG-fired CCGTs that provide grid stability. The plants keep running, frequency regulation is preserved, and only the upstream fuel tap switches. Coal plants cannot do this — wrong ramp rate, wrong location, wrong role. A 3-hour MoE directive to SNGPL/SSGC recovers roughly 20 GWh/day. Coal acceleration over weeks recovers 1 GWh/day. The gas lever is 20× faster and 20× larger.
+    </div>
+
+    <div class="narrative data-flag">
+      <strong>Data integrity note.</strong> This dashboard uses verified NEPRA figures for March, June, and July 2025. Peak MW shedding is calculated via an hourly supply-stack dispatch simulation (not a daily energy average × peak factor). The May 2025 figure in the underlying memo was interpolated (no NEPRA file was available in source data) and has been corrected from 8,500 GWh to a seasonally-adjusted ~11,200 GWh. Cargo estimates use electrical-output conversion (~380 GWh/cargo at 42% avg efficiency), not the thermal 700 GWh/cargo figure used in the earlier memo.
+    </div>
+  </section>
+
+  <!-- DEPENDENCY -->
+  <section id="dependency">
+    <div class="section-label">Part 1 — How Dependent Are We?</div>
+    <h2 class="section-title">RLNG share of generation, month by month.</h2>
+    <p class="section-intro">In absolute terms, RLNG generation rose from 1,528 GWh in March to 2,438 GWh in July — tracking the summer demand ramp. As a share of generation, RLNG is remarkably stable at 16–18% despite total generation nearly doubling. This means the system cannot grow out of its RLNG dependency without new baseload capacity.</p>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Monthly generation mix (GWh)</div>
+        <div class="chart-wrap"><canvas id="genMixChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">RLNG as share of total (%)</div>
+        <div class="chart-wrap"><canvas id="rlngShareChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Source-wise generation, July 2025 (NEPRA verified)</div>
+      <table class="est-table">
+        <thead>
+          <tr><th>Source</th><th class="num">GWh</th><th class="num">Share</th><th class="num">YoY</th><th class="num">MoM</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hydel</td><td class="num">5,668</td><td class="num">40.1%</td><td class="num" style="color:var(--success)">+6%</td><td class="num" style="color:var(--success)">+5%</td></tr>
+          <tr><td>RLNG</td><td class="num"><strong>2,438</strong></td><td class="num"><strong>17.3%</strong></td><td class="num" style="color:var(--warning)">-18%</td><td class="num" style="color:var(--success)">+10%</td></tr>
+          <tr><td>Coal (Local)</td><td class="num">1,503</td><td class="num">10.6%</td><td class="num">0%</td><td class="num">0%</td></tr>
+          <tr><td>Nuclear</td><td class="num">1,405</td><td class="num">9.9%</td><td class="num" style="color:var(--warning)">-29%</td><td class="num">+2%</td></tr>
+          <tr><td>Coal (Imported)</td><td class="num">1,140</td><td class="num">8.1%</td><td class="num">0%</td><td class="num" style="color:var(--warning)">-18%</td></tr>
+          <tr><td>Gas</td><td class="num">1,093</td><td class="num">7.7%</td><td class="num">-7%</td><td class="num">+13%</td></tr>
+          <tr><td>Wind</td><td class="num">592</td><td class="num">4.2%</td><td class="num" style="color:var(--success)">+33%</td><td class="num" style="color:var(--success)">+13%</td></tr>
+          <tr><td>RFO</td><td class="num">108</td><td class="num">0.8%</td><td class="num">+6%</td><td class="num">-28%</td></tr>
+          <tr><td>Solar</td><td class="num">105</td><td class="num">0.7%</td><td class="num">-5%</td><td class="num">-1%</td></tr>
+          <tr><td>Others</td><td class="num">71</td><td class="num">0.5%</td><td class="num">-30%</td><td class="num">-13%</td></tr>
+          <tr class="total"><td>Total</td><td class="num">14,123</td><td class="num">100%</td><td class="num">-5%</td><td class="num">+3%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- OMO -->
+  <section id="omo">
+    <div class="section-label">Part 2 — The Hidden RLNG Layer</div>
+    <h2 class="section-title">Not all RLNG is replaceable. This is why coal isn't a clean swap.</h2>
+    <p class="section-intro">RLNG generation has two distinct components: <strong>demand-driven</strong> (fills consumer load at prevailing tariffs) and <strong>OMO-driven</strong> — Out-of-Merit-Order generation that exists solely to maintain grid voltage and frequency stability. OMO RLNG cannot be replaced by coal because coal plants are being curtailed precisely to hold the grid stable. This distinction is the reason simple "switch to coal" solutions fail in practice.</p>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Monthly OMO curtailments (GWh, from NTDC SCED)</div>
+        <div class="chart-wrap"><canvas id="omoChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Why plants are curtailed (stability vs. congestion)</div>
+        <div class="chart-wrap"><canvas id="curtailReasonChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="narrative caution">
+      <strong>What OMO actually looks like on the ground.</strong> In May 2025, China Hubco (coal) was curtailed on 18 separate days to honor HVDC+HVAC safe evacuation under the SCS strategy table. In July, Liberty Power was curtailed on 4 consecutive days to avoid overloading the 220 kV GKR–NGKR circuit. Each curtailment is replaced by RLNG because it's the only dispatchable source with the ramp rate to hold frequency. Grid reinforcement — not fuel switching — is the structural fix.
+      <details style="margin-top:1rem;background:transparent;border:none;padding:0">
+        <summary>Grid code clauses invoked (for technical readers)</summary>
+        <ul>
+          <li><strong>OC 7.5.1, OC 7.5.9:</strong> Stability considerations and must-run generation</li>
+          <li><strong>SDC 1.7.4, SDC 1.7.3:</strong> System dispatch code provisions for economic dispatch deviation</li>
+          <li><strong>OC 6.7.2, OC 3.1.1:</strong> Transmission line loading limits and congestion management</li>
+        </ul>
+      </details>
+    </div>
+  </section>
+
+  <!-- CARGOES -->
+  <section id="cargoes">
+    <div class="section-label">Part 3 — The Cargo Math</div>
+    <h2 class="section-title">At 6–7 cargoes per month, there is no buffer.</h2>
+    <p class="section-intro">Port Qasim's regasification terminal runs at 5 MTPA nameplate, which translates to roughly 7 standard LNG cargoes per month. Pakistan's power sector alone needs 6–7 in peak summer — leaving essentially no buffer for shipping delays, weather, or geopolitical friction. One missed cargo (~20 days of dispatch) triggers Scenario 2 shedding.</p>
+
+    <div class="panel">
+      <div class="panel-title">Monthly LNG cargo requirements (electrical output basis)</div>
+      <table class="est-table">
+        <thead>
+          <tr><th>Month</th><th class="num">RLNG Generation</th><th class="num">Cargoes Needed</th><th class="num">% of Port Qasim Capacity</th><th class="num">Headroom</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>March 2025</td><td class="num">1,528 GWh</td><td class="num">4.0</td><td class="num">57%</td><td class="num" style="color:var(--success)">3.0 cargoes</td></tr>
+          <tr><td>May 2025 (est.)</td><td class="num">~2,000 GWh</td><td class="num">5.3</td><td class="num">76%</td><td class="num" style="color:var(--accent)">1.7 cargoes</td></tr>
+          <tr><td>June 2025</td><td class="num">2,216 GWh</td><td class="num">5.8</td><td class="num">83%</td><td class="num" style="color:var(--accent)">1.2 cargoes</td></tr>
+          <tr><td>July 2025</td><td class="num">2,438 GWh</td><td class="num"><strong>6.4</strong></td><td class="num"><strong>92%</strong></td><td class="num" style="color:var(--warning)">0.6 cargoes</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--text-tertiary);margin-top:0.75rem;font-style:italic">Conversion: 1 standard LNG cargo ≈ 65,000 tonnes × 14 MWh/tonne thermal × 42% avg electrical efficiency ≈ 382 GWh electricity. Port Qasim 5 MTPA capacity ≈ 7 cargoes/month at standard size.</p>
+    </div>
+  </section>
+
+  <!-- GAS LEVER -->
+  <section id="gaslever">
+    <div class="section-label">Part 3.5 — The Curtailed Gas Lever</div>
+    <h2 class="section-title">Pakistan has 200 mmcfd of hidden swing capacity.</h2>
+    <p class="section-intro">Domestic natural gas is currently allocated across seven priority tiers by SNGPL and SSGC. Power sits third, below household and commercial. During an RLNG disruption, 150–250 mmcfd can be emergency-reallocated from lower-priority tiers — CNG stations, industrial captive power, cement/general industry, and non-critical fertilizer units — into the power sector's dual-fuel CCGT fleet. Precedent exists: the 2022–23 winter gas load management exercise recovered similar volumes for priority use.</p>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Current gas allocation by sector (%)</div>
+        <div class="chart-wrap"><canvas id="gasAllocChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Emergency reallocation potential (mmcfd)</div>
+        <div class="chart-wrap"><canvas id="gasRealloc"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Reallocation ladder — what each source yields</div>
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th>Source sector</th>
+            <th class="num">mmcfd (range)</th>
+            <th class="num">Electrical output (GWh/day)</th>
+            <th>Political feasibility</th>
+            <th>Time to activate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CNG stations</td>
+            <td class="num">40–60</td>
+            <td class="num">5.2–7.8</td>
+            <td><span style="color:var(--success)">High</span> — precedent exists</td>
+            <td>24–48 hours</td>
+          </tr>
+          <tr>
+            <td>Industrial captive power</td>
+            <td class="num">60–100</td>
+            <td class="num">7.8–13.0</td>
+            <td><span style="color:var(--accent)">Medium</span> — compensation likely needed</td>
+            <td>3–7 days</td>
+          </tr>
+          <tr>
+            <td>Cement / general industry</td>
+            <td class="num">20–40</td>
+            <td class="num">2.6–5.2</td>
+            <td><span style="color:var(--success)">High</span> — seasonal flexibility</td>
+            <td>3–5 days</td>
+          </tr>
+          <tr>
+            <td>Non-critical fertilizer</td>
+            <td class="num">20–40</td>
+            <td class="num">2.6–5.2</td>
+            <td><span style="color:var(--warning)">Lower</span> — food-security concerns</td>
+            <td>7–14 days</td>
+          </tr>
+          <tr>
+            <td>Commercial / misc.</td>
+            <td class="num">10–20</td>
+            <td class="num">1.3–2.6</td>
+            <td><span style="color:var(--accent)">Medium</span> — ad-hoc measures</td>
+            <td>2–5 days</td>
+          </tr>
+          <tr class="total">
+            <td>Total reallocation potential</td>
+            <td class="num">150–260</td>
+            <td class="num">19.5–33.8</td>
+            <td colspan="2">Conservative central case: <strong>~200 mmcfd → 20 GWh/day</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--text-tertiary);margin-top:0.75rem;font-style:italic">Conversion: 1 mmcfd ≈ 1.03 mmbtu/day × 1,000 kbtu/mmbtu ÷ 8,000 btu/kWh (fleet-average CCGT heat rate) ≈ 0.13 GWh/day. Ranges reflect summer-season availability; winter reallocation potential is lower (domestic heating demand).</p>
+    </div>
+
+    <div class="narrative caution">
+      <strong>Why this lever beats coal ramp-up.</strong> Unlike coal substitution, reallocated gas flows into the <em>same</em> RLNG-fired CCGT plants that currently provide grid stability (OMO) services. The plants keep running, the frequency/voltage regulation capability is preserved, and the only operational change is switching the upstream fuel tap from the RLNG terminal to the domestic pipeline network. Coal plants cannot do this — their ramp rates and location make them ill-suited for OMO. <strong>This is why the gas lever carries 4× the mitigation weight of the coal lever (20 GWh/day vs. 0.9 GWh/day).</strong>
+    </div>
+
+    <div class="narrative data-flag">
+      <strong>Caveats on the gas lever.</strong> (1) Reallocation is a policy action, not an operational toggle — it requires explicit government direction to SNGPL/SSGC and compensation frameworks for affected sectors. (2) Fertilizer diversion during urea production season carries food-security implications and is the hardest tier to access. (3) Winter reallocation potential is roughly 40% lower due to domestic heating priority. (4) Industrial captive diversion may cause knock-on manufacturing output losses that partially offset grid savings — included in the scenario cost figures below.
+    </div>
+  </section>
+
+  <section id="scenarios">
+    <div class="section-label">Part 4 — Scenario Analysis (Hourly Supply-Stack Model)</div>
+    <h2 class="section-title">What happens when cargoes don't arrive?</h2>
+    <p class="section-intro">Three disruption scenarios are modeled using an <strong>hourly supply-stack dispatch simulation</strong>. For each hour, we calculate RLNG lost (from July's verified hourly profile) against a mitigation stack of gas reallocation, coal ramp, and HFO. Residual shortfall at each hour becomes load shedding at that hour. Click a scenario to see the impact.</p>
+
+    <div class="scenario-controls">
+      <button class="scenario-btn scenario-50 active" data-scenario="50">Mild · 50% loss</button>
+      <button class="scenario-btn scenario-70" data-scenario="70">Moderate · 70% loss</button>
+      <button class="scenario-btn scenario-100" data-scenario="100">Severe · 100% blockade</button>
+    </div>
+
+    <div class="scenario-result">
+      <div class="kpi-card" id="sc-load"><div class="kpi-num" id="sc-load-val">939 MW</div><div class="kpi-label">Peak hourly shed <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-tertiary)">(no gas: 1,912)</span></div></div>
+      <div class="kpi-card" id="sc-energy"><div class="kpi-num" id="sc-energy-val">16.1 GWh</div><div class="kpi-label">Daily energy shed <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-tertiary)">(no gas: 36.1)</span></div></div>
+      <div class="kpi-card" id="sc-hh"><div class="kpi-num" id="sc-hh-val">~805k</div><div class="kpi-label">Households at peak <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-tertiary)">(60% resi share)</span></div></div>
+      <div class="kpi-card" id="sc-cost"><div class="kpi-num" id="sc-cost-val">PKR 4–6B</div><div class="kpi-label">Monthly economic cost</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Hourly mitigation stack — RLNG lost vs. each offsetting lever</div>
+      <div class="chart-wrap tall"><canvas id="hourlyStackChart"></canvas></div>
+      <p style="font-size:12px;color:var(--text-tertiary);margin-top:0.75rem;font-style:italic">Stacked bars show how much RLNG loss at each hour is absorbed by gas reallocation (green), coal ramp (amber), and HFO (blue). The red line on top is residual load shedding. Middle-of-day hours have no coal/HFO mitigation (those plants are already running at baseline), which is why gas reallocation is the dominant lever during 08:00–16:00.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Shedding profile — with vs. without gas lever</div>
+        <div class="chart-wrap"><canvas id="shedCompareChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Monthly cost breakdown (PKR billion)</div>
+        <div class="chart-wrap"><canvas id="costBreakdownChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Scenario comparison — with vs. without gas reallocation</div>
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th class="num">Daily loss</th>
+            <th class="num">Peak MW (no gas)</th>
+            <th class="num">Peak MW (w/ gas)</th>
+            <th class="num">Peak reduction</th>
+            <th class="num">Daily GWh shed</th>
+            <th class="num">Monthly cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mild · 50% loss</td>
+            <td class="num">39.3 GWh</td>
+            <td class="num" style="color:var(--text-tertiary)">1,912</td>
+            <td class="num" style="color:var(--info)"><strong>939</strong></td>
+            <td class="num" style="color:var(--success)">−51%</td>
+            <td class="num">16.1 (was 36.1)</td>
+            <td class="num">PKR 4–6B</td>
+          </tr>
+          <tr>
+            <td>Moderate · 70% loss</td>
+            <td class="num">55.1 GWh</td>
+            <td class="num" style="color:var(--text-tertiary)">2,676</td>
+            <td class="num" style="color:var(--accent)"><strong>1,704</strong></td>
+            <td class="num" style="color:var(--success)">−36%</td>
+            <td class="num">31.9 (was 51.9)</td>
+            <td class="num">PKR 8–12B</td>
+          </tr>
+          <tr>
+            <td>Severe · 100% blockade</td>
+            <td class="num">78.6 GWh</td>
+            <td class="num" style="color:var(--text-tertiary)">3,823</td>
+            <td class="num" style="color:var(--warning)"><strong>2,851</strong></td>
+            <td class="num" style="color:var(--success)">−25%</td>
+            <td class="num">55.4 (was 75.4)</td>
+            <td class="num">PKR 15–22B</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="narrative caution">
+      <strong>Why gas efficacy falls as disruption deepens.</strong> Gas reallocation delivers a fixed 20 GWh/day regardless of scenario severity. At 50% loss (39 GWh/day gap), that's 51% of the problem solved. At 100% blockade (79 GWh/day gap), it's 25%. The implication: <strong>gas reallocation is most effective as a first-response lever</strong> — it can keep a mild-to-moderate disruption from escalating into crisis-grade shedding. For severe blockades, gas must be paired with structural measures (industrial load-shifting, premium dispatch, rotational schedules). Peak shedding concentrates at midnight because that's when RLNG runs hardest — solar is absent, demand stays elevated, and gas reallocation hits its plant-capacity ceiling.
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section id="calculator">
+    <div class="section-label">Part 5 — Your Scenario</div>
+    <h2 class="section-title">Build a custom disruption scenario.</h2>
+    <p class="section-intro">Adjust the sliders to model any disruption size and duration. The calculator uses the same mitigation assumptions as the scenario analysis (coal ramp of 0.9 GWh/day, 500 MW HFO emergency deployment, industrial load-shifting).</p>
+
+    <div class="calc-box">
+      <div class="calc-row">
+        <label for="calc-pct">RLNG supply loss</label>
+        <input type="range" id="calc-pct" min="10" max="100" step="5" value="50">
+        <div class="val" id="calc-pct-val">50%</div>
+      </div>
+      <div class="calc-row">
+        <label for="calc-days">Duration (days)</label>
+        <input type="range" id="calc-days" min="1" max="60" step="1" value="15">
+        <div class="val" id="calc-days-val">15</div>
+      </div>
+      <div class="calc-row">
+        <label for="calc-gas">Gas reallocation (mmcfd)</label>
+        <input type="range" id="calc-gas" min="0" max="250" step="10" value="150">
+        <div class="val" id="calc-gas-val">150</div>
+      </div>
+      <div class="calc-row">
+        <label for="calc-other">Other mitigation (coal+HFO, %)</label>
+        <input type="range" id="calc-other" min="0" max="100" step="5" value="10">
+        <div class="val" id="calc-other-val">10%</div>
+      </div>
+
+      <div class="calc-output">
+        <strong id="calc-cost-out">PKR 2.3B</strong>
+        Total economic cost across the disruption window.<br>
+        Load shedding peak: <span id="calc-mw-out">~500 MW</span> · Affected households: <span id="calc-hh-out">~140,000</span> · Total energy shed: <span id="calc-shed-out">~475 GWh</span> · Gas contribution: <span id="calc-gasgwh-out">~20 GWh/day</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEAK HOUR -->
+  <section id="peak">
+    <div class="section-label">Part 6 — Why Peak Hour Is The Binding Constraint</div>
+    <h2 class="section-title">3× the volatility, 2× the cost, one shared dependency.</h2>
+    <p class="section-intro">Marginal cost at peak (17:00–23:00) averages PKR 18.66/kWh — roughly double the morning rate and with 3× the volatility. This is the signature of a system running without reserve margin: every incremental MW pulls from the most expensive plant still available, which is almost always RLNG-fired.</p>
+
+    <div class="panel">
+      <div class="panel-title">July 2025 — Hourly demand vs. marginal cost</div>
+      <div class="chart-wrap tall"><canvas id="peakChart"></canvas></div>
+      <p style="font-size:12px;color:var(--text-tertiary);margin-top:0.75rem;font-style:italic">Source: NTDC Security Constrained Economic Dispatch, July 2025. Demand peaks at 21,238 MW at hour 23; marginal cost peaks at PKR 27.83/kWh at the same hour.</p>
+    </div>
+
+    <div class="three-col">
+      <div class="kpi-card">
+        <div class="kpi-num">PKR 18.66</div>
+        <div class="kpi-label">Avg peak MC (17–23h)</div>
+        <div class="kpi-note">per kWh</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">PKR 9.26</div>
+        <div class="kpi-label">Avg morning MC (06–12h)</div>
+        <div class="kpi-note">per kWh</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">36.6%</div>
+        <div class="kpi-label">Peak hour volatility (CoV)</div>
+        <div class="kpi-note">3× morning volatility</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MITIGATION -->
+  <section id="mitigation">
+    <div class="section-label">Part 7 — Mitigation Roadmap</div>
+    <h2 class="section-title">PKR 1.5–2B of prep, PKR 5–8B/month of avoided losses.</h2>
+    <p class="section-intro">A well-coordinated mitigation package — coal supply acceleration, industrial load-shifting contracts, SCED optimization, and grid reinforcement — pays back in 2–3 months under any sustained disruption scenario. The specific actions and timelines:</p>
+
+    <div class="timeline">
+      <div class="tl-item red">
+        <div class="tl-phase">Days 0–3 · Immediate (highest impact)</div>
+        <div class="tl-title">Emergency gas reallocation via SNGPL / SSGC directive</div>
+        <div class="tl-body">Issue MoE directive to SNGPL and SSGC for emergency reallocation of 150–200 mmcfd from CNG, industrial captive, and cement sectors to power sector CCGTs. Expected yield: <strong>+20 GWh/day</strong> within 48–72 hours. Activate compensation framework for diverted sectors (PKR 3–5B/month standby fund). This single action reduces peak load shedding by 26–52% across scenarios.</div>
+      </div>
+      <div class="tl-item red">
+        <div class="tl-phase">Days 0–7 · Immediate (secondary)</div>
+        <div class="tl-title">Coal procurement & load-shedding protocols</div>
+        <div class="tl-body">Activate spot market purchases for 0.5M tonnes from South Africa, Indonesia, or Australia (PKR 500M–1B). Issue NTDC circular with Scenario 1/2/3 shedding templates to all DISCOs with 48-hour implementation authority. Brief Minister, SAPM Energy, and PM's office. Brief HFO-capable plants (Kotri, Guddu, Sukkur) for 500 MW standby.</div>
+      </div>
+      <div class="tl-item amber">
+        <div class="tl-phase">Weeks 2–8 · Medium term</div>
+        <div class="tl-title">Procurement diversification & industrial load contracts</div>
+        <div class="tl-body">Reduce single-source Qatar dependency to 80–85% via spot and medium-term contracts (Australia, USA, Oman). Negotiate 3-month demand curtailment agreements with 5–8 major industrials (Hubco, Fauji Fertilizer, DG Khan Cement, Lucky Cement) for 300–500 MW flexible load. Coal plant readiness surge: +1.2–1.5 GWh/day online by week 6.</div>
+      </div>
+      <div class="tl-item green">
+        <div class="tl-phase">Months 3–12 · Structural</div>
+        <div class="tl-title">Gas pipeline capacity, LNG terminal expansion, grid reinforcement</div>
+        <div class="tl-body">Pre-position gas-reallocation protocols (standing MoE notification to SNGPL/SSGC) so the 48-hour trigger becomes 12-hour. Port Qasim regasification capacity expansion from 5 to 7–8 MTPA ($150–200M, 18–24 months). High-impact 220/500 kV grid reinforcement (GKR–NGKR, Gatti Autos, Multan Autos) to reduce OMO requirement below 1% ($400–600M). NTDC-controlled demand response platform: 50–100 MW fast-response capacity at PKR 5–10/kWh.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRIGGERS -->
+  <section id="triggers">
+    <div class="section-label">Part 8 — Escalation Protocol</div>
+    <h2 class="section-title">When to pull which lever.</h2>
+    <p class="section-intro">Three escalation triggers tied to observable cargo-arrival signals. Each level maps to a pre-defined response with pre-authorized spending and shedding authority.</p>
+
+    <div class="three-col">
+      <div class="trigger-card">
+        <div class="trigger-level">Level 1 · Advisory</div>
+        <div class="trigger-title">Cargo delay &gt; 10 days</div>
+        <div class="trigger-body">Activate coal supply acceleration task force. Brief Energy Minister and NTDC MD. Monitor buffer stock — trigger alert if &lt; 10 days supply remaining. No consumer impact at this stage.</div>
+      </div>
+      <div class="trigger-card amber">
+        <div class="trigger-level">Level 2 · Precautionary</div>
+        <div class="trigger-title">1 cargo lost (~20 days supply)</div>
+        <div class="trigger-body">Issue Scenario 2 (70% loss) shedding schedules to DISCOs within 72 hours. Engage major industrial consumers with load-shifting contracts. Activate emergency coal procurement. Brief cabinet.</div>
+      </div>
+      <div class="trigger-card red">
+        <div class="trigger-level">Level 3 · Emergency</div>
+        <div class="trigger-title">2+ cargoes lost (6+ weeks)</div>
+        <div class="trigger-body">Implement full Scenario 1 (100% loss) load shedding nationwide. Activate all coal, HFO, and hydel resources. Public energy emergency declaration. Coordinate with State Bank on forex reserves for alternate LNG procurement.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHODOLOGY -->
+  <section id="methodology">
+    <div class="section-label">Methodology & Data Sources</div>
+    <h2 class="section-title">How we arrived at these numbers.</h2>
+
+    <details open>
+      <summary>Step 1 — RLNG generation (NEPRA verified)</summary>
+      <p>Monthly RLNG dispatch is sourced directly from NEPRA Monthly Power Generation Reports. Verified values: March 2025 = 1,528 GWh, June 2025 = 2,216 GWh, July 2025 = 2,438 GWh. The May 2025 figure is interpolated (no NEPRA file was published/available in the source dataset for that month) at ~2,000 GWh based on the seasonal Mar→Jun ramp.</p>
+    </details>
+
+    <details>
+      <summary>Step 2 — OMO curtailments (NTDC SCED)</summary>
+      <p>Out-of-merit-order generation is proxied by summing all plant-level curtailments reported in NTDC's monthly Security Constrained Economic Dispatch (SCED) sheets. Curtailments are driven primarily by grid stability (OC 7.5.1, OC 7.5.9) and transmission congestion (OC 6.7.2, OC 3.1.1). When a coal or hydel plant is curtailed, the replacement generation is typically RLNG — the only source with sufficient ramp rate to hold frequency stable.</p>
+    </details>
+
+    <details>
+      <summary>Step 3 — Cargo conversion</summary>
+      <p>Standard LNG cargo size: 65,000–75,000 tonnes. Thermal energy content: ~14 MWh/tonne (LHV basis). At Pakistan's fleet-average CCGT efficiency of 42%, electrical output per cargo is ~380 GWh. Port Qasim 5 MTPA nameplate ≈ 7 standard cargoes per month. Earlier analyses using 700 GWh/cargo conflated thermal energy with electrical output and should be treated as upper-bound only.</p>
+    </details>
+
+    <details>
+      <summary>Step 4 — Curtailed gas reallocation (central addition)</summary>
+      <p>Pakistan's domestic gas (SNGPL + SSGC aggregate) is allocated across seven priority tiers. Under the Economic Coordination Committee (ECC) gas allocation framework, reallocation during emergencies is permissible with MoE direction. Reallocation potential by sector (summer conditions): CNG 40–60 mmcfd (high feasibility), industrial captive 60–100 mmcfd (medium), cement/general 20–40 mmcfd (high), non-critical fertilizer 20–40 mmcfd (lower feasibility), commercial/misc. 10–20 mmcfd. Total central-case: 200 mmcfd. Conversion to electrical output: 200 × 1.03 mmbtu/mmcfd ÷ 8,000 btu/kWh ≈ 26 GWh/day gross; after plant efficiency and pipeline losses, we use <strong>20 GWh/day</strong> as the conservative central case applied to all scenarios.</p>
+    </details>
+
+    <details>
+      <summary>Step 5 — Hourly supply-stack model (revised)</summary>
+      <p>Peak MW shedding is now calculated using an hourly supply-stack dispatch simulation, not a daily energy average. For each of the 24 hours:</p>
+      <ul>
+        <li><strong>Step A:</strong> Derive the July 2025 hourly RLNG profile by scaling NTDC's June thermal hourly shape to match July's verified 2,438 GWh monthly RLNG total. Peak RLNG = 3,823 MW at 00:00; minimum = 2,726 MW at 12:00.</li>
+        <li><strong>Step B:</strong> Hourly RLNG lost = hourly RLNG × disruption percentage.</li>
+        <li><strong>Step C:</strong> Apply mitigation stack in merit order — (1) gas reallocation: 20 GWh/day budget dispatched proportionally to hourly loss, capped at 4,000 MW plant capacity ceiling; (2) coal ramp: +200 MW during 17:00–22:00 (peak hours only, reflects slow ramp physics); (3) HFO emergency: +500 MW during 19:00–22:00 (peakers).</li>
+        <li><strong>Step D:</strong> Residual shed at hour h = RLNG lost at h − gas at h − coal at h − HFO at h.</li>
+        <li><strong>Peak MW shed</strong> = maximum over 24 hours. <strong>Daily GWh shed</strong> = sum over 24 hours.</li>
+      </ul>
+      <p>This replaces the earlier approach that approximated peak MW from daily energy deficit × a peak factor, which understated true peak by ~35%. The memo's original figure of 2,100 MW for 100% blockade is now corrected to 2,851 MW under the same mitigation assumptions.</p>
+    </details>
+
+    <details>
+      <summary>Step 6 — Households affected (transparent assumption)</summary>
+      <p>Households experiencing blackout at peak hour = peak MW shed × 1,000 × 0.60 (residential share of shedding) ÷ 0.70 (kW average peak residential load). This gives a simultaneous-snapshot figure. Rotational shedding means different households experience blackout over the course of the day; total unique households over 24 hours can be 3–5× this snapshot. The dashboard reports the peak-hour snapshot.</p>
+    </details>
+
+    <details>
+      <summary>Step 7 — Economic cost (revised)</summary>
+      <p>Monthly cost components: (1) industrial output loss — dominant component at higher scenarios, calibrated at ~PKR 0.20B per GWh shed (cement, steel, textile, commercial); (2) gas-reallocation compensation to diverted sectors — ~PKR 1.2B/month for 200 mmcfd (CNG, captive, cement, commercial); (3) emergency fuel procurement premium — spot coal and HFO price differential; (4) coal spot premium — for accelerated 0.5M tonne procurement; (5) grid ancillary services — frequency regulation, voltage support, blackstart preparation.</p>
+    </details>
+
+    <details>
+      <summary>Known limitations & caveats</summary>
+      <ul>
+        <li>May 2025 total generation is interpolated, not observed. Refer to June/July figures for verified analysis.</li>
+        <li>OMO replacement by RLNG is conservatively assumed 1:1. In practice, some curtailments may be offset by reduced demand or imports.</li>
+        <li>Gas reallocation potential is based on summer conditions. Winter potential is ~40% lower due to domestic heating priority. Fertilizer diversion during urea-production seasons carries food-security costs not fully priced in.</li>
+        <li>Industrial output loss assumes no demand-side response beyond contracted load-shifting. Informal load curtailment could materially reduce this loss.</li>
+        <li>Cargo conversion uses fleet-average efficiency. Specific plant-level calculations may vary ±15%.</li>
+        <li>Economic cost excludes second-order effects (tariff adjustment, circular debt escalation, social impact from diverted-sector output losses).</li>
+        <li>Gas reallocation assumes SNGPL/SSGC pipeline capacity to redirect volumes — broadly true in summer when domestic demand is lower, but localized pipeline bottlenecks could constrain specific plant access.</li>
+      </ul>
+    </details>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><strong>Data sources:</strong> NEPRA Monthly Power Generation Reports (Mar, Jun, Jul 2025); NTDC Security Constrained Economic Dispatch Reports (May, Jun, Jul 2025); NTDC monthly marginal cost / demand profile (Jul 2025); AHL Research compilations.</p>
+    <p style="margin-top:0.75rem"><strong>Classification:</strong> Public analysis. Prepared for Energy Ministry / NTDC decision support; adapted for public dissemination. Figures subject to revision as additional NEPRA and NTDC data becomes available.</p>
+    <p style="margin-top:0.75rem">Last updated April 2026 · Period covered May–July 2025</p>
+  </footer>
+
+</div>
+
+<script>
+// ============ DATA ============
+const MONTHS = ['Mar 2025', 'Jun 2025', 'Jul 2025'];
+const RLNG = [1528, 2216, 2438];
+const TOTAL_GEN = [8409, 13744, 14123];
+const SHARE = RLNG.map((r, i) => +(r / TOTAL_GEN[i] * 100).toFixed(1));
+const OMO_LABELS = ['May 2025', 'Jun 2025', 'Jul 2025'];
+const OMO_VALS = [58, 24, 14];
+
+// July hourly profile (verified from NTDC file)
+const PEAK_HOURS = Array.from({length: 24}, (_, i) => String(i).padStart(2,'0') + ':00');
+const DEMAND_MW = [21193,20759,20398,19899,19230,18755,17343,16299,16302,16503,16098,16140,16045,16245,17312,18033,18273,18568,18338,19097,20212,20778,20759,21238];
+const MARGINAL_COST = [24.13,21.91,20.09,19.34,16.72,15.19,11.48,8.01,8.10,9.17,9.24,9.55,9.63,9.58,12.32,13.75,15.66,16.39,14.56,15.93,20.68,21.91,22.48,27.83];
+
+// Curtailment reason breakdown (approximate, from SCED review)
+const CURTAIL_REASONS = {
+  labels: ['Stability / Must-run (HVDC+HVAC)', 'Transmission congestion (220/500 kV)', 'RLNG prod. plan compliance', 'Outage management'],
+  values: [62, 22, 10, 6]
+};
+
+// Gas allocation and reallocation data for the Gas Lever section
+const GAS_ALLOC = {
+  labels: ['Power (incl. RLNG)', 'Domestic household', 'Fertilizer', 'Industrial captive', 'CNG', 'Commercial', 'Cement / general'],
+  values: [30, 25, 18, 12, 8, 2, 5]
+};
+const GAS_REALLOC = {
+  labels: ['CNG stations', 'Industrial captive', 'Cement / general', 'Non-critical fertilizer', 'Commercial / misc.'],
+  values: [50, 80, 30, 30, 15]
+};
+
+// ============ COMMON CHART STYLING ============
+const BRAND = {
+  accent: '#C8923A', text: '#1A1A1A', muted: '#999999', border: '#E5E5E5',
+  success: '#52B788', warning: '#9B2335', info: '#2E6F95', soft: '#FAFAFA'
+};
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = BRAND.muted;
+Chart.defaults.borderColor = BRAND.border;
+
+// ============ CHART 1: GENERATION MIX ============
+new Chart(document.getElementById('genMixChart'), {
+  type: 'bar',
+  data: {
+    labels: MONTHS,
+    datasets: [
+      {label: 'RLNG', data: RLNG, backgroundColor: BRAND.accent, borderWidth: 0, stack: 'stack'},
+      {label: 'Other generation', data: TOTAL_GEN.map((t, i) => t - RLNG[i]), backgroundColor: '#DADADA', borderWidth: 0, stack: 'stack'}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: {position: 'bottom', labels: {boxWidth: 14, padding: 16, color: BRAND.text}},
+      tooltip: {callbacks: {label: function(c){return c.dataset.label + ': ' + c.parsed.y.toLocaleString() + ' GWh';}}}
+    },
+    scales: {
+      x: {grid: {display: false}, ticks: {color: BRAND.text}},
+      y: {grid: {color: BRAND.border}, ticks: {callback: function(v){return (v/1000).toFixed(0) + 'k';}, color: BRAND.muted}, title: {display: true, text: 'GWh', color: BRAND.muted}}
+    }
+  }
+});
+
+// ============ CHART 2: RLNG SHARE LINE ============
+new Chart(document.getElementById('rlngShareChart'), {
+  type: 'line',
+  data: {
+    labels: MONTHS,
+    datasets: [{
+      label: 'RLNG share (%)',
+      data: SHARE,
+      borderColor: BRAND.accent, backgroundColor: 'rgba(200,146,58,0.12)',
+      fill: true, tension: 0.35, pointRadius: 5, pointBackgroundColor: BRAND.accent, pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2.5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: function(c){return c.parsed.y + '% of total generation';}}}
+    },
+    scales: {
+      x: {grid: {display: false}, ticks: {color: BRAND.text}},
+      y: {suggestedMin: 10, suggestedMax: 25, grid: {color: BRAND.border}, ticks: {callback: function(v){return v + '%';}, color: BRAND.muted}}
+    }
+  }
+});
+
+// ============ CHART 3: OMO CURTAILMENTS ============
+new Chart(document.getElementById('omoChart'), {
+  type: 'bar',
+  data: {
+    labels: OMO_LABELS,
+    datasets: [{
+      label: 'OMO curtailments (GWh)',
+      data: OMO_VALS,
+      backgroundColor: [BRAND.warning, BRAND.accent, BRAND.success],
+      borderWidth: 0, borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: function(c){return c.parsed.x + ' GWh replaced by RLNG';}}}
+    },
+    scales: {
+      x: {grid: {color: BRAND.border}, ticks: {callback: function(v){return v + ' GWh';}, color: BRAND.muted}, beginAtZero: true},
+      y: {grid: {display: false}, ticks: {color: BRAND.text, font: {size: 13}}}
+    }
+  }
+});
+
+// ============ CHART 4: CURTAIL REASONS ============
+new Chart(document.getElementById('curtailReasonChart'), {
+  type: 'doughnut',
+  data: {
+    labels: CURTAIL_REASONS.labels,
+    datasets: [{
+      data: CURTAIL_REASONS.values,
+      backgroundColor: [BRAND.warning, BRAND.accent, BRAND.info, BRAND.muted],
+      borderColor: '#fff', borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '62%',
+    plugins: {
+      legend: {position: 'right', labels: {boxWidth: 12, padding: 12, font: {size: 12}, color: BRAND.text}},
+      tooltip: {callbacks: {label: function(c){return c.label + ': ' + c.parsed + '%';}}}
+    }
+  }
+});
+
+// ============ CHART 4b: GAS ALLOCATION ============
+new Chart(document.getElementById('gasAllocChart'), {
+  type: 'doughnut',
+  data: {
+    labels: GAS_ALLOC.labels,
+    datasets: [{
+      data: GAS_ALLOC.values,
+      backgroundColor: [BRAND.warning, '#6C757D', BRAND.accent, BRAND.info, '#8FBC8F', '#B39CD0', '#D4A373'],
+      borderColor: '#fff', borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '55%',
+    plugins: {
+      legend: {position: 'right', labels: {boxWidth: 12, padding: 10, font: {size: 11}, color: BRAND.text}},
+      tooltip: {callbacks: {label: function(c){return c.label + ': ' + c.parsed + '%';}}}
+    }
+  }
+});
+
+// ============ CHART 4c: GAS REALLOCATION POTENTIAL ============
+new Chart(document.getElementById('gasRealloc'), {
+  type: 'bar',
+  data: {
+    labels: GAS_REALLOC.labels,
+    datasets: [{
+      label: 'Emergency reallocation potential (mmcfd)',
+      data: GAS_REALLOC.values,
+      backgroundColor: [BRAND.success, BRAND.accent, BRAND.success, BRAND.warning, BRAND.info],
+      borderRadius: 4, borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: function(c){
+        const gwh = (c.parsed.x * 0.13).toFixed(1);
+        return c.parsed.x + ' mmcfd (~' + gwh + ' GWh/day)';
+      }}}
+    },
+    scales: {
+      x: {grid: {color: BRAND.border}, ticks: {callback: function(v){return v + ' mmcfd';}, color: BRAND.muted}, beginAtZero: true},
+      y: {grid: {display: false}, ticks: {color: BRAND.text, font: {size: 12}}}
+    }
+  }
+});
+
+// ============ CHART 5: PEAK HOUR ============
+new Chart(document.getElementById('peakChart'), {
+  type: 'bar',
+  data: {
+    labels: PEAK_HOURS,
+    datasets: [
+      {type: 'bar', label: 'Demand (MW)', data: DEMAND_MW, backgroundColor: 'rgba(26,26,26,0.08)', borderColor: BRAND.text, borderWidth: 0, yAxisID: 'y', order: 2},
+      {type: 'line', label: 'Marginal cost (PKR/kWh)', data: MARGINAL_COST, borderColor: BRAND.accent, backgroundColor: 'rgba(200,146,58,0.1)', borderWidth: 2.5, tension: 0.25, pointRadius: 3, pointBackgroundColor: BRAND.accent, yAxisID: 'y1', order: 1, fill: false}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: {mode: 'index', intersect: false},
+    plugins: {
+      legend: {position: 'bottom', labels: {boxWidth: 14, padding: 16, color: BRAND.text}},
+      tooltip: {callbacks: {label: function(c){return c.dataset.label + ': ' + (c.datasetIndex === 0 ? c.parsed.y.toLocaleString() + ' MW' : 'PKR ' + c.parsed.y.toFixed(2));}}}
+    },
+    scales: {
+      x: {grid: {display: false}, ticks: {color: BRAND.muted, maxRotation: 0, autoSkipPadding: 10}},
+      y: {position: 'left', grid: {color: BRAND.border}, ticks: {callback: function(v){return (v/1000).toFixed(0) + 'k';}, color: BRAND.text}, title: {display: true, text: 'Demand (MW)', color: BRAND.muted}},
+      y1: {position: 'right', grid: {display: false}, ticks: {callback: function(v){return 'PKR ' + v;}, color: BRAND.accent}, title: {display: true, text: 'Marginal cost (PKR/kWh)', color: BRAND.accent}, min: 0, max: 30}
+    }
+  }
+});
+
+// ============ HOURLY STACK MODEL RESULTS ============
+// Produced by Python simulation: July 2025 hourly RLNG profile vs. mitigation stack
+// Gas: 20 GWh/day (200 mmcfd), dispatched proportionally, 4,000 MW plant cap
+// Coal: +200 MW during 17:00-22:00 (1.2 GWh/day)
+// HFO: +500 MW during 19:00-22:00 (2.0 GWh/day)
+const STACK = {
+  "50": {
+    "lost":  [1912,1864,1848,1820,1769,1762,1605,1456,1400,1427,1381,1371,1363,1378,1492,1576,1608,1660,1566,1683,1796,1849,1858,1876],
+    "gas":   [972,948,940,926,900,896,816,741,712,726,702,697,693,701,759,802,818,844,797,856,914,940,945,954],
+    "coal":  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,200,200,200,200,200,200,0],
+    "hfo":   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,500,500,500,500,0],
+    "shed":  [939,916,908,895,869,866,789,715,688,701,679,674,670,677,733,774,790,616,569,127,183,209,213,922],
+    "shed_no_gas": [1912,1864,1848,1820,1769,1762,1605,1456,1400,1427,1381,1371,1363,1378,1492,1576,1608,1460,1366,983,1096,1149,1158,1876],
+    "peak_mw": 939, "peak_mw_no_gas": 1912, "peak_hr": 0,
+    "total_gwh_shed": 16.1, "total_gwh_shed_no_gas": 36.1, "cost_band": "PKR 4–6B"
+  },
+  "70": {
+    "lost":  [2676,2610,2586,2549,2477,2466,2247,2038,1960,1998,1933,1919,1908,1930,2090,2206,2252,2324,2192,2356,2515,2589,2601,2626],
+    "gas":   [972,948,940,926,900,896,816,741,712,726,702,697,693,701,759,802,818,844,797,856,914,940,945,954],
+    "coal":  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,200,200,200,200,200,200,0],
+    "hfo":   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,500,500,500,500,0],
+    "shed":  [1704,1662,1647,1623,1577,1570,1431,1298,1248,1272,1231,1222,1215,1229,1330,1405,1434,1280,1196,800,901,948,956,1672],
+    "shed_no_gas": [2676,2610,2586,2549,2477,2466,2247,2038,1960,1998,1933,1919,1908,1930,2090,2206,2252,2124,1992,1656,1815,1889,1901,2626],
+    "peak_mw": 1704, "peak_mw_no_gas": 2676, "peak_hr": 0,
+    "total_gwh_shed": 31.9, "total_gwh_shed_no_gas": 51.9, "cost_band": "PKR 8–12B"
+  },
+  "100": {
+    "lost":  [3823,3729,3695,3641,3538,3523,3210,2912,2800,2854,2762,2742,2726,2757,2985,3152,3217,3320,3132,3366,3593,3698,3716,3752],
+    "gas":   [972,948,940,926,900,896,816,741,712,726,702,697,693,701,759,802,818,844,797,856,914,940,945,954],
+    "coal":  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,200,200,200,200,200,200,0],
+    "hfo":   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,500,500,500,500,0],
+    "shed":  [2851,2781,2755,2715,2638,2627,2394,2171,2088,2128,2060,2045,2033,2056,2226,2350,2399,2276,2135,1810,1979,2058,2071,2798],
+    "shed_no_gas": [3823,3729,3695,3641,3538,3523,3210,2912,2800,2854,2762,2742,2726,2757,2985,3152,3217,3120,2932,2666,2893,2998,3016,3752],
+    "peak_mw": 2851, "peak_mw_no_gas": 3823, "peak_hr": 0,
+    "total_gwh_shed": 55.4, "total_gwh_shed_no_gas": 75.4, "cost_band": "PKR 15–22B"
+  }
+};
+
+// Cost breakdowns per scenario (PKR billion / month)
+const COST_BREAKDOWN = {
+  "50":  {labels: ['Industrial output loss', 'Gas reallocation comp.', 'Emergency fuel premium', 'Coal spot premium', 'Grid ancillary'], values: [2.5, 1.2, 0.5, 0.6, 0.2], color: '#2E6F95'},
+  "70":  {labels: ['Industrial output loss', 'Gas reallocation comp.', 'Emergency fuel premium', 'Coal spot premium', 'Grid ancillary'], values: [6.0, 1.2, 1.2, 1.0, 0.4], color: '#C8923A'},
+  "100": {labels: ['Industrial output loss', 'Gas reallocation comp.', 'Emergency fuel premium', 'Coal spot premium', 'Grid ancillary'], values: [12.0, 1.2, 2.5, 1.5, 0.6], color: '#9B2335'}
+};
+
+const HOURS = Array.from({length: 24}, function(_, i){return String(i).padStart(2,'0') + ':00';});
+const SCENARIO_COLORS = {'50': BRAND.info, '70': BRAND.accent, '100': BRAND.warning};
+
+// ============ CHART 6: HOURLY STACK (stacked bars + shed line) ============
+const hourlyStackCtx = document.getElementById('hourlyStackChart');
+const hourlyStackChart = new Chart(hourlyStackCtx, {
+  type: 'bar',
+  data: {
+    labels: HOURS,
+    datasets: [
+      {label: 'Gas reallocation', data: STACK['50'].gas, backgroundColor: BRAND.success, stack: 'stack', borderWidth: 0, order: 2},
+      {label: 'Coal ramp', data: STACK['50'].coal, backgroundColor: BRAND.accent, stack: 'stack', borderWidth: 0, order: 2},
+      {label: 'HFO emergency', data: STACK['50'].hfo, backgroundColor: BRAND.info, stack: 'stack', borderWidth: 0, order: 2},
+      {label: 'Residual shed', data: STACK['50'].shed, backgroundColor: 'rgba(155,35,53,0.85)', stack: 'stack', borderWidth: 0, order: 2},
+      {label: 'RLNG lost (total)', data: STACK['50'].lost, type: 'line', borderColor: BRAND.text, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, pointBackgroundColor: BRAND.text, order: 1, tension: 0.2}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: {mode: 'index', intersect: false},
+    plugins: {
+      legend: {position: 'bottom', labels: {boxWidth: 12, padding: 10, font: {size: 11}, color: BRAND.text}},
+      tooltip: {callbacks: {label: function(c){return c.dataset.label + ': ' + c.parsed.y.toLocaleString() + ' MW';}}}
+    },
+    scales: {
+      x: {stacked: true, grid: {display: false}, ticks: {color: BRAND.muted, maxRotation: 0, autoSkipPadding: 10, font: {size: 10}}},
+      y: {stacked: true, grid: {color: BRAND.border}, ticks: {callback: function(v){return v.toLocaleString() + ' MW';}, color: BRAND.muted}, title: {display: true, text: 'MW', color: BRAND.muted}}
+    }
+  }
+});
+
+// ============ CHART 7: SHED COMPARE (with vs without gas) ============
+const shedCompareCtx = document.getElementById('shedCompareChart');
+const shedCompareChart = new Chart(shedCompareCtx, {
+  type: 'line',
+  data: {
+    labels: HOURS,
+    datasets: [
+      {label: 'Shed (no gas lever)', data: STACK['50'].shed_no_gas, borderColor: BRAND.text, backgroundColor: 'rgba(26,26,26,0.06)', borderWidth: 2, fill: 'origin', tension: 0.25, pointRadius: 2, borderDash: [6,4]},
+      {label: 'Shed (w/ gas lever)', data: STACK['50'].shed, borderColor: BRAND.info, backgroundColor: 'rgba(46,111,149,0.20)', borderWidth: 2.5, fill: 'origin', tension: 0.25, pointRadius: 3, pointBackgroundColor: BRAND.info}
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: {position: 'bottom', labels: {boxWidth: 14, padding: 16, color: BRAND.text}},
+      tooltip: {callbacks: {label: function(c){return c.dataset.label + ': ' + c.parsed.y.toLocaleString() + ' MW';}}}
+    },
+    scales: {
+      x: {grid: {display: false}, ticks: {color: BRAND.muted, maxRotation: 0, autoSkipPadding: 10, font: {size: 10}}},
+      y: {beginAtZero: true, grid: {color: BRAND.border}, ticks: {callback: function(v){return v.toLocaleString();}, color: BRAND.muted}, title: {display: true, text: 'MW shed', color: BRAND.muted}}
+    }
+  }
+});
+
+// ============ CHART 8: COST BREAKDOWN ============
+const costCtx = document.getElementById('costBreakdownChart');
+const costChart = new Chart(costCtx, {
+  type: 'bar',
+  data: {
+    labels: COST_BREAKDOWN['50'].labels,
+    datasets: [{
+      label: 'PKR billion',
+      data: COST_BREAKDOWN['50'].values,
+      backgroundColor: BRAND.info,
+      borderRadius: 4, borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    plugins: {
+      legend: {display: false},
+      tooltip: {callbacks: {label: function(c){return 'PKR ' + c.parsed.x.toFixed(1) + 'B';}}}
+    },
+    scales: {
+      x: {grid: {color: BRAND.border}, ticks: {callback: function(v){return 'PKR ' + v + 'B';}, color: BRAND.muted}, beginAtZero: true},
+      y: {grid: {display: false}, ticks: {color: BRAND.text, font: {size: 12}}}
+    }
+  }
+});
+
+// ============ SCENARIO SWITCHING (hourly stack model) ============
+function fmt(n) { return n.toLocaleString(); }
+function householdsAtPeak(peakMW) {
+  // 60% residential share × 1000 kW/MW ÷ 0.7 kW average residential peak load
+  return Math.round(peakMW * 1000 * 0.6 / 0.7);
+}
+
+function applyScenario(pct) {
+  const s = STACK[pct];
+  const color = SCENARIO_COLORS[pct];
+  const hh = householdsAtPeak(s.peak_mw);
+  const hhNoGas = householdsAtPeak(s.peak_mw_no_gas);
+
+  // KPI cards
+  document.getElementById('sc-load-val').textContent = fmt(s.peak_mw) + ' MW';
+  document.getElementById('sc-load').querySelector('.kpi-label').innerHTML =
+    'Peak hourly shed <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-tertiary)">(no gas: ' + fmt(s.peak_mw_no_gas) + ')</span>';
+
+  document.getElementById('sc-energy-val').textContent = s.total_gwh_shed + ' GWh';
+  document.getElementById('sc-energy').querySelector('.kpi-label').innerHTML =
+    'Daily energy shed <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-tertiary)">(no gas: ' + s.total_gwh_shed_no_gas + ')</span>';
+
+  document.getElementById('sc-hh-val').textContent = '~' + (hh >= 1e6 ? (hh/1e6).toFixed(1) + 'M' : Math.round(hh/1000) + 'k');
+
+  document.getElementById('sc-cost-val').textContent = s.cost_band;
+
+  ['sc-load', 'sc-energy', 'sc-hh', 'sc-cost'].forEach(function(id){
+    document.getElementById(id).style.borderTopColor = color;
+  });
+
+  // Update hourly stack chart
+  hourlyStackChart.data.datasets[0].data = s.gas;
+  hourlyStackChart.data.datasets[1].data = s.coal;
+  hourlyStackChart.data.datasets[2].data = s.hfo;
+  hourlyStackChart.data.datasets[3].data = s.shed;
+  hourlyStackChart.data.datasets[3].backgroundColor = 'rgba(' + hexToRgb(color) + ',0.80)';
+  hourlyStackChart.data.datasets[4].data = s.lost;
+  hourlyStackChart.update();
+
+  // Update compare chart
+  shedCompareChart.data.datasets[0].data = s.shed_no_gas;
+  shedCompareChart.data.datasets[1].data = s.shed;
+  shedCompareChart.data.datasets[1].borderColor = color;
+  shedCompareChart.data.datasets[1].backgroundColor = 'rgba(' + hexToRgb(color) + ',0.18)';
+  shedCompareChart.data.datasets[1].pointBackgroundColor = color;
+  shedCompareChart.update();
+
+  // Update cost breakdown
+  const cb = COST_BREAKDOWN[pct];
+  costChart.data.datasets[0].data = cb.values;
+  costChart.data.datasets[0].backgroundColor = color;
+  costChart.update();
+}
+
+function hexToRgb(hex) {
+  hex = hex.replace('#','');
+  const r = parseInt(hex.substr(0,2), 16);
+  const g = parseInt(hex.substr(2,2), 16);
+  const b = parseInt(hex.substr(4,2), 16);
+  return r + ',' + g + ',' + b;
+}
+
+document.querySelectorAll('.scenario-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.scenario-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    applyScenario(btn.dataset.scenario);
+  });
+});
+
+// ============ CALCULATOR (hourly stack simulation in browser) ============
+// July hourly RLNG profile (same source as STACK)
+const RLNG_HOURLY = [3823,3729,3695,3641,3538,3523,3210,2912,2800,2854,2762,2742,2726,2757,2985,3152,3217,3320,3132,3366,3593,3698,3716,3752];
+
+function simulateHourly(pctLoss, gasMmcfd, includeCoal, includeHfo) {
+  // Same logic as Python simulation
+  const lost = RLNG_HOURLY.map(function(r){ return r * pctLoss / 100; });
+
+  // Gas: proportional dispatch with re-allocation of slack
+  const gasBudgetMwh = gasMmcfd * 0.13 * 1000 * 0.77; // 77% haircut
+  const plantCap = 4000;
+  const totalLost = lost.reduce(function(a,b){return a+b;}, 0);
+  let gas = [];
+  if (gasBudgetMwh > 0 && totalLost > 0) {
+    gas = lost.map(function(l){ return Math.min(plantCap, l * gasBudgetMwh / totalLost); });
+    let remaining = gasBudgetMwh - gas.reduce(function(a,b){return a+b;}, 0);
+    let iter = 0;
+    while (remaining > 1 && iter < 30) {
+      let bestH = -1, bestRes = 0;
+      for (let h = 0; h < 24; h++) {
+        const res = lost[h] - gas[h];
+        const room = plantCap - gas[h];
+        if (res > 0 && room > 0 && res > bestRes) { bestH = h; bestRes = res; }
+      }
+      if (bestH < 0) break;
+      const add = Math.min(remaining, lost[bestH] - gas[bestH], plantCap - gas[bestH]);
+      gas[bestH] += add;
+      remaining -= add;
+      iter++;
+    }
+  } else {
+    gas = new Array(24).fill(0);
+  }
+
+  // Coal: +200 MW during 17:00-22:00
+  const coalCap = Array.from({length: 24}, function(_, h){ return (includeCoal && h >= 17 && h <= 22) ? 200 : 0; });
+  const afterGas = lost.map(function(l, h){ return Math.max(l - gas[h], 0); });
+  const coal = afterGas.map(function(a, h){ return Math.min(a, coalCap[h]); });
+
+  // HFO: 500 MW during 19:00-22:00
+  const hfoCap = Array.from({length: 24}, function(_, h){ return (includeHfo && h >= 19 && h <= 22) ? 500 : 0; });
+  const afterCoal = afterGas.map(function(a, h){ return Math.max(a - coal[h], 0); });
+  const hfo = afterCoal.map(function(a, h){ return Math.min(a, hfoCap[h]); });
+
+  const shed = afterCoal.map(function(a, h){ return Math.max(a - hfo[h], 0); });
+
+  return {
+    lost: lost, gas: gas, coal: coal, hfo: hfo, shed: shed,
+    peakMw: Math.max.apply(null, shed),
+    totalGwhShed: shed.reduce(function(a,b){return a+b;}, 0) / 1000,
+    totalGasGwh: gas.reduce(function(a,b){return a+b;}, 0) / 1000
+  };
+}
+
+function updateCalc() {
+  const pct = +document.getElementById('calc-pct').value;
+  const days = +document.getElementById('calc-days').value;
+  const gasMmcfd = +document.getElementById('calc-gas').value;
+  const otherPct = +document.getElementById('calc-other').value;
+  const includeCoal = otherPct > 0;
+  const includeHfo = otherPct > 50;
+
+  document.getElementById('calc-pct-val').textContent = pct + '%';
+  document.getElementById('calc-days-val').textContent = days;
+  document.getElementById('calc-gas-val').textContent = gasMmcfd;
+  document.getElementById('calc-other-val').textContent = otherPct + '%';
+
+  const sim = simulateHourly(pct, gasMmcfd, includeCoal, includeHfo);
+  // Scale down coal/HFO by otherPct (partial availability)
+  const scale = otherPct / 100;
+  const shed = sim.lost.map(function(l, h){
+    return Math.max(l - sim.gas[h] - sim.coal[h] * scale - sim.hfo[h] * scale, 0);
+  });
+  const peakMw = Math.max.apply(null, shed);
+  const totalGwhShed = shed.reduce(function(a,b){return a+b;}, 0) / 1000;
+  const totalEnergyShedWindow = totalGwhShed * days;
+
+  // Households at peak: 60% residential × 1000 kW/MW ÷ 0.7 kW
+  const hh = Math.round(peakMw * 857);
+  const hhStr = hh >= 1e6 ? (hh/1e6).toFixed(1) + 'M' : Math.round(hh/1000) + 'k';
+
+  // Cost: calibrated to scenario outputs
+  // Industrial output loss: ~PKR 0.2B per GWh shed
+  // Gas compensation: PKR 40M per mmcfd-month
+  // Emergency fuel: PKR 0.02B per GWh of HFO
+  const industrialLoss = totalEnergyShedWindow * 0.20;
+  const gasComp = gasMmcfd * 0.040 * days / 30;
+  const emergencyFuel = (sim.hfo.reduce(function(a,b){return a+b;}, 0) / 1000) * days * 0.05;
+  const costB = industrialLoss + gasComp + emergencyFuel;
+
+  document.getElementById('calc-cost-out').textContent = 'PKR ' + costB.toFixed(1) + 'B';
+  document.getElementById('calc-mw-out').textContent = '~' + Math.round(peakMw).toLocaleString() + ' MW';
+  document.getElementById('calc-hh-out').textContent = '~' + hhStr;
+  document.getElementById('calc-shed-out').textContent = '~' + Math.round(totalEnergyShedWindow) + ' GWh';
+  document.getElementById('calc-gasgwh-out').textContent = '~' + sim.totalGasGwh.toFixed(1) + ' GWh/day';
+}
+['calc-pct', 'calc-days', 'calc-gas', 'calc-other'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', updateCalc);
+});
+updateCalc();
+
+// Initial scenario render
+applyScenario('50');
+
+// ============ NAV ACTIVE STATE ============
+const navLinks = document.querySelectorAll('.nav-inner a');
+const sections = Array.from(navLinks).map(function(a){return document.querySelector(a.getAttribute('href'));});
+function updateNav() {
+  const y = window.scrollY + 120;
+  let idx = 0;
+  sections.forEach(function(s, i){if (s && s.offsetTop <= y) idx = i;});
+  navLinks.forEach(function(a){a.classList.remove('active');});
+  if (navLinks[idx]) navLinks[idx].classList.add('active');
+}
+window.addEventListener('scroll', updateNav);
+updateNav();
+
+</script>
+</body>
+</html>
