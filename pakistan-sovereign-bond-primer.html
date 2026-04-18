@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sovereign Bond Pricing: A Fixed Income Primer — Pakistan Eurobond Case Study</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #FFFFFF;
+      --secondary: #FAFAFA;
+      --border: #E5E5E5;
+      --accent: #C8923A;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --success: #52B788;
+      --warning: #9B2335;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: var(--primary);
+      color: #2D2D2D;
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* HEADER */
+    .doc-header {
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 0 2rem;
+      margin-bottom: 0;
+    }
+    .doc-meta {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .doc-title {
+      font-family: Georgia, serif;
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .doc-subtitle {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+    .doc-tags {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .tag.amber { background: #FFF8F0; border-color: #C8923A; color: #C8923A; }
+
+    /* TABS */
+    .tabs {
+      display: flex; gap: 0; flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      margin: 0;
+      padding: 0;
+      position: sticky; top: 0;
+      background: white;
+      z-index: 100;
+    }
+    .tab-btn {
+      background: none; border: none;
+      padding: 1rem 1.25rem;
+      font-size: 12px; font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+
+    .tab-content { display: none; padding: 2.5rem 0; }
+    .tab-content.active { display: block; }
+
+    /* SECTIONS */
+    .section-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.1em; color: var(--text-tertiary);
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: Georgia, serif;
+      font-size: 26px; font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem; line-height: 1.2;
+    }
+    .section-intro {
+      font-size: 14px; color: #3D3D3D;
+      line-height: 1.75; margin-bottom: 1.5rem;
+      max-width: 820px;
+    }
+
+    /* GRIDS */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+    .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0; }
+
+    /* PANELS */
+    .panel {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .panel-title {
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.08em; color: var(--text-secondary);
+      text-transform: uppercase; margin-bottom: 1rem;
+    }
+
+    /* INSIGHT BOXES */
+    .insight-box {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--success);
+      padding: 1.25rem;
+      border-radius: 0 0 6px 6px;
+    }
+    .insight-box.amber { border-top-color: var(--accent); }
+    .insight-box.red { border-top-color: var(--warning); }
+    .insight-box.blue { border-top-color: #4A7DC8; }
+    .insight-num {
+      font-family: Georgia, serif;
+      font-size: 26px; font-weight: 400;
+      color: var(--text-primary); line-height: 1;
+    }
+    .insight-text {
+      font-size: 12px; color: var(--text-secondary);
+      margin-top: 0.5rem; line-height: 1.5;
+    }
+    .insight-sub {
+      font-size: 11px; color: var(--text-tertiary);
+      margin-top: 0.25rem;
+    }
+
+    /* TABLES */
+    .est-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13px; margin: 1rem 0;
+    }
+    .est-table th {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.08em; color: var(--text-primary);
+      text-align: left; padding: 0.75rem 0.875rem;
+      border-bottom: 2px solid var(--border);
+      background: var(--primary);
+      text-transform: uppercase;
+    }
+    .est-table td {
+      padding: 0.75rem 0.875rem;
+      border-bottom: 1px solid var(--border);
+      color: #2D2D2D;
+    }
+    .est-table tr:hover td { background: var(--secondary); }
+    .est-table tr.highlight td { background: #FFF8F0; }
+    .est-table tr.highlight-green td { background: #F0FAF5; }
+    .num { font-family: Georgia, serif; font-variant-numeric: tabular-nums; }
+    .badge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.2rem 0.55rem; border-radius: 4px;
+    }
+    .badge-green { background: #E8F5EE; color: #2D8055; }
+    .badge-amber { background: #FFF3E0; color: #C8923A; }
+    .badge-red { background: #FDECEA; color: #9B2335; }
+    .badge-blue { background: #E8F0FA; color: #4A7DC8; }
+    .badge-gray { background: #F0F0F0; color: #555; }
+
+    /* VERDICTS & CALLOUTS */
+    .verdict {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .verdict-label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; color: var(--text-tertiary);
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .verdict-text {
+      font-size: 14px; color: #2D2D2D;
+      line-height: 1.7;
+    }
+    .callout {
+      background: var(--secondary);
+      border-left: 4px solid var(--success);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 14px; color: #2D2D2D; line-height: 1.7;
+    }
+    .callout.amber { border-left-color: var(--accent); }
+    .callout.red { border-left-color: var(--warning); }
+
+    /* FORMULA BOXES */
+    .formula-box {
+      background: #F5F5F5;
+      border: 1px solid #DCDCDC;
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 1.25rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 2;
+      color: var(--text-primary);
+      text-align: center;
+    }
+    .formula-box .formula-title {
+      font-family: -apple-system, sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; color: var(--text-tertiary);
+      text-transform: uppercase; margin-bottom: 0.75rem;
+      text-align: left;
+    }
+
+    /* STEP PROCESS */
+    .step-list { margin: 1rem 0; }
+    .step {
+      display: flex; gap: 1.25rem;
+      margin-bottom: 1.25rem; align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--accent); color: white;
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; }
+    .step-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* RISK FACTOR CARDS */
+    .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0; }
+    .risk-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      background: var(--primary);
+    }
+    .risk-card-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 0.875rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .risk-icon {
+      width: 32px; height: 32px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .risk-card-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .risk-card-sub { font-size: 11px; color: var(--text-tertiary); }
+    .risk-items { list-style: none; }
+    .risk-items li {
+      font-size: 13px; color: #3D3D3D;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: baseline; gap: 0.5rem;
+    }
+    .risk-items li:last-child { border-bottom: none; }
+    .risk-items li::before { content: "–"; color: var(--accent); flex-shrink: 0; }
+
+    /* YIELD VISUALIZATION */
+    .yield-bar-wrap { margin: 0.5rem 0; }
+    .yield-bar-row {
+      display: flex; align-items: center; gap: 0.875rem;
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .yield-bar-label { width: 180px; flex-shrink: 0; color: var(--text-primary); font-size: 13px; }
+    .yield-bar-track { flex: 1; background: #F0F0F0; border-radius: 4px; height: 10px; overflow: hidden; }
+    .yield-bar-fill { height: 100%; border-radius: 4px; background: var(--success); }
+    .yield-bar-fill.amber { background: var(--accent); }
+    .yield-bar-fill.red { background: var(--warning); }
+    .yield-bar-fill.gray { background: #AAAAAA; }
+    .yield-bar-fill.blue { background: #4A7DC8; }
+    .yield-bar-val { width: 60px; text-align: right; font-family: Georgia, serif; font-weight: 400; font-size: 14px; color: var(--text-primary); flex-shrink: 0; }
+    .yield-bar-extra { width: 140px; font-size: 11px; color: var(--text-tertiary); flex-shrink: 0; }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    /* CHART WRAPPERS */
+    .chart-wrap { position: relative; height: 280px; margin: 1rem 0; }
+    .chart-wrap-sm { position: relative; height: 220px; margin: 0.75rem 0; }
+
+    /* ANNOTATION / TOOLTIP */
+    .annotation {
+      font-size: 11px; color: var(--text-tertiary);
+      margin-top: 0.5rem; font-style: italic;
+    }
+
+    /* SPREAD DECOMP */
+    .spread-row {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .spread-row.total { font-weight: 700; font-size: 14px; }
+    .spread-label { color: var(--text-primary); }
+    .spread-bps { font-family: Georgia, serif; font-size: 15px; color: var(--text-primary); }
+    .spread-bar { height: 6px; border-radius: 3px; background: var(--accent); margin-top: 4px; }
+
+    /* FOOTNOTE */
+    .footnote {
+      font-size: 11px; color: var(--text-tertiary);
+      line-height: 1.6; margin-top: 2rem;
+      padding-top: 1.25rem; border-top: 1px solid var(--border);
+    }
+
+    /* CONCEPT DEF */
+    .concept-box {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.25rem;
+      margin: 1rem 0;
+    }
+    .concept-term {
+      font-size: 13px; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 0.4rem;
+    }
+    .concept-def { font-size: 13px; color: #3D3D3D; line-height: 1.65; }
+
+    /* RATING SCALE */
+    .rating-tier {
+      display: flex; gap: 1rem; align-items: stretch;
+      padding: 0.875rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .rating-codes { width: 200px; flex-shrink: 0; }
+    .rating-label { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
+    .rating-agencies { font-size: 11px; color: var(--text-tertiary); }
+    .rating-desc { flex: 1; font-size: 13px; color: #3D3D3D; line-height: 1.55; }
+    .rating-yield { width: 100px; text-align: right; font-family: Georgia, serif; font-size: 14px; flex-shrink: 0; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .two-col, .three-col, .four-col { grid-template-columns: 1fr; }
+      .risk-grid { grid-template-columns: 1fr; }
+      .doc-title { font-size: 26px; }
+      .yield-bar-extra { display: none; }
+      .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    }
+
+    p { margin-bottom: 0.875rem; }
+    strong { color: var(--text-primary); }
+    .mt1 { margin-top: 1rem; }
+    .mt2 { margin-top: 2rem; }
+    .mb1 { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-meta">Fixed Income Investment — IBA Karachi &nbsp;·&nbsp; Learning Module &nbsp;·&nbsp; April 2026</div>
+    <h1 class="doc-title">Sovereign Bond Pricing: A Fixed Income Primer</h1>
+    <div class="doc-subtitle">Anchored in Pakistan's 6.95% Eurobond, April 2029</div>
+    <div class="doc-tags">
+      <span class="tag amber">Case Study: Pakistan</span>
+      <span class="tag">Sovereign Risk</span>
+      <span class="tag">Credit Spreads</span>
+      <span class="tag">Emerging Markets</span>
+      <span class="tag">Yield Analysis</span>
+      <span class="tag">Credit Ratings</span>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('intro')">I. Overview</button>
+    <button class="tab-btn" onclick="switchTab('pricing')">II. Pricing Mechanics</button>
+    <button class="tab-btn" onclick="switchTab('pakistan')">III. Pakistan Bonds</button>
+    <button class="tab-btn" onclick="switchTab('spreads')">IV. Credit Spreads</button>
+    <button class="tab-btn" onclick="switchTab('ratings')">V. Rating Tiers</button>
+    <button class="tab-btn" onclick="switchTab('risk')">VI. Sovereign Risk</button>
+    <button class="tab-btn" onclick="switchTab('case')">VII. Case Study</button>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- TAB I: OVERVIEW -->
+  <!-- ======================================================== -->
+  <div id="intro" class="tab-content active">
+
+    <div class="section-label">Module Overview</div>
+    <h2 class="section-title">What is a Eurobond — and Why Does Pakistan's Yield Matter?</h2>
+
+    <p class="section-intro">
+      On April 17, 2026, Pakistan priced a new US dollar-denominated Eurobond at a yield of <strong>6.95%</strong>, 
+      maturing in April 2029 — its first fresh sovereign Eurobond issuance after a nearly five-year hiatus from global capital markets. 
+      This transaction sits at the intersection of sovereign credit, interest rate benchmarks, and investor risk appetite. 
+      Understanding why Pakistan pays 6.95% — and not 3.95% or 9.95% — is the central question of this module.
+    </p>
+
+    <div class="four-col">
+      <div class="insight-box amber">
+        <div class="insight-num">6.95%</div>
+        <div class="insight-text">Pakistan's new Eurobond yield (April 2029 maturity)</div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-num">~320 bps</div>
+        <div class="insight-text">Credit spread over US Treasury 3-year benchmark (~3.75%)</div>
+      </div>
+      <div class="insight-box blue">
+        <div class="insight-num">Caa1 / B+</div>
+        <div class="insight-text">Moody's / Fitch sovereign credit rating (April 2026)</div>
+      </div>
+      <div class="insight-box red">
+        <div class="insight-num">$4.5B</div>
+        <div class="insight-text">Pakistan's outstanding sovereign Eurobond stock post-issuance</div>
+      </div>
+    </div>
+
+    <div class="callout amber">
+      <strong>Learning arc:</strong> This module builds from first principles — what a bond is, how it is priced, 
+      what "yield" means — then layers in sovereign-specific risk: why some governments borrow at 2% and others at 12%, 
+      how credit ratings translate into yield premiums, and how global investors decompose a sovereign spread into its component risks.
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Key Concepts</div>
+    <h2 class="section-title">Building Blocks: What You Need to Know First</h2>
+
+    <div class="two-col">
+      <div>
+        <div class="concept-box">
+          <div class="concept-term">Eurobond</div>
+          <div class="concept-def">A bond issued in a currency other than the issuer's home currency, 
+          sold internationally across multiple markets. Pakistan's Eurobonds are USD-denominated, 
+          issued under English law, and settle through Euroclear/Clearstream. The "Euro" prefix 
+          is historical — it has nothing to do with the euro currency.</div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-term">Yield to Maturity (YTM)</div>
+          <div class="concept-def">The total annualised return an investor earns if they hold the bond to maturity, 
+          assuming all coupon payments are reinvested at the same rate. When we say Pakistan "priced at 6.95%," 
+          we mean the YTM at issuance equals 6.95%. If the coupon is also set at 6.95%, the bond is issued at par (100 cents).</div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-term">Risk-Free Rate</div>
+          <div class="concept-def">The return on an asset assumed to carry zero default risk. 
+          For USD-denominated sovereign bonds, the benchmark is US Treasury securities. 
+          The 3-year US Treasury yielded ~3.75% on the Pakistan pricing date (April 17, 2026). 
+          Every other sovereign is priced as a spread above this baseline.</div>
+        </div>
+      </div>
+      <div>
+        <div class="concept-box">
+          <div class="concept-term">Credit Spread</div>
+          <div class="concept-def">The additional yield an investor demands over the risk-free rate to compensate 
+          for default probability, liquidity constraints, and market risk. Pakistan's spread of ~320 bps means 
+          investors require 3.20 percentage points over US Treasuries to lend to the Government of Pakistan.</div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-term">Sovereign Credit Rating</div>
+          <div class="concept-def">An assessment by agencies (Moody's, Fitch, S&P) of a government's 
+          willingness and ability to service its debt. Ratings range from AAA (near-zero default risk) 
+          to C/D (default). Pakistan currently holds Caa1 (Moody's) and B+ (Fitch) — both sub-investment grade, 
+          meaning the bond is "high yield" or "speculative grade."</div>
+        </div>
+        <div class="concept-box">
+          <div class="concept-term">Price vs. Yield Inverse Relationship</div>
+          <div class="concept-def">Bond prices and yields move in opposite directions. 
+          If a $1,000 bond with a 6.95% coupon can be bought for $950 in the secondary market, 
+          its yield is higher than 6.95%. When credit perception improves, 
+          prices rise and yields compress — and vice versa.</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Context</div>
+    <h2 class="section-title">Pakistan's Return to Global Capital Markets</h2>
+
+    <p class="section-intro">Pakistan last issued a sovereign Eurobond in April 2021, raising $2.5 billion across three tranches 
+    (5-year at 6%, 10-year at 7.375%, 30-year at 8.875%). A combination of balance-of-payments stress, 
+    near-default conditions in 2023, and multiple IMF programme reviews kept it out of commercial markets for five years. 
+    The April 2026 issuance signals a turning point — underwritten by rating upgrades, $20+ billion in foreign reserves, 
+    and the demonstration of timely Eurobond repayment on April 8, 2026 ($1.3 billion principal + $126 million coupons).</p>
+
+    <div class="verdict">
+      <div class="verdict-label">Why This Matters Pedagogically</div>
+      <div class="verdict-text">Pakistan's Eurobond is textbook sovereign risk in action: a sub-investment-grade 
+      emerging market with improving-but-fragile fundamentals, re-entering global markets after distress, 
+      paying a yield that precisely reflects the market's probability-weighted assessment of its creditworthiness. 
+      Every component of the 6.95% yield — the risk-free rate, the credit premium, the liquidity premium — can be dissected and taught.</div>
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- TAB II: PRICING MECHANICS -->
+  <!-- ======================================================== -->
+  <div id="pricing" class="tab-content">
+
+    <div class="section-label">Core Methodology</div>
+    <h2 class="section-title">How Sovereign Bond Pricing Works</h2>
+
+    <p class="section-intro">
+      Sovereign bond pricing is anchored in present value theory. A bond's price equals the sum of discounted 
+      future cash flows, where the discount rate reflects the risk-adjusted required return of investors. 
+      In practice, new sovereign bonds are priced through a bookbuilding process anchored to a benchmark yield 
+      plus a negotiated credit spread.
+    </p>
+
+    <div class="section-label">The Fundamental Identity</div>
+
+    <div class="formula-box">
+      <div class="formula-title">Bond Pricing Formula</div>
+      P = Σ [C / (1 + y)ᵗ] + [F / (1 + y)ⁿ]
+      <br>
+      <span style="font-size:12px;font-family:sans-serif;color:#666;">
+        P = Price &nbsp;·&nbsp; C = Coupon Payment &nbsp;·&nbsp; y = Yield per period &nbsp;·&nbsp; t = Period &nbsp;·&nbsp; F = Face Value &nbsp;·&nbsp; n = Total Periods
+      </span>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-title">Sovereign Yield Decomposition</div>
+      Sovereign Yield = Risk-Free Rate + Credit Spread
+      <br>
+      Credit Spread = Default Risk Premium + Liquidity Premium + Country Risk Premium
+      <br>
+      <span style="font-size:12px;font-family:sans-serif;color:#666;">
+        Pakistan Example: 6.95% = 3.75% (UST 3yr) + 3.20% (credit spread)
+      </span>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Issuance Process</div>
+    <h2 class="section-title">From Road Show to Settlement: How a Sovereign Eurobond is Issued</h2>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Mandate & Documentation</div>
+          <div class="step-text">The government mandates 3–5 lead managers (global investment banks: e.g., Citi, JPMorgan, Deutsche Bank). 
+          A prospectus is prepared under the sovereign's Global Medium-Term Note (GMTN) programme, 
+          covering financial terms, legal jurisdiction, use of proceeds, and risk disclosures. 
+          Pakistan's GMTN programme is listed on the London Stock Exchange.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Investor Road Show</div>
+          <div class="step-text">Finance Ministry officials and lead managers travel to major financial centres 
+          (London, New York, Hong Kong, Dubai, Zurich) to present the sovereign's economic case to institutional investors 
+          — pension funds, sovereign wealth funds, hedge funds, asset managers. The road show typically lasts 3–5 days. 
+          Investor feedback begins to shape pricing expectations.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Initial Price Talk (IPT)</div>
+          <div class="step-text">Lead managers publish an Initial Price Talk — a yield range (e.g., "7.25% area") 
+          to gauge market demand. This is not a commitment; it is an anchor for bookbuilding. 
+          Investors submit "orders" — the size they would buy at what yield.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Bookbuilding & Pricing</div>
+          <div class="step-text">As the order book builds, lead managers tighten guidance. 
+          If demand is strong (book is "oversubscribed"), the yield is revised tighter 
+          (lower spread over benchmark = better terms for the issuer). 
+          Pakistan's 2021 issuance was reportedly 3–4x oversubscribed; its 2026 issuance benefited from 
+          improved ratings and a demonstrated repayment track record. 
+          Final pricing is set at the yield that clears the market.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Allocation & Settlement</div>
+          <div class="step-text">The government, with advice from lead managers, allocates the bond across investor types. 
+          Allocation decisions can be strategic — giving priority to long-term real-money investors 
+          (pension funds, insurers) over short-term hedge funds ensures better secondary market performance. 
+          Settlement typically occurs T+5 through Euroclear. The government receives proceeds minus fees (typically 0.25–0.50% of issuance).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <div class="step-title">Secondary Market Trading</div>
+          <div class="step-text">After settlement, the bond trades freely in the over-the-counter (OTC) secondary market, 
+          via Bloomberg and Reuters electronic platforms. Prices move daily based on: 
+          changes in US Treasury rates (which shift the benchmark), changes in the sovereign's perceived creditworthiness, 
+          and global risk appetite (when investors "flee to safety," EM spreads widen).</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">The Benchmark Framework</div>
+    <h2 class="section-title">US Treasury Curve: The Baseline for All USD Sovereign Pricing</h2>
+
+    <p class="section-intro">All USD-denominated sovereign bonds are priced at a spread to the US Treasury 
+    of equivalent maturity. The UST curve on April 17, 2026 provides the risk-free anchor for Pakistan's 3-year bond.</p>
+
+    <div class="panel">
+      <div class="panel-title">US Treasury Yield Curve — April 17, 2026</div>
+      <div class="chart-wrap">
+        <canvas id="ustChart"></canvas>
+      </div>
+      <p class="annotation">Sources: Federal Reserve H.15 Release; 3-year interpolated from 2yr (3.71%) and 5yr (~3.90%) data. 
+      10-year: 4.26%. 2-year: 3.71%. 30-year: 4.88%. The curve is upward-sloping (normal), 
+      reflecting market expectations that the Fed holds or cuts rates modestly over the medium term.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Duration & Sensitivity</div>
+    <h2 class="section-title">How Price Changes With Yield: The Duration Concept</h2>
+
+    <div class="two-col">
+      <div>
+        <div class="formula-box" style="text-align:left;">
+          <div class="formula-title">Approximate Price Change</div>
+          ΔP ≈ −Duration × ΔYield × P
+          <br><br>
+          <span style="font-size:12px;font-family:sans-serif;color:#666;">
+            For Pakistan's 3-year bond (Duration ≈ 2.7 years):<br>
+            A 100 bps yield rise → ~2.7% price decline<br>
+            A 100 bps yield fall → ~2.7% price gain
+          </span>
+        </div>
+        <div class="callout">
+          <strong>Key insight:</strong> Short-dated bonds (like Pakistan's 3-year) are less sensitive to interest rate 
+          changes than long-dated bonds. This is why sovereign issuers facing market uncertainty often prefer shorter tenors — 
+          investors accept lower duration risk, and the spread premium required is smaller.
+        </div>
+      </div>
+      <div>
+        <table class="est-table">
+          <tr>
+            <th>Scenario</th>
+            <th>Yield Change</th>
+            <th>Approx. Price</th>
+            <th>P&L on $1M</th>
+          </tr>
+          <tr>
+            <td>Credit upgrade (one notch)</td>
+            <td style="color:#2D8055;">−75 bps</td>
+            <td class="num">102.0</td>
+            <td style="color:#2D8055;" class="num">+$20,250</td>
+          </tr>
+          <tr>
+            <td>Status quo</td>
+            <td>0 bps</td>
+            <td class="num">100.0</td>
+            <td class="num">—</td>
+          </tr>
+          <tr>
+            <td>IMF programme delay</td>
+            <td style="color:#9B2335;">+150 bps</td>
+            <td class="num">96.0</td>
+            <td style="color:#9B2335;" class="num">−$40,500</td>
+          </tr>
+          <tr>
+            <td>Reserves crisis / default risk</td>
+            <td style="color:#9B2335;">+400 bps</td>
+            <td class="num">89.6</td>
+            <td style="color:#9B2335;" class="num">−$104,000</td>
+          </tr>
+        </table>
+        <p class="annotation">Indicative calculations based on modified duration ≈ 2.7 years for a 3-year 6.95% bond at par.</p>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- TAB III: PAKISTAN BONDS -->
+  <!-- ======================================================== -->
+  <div id="pakistan" class="tab-content">
+
+    <div class="section-label">Pakistan Eurobond Portfolio</div>
+    <h2 class="section-title">Pakistan's Outstanding USD Sovereign Bonds: The Full Curve</h2>
+
+    <p class="section-intro">
+      Following the April 8, 2026 repayment of the $1.3 billion 6% bond and the new issuance on April 17, 2026, 
+      Pakistan's USD sovereign Eurobond outstanding stock totals approximately $4.5 billion across three maturities. 
+      Together, they sketch Pakistan's USD yield curve in the international market.
+    </p>
+
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Bond</th>
+          <th>Issued</th>
+          <th>Maturity</th>
+          <th>Size</th>
+          <th>Coupon</th>
+          <th>Issue Yield</th>
+          <th>Approx. Secondary Yield (Apr 2026)</th>
+          <th>Spread vs UST</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#F7F7F7;">
+          <td style="color:#999;">GoP 6% Apr 2026</td>
+          <td style="color:#999;">Apr 2021</td>
+          <td style="color:#999;">8 Apr 2026</td>
+          <td style="color:#999;">$1.0B</td>
+          <td style="color:#999;" class="num">6.00%</td>
+          <td style="color:#999;" class="num">6.00%</td>
+          <td style="color:#999;" class="num">—</td>
+          <td style="color:#999;" class="num">—</td>
+          <td><span class="badge badge-gray">Matured & Repaid</span></td>
+        </tr>
+        <tr class="highlight">
+          <td><strong>GoP 6.95% Apr 2029</strong></td>
+          <td>Apr 2026</td>
+          <td>Apr 2029</td>
+          <td>$1.0B+</td>
+          <td class="num"><strong>6.95%</strong></td>
+          <td class="num"><strong>6.95%</strong></td>
+          <td class="num"><strong>6.95%</strong></td>
+          <td class="num"><strong>~320 bps</strong></td>
+          <td><span class="badge badge-amber">New Issuance</span></td>
+        </tr>
+        <tr>
+          <td>GoP ~7.375% Jan 2029</td>
+          <td>Jan 2022</td>
+          <td>Jan 2029</td>
+          <td>$1.0B</td>
+          <td class="num">~7.375%</td>
+          <td class="num">~7.375%</td>
+          <td class="num">~7.00–7.25%</td>
+          <td class="num">~325–350 bps</td>
+          <td><span class="badge badge-green">Outstanding</span></td>
+        </tr>
+        <tr>
+          <td>GoP 7.3% Apr 2031</td>
+          <td>Apr 2021</td>
+          <td>Apr 2031</td>
+          <td>$1.0B</td>
+          <td class="num">7.30%</td>
+          <td class="num">7.30%</td>
+          <td class="num">~7.50–7.75%</td>
+          <td class="num">~330–360 bps</td>
+          <td><span class="badge badge-green">Outstanding</span></td>
+        </tr>
+        <tr>
+          <td>WAPDA 7.5% 2026</td>
+          <td>May 2021</td>
+          <td>2026</td>
+          <td>$500M</td>
+          <td class="num">7.50%</td>
+          <td class="num">7.50%</td>
+          <td class="num">Near maturity</td>
+          <td class="num">—</td>
+          <td><span class="badge badge-blue">Quasi-Sovereign</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="annotation">Secondary yield estimates for Jan 2029 and Apr 2031 bonds are indicative, 
+    based on spread relationships and Pakistan's current credit trajectory. 
+    WAPDA is Water and Power Development Authority — government-owned but not direct sovereign obligation.</p>
+
+    <hr class="divider">
+
+    <div class="section-label">Pakistan's USD Yield Curve</div>
+    <h2 class="section-title">Constructing Pakistan's Offshore Yield Curve</h2>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Pakistan Eurobond Yield Curve vs. US Treasury (April 2026)</div>
+        <div class="chart-wrap">
+          <canvas id="yieldCurveChart"></canvas>
+        </div>
+        <p class="annotation">The vertical gap between the Pakistan curve and the UST curve at each maturity point 
+        represents the credit spread — the compensation investors demand for Pakistan's default risk and liquidity constraints.</p>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-title">The New Issue Premium: Analysing the 2026 Deal</div>
+          <div style="margin-top:0.75rem;">
+            <div class="spread-row">
+              <div class="spread-label">US Treasury 3-year benchmark</div>
+              <div class="spread-bps">3.75%</div>
+            </div>
+            <div class="spread-row">
+              <div class="spread-label">Pakistan credit spread (320 bps)</div>
+              <div class="spread-bps">+3.20%</div>
+            </div>
+            <div class="spread-row total">
+              <div class="spread-label">Pakistan 3-year Eurobond yield</div>
+              <div class="spread-bps">= 6.95%</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;">
+          <div class="callout amber">
+            <strong>New Issue Premium (NIP):</strong> Issuers typically price new bonds 15–30 bps wider than 
+            where their existing bonds trade in the secondary market, to attract fresh demand from investors 
+            who require a "concession" to buy primary paper over secondary. 
+            If Pakistan's Jan 2029 bond was trading at ~7.00% in secondary, 
+            the new April 2029 bond at 6.95% reflects a very tight NIP, 
+            signalling strong investor demand and improved credit standing.
+          </div>
+        </div>
+
+        <div class="panel mt1">
+          <div class="panel-title">Historical Issuance Comparison</div>
+          <table class="est-table">
+            <tr><th>Year</th><th>Tenor</th><th>Yield</th><th>Rating (Fitch)</th></tr>
+            <tr><td>2014</td><td>10yr</td><td class="num">8.25%</td><td>B−</td></tr>
+            <tr><td>2017</td><td>10yr</td><td class="num">6.875%</td><td>B−</td></tr>
+            <tr><td>2021</td><td>5yr</td><td class="num">6.00%</td><td>B−</td></tr>
+            <tr><td>2021</td><td>10yr</td><td class="num">7.375%</td><td>B−</td></tr>
+            <tr><td>2021</td><td>30yr</td><td class="num">8.875%</td><td>B−</td></tr>
+            <tr class="highlight"><td><strong>2026</strong></td><td><strong>3yr</strong></td><td class="num"><strong>6.95%</strong></td><td><strong>B+</strong></td></tr>
+          </table>
+          <p class="annotation">Despite the higher global rate environment of 2026, 
+          Pakistan's 3-year yield at 6.95% reflects a meaningfully lower spread than 2014, 
+          driven by rating upgrades and IMF programme credibility.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- TAB IV: CREDIT SPREADS -->
+  <!-- ======================================================== -->
+  <div id="spreads" class="tab-content">
+
+    <div class="section-label">Spread Analysis</div>
+    <h2 class="section-title">Credit Spreads: Decomposing the Risk Premium</h2>
+
+    <p class="section-intro">
+      A sovereign credit spread is not a single monolithic number — it is the sum of several distinct risk premiums 
+      that investors layer on top of the risk-free rate. Understanding these components helps explain why 
+      two sovereigns with the same rating may trade at very different yields, and why the same sovereign's 
+      spread can vary dramatically over time.
+    </p>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Pakistan's Spread Decomposition (April 2026)</div>
+        <div style="margin-top:0.75rem;">
+          <div class="spread-row">
+            <div>
+              <div class="spread-label">US Treasury 3-year (risk-free base)</div>
+              <div class="annotation" style="margin-top:0.1rem;">Fed policy rate + inflation expectations + term premium</div>
+            </div>
+            <div>
+              <div class="spread-bps">3.75%</div>
+              <div class="spread-bar" style="width:54%;background:#AAAAAA;"></div>
+            </div>
+          </div>
+          <div class="spread-row">
+            <div>
+              <div class="spread-label">Fundamental Default Risk Premium</div>
+              <div class="annotation" style="margin-top:0.1rem;">Debt/GDP (85%), FX reserve adequacy, debt service coverage</div>
+            </div>
+            <div>
+              <div class="spread-bps">+1.80%</div>
+              <div class="spread-bar" style="width:26%;background:#9B2335;"></div>
+            </div>
+          </div>
+          <div class="spread-row">
+            <div>
+              <div class="spread-label">Political & Governance Premium</div>
+              <div class="annotation" style="margin-top:0.1rem;">Institutional fragility, civil-military relations, policy unpredictability</div>
+            </div>
+            <div>
+              <div class="spread-bps">+0.80%</div>
+              <div class="spread-bar" style="width:11.5%;background:#C8923A;"></div>
+            </div>
+          </div>
+          <div class="spread-row">
+            <div>
+              <div class="spread-label">Liquidity & Market Access Premium</div>
+              <div class="annotation" style="margin-top:0.1rem;">5-year absence from market; smaller outstanding stock</div>
+            </div>
+            <div>
+              <div class="spread-bps">+0.40%</div>
+              <div class="spread-bar" style="width:5.8%;background:#4A7DC8;"></div>
+            </div>
+          </div>
+          <div class="spread-row">
+            <div>
+              <div class="spread-label">IMF Programme / Re-entry Discount</div>
+              <div class="annotation" style="margin-top:0.1rem;">Extended Fund Facility credit, reform track record</div>
+            </div>
+            <div>
+              <div class="spread-bps">+0.20%</div>
+              <div class="spread-bar" style="width:2.9%;background:#52B788;"></div>
+            </div>
+          </div>
+          <div class="spread-row total">
+            <div class="spread-label">All-in Yield (Pakistan 3yr)</div>
+            <div class="spread-bps">= 6.95%</div>
+          </div>
+        </div>
+        <p class="annotation mt1">Decomposition is illustrative; actual spread attribution is model-dependent and varies by analyst. 
+        The total spread of 320 bps over UST is precisely observed; the sub-components are analytical constructs.</p>
+      </div>
+
+      <div>
+        <div class="section-label">Cross-Country Spread Comparison (3–5 Year USD Bonds, Apr 2026)</div>
+        <div class="yield-bar-wrap" style="margin-top:1rem;">
+          <!-- AAA -->
+          <div class="yield-bar-row">
+            <div class="yield-bar-label"><strong>Germany</strong> <span style="color:#999;font-size:11px;">AAA / Aaa</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill" style="width:14%;background:#52B788;"></div></div>
+            <div class="yield-bar-val">3.90%</div>
+            <div class="yield-bar-extra" style="color:#52B788;">~+15 bps</div>
+          </div>
+          <div class="yield-bar-row">
+            <div class="yield-bar-label"><strong>US Treasury</strong> <span style="color:#999;font-size:11px;">AA+ / Aaa</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill" style="width:13.5%;background:#AAAAAA;"></div></div>
+            <div class="yield-bar-val">3.75%</div>
+            <div class="yield-bar-extra" style="color:#999;">Benchmark</div>
+          </div>
+          <!-- A range -->
+          <div class="yield-bar-row">
+            <div class="yield-bar-label"><strong>Saudi Arabia</strong> <span style="color:#999;font-size:11px;">A1 / A+</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill" style="width:19%;background:#52B788;"></div></div>
+            <div class="yield-bar-val">4.30%</div>
+            <div class="yield-bar-extra">+55 bps</div>
+          </div>
+          <div class="yield-bar-row">
+            <div class="yield-bar-label"><strong>Philippines</strong> <span style="color:#999;font-size:11px;">Baa2 / BBB</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill" style="width:21%;background:#52B788;"></div></div>
+            <div class="yield-bar-val">4.60%</div>
+            <div class="yield-bar-extra">+85 bps</div>
+          </div>
+          <!-- BB range -->
+          <div class="yield-bar-row">
+            <div class="yield-bar-label"><strong>Egypt</strong> <span style="color:#999;font-size:11px;">B+ / B3</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill" style="width:32%;background:#C8923A;"></div></div>
+            <div class="yield-bar-val">7.15%</div>
+            <div class="yield-bar-extra">+340 bps</div>
+          </div>
+          <div class="yield-bar-row" style="background:#FFF8F0;">
+            <div class="yield-bar-label"><strong>Pakistan ★</strong> <span style="color:#C8923A;font-size:11px;">Caa1 / B+</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill amber" style="width:34%;"></div></div>
+            <div class="yield-bar-val"><strong>6.95%</strong></div>
+            <div class="yield-bar-extra" style="color:#C8923A;"><strong>+320 bps</strong></div>
+          </div>
+          <div class="yield-bar-row">
+            <div class="yield-bar-label"><strong>Nigeria</strong> <span style="color:#999;font-size:11px;">B3 / B−</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill" style="width:37%;background:#9B2335;"></div></div>
+            <div class="yield-bar-val">8.25%</div>
+            <div class="yield-bar-extra">+450 bps</div>
+          </div>
+          <div class="yield-bar-row">
+            <div class="yield-bar-label"><strong>Kenya</strong> <span style="color:#999;font-size:11px;">Caa1 / B−</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill" style="width:42%;background:#9B2335;"></div></div>
+            <div class="yield-bar-val">9.25%</div>
+            <div class="yield-bar-extra">+550 bps</div>
+          </div>
+          <div class="yield-bar-row">
+            <div class="yield-bar-label"><strong>Ethiopia</strong> <span style="color:#999;font-size:11px;">Caa2 / CCC+</span></div>
+            <div class="yield-bar-track"><div class="yield-bar-fill" style="width:51%;background:#9B2335;"></div></div>
+            <div class="yield-bar-val">11.5%</div>
+            <div class="yield-bar-extra">+775 bps</div>
+          </div>
+        </div>
+        <p class="annotation">Yields and spreads are approximate for comparable USD bonds at 3–5 year maturity. 
+        Pakistan's spread is broadly in line with Egypt's B3/B+ range, and meaningfully tighter than Nigeria or Kenya 
+        despite the similar Moody's Caa1 rating — reflecting investor confidence in Pakistan's IMF programme backstop.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Spread Dynamics</div>
+    <h2 class="section-title">What Moves Sovereign Spreads?</h2>
+
+    <div class="three-col">
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#FFF3E0;">📉</div>
+          <div>
+            <div class="risk-card-title">Spread-Tightening Drivers</div>
+            <div class="risk-card-sub">Factors that reduce the credit premium</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li>IMF programme on-track; tranche disbursements on schedule</li>
+          <li>Rating upgrade by Moody's, Fitch, or S&P</li>
+          <li>FX reserves building above import cover thresholds</li>
+          <li>Current account deficit narrowing</li>
+          <li>Strong Eurobond repayment (demonstrated July–April 2026)</li>
+          <li>Global risk-on sentiment (EM bonds rally)</li>
+        </ul>
+      </div>
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#FDECEA;">📈</div>
+          <div>
+            <div class="risk-card-title">Spread-Widening Drivers</div>
+            <div class="risk-card-sub">Factors that increase the credit premium</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li>IMF review delay or programme breakdown</li>
+          <li>Geopolitical escalation (India-Pakistan tensions)</li>
+          <li>FX reserve depletion; bilateral deposit non-rollover</li>
+          <li>Fiscal slippage: higher deficit than IMF targets</li>
+          <li>Political instability: government collapse, military intervention</li>
+          <li>Global risk-off (US recession fears, Fed rate hikes)</li>
+        </ul>
+      </div>
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#E8F5EE;">⚖️</div>
+          <div>
+            <div class="risk-card-title">External Benchmark Drivers</div>
+            <div class="risk-card-sub">UST rate changes flow through to all spreads</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li>Fed rate decisions directly shift the 3-year UST anchor</li>
+          <li>US inflation data (CPI, PCE) reprices the real yield component</li>
+          <li>Global oil price shocks (Iran conflict: raised US CPI to 3.3% in Mar 2026)</li>
+          <li>USD strength reduces EM bond attractiveness to local investors</li>
+          <li>Correlated sell-offs: EM spreads tend to widen together in crises</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- TAB V: RATING TIERS -->
+  <!-- ======================================================== -->
+  <div id="ratings" class="tab-content">
+
+    <div class="section-label">Rating Architecture</div>
+    <h2 class="section-title">The Credit Rating Scale: From AAA to Default</h2>
+
+    <p class="section-intro">
+      Credit ratings are opinions — not guarantees — about the relative likelihood of default. 
+      The three major agencies (Moody's, Fitch, S&P) each maintain their own scales, but the correspondence 
+      is close enough to be mapped. The fundamental divide between investment grade and speculative grade 
+      (colloquially: "junk") is not merely semantic — it determines which institutional investors can legally hold the bond.
+    </p>
+
+    <!-- IG Tier -->
+    <div class="section-label">Investment Grade (BBB− / Baa3 and above)</div>
+
+    <div style="margin-bottom:1.5rem;">
+      <div class="rating-tier" style="background:#F0FAF5;">
+        <div class="rating-codes">
+          <div class="rating-label">AAA / Aaa</div>
+          <div class="rating-agencies">S&P / Fitch: AAA &nbsp;·&nbsp; Moody's: Aaa</div>
+        </div>
+        <div class="rating-desc">Prime: Highest quality, negligible credit risk. Governments with strong institutions, 
+        low debt, and sustained track records. <em>Examples: Germany, Netherlands, Switzerland, Australia.</em></div>
+        <div class="rating-yield" style="color:#52B788;">~3.7–4.1%<br><small style="font-size:10px;color:#999;">USD 3–5yr</small></div>
+      </div>
+      <div class="rating-tier" style="background:#F5FBF8;">
+        <div class="rating-codes">
+          <div class="rating-label">AA+/AA/AA−</div>
+          <div class="rating-agencies">S&P/Fitch: AA+ to AA− &nbsp;·&nbsp; Moody's: Aa1–Aa3</div>
+        </div>
+        <div class="rating-desc">High quality, very low credit risk. Minor vulnerability to economic cycles. 
+        <em>Examples: USA (S&P: AA+), UK (Aa3), France (Aa2), Canada (Aaa/AA+).</em></div>
+        <div class="rating-yield" style="color:#52B788;">~3.8–4.3%</div>
+      </div>
+      <div class="rating-tier" style="background:#F8FCFA;">
+        <div class="rating-codes">
+          <div class="rating-label">A+/A/A−</div>
+          <div class="rating-agencies">S&P/Fitch: A+ to A− &nbsp;·&nbsp; Moody's: A1–A3</div>
+        </div>
+        <div class="rating-desc">Upper-medium grade. Some susceptibility to economic conditions. 
+        <em>Examples: Saudi Arabia, Japan, South Korea, Israel.</em></div>
+        <div class="rating-yield">~4.0–4.6%</div>
+      </div>
+      <div class="rating-tier" style="background:#FFFCF5;">
+        <div class="rating-codes">
+          <div class="rating-label">BBB+/BBB/BBB−</div>
+          <div class="rating-agencies">S&P/Fitch: BBB+ to BBB− &nbsp;·&nbsp; Moody's: Baa1–Baa3</div>
+        </div>
+        <div class="rating-desc">Lower-medium grade. Adequate capacity but vulnerable to adverse economic conditions. 
+        The lowest investment grade rung — crossing below BBB− triggers forced selling from IG mandates. 
+        <em>Examples: Indonesia, India, Philippines, Brazil, Italy.</em></div>
+        <div class="rating-yield" style="color:#C8923A;">~4.4–5.2%</div>
+      </div>
+    </div>
+
+    <!-- HY Tier -->
+    <div class="section-label">High Yield / Speculative Grade (BB+ / Ba1 and below)</div>
+
+    <div>
+      <div class="rating-tier" style="background:#FFFBF0;">
+        <div class="rating-codes">
+          <div class="rating-label">BB+/BB/BB−</div>
+          <div class="rating-agencies">S&P/Fitch: BB+ to BB− &nbsp;·&nbsp; Moody's: Ba1–Ba3</div>
+        </div>
+        <div class="rating-desc">Speculative — faces major ongoing uncertainties. First rung of high yield. 
+        Elevated event risk. Many EM sovereigns cluster here during transition periods. 
+        <em>Examples: Turkey (B2/B+), Egypt (B+/B3), Bolivia, Morocco.</em></div>
+        <div class="rating-yield" style="color:#C8923A;">~5.5–7.5%</div>
+      </div>
+      <div class="rating-tier" style="background:#FFF8F5;">
+        <div class="rating-codes">
+          <div class="rating-label">B+/B/B−</div>
+          <div class="rating-agencies">S&P/Fitch: B+ to B− &nbsp;·&nbsp; Moody's: B1–B3</div>
+        </div>
+        <div class="rating-desc">Highly speculative. Significant credit risk; ability to repay dependent on 
+        favourable conditions. Pakistan's Fitch rating of B+ sits in this tier. 
+        <em>Examples: Pakistan (Fitch B+), Nigeria (B/B3), Kenya (B−), Bangladesh (B+).</em></div>
+        <div class="rating-yield" style="color:#C8923A;">~7.0–10.0%</div>
+      </div>
+      <div class="rating-tier" style="background:#FFF5F5; border-left: 3px solid #9B2335;">
+        <div class="rating-codes">
+          <div class="rating-label">CCC/Caa1–Caa3</div>
+          <div class="rating-agencies">S&P/Fitch: CCC+ to C &nbsp;·&nbsp; Moody's: Caa1–Caa3</div>
+        </div>
+        <div class="rating-desc">Near distress — very high default risk; dependent on favourable conditions 
+        to meet commitments. Pakistan's Moody's Caa1 sits here — one notch below B3. 
+        <em>Examples: Pakistan (Moody's Caa1), Ethiopia (CCC+), Lebanon (SD), El Salvador (B−).</em></div>
+        <div class="rating-yield" style="color:#9B2335;">~9.0–15.0%</div>
+      </div>
+      <div class="rating-tier" style="background:#FDECEA;">
+        <div class="rating-codes">
+          <div class="rating-label">CC / Ca / C / D</div>
+          <div class="rating-agencies">Default or near-default</div>
+        </div>
+        <div class="rating-desc">In default, in restructuring, or near-certain default. 
+        Bonds typically trade at deeply distressed prices (20–50 cents on the dollar). 
+        <em>Examples: Sri Lanka (post-2022 default), Zambia (post-2020 default), Ghana (2023 restructuring).</em></div>
+        <div class="rating-yield" style="color:#9B2335;">15%+ (distressed)</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">The Rating-Yield Relationship</div>
+    <h2 class="section-title">How Rating Translates to Borrowing Cost: The Spread Ladder</h2>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Typical USD Sovereign Spread by Rating Category (5-Year, April 2026)</div>
+        <div class="chart-wrap">
+          <canvas id="ratingSpreadChart"></canvas>
+        </div>
+        <p class="annotation">The spread ladder is roughly exponential — each step down the rating scale 
+        costs more than the previous step, reflecting the convex relationship between rating and 
+        implied probability of default. Crossing the IG/HY boundary is particularly sharp.</p>
+      </div>
+      <div>
+        <table class="est-table" style="margin-top:0;">
+          <tr>
+            <th>Rating Tier</th>
+            <th>Typical Spread (bps)</th>
+            <th>All-in Yield (5yr)</th>
+            <th>Implied 5yr PD*</th>
+          </tr>
+          <tr>
+            <td>AAA / Aaa</td>
+            <td class="num">15–30</td>
+            <td class="num">3.9–4.1%</td>
+            <td class="num">&lt;0.1%</td>
+          </tr>
+          <tr>
+            <td>AA</td>
+            <td class="num">25–60</td>
+            <td class="num">4.0–4.4%</td>
+            <td class="num">0.1–0.3%</td>
+          </tr>
+          <tr>
+            <td>A</td>
+            <td class="num">50–120</td>
+            <td class="num">4.3–5.0%</td>
+            <td class="num">0.3–0.8%</td>
+          </tr>
+          <tr>
+            <td>BBB</td>
+            <td class="num">100–220</td>
+            <td class="num">4.7–5.9%</td>
+            <td class="num">0.8–2.5%</td>
+          </tr>
+          <tr>
+            <td>BB</td>
+            <td class="num">200–400</td>
+            <td class="num">5.7–7.7%</td>
+            <td class="num">2.5–7%</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>B+ (Pakistan Fitch)</strong></td>
+            <td class="num"><strong>280–360</strong></td>
+            <td class="num"><strong>6.6–7.4%</strong></td>
+            <td class="num"><strong>6–12%</strong></td>
+          </tr>
+          <tr>
+            <td>B/B−</td>
+            <td class="num">350–550</td>
+            <td class="num">7.3–9.3%</td>
+            <td class="num">10–20%</td>
+          </tr>
+          <tr>
+            <td>Caa1 (Pakistan Moody's)</td>
+            <td class="num">450–700</td>
+            <td class="num">8.2–10.7%</td>
+            <td class="num">15–30%</td>
+          </tr>
+          <tr>
+            <td>CCC / Caa2–Caa3</td>
+            <td class="num">600–1000+</td>
+            <td class="num">9.7%+</td>
+            <td class="num">25–50%</td>
+          </tr>
+        </table>
+        <p class="annotation">*Implied 5-year probability of default using simplified Merton model (recovery rate assumption 40%). 
+        Pakistan's actual trading yield of 6.95% on a 3-year bond sits firmly within the B+ range — 
+        indicating that markets are "rating it" more like Fitch's B+ than Moody's Caa1. 
+        This divergence is analytically significant: markets often lead rating agencies.</p>
+
+        <div class="callout" style="margin-top:1rem;">
+          <strong>Pakistan's Rating Split:</strong> With Moody's at Caa1 (equivalent to CCC+) but Fitch at B+ 
+          and market-implied spread suggesting B, Pakistan's bonds are "expensive" relative to 
+          its Moody's rating but "fair" or even "cheap" relative to its Fitch rating. 
+          This creates a trading opportunity: if Moody's upgrades (likely given the trajectory), 
+          spreads could tighten meaningfully as Caa1-constrained institutional investors gain access.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- TAB VI: SOVEREIGN RISK -->
+  <!-- ======================================================== -->
+  <div id="risk" class="tab-content">
+
+    <div class="section-label">Analytical Framework</div>
+    <h2 class="section-title">What Drives Sovereign Risk? Quantitative & Qualitative Factors</h2>
+
+    <p class="section-intro">
+      Sovereign credit assessment is more art than science — it blends hard macro-financial indicators 
+      with nuanced political and institutional judgements. Rating agencies, bond analysts, and investors 
+      all use variants of the same framework. The goal is to estimate a government's <em>ability</em> 
+      to pay (fiscal and external solvency) and its <em>willingness</em> to pay (political economy, 
+      history, institutional quality).
+    </p>
+
+    <div class="callout amber">
+      <strong>The Two Axes of Sovereign Risk:</strong> Unlike corporate credit, sovereign default is 
+      almost never pure inability — governments can technically inflate, tax, or cut spending to service debt. 
+      Default is almost always a <em>political choice</em>: the government decides that 
+      the cost of adjustment exceeds the cost of default. 
+      This makes political and institutional factors uniquely important in sovereign credit analysis.
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Quantitative Factors</div>
+    <h2 class="section-title">Measurable Indicators of Debt Sustainability & External Viability</h2>
+
+    <div class="risk-grid">
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#F5F0FF;">📊</div>
+          <div>
+            <div class="risk-card-title">Debt Sustainability Metrics</div>
+            <div class="risk-card-sub">Is the debt stock manageable?</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li><strong>Debt/GDP ratio:</strong> Pakistan ~85%; BBB threshold ~50–60%; AAA threshold &lt;30%. High but not unique in EM. IMF's debt sustainability analysis sets maximum thresholds.</li>
+          <li><strong>Interest/Revenue ratio:</strong> Pakistan spends ~60% of revenues on debt servicing — one of the highest globally. Even minor yield increases are material.</li>
+          <li><strong>Debt maturity profile:</strong> Concentration of near-term maturities (as seen April 2026) creates rollover risk. A smooth amortisation schedule reduces refinancing pressures.</li>
+          <li><strong>Fiscal deficit:</strong> Pakistan ~7.7% of GDP (FY25); IMF target ~3.5% over programme. Structural primary deficits are unsustainable without growth above interest rates.</li>
+        </ul>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#FFF0E8;">💱</div>
+          <div>
+            <div class="risk-card-title">External Sector Metrics</div>
+            <div class="risk-card-sub">Can the country earn the FX to service USD debt?</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li><strong>FX reserves / import cover:</strong> Pakistan ~3.1 months (Apr 2026). IMF benchmark: 3 months. Below this signals vulnerability. 12 months would be ideal for a B-rated credit.</li>
+          <li><strong>Current account deficit:</strong> Pakistan's CAD has narrowed sharply under IMF adjustment, but structural trade deficit remains. Export-to-GDP ratio is very low at ~10%.</li>
+          <li><strong>External debt / GDP and external debt service:</strong> Pakistan's external debt ~35% of GDP. Upcoming lumpy repayments (CPEC, bilateral deposits) amplify near-term risk.</li>
+          <li><strong>Remittance reliance:</strong> Pakistan receives ~$30B/year in remittances (~8% of GDP) — a critical and relatively stable FX inflow that buttresses reserves but creates an "FX dependency" vulnerability.</li>
+        </ul>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#E8F5FF;">📈</div>
+          <div>
+            <div class="risk-card-title">Growth & Inflation Metrics</div>
+            <div class="risk-card-sub">The economic foundation for debt service capacity</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li><strong>Real GDP growth vs. real interest rate:</strong> When growth (g) &gt; real interest rate (r), debt/GDP ratio naturally falls without additional fiscal tightening. Pakistan's challenge: r has historically exceeded g.</li>
+          <li><strong>Inflation:</strong> Elevated inflation (Pakistan CPI peaked at 38% in 2023) erodes real wages, reduces domestic savings, and undermines currency stability — all negative for sovereign credit.</li>
+          <li><strong>GDP per capita:</strong> Pakistan's ~$1,500 GDP per capita limits tax base and adjustment capacity relative to higher-income EM peers at similar debt ratios.</li>
+          <li><strong>Current account balance as % of GDP:</strong> A chronic deficit must be financed with capital inflows; loss of market access turns a CAD into a crisis trigger.</li>
+        </ul>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#F0F8FF;">🏦</div>
+          <div>
+            <div class="risk-card-title">Banking Sector & Market Indicators</div>
+            <div class="risk-card-sub">Financial system health and market signals</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li><strong>Sovereign CDS spread:</strong> Credit Default Swap spreads provide real-time market pricing of default probability, often leading rating agency actions by weeks or months.</li>
+          <li><strong>Local currency bond yields:</strong> Pakistan's PKRV 10-year at ~12.7% (Apr 2026) reflects domestic inflation expectations and SBP policy outlook.</li>
+          <li><strong>FX rate and volatility:</strong> Sharp currency depreciation signals reserve pressure and forces imported inflation — a negative feedback loop. PKR/USD is a leading indicator.</li>
+          <li><strong>Banking sector exposure to sovereign debt:</strong> Pakistan's banks hold ~70%+ of government securities — a "sovereign-bank nexus" where fiscal stress immediately impairs the banking system's capital.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Qualitative Factors</div>
+    <h2 class="section-title">The "Softer" Dimensions That Often Drive the Hard Numbers</h2>
+
+    <div class="risk-grid">
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#FFF5F0;">🏛️</div>
+          <div>
+            <div class="risk-card-title">Political & Governance Risk</div>
+            <div class="risk-card-sub">Willingness to pay; institutional capacity to adjust</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li><strong>Political continuity and stability:</strong> Governments with strong mandates can implement painful fiscal reforms. Fragile coalitions signal reform fatigue and possible programme breakdown.</li>
+          <li><strong>Institutional quality:</strong> Rule of law, property rights, bureaucratic competence, and corruption levels all affect the government's ability to collect taxes and control spending.</li>
+          <li><strong>Civil-military relations:</strong> In Pakistan's context, the military's economic footprint and interference in fiscal policy is a key qualitative risk factor flagged by rating agencies.</li>
+          <li><strong>Judicial independence:</strong> Courts that block government revenue measures (e.g., tax amendments) directly impair fiscal adjustment capacity.</li>
+          <li><strong>Default history:</strong> Pakistan has never technically defaulted on external bonds — a critical qualitative positive that distinguishes it from Sri Lanka, Zambia, or Argentina.</li>
+        </ul>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#F0F5FF;">🤝</div>
+          <div>
+            <div class="risk-card-title">International Relations & Geopolitical Risk</div>
+            <div class="risk-card-sub">Friends in need — and the risks that come with them</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li><strong>IMF programme status:</strong> For Pakistan, the IMF's EFF ($7B) is the anchor of external confidence. On-track reviews signal policy credibility; delayed reviews trigger spread widening.</li>
+          <li><strong>Bilateral partner support:</strong> Saudi Arabia, UAE, China, and Qatar provide deposit rollovers and balance-of-payments support that effectively "top up" reserves — but this is liability-creating, not grant-based.</li>
+          <li><strong>Regional security environment:</strong> The April 2026 India-Pakistan-Iran nexus (US-Iran negotiations hosted in Islamabad) illustrates how geopolitical centrality can be a double-edged asset.</li>
+          <li><strong>Sanctions risk:</strong> Financial sanctions (as imposed on Russia, Iran) can restrict market access. Pakistan's FATF "grey list" status in 2018–2022 demonstrated how regulatory stigma affects borrowing costs.</li>
+        </ul>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#F5FFF5;">📝</div>
+          <div>
+            <div class="risk-card-title">Policy Framework & Credibility</div>
+            <div class="risk-card-sub">Can the government follow through?</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li><strong>Monetary policy independence:</strong> An independent central bank with a credible inflation target narrows the "inflation tax" risk on domestic debt and supports currency stability.</li>
+          <li><strong>Tax policy and revenue effort:</strong> Pakistan's tax-to-GDP ratio of ~9–10% is structurally insufficient for debt sustainability at 85% debt/GDP. FBR reform progress is a key qualitative rating driver.</li>
+          <li><strong>Subsidy and SOE reform:</strong> Energy-sector circular debt and SoE losses impose quasi-fiscal costs that inflate the true deficit beyond headline numbers.</li>
+          <li><strong>Track record of reform implementation:</strong> Pakistan's history of IMF programme abandonment (9 out of ~24 programmes were abandoned) is a recurring qualitative concern that keeps spreads elevated relative to pure fundamentals.</li>
+        </ul>
+      </div>
+
+      <div class="risk-card">
+        <div class="risk-card-header">
+          <div class="risk-icon" style="background:#FFFDF0;">🌏</div>
+          <div>
+            <div class="risk-card-title">Structural & Long-Run Factors</div>
+            <div class="risk-card-sub">Determinants of economic resilience over a 5–10 year horizon</div>
+          </div>
+        </div>
+        <ul class="risk-items">
+          <li><strong>Economic diversification:</strong> Pakistan's over-reliance on textiles and remittances limits export diversification and value-added potential — reducing long-run growth capacity.</li>
+          <li><strong>Demographic dividend:</strong> A young, large population can be an asset (future workforce) or a liability (unemployment, urbanisation stress) depending on human capital investment.</li>
+          <li><strong>Climate vulnerability:</strong> The 2022 floods destroyed 4% of GDP in one event. Pakistan is among the world's most climate-vulnerable sovereigns — an increasingly material credit factor.</li>
+          <li><strong>Investor base diversification:</strong> A reliance on a narrow investor base (GCC sovereign wealth, a few EM-focused funds) amplifies spread volatility when that base turns over.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="verdict" style="margin-top:2rem;">
+      <div class="verdict-label">Synthesising Qualitative and Quantitative</div>
+      <div class="verdict-text">
+        Rating agencies typically begin with a quantitative anchor — a country's fiscal and external metrics — 
+        then apply qualitative notch adjustments. Moody's, for example, assesses Pakistan's economic strength 
+        at Baa3 level (decent size and resilience) but notches it down multiple times for very weak fiscal strength, 
+        high susceptibility to event risk, and fragile governance. The result: Caa1. 
+        The gap between what the economy <em>could</em> support and what governance <em>delivers</em> 
+        is the core Pakistan credit story.
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- TAB VII: CASE STUDY -->
+  <!-- ======================================================== -->
+  <div id="case" class="tab-content">
+
+    <div class="section-label">Applied Analysis</div>
+    <h2 class="section-title">Pakistan's 6.95% Eurobond: A Complete Case Study</h2>
+
+    <p class="section-intro">
+      This section integrates all prior concepts to fully analyse Pakistan's April 2026 Eurobond. 
+      It walks through the benchmark framework, spread decomposition, peer comparison, 
+      and what the pricing tells us about investor sentiment.
+    </p>
+
+    <div class="two-col">
+      <div>
+        <div class="panel">
+          <div class="panel-title">Bond Terms Sheet</div>
+          <table class="est-table" style="margin:0.5rem 0 0;">
+            <tr><td style="color:#666;">Issuer</td><td><strong>Islamic Republic of Pakistan</strong></td></tr>
+            <tr><td style="color:#666;">Format</td><td>Regulation S / Rule 144A Eurobond</td></tr>
+            <tr><td style="color:#666;">Programme</td><td>Global Medium-Term Note (GMTN)</td></tr>
+            <tr><td style="color:#666;">Settlement</td><td>Euroclear / Clearstream</td></tr>
+            <tr><td style="color:#666;">Currency</td><td>US Dollar (USD)</td></tr>
+            <tr><td style="color:#666;">Maturity</td><td>April 2029 (~3 years)</td></tr>
+            <tr><td style="color:#666;">Yield / Coupon</td><td class="num"><strong>6.95%</strong></td></tr>
+            <tr><td style="color:#666;">Issue Price</td><td class="num">100 (par)</td></tr>
+            <tr><td style="color:#666;">Coupon Frequency</td><td>Semi-annual</td></tr>
+            <tr><td style="color:#666;">Ratings</td><td>Caa1 (Moody's) / B+ (Fitch)</td></tr>
+            <tr><td style="color:#666;">Governing Law</td><td>English Law</td></tr>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-title">Step-by-Step Pricing Walkthrough</div>
+          <div style="margin-top:0.75rem;">
+            <div class="spread-row">
+              <div>
+                <div class="spread-label">Step 1: Identify the Benchmark</div>
+                <div style="font-size:12px;color:#999;">Equivalent maturity US Treasury = 3-year</div>
+              </div>
+              <div class="spread-bps">3.75%</div>
+            </div>
+            <div class="spread-row">
+              <div>
+                <div class="spread-label">Step 2: Determine Peer Spreads</div>
+                <div style="font-size:12px;color:#999;">Egypt B3/B+: ~340 bps; Nigeria B3/B−: ~450 bps</div>
+              </div>
+              <div class="spread-bps">~300–350</div>
+            </div>
+            <div class="spread-row">
+              <div>
+                <div class="spread-label">Step 3: Apply IMF / Upgrade Premium</div>
+                <div style="font-size:12px;color:#999;">Programme on track; 3 rating upgrades in 18 months</div>
+              </div>
+              <div class="spread-bps">−30 bps</div>
+            </div>
+            <div class="spread-row">
+              <div>
+                <div class="spread-label">Step 4: Apply Market Timing</div>
+                <div style="font-size:12px;color:#999;">Geopolitical tension (India-Pak, Middle East) widens EM</div>
+              </div>
+              <div class="spread-bps">+15 bps</div>
+            </div>
+            <div class="spread-row">
+              <div>
+                <div class="spread-label">Step 5: New Issue Premium</div>
+                <div style="font-size:12px;color:#999;">5-year market absence; investor demand premium</div>
+              </div>
+              <div class="spread-bps">+10 bps</div>
+            </div>
+            <div class="spread-row total">
+              <div class="spread-label">Cleared Yield</div>
+              <div class="spread-bps">= 6.95%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">What the Yield Signals</div>
+    <h2 class="section-title">Reading the Market's Assessment of Pakistan</h2>
+
+    <div class="three-col">
+      <div class="insight-box">
+        <div class="insight-num">B+</div>
+        <div class="insight-text">Market-implied rating based on spread of ~320 bps. 
+        Markets are effectively pricing Pakistan at Fitch's B+, not Moody's Caa1 — 
+        signalling that investors expect an upgrade from Moody's and are pre-empting it.</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">~7%</div>
+        <div class="insight-text">Pakistan's annualised cost of USD borrowing for 3 years. 
+        On $1 billion, this is ~$69.5 million in annual interest payments 
+        — manageable only if FX reserves and IMF programme remain intact.</div>
+      </div>
+      <div class="insight-box blue">
+        <div class="insight-num">Oversubscribed</div>
+        <div class="insight-text">Market reports suggest the book was well-oversubscribed, 
+        allowing Pakistan to tighten pricing from Initial Price Talk 
+        of ~7.25% to the final 6.95% — a 30 bps compression during bookbuilding.</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Peer Benchmarking</div>
+    <h2 class="section-title">How Pakistan Compares: Same Rating, Different Yields</h2>
+
+    <p class="section-intro">Two sovereigns with identical ratings can trade at meaningfully different yields. 
+    The gap reflects factors not fully captured by the rating: IMF programme status, geopolitical 
+    support, liquidity of the bond, and investor familiarity. The table below benchmarks Pakistan 
+    against its closest peers as of April 2026.</p>
+
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Country</th>
+          <th>Moody's</th>
+          <th>Fitch</th>
+          <th>3–5yr USD Yield</th>
+          <th>Spread vs UST</th>
+          <th>IMF Programme?</th>
+          <th>FX Reserves</th>
+          <th>Key Risk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td><strong>Pakistan ★</strong></td>
+          <td>Caa1</td>
+          <td>B+</td>
+          <td class="num"><strong>6.95%</strong></td>
+          <td class="num"><strong>~320 bps</strong></td>
+          <td><span class="badge badge-green">Yes (EFF)</span></td>
+          <td>$15B SBP</td>
+          <td>Programme continuity</td>
+        </tr>
+        <tr>
+          <td>Egypt</td>
+          <td>B3</td>
+          <td>B+</td>
+          <td class="num">7.10–7.25%</td>
+          <td class="num">~335–350 bps</td>
+          <td><span class="badge badge-green">Yes (EFF)</span></td>
+          <td>$47B</td>
+          <td>External financing gap</td>
+        </tr>
+        <tr>
+          <td>Nigeria</td>
+          <td>B3</td>
+          <td>B−</td>
+          <td class="num">8.00–8.50%</td>
+          <td class="num">~425–475 bps</td>
+          <td><span class="badge badge-gray">No</span></td>
+          <td>$38B</td>
+          <td>Oil revenue volatility</td>
+        </tr>
+        <tr>
+          <td>Kenya</td>
+          <td>Caa1</td>
+          <td>B−</td>
+          <td class="num">9.00–9.50%</td>
+          <td class="num">~525–575 bps</td>
+          <td><span class="badge badge-amber">Partial</span></td>
+          <td>$8.5B</td>
+          <td>Fiscal tightness; protests</td>
+        </tr>
+        <tr>
+          <td>Bangladesh</td>
+          <td>Ba3</td>
+          <td>B+</td>
+          <td class="num">6.50–7.00%</td>
+          <td class="num">~275–325 bps</td>
+          <td><span class="badge badge-green">Yes</span></td>
+          <td>$22B</td>
+          <td>Political transition</td>
+        </tr>
+        <tr>
+          <td>Sri Lanka</td>
+          <td>Caa3</td>
+          <td>CCC</td>
+          <td class="num">11.0–13.0%</td>
+          <td class="num">~725–925 bps</td>
+          <td><span class="badge badge-amber">Restructuring</span></td>
+          <td>$6B</td>
+          <td>Post-default restructuring</td>
+        </tr>
+        <tr>
+          <td>Senegal</td>
+          <td>Ba3</td>
+          <td>BB−</td>
+          <td class="num">6.00–6.50%</td>
+          <td class="num">~225–275 bps</td>
+          <td><span class="badge badge-gray">No</span></td>
+          <td>Adequate</td>
+          <td>New oil revenues; debt path</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="annotation">Yields are indicative; based on market data available April 2026 for each country's outstanding USD bonds of comparable maturity. 
+    Sources: Bloomberg/Reuters secondary market data; rating agency websites; IMF Country Report databases.</p>
+
+    <div class="verdict">
+      <div class="verdict-label">Key Takeaway: What Pakistan's 6.95% Tells Us</div>
+      <div class="verdict-text">
+        Pakistan's pricing at 6.95% — tighter than Nigeria and Kenya, broadly in line with Egypt — 
+        reflects a market that is giving Pakistan meaningful credit for: (a) its IMF-anchored macro stabilisation, 
+        (b) three consecutive rating upgrades, (c) the demonstrated repayment of $1.4 billion in Eurobond obligations 
+        on April 8, 2026, and (d) the broader geopolitical support network from Saudi Arabia, UAE, and China. 
+        The spread of 320 bps is not cheap — it embeds Pakistan's structural vulnerabilities 
+        (high interest/revenue ratio, reserve fragility, political uncertainty) — 
+        but it is not distressed. It is the yield of a country in managed transition: 
+        not yet investment grade, but no longer flirting with default.
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Discussion Questions</div>
+    <h2 class="section-title">Questions for Class Discussion</h2>
+
+    <div class="two-col">
+      <div>
+        <ol style="font-size:14px;line-height:2;color:#2D2D2D;padding-left:1.25rem;">
+          <li>If the US Federal Reserve raises rates by 50 bps in June 2026, what happens to Pakistan's 6.95% bond price? What is the approximate new yield?</li>
+          <li>Moody's upgrades Pakistan from Caa1 to B3. What would you expect to happen to the secondary yield of Pakistan's April 2029 bond? Why?</li>
+          <li>Pakistan's IMF programme review is delayed by 2 months due to energy sector reform slippage. Model the likely spread impact on Pakistan's bonds.</li>
+          <li>Compare Pakistan's 320 bps spread to Kenya's ~550 bps spread. Both are Moody's Caa1. What factors explain the 230 bps difference?</li>
+        </ol>
+      </div>
+      <div>
+        <ol start="5" style="font-size:14px;line-height:2;color:#2D2D2D;padding-left:1.25rem;">
+          <li>An investor is comparing Pakistan's 6.95% USD bond to a Pakistani rupee T-bill yielding 22%. Which is the better investment? What additional information do you need?</li>
+          <li>Pakistan's sovereign CDS trades at 450 bps while the Eurobond spread is 320 bps. What does this divergence imply? Is this an arbitrage opportunity?</li>
+          <li>Design a 2-page credit memo for a fixed income fund considering investing in Pakistan's Eurobond. What are the three most important "bull case" factors and three most important risks?</li>
+          <li>How should a Pakistani company price a USD bond of its own, given the sovereign's Eurobond yield of 6.95%? What is the corporate-sovereign spread relationship?</li>
+        </ol>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="footnote">
+      <strong>Data Sources & Disclaimers:</strong> Pakistan Eurobond terms from Dawn (April 2026); US Treasury yields from Federal Reserve H.15 Release (April 17, 2026) — 10yr: 4.26%, 2yr: 3.71%, 30yr: 4.88%; 3yr interpolated at ~3.75%. 
+      Pakistan credit ratings: Moody's Caa1 (August 2025 upgrade), Fitch B+ (confirmed April 2026). 
+      S&P's Pakistan rating is not confirmed in latest available data — approximately B− to B range. 
+      Pakistan Eurobond history from Wikipedia / Profit Pakistan Today. 
+      Peer sovereign yields are indicative secondary market estimates based on comparable USD bonds; 
+      actual traded prices may differ. Spread decomposition is analytical and for illustrative purposes. 
+      This document is prepared for educational purposes only and does not constitute investment advice. 
+      <br><br>
+      <em>Prepared for Fixed Income Investment (FIN-456) | IBA Karachi | April 2026 | Ammar H. Khan</em>
+    </div>
+
+  </div>
+
+</div><!-- .container -->
+
+<script>
+  // ---- TAB SWITCHING ----
+  function switchTab(id) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ---- CHART: US TREASURY YIELD CURVE ----
+  const ustCtx = document.getElementById('ustChart').getContext('2d');
+  new Chart(ustCtx, {
+    type: 'line',
+    data: {
+      labels: ['3M', '6M', '1Y', '2Y', '3Y', '5Y', '7Y', '10Y', '20Y', '30Y'],
+      datasets: [{
+        label: 'US Treasury Yield Curve (Apr 17, 2026)',
+        data: [4.33, 4.25, 4.05, 3.71, 3.75, 3.90, 4.05, 4.26, 4.70, 4.88],
+        borderColor: '#2D2D2D',
+        backgroundColor: 'rgba(45,45,45,0.06)',
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: '#2D2D2D',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { font: { size: 11 }, color: '#666' } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(2)}%` } }
+      },
+      scales: {
+        y: {
+          min: 3.4, max: 5.1,
+          ticks: { callback: v => v.toFixed(2) + '%', font: { size: 11 }, color: '#666' },
+          grid: { color: '#E5E5E5' }
+        },
+        x: { ticks: { font: { size: 11 }, color: '#666' }, grid: { display: false } }
+      }
+    }
+  });
+
+  // ---- CHART: PAKISTAN YIELD CURVE VS UST ----
+  const ycCtx = document.getElementById('yieldCurveChart').getContext('2d');
+  new Chart(ycCtx, {
+    type: 'line',
+    data: {
+      labels: ['0', '1Y', '2Y', '3Y (Apr 29)', '5Y', '7Y (Jan 29)', '10Y (Apr 31)'],
+      datasets: [
+        {
+          label: 'Pakistan USD Eurobonds',
+          data: [null, null, null, 6.95, null, 7.10, 7.60],
+          borderColor: '#C8923A',
+          backgroundColor: 'rgba(200,146,58,0.1)',
+          borderWidth: 2.5,
+          pointRadius: 6,
+          pointBackgroundColor: '#C8923A',
+          fill: false,
+          tension: 0.3,
+          spanGaps: true
+        },
+        {
+          label: 'US Treasury Curve',
+          data: [4.33, 4.05, 3.71, 3.75, 3.90, 4.05, 4.26],
+          borderColor: '#AAAAAA',
+          backgroundColor: 'rgba(170,170,170,0.07)',
+          borderWidth: 1.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#AAAAAA',
+          fill: false,
+          tension: 0.4,
+          borderDash: [4, 3]
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { font: { size: 11 }, color: '#666' } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y ? ctx.parsed.y.toFixed(2) + '%' : 'n/a'}` } }
+      },
+      scales: {
+        y: {
+          min: 3.0, max: 8.5,
+          ticks: { callback: v => v.toFixed(1) + '%', font: { size: 11 }, color: '#666' },
+          grid: { color: '#E5E5E5' }
+        },
+        x: { ticks: { font: { size: 11 }, color: '#666' }, grid: { display: false } }
+      }
+    }
+  });
+
+  // ---- CHART: RATING SPREAD ----
+  const rsCtx = document.getElementById('ratingSpreadChart').getContext('2d');
+  new Chart(rsCtx, {
+    type: 'bar',
+    data: {
+      labels: ['AAA', 'AA', 'A', 'BBB', 'BB', 'B+\n(Pak Fitch)', 'B/B−', 'Caa1\n(Pak Moodys)', 'CCC−'],
+      datasets: [
+        {
+          label: 'Risk-Free Base (UST 5yr ~3.9%)',
+          data: [3.9, 3.9, 3.9, 3.9, 3.9, 3.9, 3.9, 3.9, 3.9],
+          backgroundColor: '#E5E5E5'
+        },
+        {
+          label: 'Credit Spread (bps)',
+          data: [0.2, 0.45, 0.85, 1.60, 3.00, 3.25, 4.50, 5.75, 8.0],
+          backgroundColor: (ctx) => {
+            const idx = ctx.dataIndex;
+            if (idx <= 1) return '#52B788';
+            if (idx <= 3) return '#C8923A';
+            if (idx === 5) return '#C8923A';
+            return '#9B2335';
+          }
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { font: { size: 11 }, color: '#666' } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.datasetIndex === 0) return ` Base: ${ctx.parsed.y.toFixed(2)}%`;
+              return ` Credit Spread: +${(ctx.parsed.y * 100).toFixed(0)} bps`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { stacked: true, ticks: { font: { size: 10 }, color: '#666' }, grid: { display: false } },
+        y: {
+          stacked: true, max: 13,
+          ticks: { callback: v => v.toFixed(0) + '%', font: { size: 11 }, color: '#666' },
+          grid: { color: '#E5E5E5' },
+          title: { display: true, text: 'All-in Yield (%)', font: { size: 11 }, color: '#999' }
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
