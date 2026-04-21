@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplier Credit Guarantee Facility — NCGCL Product Note</title>
+<style>
+  :root {
+    --primary: #FFFFFF;
+    --secondary: #FAFAFA;
+    --border: #E5E5E5;
+    --accent: #C8923A;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --success: #52B788;
+    --warning: #9B2335;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: var(--primary);
+    color: #2D2D2D;
+    line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* Cover */
+  .cover {
+    background: #1A1A1A;
+    color: #fff;
+    padding: 4rem 0 3rem;
+    margin-bottom: 0;
+  }
+  .cover-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+  .cover-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #C8923A; margin-bottom: 1.5rem;
+  }
+  .cover-title {
+    font-family: Georgia, serif; font-size: 40px; font-weight: 400;
+    color: #fff; line-height: 1.15; margin-bottom: 1rem; max-width: 700px;
+  }
+  .cover-subtitle {
+    font-size: 16px; color: #AAAAAA; max-width: 600px; margin-bottom: 2.5rem; line-height: 1.6;
+  }
+  .cover-meta { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+  .cover-meta-item { font-size: 12px; color: #888; }
+  .cover-meta-item span { display: block; font-size: 13px; color: #CCC; font-weight: 500; margin-top: 2px; }
+
+  /* Nav */
+  .doc-nav {
+    background: #fff; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-inner {
+    max-width: 1100px; margin: 0 auto; padding: 0 1.5rem;
+    display: flex; gap: 0; overflow-x: auto;
+  }
+  .nav-btn {
+    background: none; border: none; padding: 1rem 1.25rem;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.05em;
+    color: #999; cursor: pointer; border-bottom: 2px solid transparent;
+    white-space: nowrap; transition: all 0.2s; text-transform: uppercase;
+  }
+  .nav-btn:hover { color: #1A1A1A; }
+  .nav-btn.active { color: #1A1A1A; border-bottom-color: #C8923A; }
+
+  /* Sections */
+  .doc-section { display: none; padding: 3rem 0 4rem; }
+  .doc-section.active { display: block; }
+
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    color: #999; text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: Georgia, serif; font-size: 28px; font-weight: 400;
+    color: #1A1A1A; margin-bottom: 0.75rem; line-height: 1.2;
+  }
+  .section-intro {
+    font-size: 15px; color: #555; line-height: 1.7; max-width: 780px;
+    margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem;
+  }
+
+  /* Grids */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+
+  /* Panels */
+  .panel {
+    background: #FAFAFA; border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.5rem;
+  }
+  .panel-title {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #999; margin-bottom: 1rem;
+  }
+  .panel h4 {
+    font-family: Georgia, serif; font-size: 16px; font-weight: 400;
+    color: #1A1A1A; margin-bottom: 0.5rem;
+  }
+  .panel p { font-size: 13px; color: #555; line-height: 1.6; }
+
+  /* Insight boxes */
+  .insight-box {
+    background: #FAFAFA; border: 1px solid var(--border);
+    border-top: 3px solid #52B788; padding: 1.5rem;
+  }
+  .insight-box.amber { border-top-color: #C8923A; }
+  .insight-box.red { border-top-color: #9B2335; }
+  .insight-box.blue { border-top-color: #4A90C4; }
+  .insight-num {
+    font-family: Georgia, serif; font-size: 30px; font-weight: 400;
+    color: #1A1A1A; line-height: 1;
+  }
+  .insight-text { font-size: 12px; color: #666; margin-top: 0.6rem; line-height: 1.5; }
+
+  /* Tables */
+  .est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .est-table th {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: #1A1A1A;
+    text-align: left; padding: 0.75rem 1rem; border-bottom: 2px solid #1A1A1A;
+    background: #fff; text-transform: uppercase;
+  }
+  .est-table td {
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); color: #2D2D2D;
+    vertical-align: top;
+  }
+  .est-table tr:hover td { background: #FAFAFA; }
+  .est-table td:first-child { font-weight: 500; color: #1A1A1A; }
+  .est-table .sub { font-size: 11px; color: #888; display: block; margin-top: 2px; }
+  .est-table tr.highlight td { background: #FFF8F0; }
+  .est-table tr.section-head td {
+    background: #1A1A1A; color: #fff; font-weight: 600;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .est-table tr.section-head td:first-child { color: #fff; }
+
+  /* Verdict / callout */
+  .verdict {
+    background: #FAFAFA; border: 1px solid var(--border);
+    border-left: 4px solid #C8923A; padding: 1.5rem; margin: 2rem 0;
+  }
+  .verdict-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    color: #999; text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .verdict-text { font-size: 14px; color: #2D2D2D; line-height: 1.7; }
+
+  .callout-green {
+    background: #F0FAF4; border-left: 4px solid #52B788; padding: 1.25rem 1.5rem; margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout-red {
+    background: #FDF0F2; border-left: 4px solid #9B2335; padding: 1.25rem 1.5rem; margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout-title { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .callout-green .callout-title { color: #52B788; }
+  .callout-red .callout-title { color: #9B2335; }
+  .callout-body { font-size: 13px; line-height: 1.6; color: #444; }
+
+  /* Flow diagram */
+  .flow-row {
+    display: flex; align-items: center; gap: 0; margin: 2rem 0; flex-wrap: wrap;
+  }
+  .flow-box {
+    background: #FAFAFA; border: 1px solid var(--border);
+    border-radius: 4px; padding: 1rem 1.25rem;
+    font-size: 13px; font-weight: 500; text-align: center;
+    min-width: 120px; flex: 1;
+  }
+  .flow-box.anchor { background: #1A1A1A; color: #fff; }
+  .flow-box.ncgcl { background: #C8923A; color: #fff; }
+  .flow-box.buyer { background: #F0FAF4; border-color: #52B788; }
+  .flow-box.bank { background: #F0F4FA; border-color: #4A90C4; }
+  .flow-box .sub { font-size: 11px; opacity: 0.7; margin-top: 3px; }
+  .flow-arrow {
+    font-size: 20px; color: #CCC; padding: 0 0.25rem; flex-shrink: 0;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    padding: 2px 8px; border-radius: 2px; letter-spacing: 0.05em;
+  }
+  .badge-green { background: #E8F7EF; color: #2E7D5A; }
+  .badge-amber { background: #FFF3E4; color: #9B6820; }
+  .badge-red { background: #FDEEF0; color: #9B2335; }
+  .badge-gray { background: #F0F0F0; color: #666; }
+
+  /* Sector cards */
+  .sector-card {
+    border: 1px solid var(--border); border-radius: 4px;
+    overflow: hidden; margin-bottom: 2.5rem;
+  }
+  .sector-card-header {
+    background: #1A1A1A; color: #fff; padding: 1.25rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sector-card-header h3 {
+    font-family: Georgia, serif; font-size: 18px; font-weight: 400;
+  }
+  .sector-card-header .sector-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #C8923A;
+  }
+  .sector-card-body { padding: 1.5rem; }
+
+  /* Economics box */
+  .econ-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    margin: 1rem 0;
+  }
+  .econ-cell {
+    background: #fff; padding: 1rem 1.25rem;
+  }
+  .econ-cell-label { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.06em; }
+  .econ-cell-val { font-family: Georgia, serif; font-size: 20px; color: #1A1A1A; margin: 0.25rem 0; }
+  .econ-cell-note { font-size: 11px; color: #888; line-height: 1.4; }
+
+  /* Process steps */
+  .step-list { list-style: none; padding: 0; margin: 1rem 0; }
+  .step-item {
+    display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start;
+  }
+  .step-num {
+    background: #1A1A1A; color: #fff; border-radius: 50%;
+    width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 600; color: #1A1A1A; margin-bottom: 2px; }
+  .step-desc { font-size: 13px; color: #555; line-height: 1.5; }
+
+  /* Risk table colors */
+  .risk-high { color: #9B2335; font-weight: 600; }
+  .risk-med { color: #C8923A; font-weight: 600; }
+  .risk-low { color: #52B788; font-weight: 600; }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+  /* Sub-section */
+  .sub-section { margin-bottom: 2.5rem; }
+  .sub-section h4 {
+    font-family: Georgia, serif; font-size: 18px; font-weight: 400;
+    color: #1A1A1A; margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .sub-section p { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 0.75rem; }
+  .sub-section ul { list-style: disc; padding-left: 1.5rem; }
+  .sub-section li { font-size: 14px; color: #444; line-height: 1.6; margin-bottom: 0.3rem; }
+
+  /* Decision box */
+  .decision-box {
+    background: #1A1A1A; color: #fff; padding: 2rem; margin-top: 2rem;
+  }
+  .decision-box h3 {
+    font-family: Georgia, serif; font-size: 20px; font-weight: 400; color: #fff; margin-bottom: 1rem;
+  }
+  .decision-item {
+    display: flex; gap: 1rem; margin-bottom: 0.75rem; align-items: flex-start;
+  }
+  .decision-num {
+    background: #C8923A; color: #fff; border-radius: 50%;
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+  }
+  .decision-text { font-size: 13px; color: #CCC; line-height: 1.5; }
+
+  /* IFRS9 specific */
+  .ifrs-stage {
+    border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .ifrs-stage-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 0.4rem;
+  }
+  .stage1 { border-top: 3px solid #52B788; }
+  .stage1 .ifrs-stage-label { color: #52B788; }
+  .stage2 { border-top: 3px solid #C8923A; }
+  .stage2 .ifrs-stage-label { color: #C8923A; }
+  .stage3 { border-top: 3px solid #9B2335; }
+  .stage3 .ifrs-stage-label { color: #9B2335; }
+
+  /* Print / footer */
+  .doc-footer {
+    border-top: 1px solid var(--border); padding: 2rem 0; margin-top: 2rem;
+    font-size: 12px; color: #999; text-align: center; line-height: 1.7;
+  }
+
+  @media (max-width: 768px) {
+    .two-col, .three-col, .four-col, .econ-row { grid-template-columns: 1fr; }
+    .cover-title { font-size: 28px; }
+    .flow-row { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .nav-btn { padding: 0.75rem 0.75rem; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-label">National Credit Guarantee Company Limited — Product Note</div>
+    <div class="cover-title">Supplier Credit Guarantee Facility (SCGF)</div>
+    <div class="cover-subtitle">A tri-party guarantee architecture enabling anchor corporates to extend structured credit to SME buyers — unlocking downstream liquidity without a Financial Institution intermediary.</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">Classification <span>Confidential — Board Discussion</span></div>
+      <div class="cover-meta-item">Date <span>April 2025</span></div>
+      <div class="cover-meta-item">Status <span>Concept Paper — Pilot Pending Board Approval</span></div>
+      <div class="cover-meta-item">Prepared by <span>NCGCL Management</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="doc-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+    <button class="nav-btn" onclick="showSection('architecture')">Architecture</button>
+    <button class="nav-btn" onclick="showSection('termsheet')">Term Sheet</button>
+    <button class="nav-btn" onclick="showSection('sectors')">Sector Products</button>
+    <button class="nav-btn" onclick="showSection('economics')">Economics</button>
+    <button class="nav-btn" onclick="showSection('ifrs9')">IFRS 9 Benefit</button>
+    <button class="nav-btn" onclick="showSection('operations')">Operations</button>
+    <button class="nav-btn" onclick="showSection('risks')">Risk Register</button>
+    <button class="nav-btn" onclick="showSection('pilot')">Pilot &amp; Way Forward</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 1: OVERVIEW ===== -->
+<div id="overview" class="doc-section active">
+<div class="container">
+
+  <div class="section-label">Section 1</div>
+  <div class="section-title">Executive Summary & Product Rationale</div>
+  <div class="section-intro">
+    NCGCL's guarantee mandate has, to date, been deployed primarily to de-risk Financial Institutions extending credit to MSMEs. The Supplier Credit Guarantee Facility (SCGF) introduces a structurally distinct delivery channel: NCGCL extends its AAA guarantee directly to large anchor corporates — enabling them to extend larger, longer, and more confident trade credit to their SME buyer networks. The guarantee simultaneously enables the anchor to optimize its balance sheet, access better bank financing rates, and reduce IFRS 9 impairment charges. Net effect: credit reaches SMEs faster, more cheaply, and at greater scale than the bank intermediation route.
+  </div>
+
+  <div class="four-col">
+    <div class="insight-box amber">
+      <div class="insight-num">PKR 8–12Tn</div>
+      <div class="insight-text">Estimated trade payables outstanding in Pakistan's formal corporate sector — the addressable pool for SCGF</div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-num">40–60 days</div>
+      <div class="insight-text">Typical credit terms anchors extend today; SCGF enables extension to 75–90 days without additional risk to the anchor</div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-num">3–5×</div>
+      <div class="insight-text">Leverage of NCGCL's guarantee capital into SME liquidity — compared to 1–2× through the bank intermediation channel</div>
+    </div>
+    <div class="insight-box amber">
+      <div class="insight-num">15–40%</div>
+      <div class="insight-text">Potential reduction in anchor's IFRS 9 ECL provision on guaranteed receivables — depending on sector and credit tenor</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>Why This Product Exists — The Market Failure</h4>
+    <p>Pakistan's MSME credit gap is structural, not cyclical. Banks underserve SMEs due to collateral deficits, documentation gaps, and thin credit histories. But many of these same SMEs already transact with large, creditworthy anchor corporates — OMCs, FMCG companies, logistics providers — on informal or minimally structured credit terms. The anchor knows its SME buyers better than any bank ever will: purchase history, payment behavior, order volumes, seasonal patterns.</p>
+    <p>The constraint is not information. It is risk absorption capacity. Anchors cannot extend more credit because their Boards, credit committees, and auditors limit uncollateralized receivables exposure. Their banks will not advance against unguaranteed SME receivables at reasonable rates. And their P&amp;L absorbs IFRS 9 ECL charges annually on that receivables book.</p>
+    <p>NCGCL's AAA guarantee resolves all three constraints simultaneously — which no other market participant can do.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">What Changes Without SCGF</div>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:0.6rem 0;border-bottom:1px solid #eee;font-size:13px;color:#555;">🔴 &nbsp; Anchor extends credit up to internal board limit (conservative)</li>
+        <li style="padding:0.6rem 0;border-bottom:1px solid #eee;font-size:13px;color:#555;">🔴 &nbsp; SME buyer restricted to existing credit line — no growth headroom</li>
+        <li style="padding:0.6rem 0;border-bottom:1px solid #eee;font-size:13px;color:#555;">🔴 &nbsp; Anchor's bank prices receivables discounting at high spread (unsecured SME risk)</li>
+        <li style="padding:0.6rem 0;border-bottom:1px solid #eee;font-size:13px;color:#555;">🔴 &nbsp; Full IFRS 9 ECL provision required on receivables book</li>
+        <li style="padding:0.6rem 0;font-size:13px;color:#555;">🔴 &nbsp; SME forced to use informal credit at 30–40% effective cost, or foregoes growth</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="panel-title">What Changes With SCGF</div>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:0.6rem 0;border-bottom:1px solid #eee;font-size:13px;color:#555;">✅ &nbsp; Anchor extends credit above board limit — backed by NCGCL AAA guarantee</li>
+        <li style="padding:0.6rem 0;border-bottom:1px solid #eee;font-size:13px;color:#555;">✅ &nbsp; SME buyer gets larger, longer credit — purchases more, grows faster</li>
+        <li style="padding:0.6rem 0;border-bottom:1px solid #eee;font-size:13px;color:#555;">✅ &nbsp; Anchor's bank advances against guaranteed receivables at near-investment-grade rate</li>
+        <li style="padding:0.6rem 0;border-bottom:1px solid #eee;font-size:13px;color:#555;">✅ &nbsp; IFRS 9 ECL provision sharply reduced on guaranteed portion</li>
+        <li style="padding:0.6rem 0;font-size:13px;color:#555;">✅ &nbsp; SME accesses structured credit at 12–18% effective cost vs. informal 30–40%</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>Precedent & Global Best Practice</h4>
+    <p>The SCGF is not a novel concept in isolation — it assembles tested global mechanisms into a Pakistan-relevant package. Key precedents include:</p>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Global Precedents</div>
+        <table class="est-table">
+          <tr><th>Mechanism</th><th>Where Used</th><th>Applicability</th></tr>
+          <tr><td>Anchor-Based Supply Chain Finance Guarantees<div class="sub">Buyer-led receivables guarantees</div></td><td>IFC / EBRD programs in emerging markets</td><td><span class="badge badge-green">High</span></td></tr>
+          <tr><td>Confirming House / Reverse Factoring with Credit Enhancement<div class="sub">Anchor confirms SME invoices; guarantee covers credit risk</div></td><td>Mexico (NAFIN), Brazil (FINAME)</td><td><span class="badge badge-green">High</span></td></tr>
+          <tr><td>Distributed Trade Credit Guarantee Programs<div class="sub">MSME buyers guaranteed under anchor umbrella</div></td><td>South Korea (KODIT), Taiwan (SMEG)</td><td><span class="badge badge-amber">Medium</span></td></tr>
+          <tr><td>Supply Chain Risk Sharing Facilities<div class="sub">Development bank co-guarantees anchor receivables</div></td><td>ADB Trade Finance Program, India (SIDBI)</td><td><span class="badge badge-green">High</span></td></tr>
+          <tr><td>IFRS 9-Aligned Credit Insurance<div class="sub">Balance sheet protection driving ECL reduction</div></td><td>Europe (Euler Hermes, Atradius)</td><td><span class="badge badge-amber">Medium</span></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Key Lessons from Global Practice</div>
+        <ol style="list-style:decimal;padding-left:1.25rem;">
+          <li style="font-size:13px;color:#444;margin-bottom:0.75rem;line-height:1.5;"><strong>Anchor skin-in-the-game is non-negotiable.</strong> Programs that guaranteed 100% of receivables experienced moral hazard — anchors extended credit to uncreditworthy buyers. 20–30% retention by anchor is the global standard.</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.75rem;line-height:1.5;"><strong>Anchor's existing buyer data is the underwriting backbone.</strong> Mexico's NAFIN model succeeded because anchors vouched for buyer creditworthiness using transaction history — not bank-style credit reports.</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.75rem;line-height:1.5;"><strong>Digitization drives scale.</strong> KODIT's supply chain programs scaled 10× after digital invoice integration — claim verification was automated, reducing per-claim costs 70%.</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.75rem;line-height:1.5;"><strong>Portfolio-level coverage outperforms transaction-level coverage</strong> for cost efficiency and underwriting discipline — particularly for high-volume, small-ticket anchor portfolios.</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.75rem;line-height:1.5;"><strong>Anchor receivables financing (reverse factoring) is the natural institutional upgrade</strong> — once guarantee is in place, bank discounting at lower spread follows organically.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Board Framing</div>
+    <div class="verdict-text">SCGF is NCGCL's entry into the <em>real economy liquidity channel</em> — distinct from, and complementary to, bank-intermediated lending. Where NCGCL's existing products de-risk banks, SCGF de-risks the supply chain itself. The anchor corporate becomes NCGCL's distribution partner: its deep commercial relationships, real-time buyer data, and existing credit infrastructure substitute for the bank origination channel — at a fraction of the cost and at far greater speed.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== SECTION 2: ARCHITECTURE ===== -->
+<div id="architecture" class="doc-section">
+<div class="container">
+
+  <div class="section-label">Section 2</div>
+  <div class="section-title">Product Architecture — Hybrid Tri-Party Structure</div>
+  <div class="section-intro">
+    SCGF operates as a tri-party arrangement: NCGCL issues a Master Guarantee Facility to the Anchor Supplier; the Anchor deploys structured credit lines to its SME buyers within NCGCL-approved parameters; the Anchor's bank advances against the NCGCL-guaranteed receivables at near-investment-grade pricing. Three distinct value flows — guarantee, credit, and liquidity — operate simultaneously within one structure.
+  </div>
+
+  <!-- Flow diagram -->
+  <div class="sub-section">
+    <h4>Structural Flow Diagram</h4>
+    <div class="flow-row">
+      <div class="flow-box ncgcl">NCGCL<div class="sub">Master Guarantee Facility (MAGFA)</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box anchor">Anchor Supplier<div class="sub">OMC / FMCG / Logistics</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box buyer">SME Buyer<div class="sub">Dealer / Distributor / Shipper</div></div>
+    </div>
+    <div class="flow-row" style="margin-top:-0.5rem;">
+      <div class="flow-box bank" style="flex:0.6;">Anchor's Bank<div class="sub">Receivables Discounting at AAA rate</div></div>
+      <div class="flow-arrow">←</div>
+      <div class="flow-box anchor" style="opacity:0.6;">Anchor presents guaranteed receivables</div>
+      <div class="flow-arrow" style="opacity:0;">→</div>
+      <div style="flex:1;"></div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:0.5rem;">Flow A: Guarantee issuance. &nbsp;|&nbsp; Flow B: Credit extension to SME buyers. &nbsp;|&nbsp; Flow C: Bank liquidity advanced to anchor against guaranteed receivables.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>The Three Flows — Explained</h4>
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Flow A — Guarantee</div>
+        <h4>NCGCL → Anchor</h4>
+        <p>NCGCL issues a <strong>Master Guarantee Facility Agreement (MAGFA)</strong> to the Anchor. This instrument guarantees a defined percentage (typically 70–80%) of the Anchor's trade receivables from eligible SME buyers, subject to portfolio eligibility criteria, concentration limits, and reporting covenants. The MAGFA defines the total guaranteed portfolio limit, tenor, fee, and claims mechanics.</p>
+        <p style="margin-top:0.75rem;">The NCGCL guarantee is the foundational instrument — it unlocks all downstream benefits for both anchor and buyers.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Flow B — Trade Credit</div>
+        <h4>Anchor → SME Buyer</h4>
+        <p>The Anchor extends structured credit to its existing SME customers. Credit limits, tenor, and terms are set by the Anchor within NCGCL-approved guardrails (minimum retention, concentration limits, buyer eligibility). NCGCL does not underwrite individual buyers — the Anchor retains this function, using its commercial relationship, transaction history, and internal credit scoring as the basis.</p>
+        <p style="margin-top:0.75rem;">The Anchor retains 20–30% uncovered exposure per buyer, preserving underwriting discipline.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Flow C — Bank Liquidity</div>
+        <h4>Anchor's Bank → Anchor</h4>
+        <p>The Anchor presents its NCGCL-guaranteed receivables to its bank for discounting or reverse factoring. Because the receivables now carry an effective AAA guarantee on 70–80% of face value, the bank prices them at near-investment-grade spread — 150–250 bps lower than unguaranteed SME receivables. This unlocks significant working capital for the Anchor, funding the expanded credit it extends to buyers.</p>
+        <p style="margin-top:0.75rem;">SBP's recognition of NCGCL guarantees as liquid assets reinforces this channel.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>Risk Layering Architecture</h4>
+    <p>SCGF is structured with explicit skin-in-the-game at the anchor level. The risk distribution is as follows:</p>
+    <table class="est-table">
+      <tr>
+        <th>Party</th>
+        <th>Risk Layer</th>
+        <th>Coverage</th>
+        <th>Rationale</th>
+      </tr>
+      <tr>
+        <td>Anchor Supplier</td>
+        <td>First-loss (uncovered retention)</td>
+        <td>20–30% of each receivable / portfolio</td>
+        <td>Preserves origination discipline; anchor bears first losses on its own underwriting decisions</td>
+      </tr>
+      <tr class="highlight">
+        <td>NCGCL</td>
+        <td>Senior guarantee layer</td>
+        <td>70–80% of portfolio (subject to portfolio cap)</td>
+        <td>AAA guarantee de-risks the majority of the book; enables bank discounting and IFRS 9 ECL reduction</td>
+      </tr>
+      <tr>
+        <td>Anchor's Bank</td>
+        <td>Working capital provider</td>
+        <td>Advances against guaranteed receivables</td>
+        <td>Bank bears liquidity risk only (not credit risk on guaranteed portion); prices accordingly</td>
+      </tr>
+    </table>
+    <div class="callout-green" style="margin-top:1.5rem;">
+      <div class="callout-title">Why 70–80% Coverage?</div>
+      <div class="callout-body">Global precedent (NAFIN, KODIT, IFC supply chain programs) converges on 70–80% as the optimal coverage ratio: sufficient to materially reduce ECL provisioning and enable bank financing, while retaining enough anchor exposure (20–30%) that credit quality is self-enforced. At 100% coverage, underwriting discipline collapses — anchors extend credit to borderline buyers without consequence.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>Three Guarantee Fee Models</h4>
+    <p>SCGF is designed with three fee models, applicable to different sector configurations. The Board should consider endorsing all three — different anchors will have different preferences depending on margin structure, buyer relationships, and P&amp;L priorities.</p>
+    <table class="est-table">
+      <tr>
+        <th>Model</th>
+        <th>Who Pays</th>
+        <th>Indicative Rate</th>
+        <th>Best Suited For</th>
+        <th>Mechanism</th>
+      </tr>
+      <tr>
+        <td><strong>Model A</strong><br><span class="badge badge-amber">Anchor Pays</span></td>
+        <td>Anchor Supplier pays NCGCL directly</td>
+        <td>1.25–2.00% p.a. on guaranteed exposure</td>
+        <td>OMCs, FMCG companies with large receivables books and clear IFRS 9 ECL savings</td>
+        <td>Anchor nets ECL savings + lower bank borrowing cost against guarantee fee. Net P&amp;L benefit typically positive.</td>
+      </tr>
+      <tr>
+        <td><strong>Model B</strong><br><span class="badge badge-green">Buyer Pays</span></td>
+        <td>SME Buyer pays credit access fee embedded in terms</td>
+        <td>0.75–1.50% p.a. embedded in credit pricing</td>
+        <td>Logistics companies, distributors where anchor margin is thin and credit is a service</td>
+        <td>Anchor passes fee to buyer as cost of extended credit. Buyer compares against cost of bank credit (typically higher).</td>
+      </tr>
+      <tr>
+        <td><strong>Model C</strong><br><span class="badge badge-gray">Split</span></td>
+        <td>Anchor pays base; buyer pays access premium</td>
+        <td>0.50–1.00% (anchor) + 0.50–0.75% (buyer)</td>
+        <td>FMCG distributors, supply chain finance where both parties benefit symmetrically</td>
+        <td>Shared cost structure aligns incentives. Anchor benefits from ECL reduction and volume growth; buyer benefits from lower effective cost than bank credit.</td>
+      </tr>
+    </table>
+    <div class="verdict">
+      <div class="verdict-label">Fee Pricing Note</div>
+      <div class="verdict-text">All fee rates are indicative, to be calibrated against sector-specific PD/LGD data during the pilot underwriting phase. NCGCL's guarantee fee must cover: expected loss on guaranteed portfolio + operating cost + capital buffer + margin. At a portfolio PD of 2–4% and LGD of 40–60% (sector-adjusted), fees in the 1.0–2.0% range are economically sound. Final rates will be established through NCGCL's risk pricing model per MAGFA.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== SECTION 3: TERM SHEET ===== -->
+<div id="termsheet" class="doc-section">
+<div class="container">
+
+  <div class="section-label">Section 3</div>
+  <div class="section-title">Indicative Master Term Sheet — SCGF</div>
+  <div class="section-intro">
+    The following constitutes an indicative, non-binding term sheet for the Supplier Credit Guarantee Facility. Final terms are subject to NCGCL Board approval, legal documentation, and anchor-specific due diligence.
+  </div>
+
+  <table class="est-table">
+    <tr class="section-head"><td colspan="2">A. FACILITY OVERVIEW</td></tr>
+    <tr><td>Facility Name</td><td>Supplier Credit Guarantee Facility (SCGF) — Master Guarantee Facility Agreement</td></tr>
+    <tr><td>Guarantor</td><td>National Credit Guarantee Company Limited (NCGCL) — AAA rated, SBP regulated</td></tr>
+    <tr><td>Guarantee Beneficiary</td><td>Anchor Supplier (the "Principal") — a large corporate, formally registered, audited financials, minimum BBB credit rating or equivalent financial health criteria</td></tr>
+    <tr><td>Ultimate Credit Beneficiaries</td><td>SME Buyers in the Anchor's existing customer network (the "Sub-Borrowers") — existing commercial relationship with Anchor of minimum 12 months</td></tr>
+    <tr><td>Purpose</td><td>To guarantee the Anchor's trade credit extended to eligible SME buyers, thereby: (i) enabling Anchor to extend larger and/or longer credit lines; (ii) enabling Anchor to discount guaranteed receivables with its bank at favorable rates; and (iii) reducing Anchor's IFRS 9 ECL provisioning on guaranteed receivables</td></tr>
+
+    <tr class="section-head"><td colspan="2">B. GUARANTEE STRUCTURE</td></tr>
+    <tr><td>Guarantee Type</td><td>Portfolio-level, pari-passu guarantee covering a defined tranche of the Anchor's eligible trade receivables portfolio. NCGCL's obligation arises on verified buyer default post-waiting period.</td></tr>
+    <tr><td>Coverage Ratio</td><td><strong>70–80%</strong> of eligible trade receivables (to be fixed per MAGFA). Anchor retains minimum 20–30% uncovered — non-negotiable.</td></tr>
+    <tr><td>Portfolio Cap</td><td>NCGCL's maximum aggregate liability under each MAGFA: PKR 500M–5Bn (indicative range; sized per anchor risk profile and NCGCL capacity)</td></tr>
+    <tr><td>Eligible Receivables</td><td>Trade receivables arising from bona fide commercial transactions between Anchor and eligible SME buyers; invoiced, undisputed, not aged beyond 90 DPD; invoice value PKR 0.5M–50M per buyer per cycle</td></tr>
+    <tr><td>Tenor — Individual Receivable</td><td>30–120 days credit terms per receivable (to match commercial terms by sector)</td></tr>
+    <tr><td>Tenor — MAGFA</td><td>3 years, renewable subject to portfolio performance review</td></tr>
+    <tr><td>Revolving Nature</td><td>Portfolio is revolving — as receivables are collected, new eligible receivables are admitted within portfolio cap</td></tr>
+    <tr><td>Concentration Limits</td><td>No single SME buyer to exceed 5% of total portfolio; no single industry sub-segment to exceed 30%</td></tr>
+
+    <tr class="section-head"><td colspan="2">C. ELIGIBILITY CRITERIA</td></tr>
+    <tr><td>Anchor Eligibility</td><td>
+      <ul style="list-style:disc;padding-left:1rem;font-size:13px;">
+        <li>Formally incorporated; minimum 5 years operating history</li>
+        <li>Audited financials (last 3 years); minimum investment-grade credit profile</li>
+        <li>Regulated/listed entity preferred; must have existing buyer credit management system</li>
+        <li>Existing bank relationships with receivables discounting or working capital facilities</li>
+        <li>No active legal proceedings material to solvency</li>
+      </ul>
+    </td></tr>
+    <tr><td>SME Buyer Eligibility</td><td>
+      <ul style="list-style:disc;padding-left:1rem;font-size:13px;">
+        <li>Existing commercial relationship with Anchor: minimum 12 months, minimum 4 completed transactions</li>
+        <li>Annual purchases from Anchor: PKR 5M–500M</li>
+        <li>Formally registered (sole proprietor, partnership, private limited)</li>
+        <li>No defaults in commercial history with Anchor in prior 24 months</li>
+        <li>CNIC/NTN verification; basic KYB completed by Anchor</li>
+        <li>Not on NCGCL exclusion list (sector or entity-level)</li>
+      </ul>
+    </td></tr>
+    <tr><td>Excluded Uses</td><td>Speculative purchases; inter-company transactions; export receivables under separate guarantee; receivables from Anchor's related parties</td></tr>
+
+    <tr class="section-head"><td colspan="2">D. GUARANTEE FEE</td></tr>
+    <tr><td>Fee Basis</td><td>Annual guarantee fee on outstanding guaranteed exposure (average daily balance). Three models applicable — Model A (Anchor pays), B (Buyer pays), C (Split). See Section 2 for details.</td></tr>
+    <tr><td>Indicative Fee Range</td><td>1.00–2.00% per annum (sector-specific; to be set per MAGFA after portfolio data review)</td></tr>
+    <tr><td>Payment Schedule</td><td>Quarterly in advance; or annually in advance (at Anchor's election with 10% upfront discount)</td></tr>
+    <tr><td>Performance Rebate</td><td>Up to 15% fee rebate if annual net loss ratio on guaranteed portfolio remains below 0.5%. Incentivizes anchor to maintain underwriting standards.</td></tr>
+    <tr><td>Late Payment Penalty</td><td>1.5× policy rate per day on overdue fees; NCGCL entitled to suspend guarantee cover after 30 days overdue</td></tr>
+
+    <tr class="section-head"><td colspan="2">E. CLAIMS & RECOVERIES</td></tr>
+    <tr><td>Claim Trigger</td><td>SME buyer default: (i) failure to pay invoiced amount within 90 days past due (DPD), after Anchor has made documented recovery attempts; OR (ii) buyer insolvency/winding-up proceedings filed</td></tr>
+    <tr><td>Waiting Period</td><td>60 days from default trigger — Anchor must exhaust first-recovery actions during this period</td></tr>
+    <tr><td>Claims Documentation Pack</td><td>
+      (i) Original invoices; (ii) delivery/service confirmation; (iii) collection correspondence evidence; (iv) buyer KYB file; (v) NCGCL monitoring data reconciliation; (vi) signed claims form
+    </td></tr>
+    <tr><td>Claim Payment Timeline</td><td>NCGCL to pay within 30 business days of complete documentation submission</td></tr>
+    <tr><td>Claim Amount</td><td>Coverage ratio × outstanding invoice principal. Interest and penalties not covered.</td></tr>
+    <tr><td>Recovery Waterfall</td><td>Post-claim recoveries shared pro-rata: Anchor (uncovered %) / NCGCL (covered %). NCGCL subrogated to Anchor's rights on paid claims.</td></tr>
+    <tr><td>Fraud &amp; Misrepresentation</td><td>NCGCL guarantee void on any receivable where fraud, collusion, or material misrepresentation by Anchor is established. Anchor liable for full repayment of claims paid.</td></tr>
+
+    <tr class="section-head"><td colspan="2">F. REPORTING & MONITORING</td></tr>
+    <tr><td>Monthly Reporting</td><td>Anchor submits: portfolio schedule (buyer, invoice date, amount, status), delinquency aging (30/60/90 DPD), new additions, exits, and any buyer covenant breaches</td></tr>
+    <tr><td>Quarterly Review</td><td>NCGCL reviews portfolio vintage performance, concentration limits, loss development, and any anchor credit events</td></tr>
+    <tr><td>Annual Audit</td><td>Anchor must provide audited accounts and IFRS 9 ECL computation for guaranteed receivables book within 120 days of fiscal year end</td></tr>
+    <tr><td>Data Access</td><td>NCGCL reserves right to request buyer-level transaction data with 5 business days notice for risk monitoring purposes</td></tr>
+
+    <tr class="section-head"><td colspan="2">G. GOVERNANCE</td></tr>
+    <tr><td>NCGCL Approvals</td><td>Individual MAGFAs above PKR 2Bn require NCGCL Board approval. Below PKR 2Bn: CEO with Risk Committee concurrence.</td></tr>
+    <tr><td>Portfolio Review Triggers</td><td>Automatic review if: (i) 90 DPD ratio exceeds 5% of portfolio; (ii) Anchor credit downgrade; (iii) buyer concentration breach; (iv) single buyer loss > 2× expected</td></tr>
+    <tr><td>Termination</td><td>NCGCL may terminate guarantee on 90-days notice; existing covered receivables remain guaranteed through original tenor. Anchor may terminate on 60-days notice with fee pro-rated.</td></tr>
+    <tr><td>Governing Law</td><td>Laws of Pakistan; jurisdiction: Karachi High Court</td></tr>
+  </table>
+
+</div>
+</div>
+
+<!-- ===== SECTION 4: SECTOR PRODUCTS ===== -->
+<div id="sectors" class="doc-section">
+<div class="container">
+
+  <div class="section-label">Section 4</div>
+  <div class="section-title">Sector Sub-Products</div>
+  <div class="section-intro">
+    SCGF's master architecture can be adapted to sector-specific commercial realities. The guarantee mechanics are identical — what differs is buyer profile, credit tenor, invoice structure, fee model, and concentration rules. Below are detailed sub-product designs for priority sectors, followed by cross-sector applicability notes.
+  </div>
+
+  <!-- OMC -->
+  <div class="sector-card">
+    <div class="sector-card-header">
+      <h3>SCGF-OMC — Oil Marketing Company Dealer Credit Guarantee</h3>
+      <div class="sector-tag">Sub-Product 1 · Pilot Recommended</div>
+    </div>
+    <div class="sector-card-body">
+      <div class="two-col" style="margin-bottom:1.5rem;">
+        <div>
+          <p style="font-size:14px;color:#444;line-height:1.7;margin-bottom:0.75rem;"><strong>Context:</strong> Pakistan's OMC sector (PSO, Total, Attock, Hascol, PUMA) operates through a network of ~12,000 petrol stations, the large majority of which are SME dealers. Dealers purchase petroleum products from OMCs on 30–45 day credit against a letter of comfort or personal guarantee. OMC exposure to dealer receivables is enormous — PSO alone carries PKR 80–120Bn in trade receivables at any given time.</p>
+          <p style="font-size:14px;color:#444;line-height:1.7;"><strong>The Constraint:</strong> OMC Boards cap dealer credit lines conservatively. Dealers with strong payment histories cannot grow their business because their credit limit is tied to the OMC's risk appetite, not their own commercial potential. Informal fuel financing (through third-party dealers lending to smaller stations) carries 25–35% effective cost.</p>
+        </div>
+        <div>
+          <div class="ifrs-stage stage3" style="margin-bottom:0.75rem;">
+            <div class="ifrs-stage-label">Key Sector Data (Indicative)</div>
+            <p style="font-size:13px;color:#444;line-height:1.5;margin-top:0.4rem;">Average dealer credit line: PKR 15–40M. Credit tenor: 30–45 days. OMC receivables delinquency (90+DPD): 3–6% of book. IFRS 9 ECL on dealer receivables: 2.5–5% of outstanding, depending on economic cycle. Dealer count per major OMC: 1,500–3,000 active dealers.</p>
+          </div>
+          <div class="callout-green">
+            <div class="callout-title">Fee Model: Model A (Anchor Pays)</div>
+            <div class="callout-body">OMC pays NCGCL guarantee fee. OMC benefits from: (1) larger dealer volumes enabled by higher credit limits; (2) IFRS 9 ECL reduction on guaranteed book; (3) better bank financing rate on guaranteed receivables. Net economics are strongly positive for OMC — see Section 5.</div>
+          </div>
+        </div>
+      </div>
+      <table class="est-table">
+        <tr><th>Parameter</th><th>Specification</th></tr>
+        <tr><td>Sub-Product Name</td><td>SCGF-OMC (Dealer Credit Guarantee)</td></tr>
+        <tr><td>Anchor Eligible</td><td>OMCs with minimum 500 active dealers; audited accounts; active receivables discounting facility</td></tr>
+        <tr><td>Buyer Profile</td><td>Petrol station dealers with minimum 12 months OMC credit history; no default in prior 24 months; CNIC/NTN verified</td></tr>
+        <tr><td>Credit Tenor</td><td>30–60 days per invoice cycle</td></tr>
+        <tr><td>Maximum Buyer Credit Line</td><td>Up to 3× dealer's average monthly purchases (vs. current typical 1.5–2×)</td></tr>
+        <tr><td>NCGCL Coverage</td><td>75% of eligible dealer receivables portfolio</td></tr>
+        <tr><td>Portfolio Cap (per OMC)</td><td>PKR 2–5Bn (to be sized against OMC's total receivables book and NCGCL capacity)</td></tr>
+        <tr><td>Guarantee Fee</td><td>1.5% p.a. on guaranteed exposure — paid by OMC (Model A)</td></tr>
+        <tr><td>Concentration Limit</td><td>No single dealer > 3% of guaranteed portfolio; no single city > 20%</td></tr>
+        <tr><td>Pilot Anchor</td><td>1 OMC; 200–500 dealers in Karachi and Lahore; 6-month observation period</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Logistics -->
+  <div class="sector-card">
+    <div class="sector-card-header">
+      <h3>SCGF-LGST — Logistics Company Deferred Service Credit Guarantee</h3>
+      <div class="sector-tag">Sub-Product 2 · Pilot Recommended</div>
+    </div>
+    <div class="sector-card-body">
+      <div class="two-col" style="margin-bottom:1.5rem;">
+        <div>
+          <p style="font-size:14px;color:#444;line-height:1.7;margin-bottom:0.75rem;"><strong>Context:</strong> Pakistan's logistics sector (TCS, Leopard, Trax, M&P, industrial 3PLs) operates on tight working capital. Anchor logistics companies service e-commerce platforms, FMCG distributors, industrial shippers — most of whom are SMEs. The logistics company provides services today and invoices on 30–60 day terms. Collection risk from SME clients is the primary P&amp;L drag.</p>
+          <p style="font-size:14px;color:#444;line-height:1.7;"><strong>The Constraint:</strong> Logistics companies restrict SME credit lines aggressively because they bear 100% of collection risk. Many SME shippers are forced to prepay, locking up their working capital. NCGCL guarantee enables the logistics anchor to extend deferred payment terms to SME clients, unlocking SME cash flow for business growth.</p>
+        </div>
+        <div>
+          <div class="callout-green">
+            <div class="callout-title">Fee Model: Model B (Buyer Pays)</div>
+            <div class="callout-body">SME buyer (shipper) pays a credit access fee embedded in service pricing. Logistics anchor with tight margins cannot absorb guarantee fee — but SME values deferred payment terms over prepayment requirement. Effective SME cost: 12–16% p.a. vs. 30–40% for informal alternatives.</div>
+          </div>
+          <div class="callout-green" style="margin-top:0.75rem;">
+            <div class="callout-title">Unique Structural Advantage</div>
+            <div class="callout-body">Logistics companies have real-time proof of delivery (POD) data — the cleanest invoice verification in any sector. Claims documentation is digital and auditable. This reduces NCGCL's moral hazard exposure significantly.</div>
+          </div>
+        </div>
+      </div>
+      <table class="est-table">
+        <tr><th>Parameter</th><th>Specification</th></tr>
+        <tr><td>Sub-Product Name</td><td>SCGF-LGST (Deferred Service Credit Guarantee)</td></tr>
+        <tr><td>Buyer Profile</td><td>SME shippers / e-commerce sellers with 6+ months service history with logistics anchor; minimum 10 shipments per month; CNIC verified</td></tr>
+        <tr><td>Credit Tenor</td><td>15–45 days deferred payment on services invoiced</td></tr>
+        <tr><td>NCGCL Coverage</td><td>70% of eligible service receivables portfolio</td></tr>
+        <tr><td>Guarantee Fee</td><td>1.0% p.a. on guaranteed exposure — passed to SME buyer via service credit pricing (Model B)</td></tr>
+        <tr><td>Unique Feature</td><td>POD-linked guarantee activation: guarantee covers only invoices with digitally confirmed delivery evidence — eliminates disputed-delivery risk</td></tr>
+        <tr><td>Concentration Limit</td><td>No single SME > 2% of portfolio (high granularity expected)</td></tr>
+        <tr><td>Expected Portfolio Size</td><td>PKR 500M–2Bn per large logistics anchor; 500–2,000 SME buyers</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- FMCG -->
+  <div class="sector-card">
+    <div class="sector-card-header">
+      <h3>SCGF-FMCG — Distributor Trade Credit Guarantee</h3>
+      <div class="sector-tag">Sub-Product 3 · Pilot Recommended</div>
+    </div>
+    <div class="sector-card-body">
+      <div class="two-col" style="margin-bottom:1.5rem;">
+        <div>
+          <p style="font-size:14px;color:#444;line-height:1.7;margin-bottom:0.75rem;"><strong>Context:</strong> Pakistan's FMCG sector (Unilever, Nestlé, P&amp;G, Reckitt, Engro Foods, National Foods) distributes through a multi-tier network of regional distributors and sub-distributors — the vast majority of whom are SMEs. FMCGs extend 30–60 day credit to distributors, who in turn extend shorter credit to retailers. FMCG trade receivables are among the most predictable in Pakistan — distributor churn is low and transaction histories are long.</p>
+          <p style="font-size:14px;color:#444;line-height:1.7;"><strong>The Opportunity:</strong> FMCG distributors are credit-hungry and deeply embedded in supply chains. Longer credit terms directly translate to more inventory purchases and deeper market penetration. FMCG anchors benefit from volume growth and reduced distributor churn — both of which are significant commercial drivers.</p>
+        </div>
+        <div>
+          <div class="callout-green">
+            <div class="callout-title">Fee Model: Model C (Split)</div>
+            <div class="callout-body">FMCG anchor pays 0.75% p.a. base guarantee fee; distributor pays 0.50% credit access premium embedded in extended-term pricing. Both parties share the benefit symmetrically. Net cost to FMCG: offset by ECL reduction and volume uplift.</div>
+          </div>
+          <div style="margin-top:0.75rem;background:#FAFAFA;border:1px solid #E5E5E5;padding:1rem;border-radius:4px;">
+            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#999;margin-bottom:0.4rem;">Added Structural Value</div>
+            <p style="font-size:13px;color:#444;line-height:1.5;">FMCG anchors have rich distributor data — order history, sell-through rates, territory performance. This data can be shared with NCGCL (with consent) to build a sector-level credit scoring model, eventually enabling faster MAGFA onboarding for new FMCG anchors.</p>
+          </div>
+        </div>
+      </div>
+      <table class="est-table">
+        <tr><th>Parameter</th><th>Specification</th></tr>
+        <tr><td>Sub-Product Name</td><td>SCGF-FMCG (Distributor Trade Credit Guarantee)</td></tr>
+        <tr><td>Buyer Profile</td><td>FMCG distributors/sub-distributors with 12+ months relationship; assigned territory; minimum PKR 10M annual purchases from anchor; no default in 24 months</td></tr>
+        <tr><td>Credit Tenor</td><td>45–90 days (extension from typical 30–45 day current terms)</td></tr>
+        <tr><td>NCGCL Coverage</td><td>75% of eligible distributor receivables</td></tr>
+        <tr><td>Guarantee Fee</td><td>0.75% (anchor) + 0.50% (distributor) = 1.25% total (Model C)</td></tr>
+        <tr><td>Seasonal Adjustment</td><td>Portfolio cap adjustable ±20% for seasonal peaks (Ramadan, Eid, winter) with 30 days advance notice to NCGCL</td></tr>
+        <tr><td>Value-Added Feature</td><td>NCGCL co-develops sector credit scorecard with anchor using distributor data — shared IP, reduces future onboarding cost</td></tr>
+        <tr><td>Expected Portfolio Size</td><td>PKR 1–8Bn per major FMCG anchor; 200–1,000 distributors</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Cross-sector table -->
+  <div class="sub-section">
+    <h4>Cross-Sector Applicability Matrix</h4>
+    <p>Beyond the three pilot sectors, SCGF architecture is directly applicable across Pakistan's formal corporate sector wherever anchor corporates extend structured credit to SME buyers. The following matrix identifies product fit and indicative parameters by sector.</p>
+    <table class="est-table">
+      <tr>
+        <th>Sector</th>
+        <th>Anchor Type</th>
+        <th>SME Buyer Type</th>
+        <th>Typical Tenor</th>
+        <th>Fee Model</th>
+        <th>Priority</th>
+      </tr>
+      <tr><td>Oil Marketing (OMC)</td><td>PSO, Total, Attock, PUMA</td><td>Petrol station dealers</td><td>30–60 days</td><td>Model A</td><td><span class="badge badge-green">Pilot</span></td></tr>
+      <tr><td>Logistics &amp; Courier</td><td>TCS, Leopard, M&P, 3PLs</td><td>SME shippers, e-commerce sellers</td><td>15–45 days</td><td>Model B</td><td><span class="badge badge-green">Pilot</span></td></tr>
+      <tr><td>FMCG</td><td>Unilever, Nestlé, P&G, Engro</td><td>Regional distributors</td><td>45–90 days</td><td>Model C</td><td><span class="badge badge-green">Pilot</span></td></tr>
+      <tr><td>Textile (Yarn &amp; Fabric)</td><td>Large spinning mills / fabric houses</td><td>SME garment manufacturers</td><td>60–90 days</td><td>Model A/C</td><td><span class="badge badge-amber">Phase 2</span></td></tr>
+      <tr><td>Automotive Parts</td><td>Key parts distributors (OEM-linked)</td><td>SME workshops, assemblers</td><td>30–60 days</td><td>Model B/C</td><td><span class="badge badge-amber">Phase 2</span></td></tr>
+      <tr><td>Food Processing/Producers</td><td>Flour mills, edible oil, rice mills</td><td>SME food retailers, bakeries</td><td>30–45 days</td><td>Model A</td><td><span class="badge badge-amber">Phase 2</span></td></tr>
+      <tr><td>Chemicals</td><td>Chemical distributors (agri/industrial)</td><td>SME farmers, light industry</td><td>45–90 days</td><td>Model C</td><td><span class="badge badge-amber">Phase 2</span></td></tr>
+      <tr><td>Pharmaceuticals</td><td>Pharma companies (local + MNC)</td><td>Pharmacies, hospital procurement</td><td>30–60 days</td><td>Model A</td><td><span class="badge badge-amber">Phase 2</span></td></tr>
+      <tr><td>Telecom Equipment</td><td>Telecom vendors / distributors</td><td>SME resellers, ISPs</td><td>30–90 days</td><td>Model B</td><td><span class="badge badge-gray">Phase 3</span></td></tr>
+      <tr><td>Agricultural Inputs</td><td>Fertilizer, seed companies</td><td>Farmer cooperatives, agri SMEs</td><td>90–180 days (seasonal)</td><td>Model A/C</td><td><span class="badge badge-gray">Phase 3</span></td></tr>
+    </table>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== SECTION 5: ECONOMICS ===== -->
+<div id="economics" class="doc-section">
+<div class="container">
+
+  <div class="section-label">Section 5</div>
+  <div class="section-title">Worked Economics — Three Sector Examples</div>
+  <div class="section-intro">
+    The following worked examples demonstrate how SCGF creates value for each party in the tri-party structure. All figures are illustrative, based on sector-reasonable assumptions. Actual figures will be calibrated during pilot underwriting.
+  </div>
+
+  <!-- OMC ECONOMICS -->
+  <div class="sub-section">
+    <h4>Example 1 — SCGF-OMC: Oil Marketing Company</h4>
+    <p style="font-size:13px;color:#888;margin-bottom:1.25rem;">Assumptions: Single OMC anchor; 500 active dealers; average dealer credit line PKR 25M; 30-day credit cycle; 12 cycles/year; portfolio PDO = 3%; LGD = 50%; NCGCL coverage = 75%; guarantee fee = 1.5% p.a. (Model A, anchor pays).</p>
+
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Portfolio Snapshot</div>
+        <table class="est-table">
+          <tr><td>No. of Dealers</td><td><strong>500</strong></td></tr>
+          <tr><td>Avg Credit Line / Dealer</td><td><strong>PKR 25M</strong></td></tr>
+          <tr><td>Total Receivables Portfolio</td><td><strong>PKR 12.5Bn</strong></td></tr>
+          <tr><td>NCGCL Guaranteed (75%)</td><td><strong>PKR 9.375Bn</strong></td></tr>
+          <tr><td>Anchor Retention (25%)</td><td><strong>PKR 3.125Bn</strong></td></tr>
+          <tr><td>Annual Guarantee Fee (1.5%)</td><td><strong>PKR 140.6M</strong></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">OMC — P&amp;L Impact</div>
+        <table class="est-table">
+          <tr><td>IFRS 9 ECL (pre-guarantee)<br><span class="sub">3% PDO × 50% LGD × PKR 12.5Bn</span></td><td><strong style="color:#9B2335;">PKR 187.5M</strong></td></tr>
+          <tr><td>IFRS 9 ECL (post-guarantee)<br><span class="sub">Full ECL on retention + near-zero on guaranteed portion</span></td><td><strong style="color:#52B788;">PKR 46.9M</strong></td></tr>
+          <tr><td>ECL Saving (P&amp;L benefit)</td><td><strong style="color:#52B788;">PKR 140.6M</strong></td></tr>
+          <tr><td>Bank Borrowing Cost Saving<br><span class="sub">150 bps reduction on PKR 9.375Bn discounted</span></td><td><strong style="color:#52B788;">PKR 140.6M</strong></td></tr>
+          <tr><td>Guarantee Fee Cost</td><td><strong style="color:#9B2335;">(PKR 140.6M)</strong></td></tr>
+          <tr class="highlight"><td><strong>Net Annual Benefit to OMC</strong></td><td><strong style="color:#52B788;">PKR 140.6M+</strong></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Dealer (SME) — Value Created</div>
+        <table class="est-table">
+          <tr><td>Old Credit Limit / Dealer</td><td>PKR 25M</td></tr>
+          <tr><td>New Credit Limit / Dealer</td><td><strong>PKR 40M (+60%)</strong></td></tr>
+          <tr><td>Additional Credit Available</td><td>PKR 15M per dealer</td></tr>
+          <tr><td>Incremental Sales Volume<br><span class="sub">at 8% gross margin on fuel</span></td><td>PKR 1.2M / dealer / yr</td></tr>
+          <tr><td>Alternative Cost of Credit<br><span class="sub">Informal financing at 30% p.a.</span></td><td>PKR 4.5M per year</td></tr>
+          <tr><td>Effective SCGF Cost to Dealer</td><td><strong>Zero</strong> (OMC absorbs fee)</td></tr>
+          <tr class="highlight"><td><strong>Net Value to Dealer</strong></td><td><strong style="color:#52B788;">PKR 1.2M+ / year</strong></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">OMC Economics Summary</div>
+      <div class="verdict-text">The guarantee fee (PKR 140.6M) is exactly offset by the IFRS 9 ECL saving alone — the bank borrowing cost saving is essentially a second layer of free benefit. The OMC pays for insurance that costs it nothing on a net basis, while 500 dealers gain 60% more credit headroom, enabling incremental annual volume growth. NCGCL earns PKR 140.6M in guarantee fees against an expected loss of PKR 9.375Bn × 3% PDO × 50% LGD × 75% coverage = ~PKR 105.5M — a sound underwriting margin of ~35.1M before opex, consistent with AAA-grade risk management.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- LOGISTICS ECONOMICS -->
+  <div class="sub-section">
+    <h4>Example 2 — SCGF-LGST: Logistics Company</h4>
+    <p style="font-size:13px;color:#888;margin-bottom:1.25rem;">Assumptions: Single logistics anchor; 1,000 active SME shippers; average receivable PKR 3M per shipper; 45-day credit cycle; PDO = 4%; LGD = 55%; NCGCL coverage = 70%; guarantee fee = 1.0% (Model B, buyer pays via credit pricing).</p>
+
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Portfolio Snapshot</div>
+        <table class="est-table">
+          <tr><td>No. of SME Shippers</td><td><strong>1,000</strong></td></tr>
+          <tr><td>Avg Receivable / Shipper</td><td><strong>PKR 3M</strong></td></tr>
+          <tr><td>Total Receivables Portfolio</td><td><strong>PKR 3Bn</strong></td></tr>
+          <tr><td>NCGCL Guaranteed (70%)</td><td><strong>PKR 2.1Bn</strong></td></tr>
+          <tr><td>Annual Guarantee Fee (1.0%)</td><td><strong>PKR 21M</strong></td></tr>
+          <tr><td>Fee Bearer</td><td><strong>SME Buyer (via pricing)</strong></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Logistics Anchor — Impact</div>
+        <table class="est-table">
+          <tr><td>Pre-SCGF: shippers required to prepay</td><td>1,000 SMEs</td></tr>
+          <tr><td>Post-SCGF: shippers on deferred terms</td><td>1,000 SMEs</td></tr>
+          <tr><td>IFRS 9 ECL Reduction</td><td><strong style="color:#52B788;">PKR 22.8M</strong></td></tr>
+          <tr><td>Revenue uplift from SME growth<br><span class="sub">30% of shippers grow 25% in volume</span></td><td>PKR 90M</td></tr>
+          <tr><td>Guarantee fee borne by anchor</td><td><strong>Zero</strong> (Model B)</td></tr>
+          <tr class="highlight"><td><strong>Net Benefit to Anchor</strong></td><td><strong style="color:#52B788;">PKR 112.8M+</strong></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">SME Shipper — Value Created</div>
+        <table class="est-table">
+          <tr><td>Old arrangement: prepay required</td><td>PKR 3M locked per cycle</td></tr>
+          <tr><td>Working capital freed per shipper</td><td><strong>PKR 3M</strong></td></tr>
+          <tr><td>Cost of SCGF credit access<br><span class="sub">1.0% fee embedded in pricing</span></td><td>PKR 30,000/year</td></tr>
+          <tr><td>Cost of bank overdraft alternative<br><span class="sub">20–25% p.a. on PKR 3M</span></td><td>PKR 600,000–750,000/year</td></tr>
+          <tr><td>Cost saving vs. bank credit</td><td><strong style="color:#52B788;">PKR 570,000–720,000</strong></td></tr>
+          <tr class="highlight"><td><strong>Effective SCGF yield to SME</strong></td><td><strong style="color:#52B788;">95–96% cheaper than bank</strong></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- FMCG ECONOMICS -->
+  <div class="sub-section">
+    <h4>Example 3 — SCGF-FMCG: FMCG Distributor Finance</h4>
+    <p style="font-size:13px;color:#888;margin-bottom:1.25rem;">Assumptions: Single FMCG anchor; 300 distributors; average distributor credit line PKR 20M; credit tenor extended from 30 to 60 days; PDO = 2%; LGD = 45%; NCGCL coverage = 75%; guarantee fee = 1.25% split (0.75% anchor + 0.50% distributor, Model C).</p>
+
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Portfolio Snapshot</div>
+        <table class="est-table">
+          <tr><td>No. of Distributors</td><td><strong>300</strong></td></tr>
+          <tr><td>Avg Credit Line / Distributor</td><td><strong>PKR 20M</strong></td></tr>
+          <tr><td>Total Portfolio</td><td><strong>PKR 6Bn</strong></td></tr>
+          <tr><td>NCGCL Guaranteed (75%)</td><td><strong>PKR 4.5Bn</strong></td></tr>
+          <tr><td>FMCG Guarantee Fee (0.75%)</td><td><strong>PKR 33.75M</strong></td></tr>
+          <tr><td>Distributor Credit Fee (0.50%)</td><td><strong>PKR 22.5M</strong></td></tr>
+          <tr><td>Total Fee to NCGCL</td><td><strong>PKR 56.25M</strong></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">FMCG Anchor — P&amp;L Impact</div>
+        <table class="est-table">
+          <tr><td>IFRS 9 ECL (pre-guarantee)<br><span class="sub">2% PDO × 45% LGD × PKR 6Bn</span></td><td>PKR 54M</td></tr>
+          <tr><td>IFRS 9 ECL (post-guarantee)<br><span class="sub">Full ECL on 25% retention only</span></td><td>PKR 13.5M</td></tr>
+          <tr><td>ECL Saving</td><td><strong style="color:#52B788;">PKR 40.5M</strong></td></tr>
+          <tr><td>Incremental volume (30% uplift)<br><span class="sub">due to longer credit enabling more purchases</span></td><td>~PKR 120–180M gross margin</td></tr>
+          <tr><td>FMCG Guarantee Fee Cost</td><td><strong style="color:#9B2335;">(PKR 33.75M)</strong></td></tr>
+          <tr class="highlight"><td><strong>Net Benefit to FMCG</strong></td><td><strong style="color:#52B788;">PKR 126M+</strong></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Distributor — Value Created</div>
+        <table class="est-table">
+          <tr><td>Credit tenor extension: 30 → 60 days</td><td>+30 days float per cycle</td></tr>
+          <tr><td>Working capital equivalent freed</td><td><strong>PKR 20M per distributor</strong></td></tr>
+          <tr><td>Credit access fee (SCGF)</td><td>PKR 100,000/year</td></tr>
+          <tr><td>Bank overdraft equivalent cost<br><span class="sub">20% p.a. on PKR 20M for 30 days</span></td><td>PKR 333,000/year</td></tr>
+          <tr><td>Inventory capacity uplift<br><span class="sub">Distributor can carry 30% more stock</span></td><td>PKR 400,000–600,000 net</td></tr>
+          <tr class="highlight"><td><strong>Net Benefit to Distributor</strong></td><td><strong style="color:#52B788;">PKR 600,000–800,000/yr</strong></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout-green">
+      <div class="callout-title">NCGCL — Aggregate Economics (Three Pilots Combined)</div>
+      <div class="callout-body">Combined annual fee income from 3 pilots: PKR 218.35M (OMC PKR 140.6M + Logistics PKR 21M + FMCG PKR 56.25M + rounding). Combined guaranteed exposure: ~PKR 15.975Bn. Expected annual loss at blended 2.75% PDO × 50% LGD × average 73% coverage = ~PKR 180M. Net NCGCL margin before opex: ~PKR 38M. At NCGCL's lean operating model, this is a viable fee income stream in pilot phase — with material upside as portfolio scales to PKR 50–100Bn over 3–5 years.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== SECTION 6: IFRS 9 ===== -->
+<div id="ifrs9" class="doc-section">
+<div class="container">
+
+  <div class="section-label">Section 6</div>
+  <div class="section-title">IFRS 9 — ECL Impairment Benefit for Anchor Corporates</div>
+  <div class="section-intro">
+    One of the most commercially compelling aspects of SCGF — and perhaps the most underappreciated — is its impact on an anchor corporate's IFRS 9 provisioning obligations. This section provides a Board-level overview of the mechanism, the scale of benefit, and why it makes the NCGCL guarantee economically rational for anchors even before volume and banking benefits are factored in.
+  </div>
+
+  <div class="sub-section">
+    <h4>IFRS 9 — How ECL Works on Trade Receivables</h4>
+    <p>Under IFRS 9 (effective in Pakistan for all listed companies and most large corporates), entities must recognize Expected Credit Losses (ECL) on financial assets — including trade receivables — from the moment they arise. Unlike IAS 39 which required a loss event to trigger provisioning, IFRS 9 is forward-looking: companies must estimate and provision for losses they <em>expect</em> to occur, even before they do.</p>
+    <p>For trade receivables, IFRS 9 prescribes a simplified approach using a provision matrix — mapping the probability of default to days past due buckets. The result is that a large corporate holding billions in trade receivables from SME buyers must recognize a significant annual ECL charge on its P&amp;L, even if actual defaults are low.</p>
+
+    <div class="three-col">
+      <div class="ifrs-stage stage1">
+        <div class="ifrs-stage-label">Stage 1 — Performing</div>
+        <p style="font-size:13px;color:#444;margin-top:0.4rem;line-height:1.5;">Receivables current or ≤30 DPD. ECL = 12-month expected loss. For SME trade receivables at 2–4% PDO, this is 0.5–2% provision on outstanding.</p>
+      </div>
+      <div class="ifrs-stage stage2">
+        <div class="ifrs-stage-label">Stage 2 — Significant Credit Risk Increase</div>
+        <p style="font-size:13px;color:#444;margin-top:0.4rem;line-height:1.5;">31–90 DPD, or qualitative trigger. ECL = Lifetime expected loss. Provision jumps to 5–15% — a significant P&amp;L charge for anchors with large SME books.</p>
+      </div>
+      <div class="ifrs-stage stage3">
+        <div class="ifrs-stage-label">Stage 3 — Credit-Impaired</div>
+        <p style="font-size:13px;color:#444;margin-top:0.4rem;line-height:1.5;">90+ DPD or objective evidence of impairment. ECL = Full lifetime expected loss net of recovery. Typically 40–70% of outstanding — near write-off economics.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>How NCGCL Guarantee Reduces ECL — The Mechanism</h4>
+    <p>IFRS 9 requires ECL to be measured net of credit enhancements that mitigate loss — explicitly including third-party guarantees. When NCGCL guarantees 75% of a receivable, the anchor's maximum loss on that receivable is capped at 25% (its uncovered retention). The ECL provision for the guaranteed portion is effectively computed against NCGCL's creditworthiness — <strong>AAA rated</strong> — rather than against the SME buyer's creditworthiness.</p>
+    <p>The mechanics are straightforward:</p>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Pre-Guarantee ECL Calculation</div>
+        <table class="est-table">
+          <tr><td>Trade receivable outstanding</td><td>PKR 100M</td></tr>
+          <tr><td>Stage 1 ECL rate (SME buyer book)</td><td>2.5%</td></tr>
+          <tr><td>ECL Provision Required</td><td><strong style="color:#9B2335;">PKR 2.5M</strong></td></tr>
+          <tr><td>Stage 2 bucket (30–90 DPD)</td><td>15% ECL rate</td></tr>
+          <tr><td>ECL on Stage 2 (say 20% of book)</td><td><strong style="color:#9B2335;">PKR 3.0M</strong></td></tr>
+          <tr><td><strong>Total annual ECL charge on P&amp;L</strong></td><td><strong style="color:#9B2335;">PKR 5.5M per PKR 100M</strong></td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Post-Guarantee ECL Calculation</div>
+        <table class="est-table">
+          <tr><td>Trade receivable outstanding</td><td>PKR 100M</td></tr>
+          <tr><td>NCGCL guaranteed (75%)</td><td>PKR 75M</td></tr>
+          <tr><td>ECL on guaranteed portion (AAA counterparty)</td><td><strong style="color:#52B788;">~0.05% → PKR 37,500</strong></td></tr>
+          <tr><td>Anchor retention (25%)</td><td>PKR 25M</td></tr>
+          <tr><td>ECL on retention (full SME rate)</td><td>PKR 1.375M</td></tr>
+          <tr><td><strong>Total annual ECL charge post-guarantee</strong></td><td><strong style="color:#52B788;">PKR 1.41M per PKR 100M</strong></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="verdict-label">Net P&amp;L Impact — IFRS 9</div>
+      <div class="verdict-text"><strong>ECL saving = PKR 5.5M – PKR 1.41M = PKR 4.09M per PKR 100M of guaranteed receivables.</strong> On a PKR 5Bn portfolio, this is PKR 204.5M in annual ECL savings — directly benefiting P&amp;L and retained earnings. For a listed anchor, this flows through to EPS. Guarantee fee on PKR 5Bn at 1.5% = PKR 75M. Net P&amp;L benefit from IFRS 9 alone: PKR 129.5M — before any bank borrowing cost benefit or volume uplift is counted.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>IFRS 9 Benefit by Sector — Sensitivity Analysis</h4>
+    <p>The table below shows the IFRS 9 ECL saving across the three pilot sectors, for different portfolio sizes. All figures are indicative; actual ECL rates will be anchor-specific.</p>
+    <table class="est-table">
+      <tr>
+        <th>Sector</th>
+        <th>Portfolio Size</th>
+        <th>Pre-Guarantee ECL</th>
+        <th>Post-Guarantee ECL</th>
+        <th>Annual ECL Saving</th>
+        <th>Guarantee Fee</th>
+        <th>Net P&amp;L Benefit</th>
+      </tr>
+      <tr>
+        <td>OMC</td><td>PKR 12.5Bn</td>
+        <td style="color:#9B2335;">PKR 187.5M</td>
+        <td style="color:#52B788;">PKR 47M</td>
+        <td style="color:#52B788;"><strong>PKR 140.5M</strong></td>
+        <td>PKR 140.6M</td>
+        <td style="color:#52B788;"><strong>~PKR 0 (+ bank saving)</strong></td>
+      </tr>
+      <tr>
+        <td>Logistics</td><td>PKR 3Bn</td>
+        <td style="color:#9B2335;">PKR 66M</td>
+        <td style="color:#52B788;">PKR 18M</td>
+        <td style="color:#52B788;"><strong>PKR 48M</strong></td>
+        <td>PKR 0 (buyer pays)</td>
+        <td style="color:#52B788;"><strong>PKR 48M net free</strong></td>
+      </tr>
+      <tr>
+        <td>FMCG</td><td>PKR 6Bn</td>
+        <td style="color:#9B2335;">PKR 54M</td>
+        <td style="color:#52B788;">PKR 13.5M</td>
+        <td style="color:#52B788;"><strong>PKR 40.5M</strong></td>
+        <td>PKR 33.75M (anchor share)</td>
+        <td style="color:#52B788;"><strong>PKR 6.75M (+ volume)</strong></td>
+      </tr>
+      <tr class="highlight">
+        <td><strong>Combined 3 Pilots</strong></td><td><strong>PKR 21.5Bn</strong></td>
+        <td style="color:#9B2335;"><strong>PKR 307.5M</strong></td>
+        <td style="color:#52B788;"><strong>PKR 78.5M</strong></td>
+        <td style="color:#52B788;"><strong>PKR 229M</strong></td>
+        <td>PKR 174.35M (anchor-borne)</td>
+        <td style="color:#52B788;"><strong>PKR 54.65M net</strong></td>
+      </tr>
+    </table>
+    <p style="font-size:12px;color:#888;margin-top:0.75rem;">Note: ECL rates used: OMC 3% PDO/50% LGD; Logistics 4% PDO/55% LGD; FMCG 2% PDO/45% LGD. Post-guarantee ECL on retained portion only; guaranteed portion ECL → near-zero (NCGCL AAA). Bank borrowing cost savings not included in table.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>Auditor & CFO Considerations</h4>
+    <p>For the IFRS 9 ECL reduction to be recognized in financial statements, anchors must ensure the following:</p>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Requirements for ECL Recognition</div>
+        <ul style="list-style:disc;padding-left:1.25rem;">
+          <li style="font-size:13px;color:#444;margin-bottom:0.5rem;line-height:1.5;">NCGCL guarantee must be legally enforceable, unconditional (subject only to claims documentation), and transferable.</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.5rem;line-height:1.5;">The MAGFA must be designated as a credit enhancement under IFRS 9 — legal opinion required (one-time, per MAGFA template).</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.5rem;line-height:1.5;">ECL must be computed net of guarantee for the covered tranche — per IFRS 9 B5.5.54 (credit risk mitigation).</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.5rem;line-height:1.5;">NCGCL's AAA rating must be referenced as the counterparty credit quality for the guaranteed portion — standard audit expectation.</li>
+          <li style="font-size:13px;color:#444;line-height:1.5;">Disclosure in annual report notes: nature, extent, and terms of credit enhancement. Audit committee briefing recommended before first year-end application.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title">NCGCL's Role in Supporting Anchors</div>
+        <ul style="list-style:disc;padding-left:1.25rem;">
+          <li style="font-size:13px;color:#444;margin-bottom:0.5rem;line-height:1.5;">NCGCL will provide a standard <strong>IFRS 9 Credit Enhancement Certificate</strong> with each MAGFA — confirming coverage ratio, enforceability, and NCGCL's own credit quality.</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.5rem;line-height:1.5;">NCGCL will engage a Big-4 auditor for a one-time opinion on MAGFA structure's compliance with IFRS 9 credit enhancement criteria — shareable with all anchor auditors.</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.5rem;line-height:1.5;">NCGCL will provide quarterly portfolio data to support anchor's provision matrix calculations.</li>
+          <li style="font-size:13px;color:#444;line-height:1.5;"><strong>This advisory support is a material value-add</strong> for anchor CFOs navigating IFRS 9 under audit pressure — it differentiates NCGCL from commercial credit insurers.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout-red">
+    <div class="callout-title">Critical Nuance — Anchor Must Not Over-Rely on ECL Benefit</div>
+    <div class="callout-body">The ECL saving is real and material — but the guarantee should not be used primarily as an accounting device. NCGCL's primary mandate is credit access expansion. Anchors must genuinely extend larger/longer credit to SME buyers as a result of the guarantee. NCGCL will monitor whether portfolio growth (buyer additions, credit limit increases) accompanies the ECL benefit. If an anchor purchases a guarantee solely to reduce provisions without extending incremental credit, NCGCL will not renew the MAGFA.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== SECTION 7: OPERATIONS ===== -->
+<div id="operations" class="doc-section">
+<div class="container">
+
+  <div class="section-label">Section 7</div>
+  <div class="section-title">Operational Flow & Implementation</div>
+  <div class="section-intro">
+    SCGF is designed for operational simplicity. The anchor does the heavy lifting — buyer origination, credit limit setting, invoice management, and first-recovery. NCGCL's operational role is governance, portfolio monitoring, and claims adjudication.
+  </div>
+
+  <div class="sub-section">
+    <h4>End-to-End Operational Flow</h4>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Anchor Onboarding & MAGFA Execution</div>
+          <div class="step-desc">Anchor submits application: audited accounts (3 years), existing buyer credit portfolio data, buyer master list, internal credit policy. NCGCL conducts due diligence (7–10 working days). MAGFA drafted, risk reviewed by NCGCL Risk Committee, CEO/Board approval as required. MAGFA executed. Anchor pays first-quarter guarantee fee. Timeline: 30–45 days from application.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Buyer Eligibility Certification</div>
+          <div class="step-desc">Anchor submits initial buyer list against NCGCL eligibility criteria. NCGCL reviews for exclusions (negative list, concentration limits). Approved buyer list established — this becomes the eligible universe for the portfolio. Updates monthly via digital portal. NCGCL does not underwrite individual buyers; Anchor certifies eligibility.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Credit Extension to SME Buyers</div>
+          <div class="step-desc">Anchor extends credit to eligible buyers per its commercial process. No NCGCL pre-approval required per transaction. Anchor issues invoices; goods/services delivered. Invoice enters Anchor's receivables system. SCGF guarantee automatically covers eligible invoices within portfolio cap and concentration limits. Real-time portfolio register maintained by Anchor; shared with NCGCL monthly.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Bank Receivables Discounting (Flow C)</div>
+          <div class="step-desc">Anchor presents guaranteed receivables to its bank for discounting. Bank verifies NCGCL MAGFA validity and coverage. Bank advances against guaranteed receivables at near-investment-grade spread (KIBOR + 150–200 bps vs. KIBOR + 350–450 bps unguaranteed). Anchor liquidity recycled to extend more buyer credit. NCGCL not party to bank agreement; guarantee covers receivable itself, not the bank facility.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Collections & Performing Portfolio Management</div>
+          <div class="step-desc">Anchor collects from buyers per normal commercial process. Monthly portfolio report submitted to NCGCL: aging by buyer, DPD buckets, collections, new additions. NCGCL runs quarterly portfolio review. If concentration limits are breached, Anchor must cure within 30 days or NCGCL suspends new additions.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Default Management & First Recovery</div>
+          <div class="step-desc">Buyer misses payment → enters Anchor's collections process. Anchor must pursue first recovery: reminder notices, personal visits, payment plans. Anchor documents all attempts. During 60-day waiting period, NCGCL is notified of any buyers entering 60 DPD. Anchor cannot claim before exhausting documented first-recovery process.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-title">Claims Submission & NCGCL Payment</div>
+          <div class="step-desc">Buyer at 90 DPD (or insolvency): Anchor submits full claims pack to NCGCL. NCGCL reviews within 15 business days. If complete and compliant: NCGCL pays (Coverage % × outstanding invoice principal) within 30 business days. NCGCL becomes subrogated creditor for the paid amount. Anchor recovers any residual (uncovered retention) independently.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <div class="step-title">Post-Claim Recovery Sharing</div>
+          <div class="step-desc">NCGCL and Anchor jointly pursue defaulted buyer (or write off as appropriate). Any recoveries shared pro-rata (NCGCL: covered %, Anchor: uncovered %). NCGCL recovery efforts through legal notice, SECP/court action if material. Recovery data fed back into portfolio performance analytics and pricing calibration.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>Roles & Responsibilities Matrix</h4>
+    <table class="est-table">
+      <tr>
+        <th>Activity</th>
+        <th>Anchor</th>
+        <th>NCGCL</th>
+        <th>Anchor's Bank</th>
+      </tr>
+      <tr><td>Buyer origination & KYB</td><td>✅ Primary</td><td>✅ Eligibility review</td><td>—</td></tr>
+      <tr><td>Credit limit setting</td><td>✅ Primary (within NCGCL guardrails)</td><td>✅ Guardrails only</td><td>—</td></tr>
+      <tr><td>Invoice issuance & delivery</td><td>✅ Primary</td><td>—</td><td>—</td></tr>
+      <tr><td>Portfolio register maintenance</td><td>✅ Primary</td><td>✅ Review &amp; monitor</td><td>—</td></tr>
+      <tr><td>Receivables discounting</td><td>✅ Executes</td><td>✅ Guarantee basis</td><td>✅ Funds advance</td></tr>
+      <tr><td>Monthly reporting to NCGCL</td><td>✅ Submits</td><td>✅ Reviews</td><td>—</td></tr>
+      <tr><td>Collections (performing)</td><td>✅ Primary</td><td>—</td><td>—</td></tr>
+      <tr><td>First recovery (default)</td><td>✅ Primary (mandatory)</td><td>✅ Notified at 60 DPD</td><td>—</td></tr>
+      <tr><td>Claims adjudication</td><td>✅ Submits pack</td><td>✅ Reviews &amp; pays</td><td>—</td></tr>
+      <tr><td>Post-claim recovery</td><td>✅ Uncovered portion</td><td>✅ Covered portion (subrogated)</td><td>—</td></tr>
+      <tr><td>Annual IFRS 9 certificate</td><td>Receives</td><td>✅ Issues</td><td>—</td></tr>
+      <tr><td>Portfolio performance review</td><td>✅ Participates</td><td>✅ Leads (quarterly)</td><td>—</td></tr>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>Technology & Data Requirements</h4>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Anchor-Side Requirements</div>
+        <ul style="list-style:disc;padding-left:1.25rem;">
+          <li style="font-size:13px;color:#444;margin-bottom:0.4rem;line-height:1.5;">ERP/accounting system with receivables aging module (SAP, Oracle, or equivalent)</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.4rem;line-height:1.5;">Buyer master database (CNIC/NTN, address, transaction history)</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.4rem;line-height:1.5;">Monthly portfolio export in NCGCL-specified format (CSV/Excel template)</li>
+          <li style="font-size:13px;color:#444;line-height:1.5;">Internal credit approval workflow for buyer eligibility certification</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title">NCGCL-Side Requirements (Build/Procure)</div>
+        <ul style="list-style:disc;padding-left:1.25rem;">
+          <li style="font-size:13px;color:#444;margin-bottom:0.4rem;line-height:1.5;">SCGF Portfolio Management System: track MAGFAs, portfolio registers, exposure limits, fee collection</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.4rem;line-height:1.5;">Anchor portal: secure monthly report submission, claims upload, status tracking</li>
+          <li style="font-size:13px;color:#444;margin-bottom:0.4rem;line-height:1.5;">Claims adjudication workflow: automated completeness check, reviewer assignment, payment trigger</li>
+          <li style="font-size:13px;color:#444;line-height:1.5;">Portfolio analytics dashboard: vintage curves, delinquency trends, concentration monitoring, sector KPIs</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== SECTION 8: RISKS ===== -->
+<div id="risks" class="doc-section">
+<div class="container">
+
+  <div class="section-label">Section 8</div>
+  <div class="section-title">Risk Register & Mitigants</div>
+  <div class="section-intro">
+    SCGF introduces a set of risks distinct from NCGCL's bank-intermediated products — primarily because the anchor corporate, not a regulated FI, is the origination and claims-management party. The following register identifies material risks, rates their severity, and specifies structural mitigants.
+  </div>
+
+  <table class="est-table">
+    <tr>
+      <th>Risk</th>
+      <th>Severity</th>
+      <th>Description</th>
+      <th>Mitigant</th>
+    </tr>
+    <tr>
+      <td><strong>Moral Hazard — Anchor</strong></td>
+      <td><span class="risk-high">HIGH</span></td>
+      <td>Anchor extends credit to uncreditworthy buyers, knowing NCGCL absorbs 75% of loss. Classic moral hazard from over-insurance.</td>
+      <td>Mandatory 20–30% anchor retention; performance rebate incentive; portfolio-level loss triggers; real-time delinquency monitoring; annual portfolio audit.</td>
+    </tr>
+    <tr>
+      <td><strong>Fraud / Collusion</strong></td>
+      <td><span class="risk-high">HIGH</span></td>
+      <td>Anchor fabricates invoices or colludes with buyers to manufacture claims. Most severe tail risk in receivables guarantee programs globally.</td>
+      <td>Physical/digital delivery evidence required per claim; spot audits of 5% of portfolio invoices annually; NCGCL right to buyer-level data; fraud voids guarantee; anchor liable for repayment; criminal referral provisions in MAGFA.</td>
+    </tr>
+    <tr>
+      <td><strong>Anchor Credit Deterioration</strong></td>
+      <td><span class="risk-med">MEDIUM</span></td>
+      <td>Anchor's own financial health deteriorates — reducing likelihood it will maintain portfolio quality or honor reporting obligations.</td>
+      <td>Anchor financial health covenants in MAGFA; automatic review if anchor credit rating drops below BBB; NCGCL can suspend new additions; guarantee continues for existing receivables only.</td>
+    </tr>
+    <tr>
+      <td><strong>Concentration Risk</strong></td>
+      <td><span class="risk-med">MEDIUM</span></td>
+      <td>Portfolio becomes concentrated in a single buyer, geography, or sector — increasing correlated default risk.</td>
+      <td>Hard limits per buyer (5%) and sector (30%); NCGCL portfolio analytics monitor concentration continuously; excess above limits not covered.</td>
+    </tr>
+    <tr>
+      <td><strong>Systemic / Macro Shock</strong></td>
+      <td><span class="risk-med">MEDIUM</span></td>
+      <td>Economic downturn causes correlated SME defaults across multiple anchor portfolios — overwhelming NCGCL capacity.</td>
+      <td>Portfolio caps per anchor; NCGCL total SCGF exposure limit (Board-set, as % of capital); stress testing annually; reserve fund sizing based on correlated stress scenario.</td>
+    </tr>
+    <tr>
+      <td><strong>Documentation Risk</strong></td>
+      <td><span class="risk-med">MEDIUM</span></td>
+      <td>Anchor submits incomplete or deficient claims documentation — NCGCL unable to pay valid claims promptly, creating reputational damage.</td>
+      <td>Standard claims pack template provided at onboarding; anchor training; digital claims portal with automated completeness checks; 15-day pre-review window before formal submission.</td>
+    </tr>
+    <tr>
+      <td><strong>IFRS 9 Recognition Risk</strong></td>
+      <td><span class="risk-low">LOW</span></td>
+      <td>Anchor's auditor declines to recognize NCGCL guarantee as IFRS 9 credit enhancement, negating ECL benefit — reducing anchor's commercial incentive.</td>
+      <td>NCGCL to obtain Big-4 legal opinion on MAGFA structure; IFRS 9 Certificate issued with each MAGFA; anchor CFO/auditor briefing at onboarding.</td>
+    </tr>
+    <tr>
+      <td><strong>Regulatory / SBP Risk</strong></td>
+      <td><span class="risk-low">LOW</span></td>
+      <td>SBP issues new guidance affecting NCGCL's ability to provide guarantees to non-FI entities, or requiring additional capital against SCGF exposure.</td>
+      <td>Pre-consultation with SBP at product design stage; SCGF explicitly framed as MSME credit access product (consistent with SBP's own MSME policy priorities); NCGCL's SBP regulated status is protective.</td>
+    </tr>
+    <tr>
+      <td><strong>Reputational Risk</strong></td>
+      <td><span class="risk-low">LOW</span></td>
+      <td>High-profile anchor default or claims dispute creates negative market perception of SCGF product.</td>
+      <td>Conservative pilot anchors selected (rated, listed, SBP-regulated or SECP-governed); Board-level disclosure of SCGF terms; proactive media/market communication strategy.</td>
+    </tr>
+  </table>
+
+  <div class="callout-green" style="margin-top:1.5rem;">
+    <div class="callout-title">Moral Hazard — The Central Risk, Managed by Design</div>
+    <div class="callout-body">The 20–30% anchor retention is SCGF's primary risk control — and it is non-negotiable. All global precedents (NAFIN, KODIT, IFC) that reduced retention below 15% experienced portfolio quality deterioration within 18–24 months. NCGCL must hold this line even under commercial pressure from large anchors requesting higher coverage. The performance rebate mechanism (fee reduction for low loss portfolios) is the constructive alternative to higher coverage — it rewards quality origination rather than relaxing risk controls.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== SECTION 9: PILOT ===== -->
+<div id="pilot" class="doc-section">
+<div class="container">
+
+  <div class="section-label">Section 9</div>
+  <div class="section-title">Pilot Design, KPIs & Way Forward</div>
+  <div class="section-intro">
+    SCGF is recommended for a structured three-anchor pilot across the OMC, Logistics, and FMCG sectors. The pilot phase (12–18 months) establishes baseline portfolio performance, validates claims mechanics, confirms IFRS 9 recognition, and generates the data needed for sustainable scale pricing.
+  </div>
+
+  <div class="sub-section">
+    <h4>Pilot Configuration</h4>
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Pilot Anchor 1 — OMC</div>
+        <table class="est-table">
+          <tr><td>Anchor Type</td><td>Major OMC (listed)</td></tr>
+          <tr><td>Pilot Portfolio</td><td>200–300 dealers</td></tr>
+          <tr><td>Geography</td><td>Karachi + Lahore</td></tr>
+          <tr><td>Guaranteed Exposure</td><td>PKR 2.5–4Bn</td></tr>
+          <tr><td>Fee Model</td><td>Model A</td></tr>
+          <tr><td>Observation Period</td><td>12 months</td></tr>
+          <tr><td>Go/No-Go Metric</td><td>90 DPD ratio &lt;5%</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Pilot Anchor 2 — Logistics</div>
+        <table class="est-table">
+          <tr><td>Anchor Type</td><td>Large courier / 3PL</td></tr>
+          <tr><td>Pilot Portfolio</td><td>300–500 SME shippers</td></tr>
+          <tr><td>Geography</td><td>Karachi + Lahore</td></tr>
+          <tr><td>Guaranteed Exposure</td><td>PKR 500M–1Bn</td></tr>
+          <tr><td>Fee Model</td><td>Model B</td></tr>
+          <tr><td>Observation Period</td><td>12 months</td></tr>
+          <tr><td>Go/No-Go Metric</td><td>90 DPD ratio &lt;6%</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Pilot Anchor 3 — FMCG</div>
+        <table class="est-table">
+          <tr><td>Anchor Type</td><td>Listed FMCG company</td></tr>
+          <tr><td>Pilot Portfolio</td><td>100–200 distributors</td></tr>
+          <tr><td>Geography</td><td>Punjab + Sindh</td></tr>
+          <tr><td>Guaranteed Exposure</td><td>PKR 1–2Bn</td></tr>
+          <tr><td>Fee Model</td><td>Model C</td></tr>
+          <tr><td>Observation Period</td><td>12 months</td></tr>
+          <tr><td>Go/No-Go Metric</td><td>90 DPD ratio &lt;4%</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>KPI Dashboard — SCGF Pilot Monitoring</h4>
+    <table class="est-table">
+      <tr><th>KPI</th><th>Measurement</th><th>Target (12 months)</th><th>Source</th></tr>
+      <tr class="section-head"><td colspan="4">PORTFOLIO PERFORMANCE</td></tr>
+      <tr><td>Total Guaranteed Exposure</td><td>PKR Mn outstanding</td><td>PKR 4–7Bn across 3 anchors</td><td>Monthly report</td></tr>
+      <tr><td>90 DPD Ratio</td><td>% of portfolio &gt;90 DPD</td><td>&lt;5% blended</td><td>Monthly report</td></tr>
+      <tr><td>Claims Paid / Guaranteed Exposure</td><td>Net loss ratio (%)</td><td>&lt;1.5% blended</td><td>Claims register</td></tr>
+      <tr><td>Recovery Rate on Paid Claims</td><td>% recovered post-claim</td><td>&gt;25%</td><td>Recovery log</td></tr>
+      <tr class="section-head"><td colspan="4">SME ACCESS & ADDITIONALITY</td></tr>
+      <tr><td>No. of SME Buyers Covered</td><td>Count</td><td>600–1,000 across pilots</td><td>Buyer register</td></tr>
+      <tr><td>Average Credit Limit Increase vs. Pre-SCGF</td><td>% increase per buyer</td><td>&gt;40%</td><td>Anchor reporting</td></tr>
+      <tr><td>Incremental Credit Extended (PKR)</td><td>New credit not previously available</td><td>PKR 2–3Bn</td><td>Baseline comparison</td></tr>
+      <tr class="section-head"><td colspan="4">ANCHOR ECONOMICS</td></tr>
+      <tr><td>IFRS 9 ECL Reduction Achieved</td><td>PKR Mn annual saving</td><td>PKR 100–200M blended</td><td>Anchor audited accounts</td></tr>
+      <tr><td>Bank Borrowing Cost Reduction</td><td>Bps reduction on discounting rate</td><td>100–200 bps</td><td>Bank statement comparison</td></tr>
+      <tr><td>Anchor Guarantee Fee Renewal Rate</td><td>% renewing at end of year 1</td><td>&gt;80%</td><td>NCGCL contracts</td></tr>
+      <tr class="section-head"><td colspan="4">NCGCL SUSTAINABILITY</td></tr>
+      <tr><td>Annual Guarantee Fee Income</td><td>PKR Mn</td><td>PKR 60–200M</td><td>NCGCL P&amp;L</td></tr>
+      <tr><td>Net Underwriting Margin</td><td>Fee income – expected loss – opex</td><td>Positive; &gt;10% margin</td><td>NCGCL MIS</td></tr>
+      <tr><td>Average MAGFA Onboarding Time</td><td>Working days from application</td><td>&lt;35 days</td><td>Process log</td></tr>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sub-section">
+    <h4>Implementation Roadmap — 90/180/365 Days</h4>
+    <div class="three-col">
+      <div class="insight-box amber">
+        <div class="insight-num" style="font-size:20px;">0–90 Days</div>
+        <div class="insight-text" style="margin-top:0.75rem;">
+          <strong>Foundation</strong><br><br>
+          ✅ Board approval of SCGF framework<br>
+          ✅ MAGFA legal template finalized (legal counsel)<br>
+          ✅ Big-4 IFRS 9 opinion commissioned<br>
+          ✅ Anchor identification: 1 OMC, 1 logistics, 1 FMCG in discussions<br>
+          ✅ SCGF portfolio management system spec completed<br>
+          ✅ Risk pricing model validated (internal)
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-num" style="font-size:20px;">90–180 Days</div>
+        <div class="insight-text" style="margin-top:0.75rem;">
+          <strong>Pilot Launch</strong><br><br>
+          ✅ First MAGFA executed (OMC anchor)<br>
+          ✅ Buyer eligibility list certified<br>
+          ✅ Anchor portal live; monthly reporting cycle begun<br>
+          ✅ SCGF-LGST and SCGF-FMCG MAGFAs executed<br>
+          ✅ First quarterly portfolio review completed<br>
+          ✅ IFRS 9 certificate issued to all anchors
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-num" style="font-size:20px;">180–365 Days</div>
+        <div class="insight-text" style="margin-top:0.75rem;">
+          <strong>Monitor & Scale</strong><br><br>
+          ✅ Mid-pilot performance review (6-month)<br>
+          ✅ First claims cycle tested (if any defaults)<br>
+          ✅ Anchor satisfaction survey; pricing feedback<br>
+          ✅ Phase 2 sector pipeline initiated (textile, pharma)<br>
+          ✅ Board report: pilot outcomes vs. KPIs<br>
+          ✅ Go/No-Go decision for full scale rollout
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="decision-box">
+    <h3>Decisions Required from the Board</h3>
+    <div class="decision-item">
+      <div class="decision-num">1</div>
+      <div class="decision-text"><strong>Approve SCGF as a new NCGCL product category</strong> — authorizing Management to proceed with MAGFA template development, legal documentation, and anchor engagement.</div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-num">2</div>
+      <div class="decision-text"><strong>Approve pilot parameters:</strong> 3 anchors (OMC, Logistics, FMCG); total guaranteed exposure cap of PKR 7–10Bn for pilot phase; 12-month observation period before scale decision.</div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-num">3</div>
+      <div class="decision-text"><strong>Authorize IFRS 9 advisory engagement:</strong> Commission Big-4 legal/accounting opinion on MAGFA structure as IFRS 9 credit enhancement. One-time cost, shared across all anchor onboardings.</div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-num">4</div>
+      <div class="decision-text"><strong>Set SCGF aggregate exposure limit:</strong> Board to specify maximum % of NCGCL's guarantee capital to be deployed in SCGF in pilot phase (recommended: 20–25% of total guarantee capacity).</div>
+    </div>
+    <div class="decision-item">
+      <div class="decision-num">5</div>
+      <div class="decision-text"><strong>Delegate MAGFA execution authority:</strong> Approve MAGFAs up to PKR 2Bn to CEO + Risk Committee concurrence; above PKR 2Bn to Board. Authorize CEO to execute standard MAGFA template with pre-approved anchors.</div>
+    </div>
+    <div style="border-top:1px solid #333;margin-top:1.5rem;padding-top:1.5rem;">
+      <p style="font-size:13px;color:#AAA;line-height:1.7;">This product note has been prepared for Board discussion purposes. It does not constitute a commitment to any anchor or institution. Final product terms, pricing, and legal documentation will be tabled for Board or Risk Committee approval before execution of any MAGFA.</p>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    National Credit Guarantee Company Limited (NCGCL) &nbsp;·&nbsp; Supplier Credit Guarantee Facility (SCGF) — Product Note &nbsp;·&nbsp; Confidential — Board Discussion &nbsp;·&nbsp; April 2025
+    <br>Prepared by NCGCL Management &nbsp;·&nbsp; All figures indicative and assumption-based; to be calibrated with anchor data during pilot underwriting
+  </div>
+
+</div>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.doc-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
