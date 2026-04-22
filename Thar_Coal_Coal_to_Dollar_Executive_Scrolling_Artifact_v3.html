@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coal to Dollar | Executive Scrolling Artifact</title>
+  <style>
+    :root {
+      --bg: #06101f;
+      --bg-2: #0a1630;
+      --panel: rgba(15, 24, 48, 0.78);
+      --panel-soft: rgba(255,255,255,0.04);
+      --line: rgba(255,255,255,0.09);
+      --text: #ecf3ff;
+      --muted: #a9b8da;
+      --blue: #60a5fa;
+      --cyan: #5eead4;
+      --amber: #fbbf24;
+      --green: #22c55e;
+      --red: #ef4444;
+      --purple: #8b5cf6;
+      --shadow: 0 30px 80px rgba(0,0,0,.38);
+      --radius: 26px;
+      --max: 1440px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% 5%, rgba(96,165,250,.17), transparent 22%),
+        radial-gradient(circle at 88% 6%, rgba(94,234,212,.11), transparent 18%),
+        linear-gradient(180deg, #05101d 0%, #09152a 25%, #091326 100%);
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display:block; }
+    .shell { width:min(var(--max), calc(100% - 32px)); margin:0 auto; }
+
+    .topnav {
+      position: fixed; top: 14px; left:50%; transform: translateX(-50%); z-index: 80;
+      width:min(1280px, calc(100% - 26px));
+      background: rgba(4,10,22,.55);
+      border:1px solid var(--line);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      border-radius: 999px;
+      padding: 12px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:18px;
+    }
+    .brand { display:flex; align-items:center; gap:12px; min-width:0; }
+    .brand-mark {
+      width:44px; height:44px; border-radius:14px; display:grid; place-items:center;
+      background: linear-gradient(135deg, var(--blue), var(--cyan)); color:#03101d; font-weight:900;
+      box-shadow: 0 16px 34px rgba(96,165,250,.28);
+      flex:0 0 auto;
+    }
+    .brand-title { min-width:0; }
+    .brand-title h1 { margin:0; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .brand-title p { margin:4px 0 0; font-size:12px; color:var(--muted); }
+    .navlinks { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+    .navlinks a { padding:9px 12px; font-size:12px; border-radius:999px; color:var(--muted); border:1px solid transparent; }
+    .navlinks a:hover, .navlinks a.active { color:var(--text); border-color:rgba(94,234,212,.22); background:rgba(255,255,255,.04); }
+
+    section { position:relative; }
+    .hero { min-height: 100vh; display:flex; align-items:center; padding:120px 0 48px; }
+    .hero-grid { display:grid; grid-template-columns: 1fr; gap:22px; align-items:stretch; width:100%; max-width: 980px; }
+    .glass {
+      background: linear-gradient(180deg, rgba(14,23,45,.84), rgba(10,16,33,.88));
+      border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+    }
+    .hero-copy { padding:34px; position:relative; }
+    .eyebrow { display:inline-flex; align-items:center; gap:9px; padding:8px 12px; border-radius:999px; font-size:12px; color:#d4e6ff; background:rgba(96,165,250,.12); border:1px solid rgba(96,165,250,.18); }
+    .hero h2 { margin:18px 0 12px; font-size: clamp(34px, 5vw, 72px); line-height:.98; letter-spacing:-.045em; max-width: 14ch; }
+    .hero .lede { font-size: 16px; line-height:1.78; color:var(--muted); max-width: 70ch; }
+    .hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+    .btn { display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:14px; font-weight:800; font-size:14px; transition:.25s ease; }
+    .btn.primary { color:#04111f; background:linear-gradient(135deg, var(--blue), var(--cyan)); }
+    .btn.secondary { background:rgba(255,255,255,.04); border:1px solid var(--line); color:var(--text); }
+    .btn:hover { transform: translateY(-1px); }
+
+    .hero-metrics { display:grid; grid-template-columns: repeat(2,1fr); gap:14px; margin-top:24px; }
+    .metric { padding:16px; border-radius:18px; background:rgba(255,255,255,.035); border:1px solid var(--line); }
+    .metric .n { font-size:31px; font-weight:900; letter-spacing:-.04em; }
+    .metric .k { margin-top:6px; font-size:13px; color:var(--muted); line-height:1.5; }
+    .metric .s { margin-top:8px; font-size:11px; color:#d7e8ff; display:inline-block; padding:5px 8px; border-radius:999px; background:rgba(255,255,255,.05); }
+
+    
+
+    .section { padding: 42px 0; }
+    .kicker { color:#c5d8ff; font-size:12px; text-transform:uppercase; letter-spacing:.14em; margin-bottom:12px; }
+    .section-head { display:flex; justify-content:space-between; gap:20px; align-items:flex-end; margin-bottom:18px; }
+    .section-head h3 { margin:0; font-size: clamp(26px, 3vw, 46px); letter-spacing:-.04em; }
+    .section-head p { margin:8px 0 0; color:var(--muted); max-width: 80ch; font-size:15px; line-height:1.75; }
+    .tag { white-space:nowrap; font-size:12px; color:var(--muted); padding:8px 12px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.03); }
+
+    .cards-4 { display:grid; grid-template-columns: repeat(4,1fr); gap:16px; }
+    .cards-3 { display:grid; grid-template-columns: repeat(3,1fr); gap:16px; }
+    .cards-2 { display:grid; grid-template-columns: repeat(2,1fr); gap:18px; }
+    .card { padding:20px; border-radius:22px; background:rgba(255,255,255,.035); border:1px solid var(--line); display:flex; flex-direction:column; gap:0; height:100%; overflow:hidden; }
+    .card h4 { margin:10px 0 10px; font-size:18px; line-height:1.3; letter-spacing:-.01em; }
+    .card p { margin:0; color:var(--muted); font-size:14px; line-height:1.7; overflow-wrap:anywhere; }
+    .numbered { width:34px; height:34px; display:grid; place-items:center; border-radius:12px; font-size:13px; font-weight:900; color:#04111f; background:linear-gradient(135deg, var(--blue), var(--cyan)); }
+    .table-wrap { overflow-x:auto; border-radius:20px; border:1px solid var(--line); background:rgba(255,255,255,.02); }
+    table { width:100%; border-collapse:collapse; min-width:720px; }
+    th, td { padding:14px 14px; vertical-align:top; text-align:left; border-bottom:1px solid rgba(255,255,255,.07); }
+    th { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#cfdbfb; background:rgba(255,255,255,.03); }
+    td { font-size:13px; line-height:1.7; color:var(--muted); }
+    td strong { color:var(--text); }
+    .data-pills { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+    .data-pills span { font-size:12px; color:#dbe8ff; padding:8px 10px; border-radius:999px; background:rgba(255,255,255,.04); border:1px solid var(--line); }
+    .brief-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:14px; }
+    .brief-card { padding:18px; border-radius:20px; background:rgba(255,255,255,.035); border:1px solid var(--line); height:100%; }
+    .brief-card strong { display:block; margin-bottom:8px; }
+    .brief-card p { margin:0; color:var(--muted); font-size:13px; line-height:1.7; }
+
+    .big-panel { padding: 26px; }
+    .chart-frame { background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:22px; padding:18px; }
+    .chart-title { font-size:18px; margin:0 0 8px; }
+    .chart-sub { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:16px; }
+    .legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; color:var(--muted); font-size:12px; }
+    .legend span::before { content:''; display:inline-block; width:10px; height:10px; border-radius:999px; margin-right:8px; vertical-align:middle; }
+    .c-blue::before { background:var(--blue); }
+    .c-cyan::before { background:var(--cyan); }
+    .c-amber::before { background:var(--amber); }
+    .c-purple::before { background:var(--purple); }
+    .c-green::before { background:var(--green); }
+    .c-red::before { background:var(--red); }
+
+    .sticky-stage { position:relative; }
+    .sticky-wrap { display:grid; grid-template-columns: .95fr 1.05fr; gap:18px; align-items:start; }
+    .sticky-card { position: sticky; top: 100px; padding:26px; }
+    .story-list { display:grid; gap:14px; }
+    .story-item { padding:18px; border-radius:20px; background:rgba(255,255,255,.035); border:1px solid var(--line); opacity:.55; transform: translateY(10px); transition:.35s ease; }
+    .story-item.active { opacity:1; transform: translateY(0); border-color:rgba(94,234,212,.28); }
+    .story-item h4 { margin:0 0 8px; font-size:18px; }
+    .story-item p { margin:0; color:var(--muted); font-size:14px; line-height:1.7; }
+
+    .timeline { display:grid; gap:14px; }
+    .time-row { display:grid; grid-template-columns: 260px 1fr; gap:16px; align-items:center; }
+    .time-label { font-size:14px; font-weight:800; color:#dce9ff; }
+    .track { position:relative; min-height:58px; border-radius:18px; background:rgba(255,255,255,.03); border:1px solid var(--line); overflow:hidden; }
+    .months { position:absolute; inset:0; display:grid; grid-template-columns: repeat(6,1fr); color:#8ea3d5; font-size:11px; }
+    .months span { padding:8px; border-right:1px dashed rgba(255,255,255,.08); }
+    .bar { position:absolute; top:24px; height:16px; border-radius:999px; background:linear-gradient(90deg, var(--blue), var(--cyan)); box-shadow:0 8px 20px rgba(96,165,250,.2); }
+    .bar.amber { background:linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .bar.green { background:linear-gradient(90deg, #34d399, #22c55e); }
+    .bar.purple { background:linear-gradient(90deg, #8b5cf6, #60a5fa); }
+
+    .gallery { display:grid; grid-template-columns: 1.25fr 1fr 1fr; gap:14px; }
+    .gallery .g { overflow:hidden; border-radius:20px; border:1px solid var(--line); background:rgba(255,255,255,.03); min-height: 220px; }
+    .gallery .tall { grid-row: span 2; }
+    .gallery img { width:100%; height:100%; object-fit:cover; transition: transform .5s ease; }
+    .gallery .g:hover img { transform: scale(1.04); }
+
+    .decision-grid { display:grid; grid-template-columns: repeat(5,1fr); gap:14px; }
+    .decision { padding:18px; border-radius:20px; background:rgba(255,255,255,.035); border:1px solid var(--line); height:100%; }
+    .decision strong { display:block; margin-bottom:8px; line-height:1.35; }
+    .decision p { margin:0; color:var(--muted); font-size:13px; line-height:1.7; overflow-wrap:anywhere; }
+
+    .footer { padding: 0 0 40px; }
+    .footer .glass { padding:22px 24px; }
+    .small { font-size:12px; color:#93a7d5; line-height:1.75; }
+
+    .reveal { opacity:0; transform: translateY(30px); transition: opacity .75s ease, transform .75s ease; }
+    .reveal.visible { opacity:1; transform: translateY(0); }
+
+    @media (max-width: 1180px) {
+      .hero-grid, .cards-4, .cards-3, .cards-2, .sticky-wrap, .gallery, .decision-grid, .brief-grid { grid-template-columns: 1fr; }
+      .time-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .topnav { border-radius:24px; align-items:flex-start; }
+      .navlinks { justify-content:flex-start; }
+      .hero-metrics { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 620px) {
+      .shell { width:min(var(--max), calc(100% - 18px)); }
+      .hero { padding-top: 110px; }
+      .hero-metrics { grid-template-columns: 1fr; }
+      .hero-copy { padding:22px; }
+      .floating-card { position:absolute; width:auto; max-width: 70%; }
+      .decision-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="brand">
+      <div class="brand-mark">C$</div>
+      <div class="brand-title">
+        <h1>Coal to Dollar - Executive Scrolling Artifact</h1>
+        <p>Presentation-style single-page brief for senior policymakers</p>
+      </div>
+    </div>
+    <div class="navlinks">
+      <a href="#case">Case</a>
+      <a href="#pillars">Pillars</a>
+      <a href="#charts">Charts</a>
+      <a href="#databook">Data Book</a>
+      <a href="#access">Open Access</a>
+      <a href="#traders">RCT</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#briefing">Board Note</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="glass hero-copy reveal">
+        <div class="eyebrow">Prepared for the Thar Coal & Energy Board</div>
+        <h2>Thar's next phase should be industrial, mobile, and national</h2>
+        <div class="lede">
+          Phase I proved that Thar lignite can anchor mine-mouth power generation. Phase II should convert that success into a wider industrial-policy platform: <strong>move coal beyond the mine</strong>, open rail access to qualified users, license a new class of <strong>Registered Coal Traders</strong>, and allocate coal to sectors that can deliver <strong>import substitution, export growth, and stronger energy security</strong>. This scrolling artifact condenses the revised policy note into a high-quality presentation format for decision-makers.
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="#case">Start the story</a>
+          <a class="btn secondary" href="#decisions">See the decisions requested</a>
+        </div>
+        <div class="hero-metrics">
+          <div class="metric"><div class="n counter" data-target="2400">0</div><div class="k">MW+ of mine-mouth power generation created in the first phase</div><div class="s">Proof of resource viability</div></div>
+          <div class="metric"><div class="n counter" data-target="7.6">0</div><div class="k">MTPA current mining-capacity anchor cited in the note</div><div class="s">Scale matters</div></div>
+          <div class="metric"><div class="n counter" data-target="105">0</div><div class="k">km rail connection under the Thar coal connectivity project</div><div class="s">From captive to mobile</div></div>
+          <div class="metric"><div class="n counter" data-target="2640">0</div><div class="k">MW installed Thar coal generation used in the note's fact base</div><div class="s">National system anchor</div></div>
+        </div>
+      </div>
+          </div>
+  </section>
+
+  <section class="section" id="case">
+    <div class="shell">
+      <div class="section-head reveal">
+        <div>
+          <div class="kicker">Why this matters now</div>
+          <h3>The macro case for Coal to Dollar</h3>
+          <p>Pakistan has already incurred the political, financial, and institutional cost of making Thar bankable. The second phase is therefore not about proving the resource again. It is about converting an existing domestic energy advantage into a broader industrial-policy instrument that reduces reliance on imported energy inputs and drives higher-value production across the country.</p>
+        </div>
+        <div class="tag">Executive framing</div>
+      </div>
+      <div class="cards-4 reveal">
+        <div class="card"><div class="numbered">1</div><h4>Falling cost curve</h4><p>The note emphasizes that mature mine expansion compresses the cost structure. That creates a policy opportunity to distinguish between legacy fully-loaded recovery and merchant coal for priority industrial uses.</p></div>
+        <div class="card"><div class="numbered">2</div><h4>Rail changes everything</h4><p>Once Thar is connected to the national network, coal can move as a bulk commodity rather than remain trapped in a pithead generation model.</p></div>
+        <div class="card"><div class="numbered">3</div><h4>Market design is the bottleneck</h4><p>Physical rail alone is not enough. The system needs rules for access, slot allocation, quality control, digital traceability, and commercial settlement.</p></div>
+        <div class="card"><div class="numbered">4</div><h4>Industrial prioritization is essential</h4><p>Coal-to-Dollar must focus on sectors with measurable foreign-exchange savings, export generation, or energy-system value rather than spreading support indiscriminately.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pillars">
+    <div class="shell">
+      <div class="section-head reveal">
+        <div>
+          <div class="kicker">Four-pillar structure</div>
+          <h3>The policy package</h3>
+          <p>The revised note is anchored around four pillars that must move together. The animation below is designed as a senior-policy-maker overview rather than a technical manual.</p>
+        </div>
+        <div class="tag">Board narrative</div>
+      </div>
+      <div class="cards-4 reveal">
+        <div class="card"><div class="numbered">I</div><h4>Common-carrier rail model</h4><p>Notify the corridor as a strategic freight facility with non-discriminatory access for qualified users. Pakistan Railways remains owner and safety authority, but not the sole commercial mover.</p></div>
+        <div class="card"><div class="numbered">II</div><h4>Registered Coal Trader regime</h4><p>Create a formal intermediary layer that can aggregate industrial demand, develop storage infrastructure, and provide dependable coal market access beyond a handful of mine-scale buyers.</p></div>
+        <div class="card"><div class="numbered">III</div><h4>Pricing architecture</h4><p>For approved sectors, use an ex-mine policy window based on verified variable cost plus a fixed expansion margin, while keeping rail and terminal charges as separate pass-throughs.</p></div>
+        <div class="card"><div class="numbered">IV</div><h4>Sector prioritization</h4><p>Allocate special treatment only where coal produces national value: lower import dependence, stronger exports, or better energy-system resilience.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="charts">
+    <div class="shell cards-2">
+      <div class="glass big-panel reveal">
+        <div class="chart-frame">
+          <h4 class="chart-title">Chart 1 - Illustrative cost architecture</h4>
+          <div class="chart-sub">This is a policy visualization, not a tariff determination. It shows why the note argues that priority-sector coal should be priced differently from legacy fully-loaded mine-mouth recovery.</div>
+          <svg id="costChart" viewBox="0 0 720 430" style="width:100%;height:auto"></svg>
+          <div class="legend">
+            <span class="c-blue">Verified variable mining cost</span>
+            <span class="c-cyan">Fixed expansion margin</span>
+            <span class="c-amber">Legacy capital / financing burden</span>
+          </div>
+        </div>
+      </div>
+      <div class="glass big-panel reveal">
+        <div class="chart-frame">
+          <h4 class="chart-title">Chart 2 - Priority sector matrix</h4>
+          <div class="chart-sub">Illustrative bubble matrix based on the note's three public-value tests. X-axis: bankability / readiness. Y-axis: foreign-exchange impact. Bubble size: indicative strategic importance.</div>
+          <svg id="bubbleChart" viewBox="0 0 720 430" style="width:100%;height:auto"></svg>
+          <div class="legend">
+            <span class="c-blue">First-wave priorities</span>
+            <span class="c-cyan">Strong medium-term opportunities</span>
+            <span class="c-amber">Later-wave / more execution-intensive</span>
+          </div>
+        </div>
+      </div>
+      <div class="glass big-panel reveal">
+        <div class="chart-frame">
+          <h4 class="chart-title">Chart 3 - Coal to Dollar value chain</h4>
+          <div class="chart-sub">Illustrative strategic flow showing how value moves from mining scale-up to final economic outcomes. This functions like a simplified Sankey-style policy map.</div>
+          <svg id="flowChart" viewBox="0 0 720 430" style="width:100%;height:auto"></svg>
+        </div>
+      </div>
+      <div class="glass big-panel reveal">
+        <div class="chart-frame">
+          <h4 class="chart-title">Chart 4 - Decision heatmap for sector sequencing</h4>
+          <div class="chart-sub">Illustrative heatmap mapping sectors against public-value screens: FX saving, export potential, system value, deployment readiness, and execution complexity.</div>
+          <svg id="heatmapChart" viewBox="0 0 720 430" style="width:100%;height:auto"></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="databook">
+    <div class="shell">
+      <div class="section-head reveal">
+        <div>
+          <div class="kicker">Policy Data Book</div>
+          <h3>Operational anchors and implementation detail</h3>
+          <p>This section makes the artifact more data-dense by pulling the core policy architecture into compact operating tables. The purpose is not to reopen the narrative, but to let senior policymakers scan the architecture in a more structured way.</p>
+        </div>
+        <div class="tag">Dense reference view</div>
+      </div>
+      <div class="cards-2 reveal">
+        <div class="glass big-panel">
+          <div class="chart-frame">
+            <h4 class="chart-title">Table 1 - Current anchors and why they matter</h4>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Anchor</th><th>Reference in the note</th><th>Why it matters for Phase II</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>2400+ MW mine-mouth phase</strong></td><td>Phase I built the credibility of Thar as a power asset.</td><td>Phase II can now shift from proving viability to widening economic use.</td></tr>
+                  <tr><td><strong>7.6 MTPA current mining scale</strong></td><td>Used in the revised note as the live mining-capacity anchor.</td><td>Scale is central because falling average and marginal costs are what make merchant coal policy possible.</td></tr>
+                  <tr><td><strong>105 km rail connection</strong></td><td>Strategic rail spine connecting Thar toward the mainline.</td><td>Without a common-carrier corridor, Thar remains a localized resource rather than a national industrial commodity.</td></tr>
+                  <tr><td><strong>2,640 MW installed Thar coal generation</strong></td><td>Used in the note's current fact base.</td><td>Shows that Thar is already system-relevant; the next step is to extend that relevance beyond power generation alone.</td></tr>
+                  <tr><td><strong>TCEB pricing authority</strong></td><td>Identified in the note as an available legal lever.</td><td>Allows differentiated treatment for priority sectors without inventing an entirely new policy institution.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="glass big-panel">
+          <div class="chart-frame">
+            <h4 class="chart-title">Table 2 - Policy levers, lead institutions, and design logic</h4>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Policy lever</th><th>Lead institution</th><th>Design logic</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Common-carrier corridor notification</strong></td><td>Government of Pakistan / Pakistan Railways</td><td>Creates the legal and commercial basis for non-discriminatory use of the Thar rail corridor.</td></tr>
+                  <tr><td><strong>Rail Access Code</strong></td><td>Pakistan Railways / Railway Board</td><td>Translates broad reform powers into route-specific operating rules, charges, and service standards.</td></tr>
+                  <tr><td><strong>Registered Coal Trader Rules</strong></td><td>TCEB with relevant federal/provincial support</td><td>Creates an organized downstream market so smaller industrial users can access coal through credible intermediaries.</td></tr>
+                  <tr><td><strong>Priority-sector coal pricing</strong></td><td>TCEB</td><td>Converts cost compression at the mine into industrial competitiveness while still preserving incentives for expansion.</td></tr>
+                  <tr><td><strong>Anchor project accreditation</strong></td><td>TCEB / SIFC / line ministries</td><td>Ensures priority treatment is tied to measurable FX saving, export generation, or system value.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cards-2 reveal" style="margin-top:18px;">
+        <div class="glass big-panel">
+          <div class="chart-frame">
+            <h4 class="chart-title">Table 3 - Open-access charge architecture</h4>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Charge component</th><th>What it covers</th><th>Policy note implication</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Reservation / path booking charge</strong></td><td>Secures booked train paths and discourages speculative over-booking.</td><td>Supports disciplined allocation and helps make anti-hoarding rules credible.</td></tr>
+                  <tr><td><strong>Variable track-use charge</strong></td><td>Recovers wear-and-tear and usage-linked infrastructure burden.</td><td>Should be transparent and formula-based rather than discretionary.</td></tr>
+                  <tr><td><strong>Terminal / handling charge</strong></td><td>Loading, unloading, shunting, siding use, and associated terminal services.</td><td>Should be published up front so users can estimate delivered coal costs reliably.</td></tr>
+                  <tr><td><strong>Demurrage / detention</strong></td><td>Late release of wagons, excessive terminal dwell time, or avoidable congestion.</td><td>Essential to keep the corridor fluid and improve wagon turnaround.</td></tr>
+                  <tr><td><strong>Performance rebate / service credit</strong></td><td>Offsets sustained shortfalls against published service levels.</td><td>Useful for making the regime commercially credible for private participants.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="glass big-panel">
+          <div class="chart-frame">
+            <h4 class="chart-title">Table 4 - Priority sector screening matrix</h4>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Sector</th><th>Public-value case</th><th>Relative readiness</th><th>Likely treatment</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Imported-coal displacement</strong></td><td>Direct fuel-import reduction and better energy security.</td><td>High</td><td>Early corridor priority.</td></tr>
+                  <tr><td><strong>Cement / industrial boilers</strong></td><td>Quick industrial absorption and localized energy-cost relief.</td><td>High</td><td>First-wave commercial demand builder.</td></tr>
+                  <tr><td><strong>Coal-to-ammonia / urea</strong></td><td>Strong FX-saving case through feedstock substitution and fertilizer value-chain benefits.</td><td>High to medium</td><td>First-wave strategic accreditation candidate.</td></tr>
+                  <tr><td><strong>Coal-to-chemicals / syngas</strong></td><td>Potentially large industrial payoff with broader downstream uses.</td><td>Medium</td><td>Phased strategic development.</td></tr>
+                  <tr><td><strong>Copper smelting / refining</strong></td><td>High export and domestic value-add potential.</td><td>Medium</td><td>Targeted medium-term industrial symbiosis.</td></tr>
+                  <tr><td><strong>Aluminium smelting</strong></td><td>Strategically interesting but more execution-intensive.</td><td>Low to medium</td><td>Later-wave opportunity.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section sticky-stage" id="access">
+    <div class="shell sticky-wrap">
+      <div class="glass sticky-card reveal">
+        <div class="kicker">Open Access Rules</div>
+        <h3 style="margin:0 0 10px; font-size:34px; letter-spacing:-.04em;">How the corridor should actually work</h3>
+        <p style="color:var(--muted); line-height:1.8; font-size:15px; margin:0 0 16px;">The revised note is clear: the coal corridor does <em>not</em> require privatization of the railway network. It requires Pakistan Railways to separate infrastructure control from commercial access. The right question is not ownership, but who may move coal under what rules.</p>
+        <div class="card" style="padding:16px;">
+          <strong style="display:block; margin-bottom:8px;">Embedding principle</strong>
+          <p style="margin:0; color:var(--muted); font-size:14px; line-height:1.7;">Use Pakistan Railways' emerging track-access pathway and overlay it with a corridor-specific Rail Access Code for coal traffic from Thar.</p>
+        </div>
+      </div>
+      <div class="story-list">
+        <div class="story-item reveal active"><h4>1. Public network declaration</h4><p>Pakistan Railways should publish a Network Statement specifying route characteristics, permitted axle loads, terminal capacities, maintenance blocks, path windows, service standards, and access charges for the coal corridor.</p></div>
+        <div class="story-item reveal"><h4>2. Standard access agreements</h4><p>Any eligible party—mine, RCT, approved industrial buyer, or rail operator acting for an eligible principal—should be able to sign a standard Track Access Agreement approved by the Railway Board.</p></div>
+        <div class="story-item reveal"><h4>3. Booking and anti-hoarding</h4><p>Capacity should be allocated through annual baseline requests, monthly nominations, and transparent congestion-management rules. A use-it-or-lose-it clause is essential to prevent slot capture.</p></div>
+        <div class="story-item reveal"><h4>4. Charges and service economics</h4><p>Access pricing should be multi-part: path reservation, variable track-use, terminal charges, demurrage, and performance rebates where service levels are not met.</p></div>
+        <div class="story-item reveal"><h4>5. Digital traceability and enforcement</h4><p>Every movement should be digitally visible: dispatch permit, electronic waybill, wagon-level tonnage record, origin weighbridge certificate, GPS/RFID tracking, and destination discharge confirmation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="traders">
+    <div class="shell cards-2">
+      <div class="glass big-panel reveal">
+        <div class="kicker">Registered Coal Traders</div>
+        <h3 style="margin:0 0 10px; font-size:36px; letter-spacing:-.04em;">A real market needs real intermediaries</h3>
+        <p style="color:var(--muted); line-height:1.8; font-size:15px; margin-top:0;">Many industrial users cannot contract directly with mines at the scale, tenor, or logistics complexity needed. RCTs solve that problem by creating an organized downstream coal market, analogous in regulatory logic to licensed intermediaries in Pakistan's fuel sector.</p>
+        <div class="chart-frame" style="margin-top:16px;">
+          <h4 class="chart-title">Illustrative licensing ladder</h4>
+          <div class="chart-sub">Consultation-draft concept based on the revised note. Thresholds are indicative and intended to show structure.</div>
+          <svg id="ladderChart" viewBox="0 0 720 380" style="width:100%;height:auto"></svg>
+        </div>
+      </div>
+      <div class="glass big-panel reveal">
+        <div class="cards-3" style="grid-template-columns:1fr; gap:14px;">
+          <div class="card"><h4>Core eligibility</h4><p>Pakistani corporate form, beneficial ownership disclosure, fit-and-proper directors, tax compliance, audited financial statements, and no serious record of fraud or insolvency.</p></div>
+          <div class="card"><h4>Financial capability</h4><p>Minimum paid-up capital, net worth, working-capital lines, performance guarantees, insurance, and a credible three-year business and investment plan.</p></div>
+          <div class="card"><h4>Infrastructure capability</h4><p>Access to stockyards, depots, rail-connected terminals or unloading arrangements, weighing capability, quality sampling protocols, and HSE readiness.</p></div>
+          <div class="card"><h4>Operational capability</h4><p>Named operations and compliance staff, digital stock and dispatch reporting, quality assurance systems, and realistic customer acquisition or demand aggregation plans.</p></div>
+          <div class="card"><h4>Lifecycle</h4><p>Application → provisional license → time-bound infrastructure completion → inspection and commissioning → full license → renewal / audit / suspension or cancellation for breach.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="roadmap">
+    <div class="shell">
+      <div class="glass big-panel reveal">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Execution sequencing</div>
+            <h3>36-month implementation roadmap</h3>
+            <p>This view turns the note's strategic sequence into a presentation-style execution chart. Timing is indicative and can be sharpened by the Board and implementing agencies.</p>
+          </div>
+          <div class="tag">Indicative</div>
+        </div>
+        <div class="timeline">
+          <div class="time-row"><div class="time-label">Coal to Dollar policy approval</div><div class="track"><div class="months"><span>0-6</span><span>6-12</span><span>12-18</span><span>18-24</span><span>24-30</span><span>30-36</span></div><div class="bar" style="left:2%; width:16%;"></div></div></div>
+          <div class="time-row"><div class="time-label">Corridor notification & network statement</div><div class="track"><div class="months"><span>0-6</span><span>6-12</span><span>12-18</span><span>18-24</span><span>24-30</span><span>30-36</span></div><div class="bar amber" style="left:4%; width:24%;"></div></div></div>
+          <div class="time-row"><div class="time-label">Rail Access Code & standard agreements</div><div class="track"><div class="months"><span>0-6</span><span>6-12</span><span>12-18</span><span>18-24</span><span>24-30</span><span>30-36</span></div><div class="bar green" style="left:10%; width:30%;"></div></div></div>
+          <div class="time-row"><div class="time-label">RCT Rules & provisional licensing</div><div class="track"><div class="months"><span>0-6</span><span>6-12</span><span>12-18</span><span>18-24</span><span>24-30</span><span>30-36</span></div><div class="bar purple" style="left:14%; width:36%;"></div></div></div>
+          <div class="time-row"><div class="time-label">Priority pricing framework</div><div class="track"><div class="months"><span>0-6</span><span>6-12</span><span>12-18</span><span>18-24</span><span>24-30</span><span>30-36</span></div><div class="bar" style="left:22%; width:24%;"></div></div></div>
+          <div class="time-row"><div class="time-label">Anchor projects & first commercial throughput</div><div class="track"><div class="months"><span>0-6</span><span>6-12</span><span>12-18</span><span>18-24</span><span>24-30</span><span>30-36</span></div><div class="bar green" style="left:30%; width:50%;"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="briefing">
+    <div class="shell">
+      <div class="glass big-panel reveal">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Board briefing note</div>
+            <h3>What this policy architecture would make possible</h3>
+            <p>This closing section is not framed as a request for approval. It simply distills the strategic implications of the Coal to Dollar architecture for the Board's consideration and ongoing policy discourse.</p>
+          </div>
+          <div class="tag">Apprising the Board</div>
+        </div>
+        <div class="brief-grid">
+          <div class="brief-card"><strong>1. Thar becomes a national industrial input</strong><p>The central shift is geographic and institutional: coal is no longer confined to mine-mouth power generation and can instead serve multiple industrial nodes across Pakistan.</p></div>
+          <div class="brief-card"><strong>2. Rail becomes enabling infrastructure</strong><p>The corridor's value is maximized when it behaves as common-user logistics infrastructure, not as a private bilateral conveyor for a narrow buyer base.</p></div>
+          <div class="brief-card"><strong>3. A new downstream market can emerge</strong><p>Registered Coal Traders would provide the aggregation, storage, compliance, and delivery capability needed to make coal commercially usable for dispersed industrial demand.</p></div>
+          <div class="brief-card"><strong>4. Pricing can become an industrial-policy tool</strong><p>A variable-cost-plus-expansion-margin framework creates a transparent way to translate mine-scale efficiency gains into downstream competitiveness.</p></div>
+          <div class="brief-card"><strong>5. Industrial sequencing becomes more disciplined</strong><p>The framework supports prioritization toward sectors with the clearest import-substitution or export rationale rather than treating all energy-intensive sectors as equally strategic.</p></div>
+          <div class="brief-card"><strong>6. Imported fuel exposure can decline over time</strong><p>As domestic coal substitutes for imported energy inputs and feedstocks, the economy's vulnerability to external fuel-price shocks can fall meaningfully.</p></div>
+          <div class="brief-card"><strong>7. The corridor can support both power and non-power use</strong><p>Coal moved through an open-access system can simultaneously strengthen power-sector fuel security and broaden industrial utilization beyond the electricity market.</p></div>
+          <div class="brief-card"><strong>8. The Board already sits near the policy center of gravity</strong><p>Because pricing, project treatment, and the broader Thar ecosystem already converge around existing institutions, much of the architecture can be built by extending current authority rather than inventing a wholly new system.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="shell">
+      <div class="glass reveal">
+        <div class="small">
+          <strong>About this artifact.</strong> This single-page scrolling presentation synthesizes the revised <em>Coal to Dollar</em> policy note and the uploaded expansion material into a visually rich executive brief. Charts labeled or described as illustrative are conceptual policy tools for discussion and prioritization; they are not regulatory determinations. The artifact is optimized for senior policymakers who need a strategic narrative, visual clarity, and a denser presentation of the implementation architecture in one place.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const sections = [...document.querySelectorAll('section[id]')];
+    const navLinks = [...document.querySelectorAll('.navlinks a')];
+    const setActive = () => {
+      const y = window.scrollY + 140;
+      let current = sections[0] ? sections[0].id : '';
+      sections.forEach(sec => { if (y >= sec.offsetTop) current = sec.id; });
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    };
+    window.addEventListener('scroll', setActive);
+    setActive();
+
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: .14 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    document.querySelectorAll('.counter').forEach(el => {
+      const target = parseFloat(el.dataset.target || '0');
+      const dec = String(el.dataset.target).includes('.');
+      const startAnim = () => {
+        const t0 = performance.now();
+        const dur = 1200;
+        const tick = (t) => {
+          const p = Math.min((t - t0) / dur, 1);
+          const e = 1 - Math.pow(1 - p, 3);
+          const val = target * e;
+          el.textContent = dec ? val.toFixed(1) : Math.round(val).toLocaleString();
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{ if(entry.isIntersecting){ startAnim(); obs.disconnect(); } });
+      }, {threshold:.5});
+      obs.observe(el);
+    });
+
+    const storyItems = document.querySelectorAll('.story-item');
+    const storyObs = new IntersectionObserver((entries)=>{
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          storyItems.forEach(i=>i.classList.remove('active'));
+          entry.target.classList.add('active');
+        }
+      })
+    }, {threshold:.58});
+    storyItems.forEach(i => storyObs.observe(i));
+
+    function line(x1,y1,x2,y2, stroke='rgba(255,255,255,.1)', w=1, dash='') {
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${w}" ${dash ? `stroke-dasharray="${dash}"` : ''}/>`;
+    }
+    function text(x,y,str,fill='#dbe7ff',size=12,anchor='start',weight='400') {
+      return `<text x="${x}" y="${y}" fill="${fill}" font-size="${size}" text-anchor="${anchor}" font-weight="${weight}">${str}</text>`;
+    }
+    function rect(x,y,w,h,fill,rx=14,stroke='none',opacity=1) {
+      return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${fill}" stroke="${stroke}" opacity="${opacity}"/>`;
+    }
+
+    (()=>{
+      const svg = document.getElementById('costChart');
+      const baseY=340, colW=150;
+      let out='';
+      out += rect(14,14,692,402,'rgba(255,255,255,.02)',18,'rgba(255,255,255,.06)');
+      out += line(80,baseY,650,baseY,'rgba(255,255,255,.16)');
+      out += text(115,382,'Legacy fully-loaded', '#dce7ff', 13, 'middle','700');
+      out += text(430,382,'Priority-sector policy price', '#dce7ff', 13, 'middle','700');
+      const l = {var: 110, legacy: 90, margin: 34};
+      out += rect(40, baseY-l.var, colW, l.var, 'rgba(96,165,250,.88)');
+      out += rect(40, baseY-l.var-l.legacy, colW, l.legacy, 'rgba(245,158,11,.9)');
+      out += rect(40, baseY-l.var-l.legacy-l.margin, colW, l.margin, 'rgba(94,234,212,.92)');
+      out += text(115, baseY-l.var/2+5, 'Variable cost', '#07101d', 12, 'middle','800');
+      out += text(115, baseY-l.var-l.legacy/2+5, 'Legacy CAPEX / finance', '#07101d', 12, 'middle','800');
+      out += text(115, baseY-l.var-l.legacy-l.margin/2+4, 'Margin', '#07101d', 12, 'middle','800');
+      const r = {var: 110, margin: 48};
+      out += rect(355, baseY-r.var, colW, r.var, 'rgba(96,165,250,.88)');
+      out += rect(355, baseY-r.var-r.margin, colW, r.margin, 'rgba(94,234,212,.92)');
+      out += text(430, baseY-r.var/2+5, 'Verified variable cost', '#07101d', 12, 'middle','800');
+      out += text(430, baseY-r.var-r.margin/2+5, 'Fixed expansion margin', '#07101d', 12, 'middle','800');
+      out += rect(540,80,140,88,'rgba(255,255,255,.03)',16,'rgba(255,255,255,.08)');
+      out += text(555,104,'Key principle', '#dce7ff', 13, 'start','700');
+      out += text(555,126,'Rail and terminal costs', '#9fb3de', 12);
+      out += text(555,144,'remain separate pass-throughs', '#9fb3de', 12);
+      out += text(555,162,'so ex-mine policy pricing', '#9fb3de', 12);
+      out += text(555,180,'is not distorted by geography', '#9fb3de', 12);
+      svg.innerHTML = out;
+    })();
+
+    (()=>{
+      const svg = document.getElementById('bubbleChart');
+      const plot={x:80,y:40,w:580,h:320};
+      const pts = [
+        {name:'Coal-to-ammonia / urea', x:72, y:92, r:34, c:'rgba(96,165,250,.88)'},
+        {name:'Imported-coal displacement', x:85, y:86, r:30, c:'rgba(96,165,250,.88)'},
+        {name:'Cement / boilers', x:80, y:74, r:26, c:'rgba(96,165,250,.88)'},
+        {name:'Coal-to-chemicals / syngas', x:56, y:82, r:30, c:'rgba(94,234,212,.9)'},
+        {name:'Copper smelting', x:49, y:70, r:24, c:'rgba(94,234,212,.9)'},
+        {name:'Aluminium smelting', x:34, y:62, r:20, c:'rgba(245,158,11,.9)'}
+      ];
+      let out='';
+      out += rect(14,14,692,402,'rgba(255,255,255,.02)',18,'rgba(255,255,255,.06)');
+      for(let i=0;i<=5;i++){
+        const x = plot.x + plot.w*(i/5); const y= plot.y + plot.h*(i/5);
+        out += line(x, plot.y, x, plot.y+plot.h, 'rgba(255,255,255,.08)');
+        if(i<5) out += text(x + plot.w/10, plot.y+plot.h+28, String(i*20+10), '#8ea3d5', 12, 'middle');
+        out += line(plot.x, y, plot.x+plot.w, y, 'rgba(255,255,255,.08)');
+        if(i<5) out += text(plot.x-16, plot.y+plot.h-(plot.h/5*i)+4, String(i*20+10), '#8ea3d5', 12, 'end');
+      }
+      out += text(plot.x + plot.w/2, 410, 'Readiness / bankability', '#96a8d4', 12, 'middle');
+      out += text(20, 200, 'FX impact', '#96a8d4', 12, 'middle', '400');
+      pts.forEach(p=>{
+        const cx = plot.x + plot.w*(p.x/100), cy = plot.y + plot.h*(1-p.y/100);
+        out += `<circle cx="${cx}" cy="${cy}" r="${p.r}" fill="${p.c}" opacity="0.9"/>`;
+        out += text(cx, cy+4, p.name, '#06111f', 11, 'middle','800');
+      });
+      svg.innerHTML = out;
+    })();
+
+    (()=>{
+      const svg = document.getElementById('flowChart');
+      const nodes = [
+        {x:40,y:140,w:120,h:72,t:'Mine scale-up'},
+        {x:210,y:72,w:140,h:72,t:'Common-carrier rail'},
+        {x:210,y:220,w:140,h:72,t:'Registered Coal Traders'},
+        {x:420,y:40,w:180,h:72,t:'Priority pricing window'},
+        {x:420,y:158,w:180,h:72,t:'Industrial deployment'},
+        {x:420,y:276,w:180,h:72,t:'Power-system support'},
+        {x:620,y:76,w:70,h:58,t:'FX\nsaving'},
+        {x:620,y:182,w:70,h:58,t:'Exports'},
+        {x:620,y:286,w:70,h:58,t:'Energy\nsecurity'}
+      ];
+      let out='';
+      out += rect(14,14,692,402,'rgba(255,255,255,.02)',18,'rgba(255,255,255,.06)');
+      nodes.forEach((n,i)=>{
+        const fill = i===0?'rgba(96,165,250,.84)':i<3?'rgba(94,234,212,.82)':i<6?'rgba(245,158,11,.85)':'rgba(139,92,246,.88)';
+        out += rect(n.x,n.y,n.w,n.h,fill,18);
+        const lines = n.t.split('\n');
+        lines.forEach((ln,j)=> out += text(n.x+n.w/2, n.y+30+j*15, ln, '#06111f', 12, 'middle','800'));
+      });
+      const curves = [
+        [160,176,210,108],[160,176,210,256],[350,108,420,76],[350,256,420,194],[600,76,620,105],[600,194,620,210],[600,312,620,315],[350,108,420,194],[350,256,420,312]
+      ];
+      curves.forEach(c=>{ out += `<path d="M${c[0]},${c[1]} C${c[0]+36},${c[1]} ${c[2]-36},${c[3]} ${c[2]},${c[3]}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3"/>`; });
+      svg.innerHTML = out;
+    })();
+
+    (()=>{
+      const svg = document.getElementById('heatmapChart');
+      const rows = ['Imported-coal displacement','Coal-to-ammonia / urea','Cement / boilers','Coal-to-chemicals / syngas','Copper smelting','Aluminium smelting'];
+      const cols = ['FX saving','Export potential','System value','Readiness','Complexity'];
+      const vals = [
+        [5,2,5,5,2],
+        [5,4,4,4,3],
+        [4,2,3,5,1],
+        [4,4,3,3,4],
+        [3,5,4,3,4],
+        [2,4,2,2,5]
+      ];
+      const colors = ['rgba(255,255,255,.05)','rgba(96,165,250,.45)','rgba(96,165,250,.58)','rgba(94,234,212,.62)','rgba(94,234,212,.78)','rgba(245,158,11,.9)'];
+      let out='';
+      out += rect(14,14,692,402,'rgba(255,255,255,.02)',18,'rgba(255,255,255,.06)');
+      const x0=210,y0=72,cw=90,ch=42;
+      cols.forEach((c,i)=> out += text(x0+i*cw+cw/2, 48, c, '#dbe7ff', 12, 'middle','700'));
+      rows.forEach((r,ri)=>{
+        out += text(190, y0+ri*ch+27, r, '#dbe7ff', 12, 'end','600');
+        cols.forEach((c,ci)=>{
+          const v=vals[ri][ci];
+          out += rect(x0+ci*cw, y0+ri*ch, cw-6, ch-6, colors[v], 10, 'rgba(255,255,255,.06)');
+          out += text(x0+ci*cw+(cw-6)/2, y0+ri*ch+23, String(v), v>2?'#06111f':'#dbe7ff', 12, 'middle','800');
+        })
+      });
+      out += text(370, 390, 'Illustrative score scale: 1 = low, 5 = high', '#96a8d4', 12, 'middle');
+      svg.innerHTML = out;
+    })();
+
+    (()=>{
+      const svg = document.getElementById('ladderChart');
+      let out='';
+      out += rect(14,14,692,352,'rgba(255,255,255,.02)',18,'rgba(255,255,255,.06)');
+      const steps = [
+        {x:48,y:260,w:120,h:68,c:'rgba(96,165,250,.88)',t:'Application'},
+        {x:190,y:212,w:130,h:116,c:'rgba(94,234,212,.88)',t:'Provisional\nlicense'},
+        {x:342,y:164,w:140,h:164,c:'rgba(245,158,11,.9)',t:'Infrastructure\ncompletion'},
+        {x:504,y:116,w:150,h:212,c:'rgba(139,92,246,.88)',t:'Full\nlicense'}
+      ];
+      steps.forEach(s=>{
+        out += rect(s.x,s.y,s.w,s.h,s.c,18);
+        s.t.split('\n').forEach((ln,j)=> out += text(s.x+s.w/2, s.y+28+j*16, ln, '#06111f', 13, 'middle','800'));
+      });
+      out += text(108, 348, 'Corporate + financial fit', '#9fb3de', 11, 'middle');
+      out += text(255, 348, 'Conditional approval', '#9fb3de', 11, 'middle');
+      out += text(412, 348, 'Depot / stockyard / digital readiness', '#9fb3de', 11, 'middle');
+      out += text(580, 348, 'Commercial operating rights', '#9fb3de', 11, 'middle');
+      svg.innerHTML = out;
+    })();
+  </script>
+</body>
+</html>
