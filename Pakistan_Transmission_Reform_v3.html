@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Transmission Infrastructure: The Rs.510 Billion Reform Imperative</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{--primary:#FFFFFF;--secondary:#FAFAFA;--border:#E5E5E5;--accent:#C8923A;--text-primary:#1A1A1A;--text-secondary:#666666;--text-tertiary:#999999;--success:#52B788;--warning:#9B2335;--teal:#036B7A;--teal-light:#E6F5F7;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--primary);color:#2D2D2D;line-height:1.6;font-size:15px}
+.container{max-width:1120px;margin:0 auto;padding:0 2rem}
+.site-header{border-bottom:1px solid var(--border);padding:1rem 0;background:#fff}
+.site-header .inner{display:flex;align-items:center;justify-content:space-between}
+.site-header .brand{font-size:12px;letter-spacing:.08em;color:var(--text-tertiary);text-transform:uppercase;font-weight:600}
+.site-header .meta{font-size:12px;color:var(--text-tertiary)}
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--border)}
+.hero-eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:1rem}
+.hero h1{font-family:Georgia,serif;font-size:42px;font-weight:400;color:var(--text-primary);line-height:1.15;max-width:820px;margin-bottom:1.5rem}
+.hero-sub{font-size:16px;color:var(--text-secondary);max-width:700px;line-height:1.7;margin-bottom:2rem}
+.hero-byline{font-size:13px;color:var(--text-tertiary)}
+.hero-byline strong{color:var(--text-primary);font-weight:600}
+
+/* KPI STRIP */
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border:1px solid var(--border);margin:3rem 0}
+.kpi-cell{padding:1.4rem 1.1rem;border-right:1px solid var(--border)}
+.kpi-cell:last-child{border-right:none}
+.kpi-num{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--text-primary);line-height:1}
+.kpi-num.red{color:var(--warning)}.kpi-num.teal{color:var(--teal)}.kpi-num.amber{color:var(--accent)}.kpi-num.green{color:var(--success)}
+.kpi-label{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-tertiary);margin-top:.5rem;font-weight:600}
+.kpi-sub{font-size:12px;color:var(--text-secondary);margin-top:.3rem}
+
+/* PRIORITY BANNER */
+.priority-banner{background:#1A3A3F;color:#fff;padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem;margin:0 0 0}
+.priority-banner .pb-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
+.priority-banner .pb-text{font-size:13px;color:#C8D8DA;line-height:1.5}
+.priority-banner strong{color:#fff}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin:3rem 0 0;overflow-x:auto}
+.tab-btn{background:none;border:none;padding:.875rem 1.6rem;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-tertiary);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s}
+.tab-btn:hover{color:var(--text-primary)}
+.tab-btn.active{color:var(--teal);border-bottom-color:var(--teal)}
+.tab-btn.priority-tab{color:var(--accent)}
+.tab-btn.priority-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none;padding:2.5rem 0}
+.tab-pane.active{display:block}
+
+/* LAYOUT */
+.section-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-tertiary);font-weight:600;margin-bottom:.5rem}
+.section-title{font-family:Georgia,serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:1.5rem;line-height:1.25}
+.section-sub{font-size:14px;color:var(--text-secondary);line-height:1.75;margin-bottom:1.5rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+.sixty-forty{display:grid;grid-template-columns:3fr 2fr;gap:2rem;margin:1.5rem 0}
+.forty-sixty{display:grid;grid-template-columns:2fr 3fr;gap:2rem;margin:1.5rem 0}
+
+/* COMPONENTS */
+.panel{background:var(--secondary);border:1px solid var(--border);border-radius:8px;padding:1.5rem}
+.panel-title{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:1rem}
+.panel-title.teal{color:var(--teal)}.panel-title.amber{color:var(--accent)}
+.insight-card{border:1px solid var(--border);padding:1.25rem;border-radius:4px}
+.insight-card.green{border-top:3px solid var(--success)}.insight-card.amber{border-top:3px solid var(--accent)}
+.insight-card.red{border-top:3px solid var(--warning)}.insight-card.teal{border-top:3px solid var(--teal)}
+.insight-num{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--text-primary)}
+.insight-text{font-size:13px;color:var(--text-secondary);margin-top:.5rem;line-height:1.5}
+.data-table{width:100%;border-collapse:collapse;font-size:13px;margin:1rem 0}
+.data-table th{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary);padding:.75rem 1rem;border-bottom:2px solid var(--border);text-align:left;background:#fff}
+.data-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border);color:#2D2D2D}
+.data-table tr:hover td{background:var(--secondary)}
+.data-table .total td{font-weight:600;background:var(--secondary)}
+.data-table .teal{color:var(--teal);font-weight:600}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;letter-spacing:.05em;text-transform:uppercase}
+.badge-red{background:#FEE2E2;color:#7F1D1D}.badge-amber{background:#FEF3C7;color:#78350F}
+.badge-green{background:#D1FAE5;color:#064E3B}.badge-teal{background:var(--teal-light);color:var(--teal)}
+.badge-orange{background:#FFF3CD;color:#854D0E}
+.verdict-box{background:var(--teal-light);border-left:4px solid var(--teal);padding:1.5rem 2rem;margin:2.5rem 0}
+.verdict-box p{font-size:14px;line-height:1.8;color:#1A3A3F}
+.verdict-box strong{color:var(--teal)}
+.callout{background:var(--secondary);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.25rem 1.5rem;margin:1.5rem 0;border-radius:0 6px 6px 0}
+.callout p{font-size:14px;color:#3D3D3D;line-height:1.7}
+.callout.teal{border-left-color:var(--teal)}
+.callout.red{border-left-color:var(--warning);background:#FFF5F5}
+.callout.green{border-left-color:var(--success);background:#F0FFF7}
+.eng-note{background:#FFFBEB;border:1px solid #FCD34D;border-left:4px solid #F59E0B;padding:1rem 1.25rem;margin:1rem 0;border-radius:0 6px 6px 0;font-size:13px;color:#78350F;line-height:1.7}
+
+/* CHART */
+.chart-wrap{position:relative;width:100%;height:280px}
+.chart-wrap-tall{position:relative;width:100%;height:340px}
+.chart-wrap-sm{position:relative;width:100%;height:200px}
+.legend{display:flex;flex-wrap:wrap;gap:1rem;margin:.75rem 0;font-size:12px;color:var(--text-secondary)}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.divider{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+
+/* PRIORITY STACK — key new component */
+.priority-stack{margin:1.5rem 0}
+.ps-item{display:grid;grid-template-columns:60px 1fr;gap:1.5rem;padding:1.25rem 1.5rem;border:1px solid var(--border);border-left:5px solid var(--border);margin-bottom:.75rem;border-radius:0 6px 6px 0;background:#fff;transition:box-shadow .2s}
+.ps-item:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ps-item.p1{border-left-color:var(--warning)}
+.ps-item.p2{border-left-color:var(--accent)}
+.ps-item.p3{border-left-color:var(--teal)}
+.ps-item.p4{border-left-color:#AAAAAA}
+.ps-rank{font-family:Georgia,serif;font-size:32px;font-weight:400;color:#CCCCCC;line-height:1;padding-top:.25rem}
+.ps-rank.p1{color:var(--warning)}
+.ps-rank.p2{color:var(--accent)}
+.ps-rank.p3{color:var(--teal)}
+.ps-body{}
+.ps-title{font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:.35rem}
+.ps-meta{font-size:12px;color:var(--text-tertiary);margin-bottom:.6rem;letter-spacing:.04em;text-transform:uppercase}
+.ps-desc{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.ps-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+
+/* WATERFALL */
+.wf-item{display:flex;align-items:flex-start;gap:1rem;padding:.75rem 0;border-bottom:1px solid var(--border)}
+.wf-label{font-size:13px;color:var(--text-secondary);flex:1}
+.wf-val{font-size:13px;font-weight:600;color:var(--text-primary);min-width:100px;text-align:right}
+
+/* CONSTRAINT DECOMP */
+.constraint-box{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:1.5rem 0}
+.cb-header{padding:.75rem 1.25rem;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.cb-header.red{background:var(--warning)}
+.cb-header.amber{background:var(--accent)}
+.cb-body{padding:1.25rem}
+.cb-num{font-family:Georgia,serif;font-size:36px;font-weight:400;line-height:1;margin-bottom:.5rem}
+.cb-detail{font-size:13px;color:var(--text-secondary);line-height:1.6}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:2rem;margin:1.5rem 0}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:1.75rem}
+.tl-item::before{content:'';position:absolute;left:-2.4rem;top:.3rem;width:12px;height:12px;border-radius:50%;background:var(--teal);border:2px solid #fff;box-shadow:0 0 0 2px var(--teal)}
+.tl-item.amber::before{background:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.tl-item.green::before{background:var(--success);box-shadow:0 0 0 2px var(--success)}
+.tl-item.red::before{background:var(--warning);box-shadow:0 0 0 2px var(--warning)}
+.tl-item.gray::before{background:#AAA;box-shadow:0 0 0 2px #AAA}
+.tl-date{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:.25rem}
+.tl-title{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:.2rem}
+.tl-body{font-size:13px;color:var(--text-secondary);line-height:1.6}
+
+/* MAP */
+.map-container{background:#F0F4F8;border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1.5rem 0}
+
+/* FOOTER */
+.site-footer{margin-top:5rem;padding:2rem 0;border-top:1px solid var(--border)}
+.site-footer p{font-size:12px;color:var(--text-tertiary);line-height:1.8}
+
+@media(max-width:900px){.kpi-strip{grid-template-columns:1fr 1fr}.two-col,.three-col,.sixty-forty,.forty-sixty{grid-template-columns:1fr}.hero h1{font-size:30px}}
+@media(max-width:600px){.kpi-strip{grid-template-columns:1fr}.kpi-cell{border-right:none;border-bottom:1px solid var(--border)}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container inner">
+    <span class="brand">Pakistan Power Sector Analysis</span>
+    <span class="meta">Ammar H. Khan &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; <em>Engineering-verified · v3</em></span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Transmission Infrastructure</div>
+    <h1>The Rs.510 Billion Reform Imperative: What to Do First, and Why</h1>
+    <p class="hero-sub">Pakistan's North–South corridor has 1,750 MW of congestion. One project — the 500 kV Lahore North Grid Station, at 96% physical completion — resolves 1,300 MW of it, or 74%, by unlocking the ±660 kV HVDC line that has been fully paid for and underused since 2021. The remaining 26% requires a separate set of southern AC upgrades. New northern generation (Chashma C5) and accelerating BTM solar change the economics of some TIP projects, but strengthen rather than weaken the case for completing what is already built. This is the prioritised sequencing.</p>
+    <div class="hero-byline">By <strong>Ammar H. Khan</strong> &nbsp;·&nbsp; Sources: NEPRA PER Transmission FY2024-25 · NEPRA PER Generation FY2024-25 · NTDC System Needs Assessment · ISMO Dispatch Data</div>
+  </div>
+</section>
+
+<!-- PRIORITY BANNER -->
+<div class="priority-banner">
+  <span class="pb-label">Priority Signal</span>
+  <p class="pb-text">Lahore North GS (96% complete) resolves <strong>74% of all North–South congestion</strong> and delivers <strong>Rs.33–56 Bn/yr</strong> in dispatch savings — before any other TIP project is needed. Finish it first.</p>
+</div>
+
+<div class="container">
+  <div class="kpi-strip">
+    <div class="kpi-cell">
+      <div class="kpi-num green">74%</div>
+      <div class="kpi-label">Congestion resolved by Lahore North</div>
+      <div class="kpi-sub">1,300 MW of 1,750 MW total</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num red">1,750 MW</div>
+      <div class="kpi-label">Total curtailment today</div>
+      <div class="kpi-sub">Constraint A: 1,300 MW · Constraint B: 450 MW</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num amber">34.9%</div>
+      <div class="kpi-label">HVDC utilisation FY2024-25</div>
+      <div class="kpi-sub">Target post-Lahore North: 47–55%</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num teal">Rs.45 Bn</div>
+      <div class="kpi-label">Annual saving from Lahore North alone</div>
+      <div class="kpi-sub">Mid-range: 4,200–7,000 GWh displaced</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num red">Rs.97.8 Bn</div>
+      <div class="kpi-label">HVDC fixed cost (take-or-pay)</div>
+      <div class="kpi-sub">Paid regardless of utilisation</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num teal">Rs.510 Bn</div>
+      <div class="kpi-label">NTDC TIP total</div>
+      <div class="kpi-sub">99 projects · C5 & BTM change priorities</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn priority-tab active" onclick="switchTab('priority',this)">★ Prioritisation</button>
+    <button class="tab-btn" onclick="switchTab('overview',this)">Overview</button>
+    <button class="tab-btn" onclick="switchTab('map',this)">Transmission Map</button>
+    <button class="tab-btn" onclick="switchTab('corridor',this)">N–S Corridor</button>
+    <button class="tab-btn" onclick="switchTab('lahore',this)">Lahore North: The 74%</button>
+    <button class="tab-btn" onclick="switchTab('c5btm',this)">C5 &amp; BTM Impact</button>
+    <button class="tab-btn" onclick="switchTab('wind',this)">Wind Curtailment</button>
+    <button class="tab-btn" onclick="switchTab('benefits',this)">Cost–Benefit</button>
+    <button class="tab-btn" onclick="switchTab('tip',this)">Investment Plan</button>
+    <button class="tab-btn" onclick="switchTab('timeline',this)">Roadmap</button>
+  </div>
+
+  <!-- ══════════════ TAB 0: PRIORITISATION ══════════════ -->
+  <div id="tab-priority" class="tab-pane active">
+    <div class="section-label">Investment Prioritisation</div>
+    <h2 class="section-title">What to Do First — A Four-Tier Priority Stack</h2>
+    <p class="section-sub">Not all 99 TIP projects carry equal urgency. Three analytical changes — the Lahore North two-constraint decomposition, the Chashma C5 northern generation addition, and accelerating BTM solar — reshape which projects should move immediately, which should be sequenced next, and which deserve fresh economic scrutiny before capital commitment. The stack below is ordered by return, reversibility, and dependence on completion of prior tiers.</p>
+
+    <div class="verdict-box">
+      <p>The core finding: <strong>74% of Pakistan's North–South congestion can be resolved by completing one project that is already 96% built.</strong> That project — Lahore North 500 kV Grid Station — delivers Rs.33–56 billion in annual dispatch savings by unlocking the ±660 kV HVDC line whose full capacity payment of Rs.97.8 billion per year is already being collected from consumers. Every month of further delay compounds an already-accumulated loss of approximately Rs.160 billion over four years. This is not a planning decision. It is an execution emergency.</p>
+    </div>
+
+    <div class="priority-stack">
+
+      <!-- P1 -->
+      <div class="ps-item p1">
+        <div class="ps-rank p1">P1</div>
+        <div class="ps-body">
+          <div class="ps-title">Lahore North 500 kV Grid Station — Immediate Commissioning</div>
+          <div class="ps-meta">96% complete · ADB-financed · Rs.33–56 Bn/yr annual saving · Sub-1-year payback</div>
+          <div class="ps-desc">Resolves Constraint A — the HVDC underutilisation problem. Without Lahore North, the Lahore Converter Station cannot absorb more than 2,700 MW from the HVDC under N-1 operating conditions. Commissioning raises the safe HVDC loading ceiling from 2,700 MW to 4,000 MW (rated), adding 1,300 MW of southward throughput capacity. This is the single intervention with the highest return, the most advanced completion status, and zero economic downside from Chashma C5 or BTM solar. C5 is at Mianwali in the north — it does not affect the value of unlocking HVDC capacity from southern coal and nuclear plants. BTM solar reduces daytime demand but the evening ramp still needs the HVDC. <strong>There is no credible argument for delaying this.</strong></div>
+          <div class="ps-tags">
+            <span class="badge badge-red">Action now</span>
+            <span class="badge badge-teal">Resolves 74% of congestion</span>
+            <span class="badge badge-green">Fully funded</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2a -->
+      <div class="ps-item p2">
+        <div class="ps-rank p2">P2</div>
+        <div class="ps-body">
+          <div class="ps-title">Jamshoro 500/220 kV Transformer Augmentation + ISMO Curtailment Reform</div>
+          <div class="ps-meta">Q4 2025 – Q2 2026 · Jamshoro: Rs.4–8 Bn capex · ISMO reform: Zero capex · Combined saving Rs.8–15 Bn/yr</div>
+          <div class="ps-desc">Two actions that together reinforce the Lahore North unlock. <strong>Jamshoro augmentation:</strong> K2 (1,145 MW), K3 (1,145 MW), Port Qasim (1,320 MW), and Hub (1,320 MW) all route through the single Jamshoro 500 kV node. Transformer overloads here impose N-1 dispatch restrictions that partially offset the Lahore North gain — fixing it ensures the full 1,300 MW HVDC improvement is realisable. <strong>ISMO curtailment merit-order reform:</strong> Redirecting 194,780 MWh of wind curtailment from Upfront plants (Rs.34.68/kWh NPMV) to Cost-Plus plants (Rs.18.22/kWh NPMV) saves Rs.3.8 billion annually at zero capital cost — achievable via a single NEPRA operational directive this quarter.</div>
+          <div class="ps-tags">
+            <span class="badge badge-amber">Q4 2025 – Q2 2026</span>
+            <span class="badge badge-green">Zero capex for ISMO reform</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2b -->
+      <div class="ps-item p2">
+        <div class="ps-rank p2">P2</div>
+        <div class="ps-body">
+          <div class="ps-title">Jhimpir 220 kV GIS Expansion (900 MW → 1,400 MW) + 2nd Wind Evacuation Corridor</div>
+          <div class="ps-meta">Q2 2026 – Q4 2027 · USD 115–170 Mn total · Rs.14–18 Bn/yr saving · Fully independent of N-S corridor</div>
+          <div class="ps-desc">Structurally separate from the North–South corridor problem — the Jhimpir bottleneck is a 220 kV sub-transmission issue with no relationship to Lahore North, C5, or BTM solar. The Rs.12.8 billion NPMV from 519 GWh of physically curtailed wind is 100% transmission-driven and 100% resolvable by local Sindh-coast infrastructure. The economic case is unaffected by any assumption about northern generation. The GIS expansion addresses the primary constraint; the Jhimpir–Dhabeji second corridor eliminates the single-point-of-failure risk for the entire 1,843 MW fleet.</div>
+          <div class="ps-tags">
+            <span class="badge badge-amber">2026–2027</span>
+            <span class="badge badge-teal">Independent of N-S corridor</span>
+            <span class="badge badge-red">NPMV stops immediately</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- P3 -->
+      <div class="ps-item p3">
+        <div class="ps-rank p3">P3</div>
+        <div class="ps-body">
+          <div class="ps-title">Southern AC Line Upgrades: Dadu–Shikarpur · Shikarpur–Guddu · Moro–RYK</div>
+          <div class="ps-meta">2026–2027 · Constraint B: Resolves remaining 450 MW (26% of congestion) · Rs.16 Bn/yr additional saving</div>
+          <div class="ps-desc">These three 500 kV lines form the AC parallel path running alongside the HVDC corridor on the southern side. They overload under N-0 conditions, forcing NGC to curtail Port Qasim and Hub China even when the HVDC itself is unconstrained. After Lahore North commissions, these become the binding limit: the HVDC can carry 4,000 MW northward, but the AC parallel path still can't evacuate the full southern fleet at N-0. Without these upgrades, ISMO will constrain total southward dispatch to ~4,000–4,200 MW rather than the theoretical 4,500 MW summer ATC. Correctly sequenced after P1 — they are the 26% complement to P1's 74%. Note: Chashma C5 modestly reduces the dispatch substitution value of this tranche (by ~Rs.5–8 Bn/yr), but Rs.16 Bn/yr residual saving still justifies the investment.</div>
+          <div class="ps-tags">
+            <span class="badge badge-teal">Resolves remaining 26%</span>
+            <span class="badge badge-amber">Sequence after Lahore North</span>
+            <span class="badge badge-orange">Partially affected by C5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- P4 -->
+      <div class="ps-item p4">
+        <div class="ps-rank" style="color:#AAA">P4</div>
+        <div class="ps-body">
+          <div class="ps-title">New Net-Additional 500 kV AC Corridors — Refresh Economics Before Committing</div>
+          <div class="ps-meta">Post-2027 · Rs.100–150 Bn subset of TIP · Economics materially weakened by C5 + BTM trajectory</div>
+          <div class="ps-desc">The Rs.277 billion power evacuation category of the TIP was designed in 2022 on a demand forecast that predated the current BTM solar trajectory and did not account for Chashma C5. Projects that assume growing southward transfer demand well beyond the existing HVDC's 4,000 MW capacity need updated load-flow modelling before construction contracts are signed. C5 (~1,000–1,200 MW at Mianwali) displaces ~1,000 MW of northern RLNG demand, reducing the corridor's peak dispatch substitution value by approximately Rs.18–25 Bn/yr. BTM solar reduces daytime grid throughput by 3–4 GW by 2028. A corridor sized for 2022 demand assumptions may be overbuilt for 2027 reality. This is not a case for cancellation — it is a case for updated ATC analysis, revised demand forecasting, and phased construction that preserves optionality.</div>
+          <div class="ps-tags">
+            <span class="badge badge-orange">Refresh economics first</span>
+            <span class="badge badge-amber">C5 reduces value</span>
+            <span class="badge badge-amber">BTM reduces throughput</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Decision Matrix</div>
+    <h3 style="font-family:Georgia,serif;font-size:22px;font-weight:400;margin-bottom:1.25rem">All Key Interventions Ranked</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Priority</th><th>Intervention</th><th>Capex</th><th>Annual Saving</th><th>Congestion Resolved</th><th>C5 Impact</th><th>BTM Impact</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background:#FFF5F5">
+          <td><strong>P1</strong></td>
+          <td><strong>Lahore North 500 kV GS</strong></td>
+          <td>Marginal (96% spent)</td>
+          <td class="teal">Rs.33–56 Bn/yr</td>
+          <td class="teal"><strong>1,300 MW (74%)</strong></td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-red">Now</span></td>
+        </tr>
+        <tr>
+          <td>P2</td>
+          <td>Jamshoro TX augmentation</td>
+          <td>Rs.4–8 Bn</td>
+          <td class="teal">Rs.4–8 Bn/yr</td>
+          <td>Reinforces P1 gain</td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-amber">Q4 2025</span></td>
+        </tr>
+        <tr>
+          <td>P2</td>
+          <td>ISMO curtailment merit-order reform</td>
+          <td>Zero</td>
+          <td class="teal">Rs.3.8 Bn/yr</td>
+          <td>Wind NPMV reduction</td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-red">Now</span></td>
+        </tr>
+        <tr>
+          <td>P2</td>
+          <td>Jhimpir 220 kV GIS expansion</td>
+          <td>USD 35–50 Mn</td>
+          <td class="teal">Rs.8–10 Bn/yr</td>
+          <td>Wind corridor only</td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-amber">Q2 2026</span></td>
+        </tr>
+        <tr>
+          <td>P2</td>
+          <td>2nd wind evacuation corridor</td>
+          <td>USD 80–120 Mn</td>
+          <td class="teal">Rs.4–6 Bn/yr</td>
+          <td>Wind corridor only</td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-green">None</span></td>
+          <td><span class="badge badge-amber">2026–27</span></td>
+        </tr>
+        <tr>
+          <td>P3</td>
+          <td>Dadu–Shikarpur 500 kV upgrade</td>
+          <td>TIP envelope</td>
+          <td class="teal">Rs.6–8 Bn/yr</td>
+          <td>~200 MW (partial B)</td>
+          <td><span class="badge badge-orange">Partial</span></td>
+          <td><span class="badge badge-green">Minimal</span></td>
+          <td><span class="badge badge-teal">2026</span></td>
+        </tr>
+        <tr>
+          <td>P3</td>
+          <td>Shikarpur–Guddu + Moro–RYK upgrades</td>
+          <td>TIP envelope</td>
+          <td class="teal">Rs.8–10 Bn/yr</td>
+          <td>~250 MW (completes B)</td>
+          <td><span class="badge badge-orange">Partial</span></td>
+          <td><span class="badge badge-green">Minimal</span></td>
+          <td><span class="badge badge-teal">2026–27</span></td>
+        </tr>
+        <tr>
+          <td>P4</td>
+          <td>Net-new 500 kV corridors (beyond HVDC complement)</td>
+          <td>Rs.100–150 Bn (est.)</td>
+          <td>Uncertain — needs refresh</td>
+          <td>Only if demand warrants</td>
+          <td><span class="badge badge-red">Significant</span></td>
+          <td><span class="badge badge-red">Significant</span></td>
+          <td><span class="badge badge-orange">Re-model first</span></td>
+        </tr>
+        <tr class="total">
+          <td colspan="2"><strong>P1+P2+P3 combined (excluding P4)</strong></td>
+          <td><strong>~USD 300–400 Mn + TIP</strong></td>
+          <td class="teal"><strong>Rs.68–98 Bn/yr</strong></td>
+          <td><strong>1,750 MW (100%)</strong></td>
+          <td colspan="3"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════ TAB 1: OVERVIEW ══════════════ -->
+  <div id="tab-overview" class="tab-pane">
+    <div class="section-label">Executive Summary</div>
+    <h2 class="section-title">Three Compounding Failures, One Near-Complete Solution</h2>
+    <div class="verdict-box">
+      <p>Pakistan's power crisis is not primarily a generation crisis — it is a <strong>transmission crisis with a specific anatomy</strong>. 1,750 MW of cheap southern generation is curtailed daily because the wires connecting it to northern load are inadequate. 74% of that problem is solvable by completing a single substation that is already 96% built and fully financed. The residual 26% requires a separate, sequenced set of southern AC line upgrades. New northern nuclear capacity (Chashma C5) and accelerating BTM solar change the economics of some parts of the Rs.510 billion TIP — but they <em>strengthen</em> the case for the highest-priority projects, which are the ones that unlock infrastructure already commissioned and paid for.</p>
+    </div>
+    <div class="three-col">
+      <div class="insight-card red">
+        <div class="insight-num">Failure 1</div>
+        <div class="insight-text"><strong>HVDC Underutilisation.</strong> The ±660 kV, 4,000 MW Matiari–Lahore line ran at 34.9% average utilisation in FY2024-25 (peak: 55.1% July; trough: 20.0% November). Rs.97.8 billion in fixed capacity payments flow to PMLTC annually regardless. Root cause: Lahore North GS has been absent for four years.</div>
+      </div>
+      <div class="insight-card amber">
+        <div class="insight-num">Failure 2</div>
+        <div class="insight-text"><strong>AC Corridor Overloads.</strong> The 500 kV Dadu–Shikarpur, Shikarpur–Guddu, and Moro–RYK lines constrain AC southward flow to 1,800 MW at N-0. Even when the HVDC is unconstrained, these lines block the full 4,500 MW summer ATC from being realised. This is the residual 450 MW — the 26% that Lahore North alone does not fix.</div>
+      </div>
+      <div class="insight-card red">
+        <div class="insight-num">Failure 3</div>
+        <div class="insight-text"><strong>Wind Evacuation Failure.</strong> 519 GWh curtailed annually at Rs.12.8 billion NPMV — 100% caused by a single 220 kV grid station at Jhimpir rated at 900 MW against a fleet peak dispatch potential of 1,400–1,600 MW. Structurally separate from the N-S corridor; separate infrastructure fix required.</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="section-label">Diagnostic Register</div>
+    <h3 style="font-family:Georgia,serif;font-size:22px;font-weight:400;margin-bottom:1.25rem">Key Numbers</h3>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Finding</th><th>Metric</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Lahore North resolves what share of total congestion</td><td><strong>74% — 1,300 MW of 1,750 MW</strong></td><td><span class="badge badge-red">P1 — Now</span></td></tr>
+        <tr><td>2</td><td>HVDC utilisation FY2024-25 vs. safe post-Lahore North target</td><td>34.9% → 47–55% (1,397 MW → 1,880–2,200 MW avg)</td><td><span class="badge badge-red">P1 — Now</span></td></tr>
+        <tr><td>3</td><td>Additional annual energy via HVDC after Lahore North</td><td>4,200–7,000 GWh/yr · Rs.33–56 Bn/yr saving</td><td><span class="badge badge-red">P1 — Now</span></td></tr>
+        <tr><td>4</td><td>Residual congestion after Lahore North (southern AC lines)</td><td>~450 MW (26%) · Rs.16 Bn/yr · Dadu–Shikarpur, Shikarpur–Guddu, Moro–RYK</td><td><span class="badge badge-teal">P3 — 2026</span></td></tr>
+        <tr><td>5</td><td>Wind NPMV — structurally separate from N-S corridor</td><td>Rs.12.8 Bn · 519 GWh · Jhimpir GIS constraint</td><td><span class="badge badge-amber">P2 — Q2 2026</span></td></tr>
+        <tr><td>6</td><td>Chashma C5 impact on corridor economics</td><td>Reduces dispatch sub. saving by Rs.18–25 Bn/yr; does not affect HVDC sunk cost recovery</td><td><span class="badge badge-orange">Monitor</span></td></tr>
+        <tr><td>7</td><td>HVDC fixed capacity payment (unchanged by utilisation)</td><td>Rs.97.8 Bn/yr take-or-pay — every MW of HVDC idle adds to consumer burden</td><td><span class="badge badge-red">P1 urgency driver</span></td></tr>
+        <tr><td>8</td><td>BTM solar impact on corridor value</td><td>Reduces daytime throughput; evening ramp needs HVDC more, not less</td><td><span class="badge badge-orange">Monitor</span></td></tr>
+        <tr><td>9</td><td>NTDC TIP budget under revised prioritisation</td><td>P1+P2+P3: ~Rs.200–250 Bn · P4: Rs.100–150 Bn pending re-modelling</td><td><span class="badge badge-teal">Sequence</span></td></tr>
+        <tr><td>10</td><td>Cost of Lahore North four-year delay (accumulated)</td><td>~Rs.160 Bn in consumer cost that was never saved</td><td><span class="badge badge-red">Execution emergency</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════════ TAB 2: MAP ══════════════ -->
+  <div id="tab-map" class="tab-pane">
+    <div class="section-label">Geographic Analysis</div>
+    <h2 class="section-title">Pakistan's National Grid: The Two Constraint Zones</h2>
+    <p class="section-sub">The map distinguishes the two structurally separate constraints. Constraint A (HVDC underutilisation — Lahore North) sits at the northern receiving end of the HVDC system. Constraint B (southern AC overloads) sits on the southern sending-end AC corridor. Fixing A without B leaves 450 MW unresolved. Fixing B without A leaves 1,300 MW unresolved. The correct sequence is always A first.</p>
+    <div class="map-container">
+      <svg width="100%" viewBox="0 0 960 800" role="img" xmlns="http://www.w3.org/2000/svg">
+        <title>Pakistan National Grid — Two-Constraint Schematic</title>
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+          <pattern id="gp" width="30" height="30" patternUnits="userSpaceOnUse">
+            <path d="M30 0L0 0 0 30" fill="none" stroke="#DDE8F0" stroke-width="0.3"/>
+          </pattern>
+        </defs>
+        <rect width="960" height="800" fill="#F4F8FC" rx="6"/>
+        <rect width="960" height="800" fill="url(#gp)" rx="6"/>
+        <!-- Pakistan body -->
+        <path d="M105 390 Q95 430 107 470 Q120 510 138 550 Q154 580 138 600 L565 660 Q575 610 588 567 Q606 507 618 457 Q628 417 623 375 Q617 334 606 304 Q596 274 582 254 Q587 224 576 202 Q562 178 546 162 Q526 147 506 142 Q486 142 472 152 Q451 157 448 147 Q442 132 426 122 Q406 112 386 118 Q366 117 356 128 Q336 133 320 127 Q305 122 290 112 Q271 107 251 114 Q231 120 216 132 Q201 144 190 157 Q176 172 161 182 Q136 198 121 218 Q106 238 101 260 Q93 284 96 317 Q99 354 105 390Z" fill="#EEF4FA" stroke="#BDD0E5" stroke-width="1.5" fill-opacity="0.9"/>
+        <path d="M290 112 Q315 92 345 82 Q375 72 405 77 Q435 82 455 97 Q470 107 470 152 Q451 157 448 147 Q426 122 406 118 Q386 117 366 118 Q351 123 336 130 Q316 133 301 124Z" fill="#E8F4EC" stroke="#BDD0E5" stroke-width="1" fill-opacity="0.85"/>
+        <rect x="138" y="710" width="437" height="50" rx="4" fill="#CCE5F5" opacity="0.5"/>
+        <text x="355" y="742" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#4A7FA0" font-style="italic">Arabian Sea</text>
+        <text x="200" y="585" font-family="Georgia,serif" font-size="12" fill="#8BA8C0" font-style="italic">Balochistan</text>
+        <text x="435" y="585" font-family="Georgia,serif" font-size="12" fill="#8BA8C0" font-style="italic">Sindh</text>
+        <text x="315" y="370" font-family="Georgia,serif" font-size="12" fill="#8BA8C0" font-style="italic">Punjab</text>
+        <text x="200" y="268" font-family="Georgia,serif" font-size="12" fill="#8BA8C0" font-style="italic">KPK</text>
+
+        <!-- CONSTRAINT B ZONE (South) highlight -->
+        <rect x="380" y="300" width="120" height="300" rx="8" fill="#FEF3C7" opacity="0.35" stroke="#D97706" stroke-width="1.5" stroke-dasharray="6 3"/>
+        <text x="440" y="320" text-anchor="middle" font-size="10" font-weight="700" fill="#92400E" font-family="-apple-system,sans-serif">CONSTRAINT B</text>
+        <text x="440" y="332" text-anchor="middle" font-size="9" fill="#92400E" font-family="-apple-system,sans-serif">Southern AC overloads</text>
+        <text x="440" y="343" text-anchor="middle" font-size="9" fill="#92400E" font-family="-apple-system,sans-serif">~450 MW (26%)</text>
+
+        <!-- CONSTRAINT A ZONE (North) highlight -->
+        <rect x="330" y="80" width="160" height="100" rx="8" fill="#FEE2E2" opacity="0.4" stroke="#9B2335" stroke-width="1.5" stroke-dasharray="6 3"/>
+        <text x="410" y="100" text-anchor="middle" font-size="10" font-weight="700" fill="#7F1D1D" font-family="-apple-system,sans-serif">CONSTRAINT A</text>
+        <text x="410" y="112" text-anchor="middle" font-size="9" fill="#7F1D1D" font-family="-apple-system,sans-serif">HVDC underutilisation</text>
+        <text x="410" y="123" text-anchor="middle" font-size="9" fill="#7F1D1D" font-family="-apple-system,sans-serif">1,300 MW (74%) — Lahore North</text>
+
+        <!-- HVDC line -->
+        <path d="M497 608 Q495 568 492 528 Q488 488 484 448 Q479 408 474 368 Q469 325 465 285 Q461 245 458 218 Q454 195 451 180" fill="none" stroke="#B91C1C" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 4" opacity="0.9" marker-end="url(#arr)"/>
+        <rect x="545" y="385" width="202" height="48" rx="5" fill="white" stroke="#B91C1C" stroke-width="1.2"/>
+        <text x="645" y="404" text-anchor="middle" font-size="11" font-weight="700" fill="#B91C1C" font-family="-apple-system,sans-serif">±660 kV HVDC Bipole</text>
+        <text x="645" y="421" text-anchor="middle" font-size="10" fill="#666" font-family="-apple-system,sans-serif">Matiari–Lahore · 886 km · 4,000 MW rated</text>
+        <line x1="545" y1="409" x2="496" y2="409" stroke="#B91C1C" stroke-width="1" stroke-dasharray="3 2"/>
+
+        <!-- 500 kV AC corridor with overload markers -->
+        <path d="M459 630 Q447 590 437 562 Q425 528 422 497 Q419 466 420 436" fill="none" stroke="#036B7A" stroke-width="3" opacity="0.7"/>
+        <!-- Constraint B: Dadu-Shikarpur warning -->
+        <rect x="402" y="475" width="44" height="38" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-width="2" stroke-dasharray="4 2"/>
+        <text x="424" y="499" text-anchor="middle" font-size="12" fill="#D97706" font-family="-apple-system,sans-serif">⚠</text>
+
+        <path d="M420 436 Q418 414 416 396 Q413 372 413 352" fill="none" stroke="#036B7A" stroke-width="3" opacity="0.7"/>
+        <!-- Constraint B: Shikarpur-Guddu warning -->
+        <rect x="396" y="400" width="40" height="36" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-width="2" stroke-dasharray="4 2"/>
+        <text x="416" y="422" text-anchor="middle" font-size="12" fill="#D97706" font-family="-apple-system,sans-serif">⚠</text>
+
+        <path d="M413 352 Q408 330 403 310 Q397 290 394 272" fill="none" stroke="#036B7A" stroke-width="2.5" opacity="0.65"/>
+        <!-- Constraint B: Moro-RYK -->
+        <rect x="385" y="305" width="36" height="30" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-width="2" stroke-dasharray="4 2"/>
+        <text x="403" y="325" text-anchor="middle" font-size="12" fill="#D97706" font-family="-apple-system,sans-serif">⚠</text>
+
+        <path d="M394 272 Q389 252 383 232 Q377 212 374 192" fill="none" stroke="#036B7A" stroke-width="2.5" opacity="0.65"/>
+        <path d="M374 192 Q369 173 363 157 Q357 141 354 128 Q352 117 354 110" fill="none" stroke="#036B7A" stroke-width="2.2" opacity="0.6"/>
+        <path d="M354 110 Q320 97 292 104 Q270 110 260 120" fill="none" stroke="#036B7A" stroke-width="2" opacity="0.55" stroke-dasharray="5 3"/>
+        <path d="M260 120 Q248 130 237 140 Q224 150 217 160" fill="none" stroke="#036B7A" stroke-width="2" opacity="0.5" stroke-dasharray="5 3"/>
+        <!-- Wind evac -->
+        <path d="M474 668 Q476 651 473 640 Q470 627 464 615" fill="none" stroke="#D97706" stroke-width="2.2" stroke-dasharray="5 3" opacity="0.85" marker-end="url(#arr)"/>
+
+        <!-- LEGEND -->
+        <rect x="15" y="295" width="160" height="118" rx="5" fill="white" stroke="#DDE0E5" stroke-width="0.5" opacity="0.97"/>
+        <text x="27" y="312" font-size="10" font-weight="600" fill="#444" font-family="-apple-system,sans-serif">Transmission</text>
+        <line x1="27" y1="324" x2="60" y2="324" stroke="#B91C1C" stroke-width="4" stroke-dasharray="7 3"/>
+        <text x="66" y="328" font-size="10" fill="#444" font-family="-apple-system,sans-serif">±660 kV HVDC</text>
+        <line x1="27" y1="343" x2="60" y2="343" stroke="#036B7A" stroke-width="2.5" opacity="0.75"/>
+        <text x="66" y="347" font-size="10" fill="#444" font-family="-apple-system,sans-serif">500 kV AC</text>
+        <line x1="27" y1="362" x2="60" y2="362" stroke="#D97706" stroke-width="2" stroke-dasharray="5 3"/>
+        <text x="66" y="366" font-size="10" fill="#444" font-family="-apple-system,sans-serif">220 kV Wind</text>
+        <rect x="20" y="378" width="14" height="10" rx="2" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+        <text x="66" y="387" font-size="10" fill="#444" font-family="-apple-system,sans-serif">⚠ Overload (Constraint B)</text>
+        <rect x="15" y="425" width="160" height="80" rx="5" fill="white" stroke="#DDE0E5" stroke-width="0.5" opacity="0.97"/>
+        <text x="27" y="442" font-size="10" font-weight="600" fill="#444" font-family="-apple-system,sans-serif">Node types</text>
+        <circle cx="30" cy="458" r="6" fill="#9B2335" stroke="white" stroke-width="1.5"/>
+        <text x="42" y="462" font-size="9" fill="#444" font-family="-apple-system,sans-serif">Critical node</text>
+        <circle cx="30" cy="476" r="6" fill="#036B7A" stroke="white" stroke-width="1.5"/>
+        <text x="42" y="480" font-size="9" fill="#444" font-family="-apple-system,sans-serif">500 kV substation</text>
+        <circle cx="30" cy="494" r="6" fill="none" stroke="#52B788" stroke-width="2.5"/>
+        <text x="42" y="498" font-size="9" fill="#444" font-family="-apple-system,sans-serif">New GS (96% complete)</text>
+
+        <!-- KKI -->
+        <circle cx="452" cy="682" r="10" fill="#9B2335" stroke="white" stroke-width="2"/>
+        <text x="428" y="702" text-anchor="middle" font-size="10" font-weight="600" fill="#9B2335" font-family="-apple-system,sans-serif">KKI/Karachi</text>
+
+        <!-- Wind cluster -->
+        <rect x="498" y="650" width="148" height="42" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1.2"/>
+        <text x="571" y="667" text-anchor="middle" font-size="10" font-weight="700" fill="#92400E" font-family="-apple-system,sans-serif">Wind Corridor (Sindh)</text>
+        <text x="571" y="683" text-anchor="middle" font-size="9" fill="#777" font-family="-apple-system,sans-serif">Jhimpir–Gharo · 36 IPPs · 1,843 MW</text>
+
+        <!-- Matiari -->
+        <rect x="482" y="600" width="28" height="18" rx="3" fill="#B91C1C" stroke="white" stroke-width="1.5"/>
+        <text x="496" y="613" text-anchor="middle" font-size="9" font-weight="700" fill="white" font-family="-apple-system,sans-serif">DC</text>
+        <text x="520" y="606" font-size="10" font-weight="600" fill="#B91C1C" font-family="-apple-system,sans-serif">Matiari Converter Stn.</text>
+        <text x="520" y="618" font-size="9" fill="#666" font-family="-apple-system,sans-serif">HVDC rectifier · 500 kV AC hub</text>
+
+        <!-- Jamshoro (CRITICAL) -->
+        <circle cx="441" cy="635" r="13" fill="#E67E22" stroke="white" stroke-width="2.5"/>
+        <text x="441" y="640" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="-apple-system,sans-serif">⚠</text>
+        <text x="382" y="631" text-anchor="end" font-size="10" font-weight="600" fill="#92400E" font-family="-apple-system,sans-serif">Jamshoro 500 kV GS</text>
+        <text x="382" y="643" text-anchor="end" font-size="9" fill="#777" font-family="-apple-system,sans-serif">10,645 MW hub · P2 priority</text>
+
+        <!-- Guddu -->
+        <circle cx="414" cy="352" r="9" fill="#036B7A" stroke="white" stroke-width="1.5"/>
+        <text x="396" y="349" text-anchor="end" font-size="10" font-weight="600" fill="#036B7A" font-family="-apple-system,sans-serif">Guddu</text>
+        <text x="396" y="361" text-anchor="end" font-size="9" fill="#666" font-family="-apple-system,sans-serif">Gas thermal cluster</text>
+
+        <!-- RYK -->
+        <circle cx="394" cy="272" r="8" fill="#036B7A" stroke="white" stroke-width="1.5"/>
+        <text x="376" y="272" text-anchor="end" font-size="9" fill="#036B7A" font-family="-apple-system,sans-serif">Rahim Yar Khan</text>
+
+        <!-- Multan -->
+        <circle cx="374" cy="192" r="10" fill="#036B7A" stroke="white" stroke-width="2"/>
+        <text x="356" y="189" text-anchor="end" font-size="10" font-weight="600" fill="#036B7A" font-family="-apple-system,sans-serif">Multan / Muzaffargarh</text>
+        <text x="356" y="201" text-anchor="end" font-size="9" fill="#666" font-family="-apple-system,sans-serif">KAPCO · RLNG plants</text>
+
+        <!-- Lahore region -->
+        <circle cx="354" cy="133" r="10" fill="#9B2335" stroke="white" stroke-width="2"/>
+        <text x="336" y="130" text-anchor="end" font-size="10" font-weight="600" fill="#9B2335" font-family="-apple-system,sans-serif">Lahore (LESCO/GEPCO)</text>
+        <text x="336" y="142" text-anchor="end" font-size="9" fill="#666" font-family="-apple-system,sans-serif">Sheikhupura · Gatti · Yousafwala</text>
+
+        <!-- HVDC Lahore Converter -->
+        <rect x="440" y="173" width="26" height="17" rx="3" fill="#B91C1C" stroke="white" stroke-width="1.5"/>
+        <text x="453" y="185" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="-apple-system,sans-serif">DC</text>
+        <text x="472" y="179" font-size="10" font-weight="600" fill="#B91C1C" font-family="-apple-system,sans-serif">Lahore Converter Stn.</text>
+        <text x="472" y="191" font-size="9" fill="#666" font-family="-apple-system,sans-serif">HVDC inverter · Sundar, Lahore</text>
+
+        <!-- Lahore North — THE KEY PROJECT -->
+        <circle cx="362" cy="108" r="12" fill="none" stroke="#52B788" stroke-width="3.5" stroke-dasharray="6 2"/>
+        <text x="380" y="100" font-size="11" font-weight="700" fill="#065F46" font-family="-apple-system,sans-serif">★ Lahore North 500 kV GS</text>
+        <text x="380" y="113" font-size="9" fill="#065F46" font-family="-apple-system,sans-serif">96% complete · Resolves 74% of congestion (1,300 MW)</text>
+
+        <!-- Chashma C1-C4 + C5 -->
+        <circle cx="220" cy="162" r="9" fill="#036B7A" stroke="white" stroke-width="1.5"/>
+        <rect x="760" y="148" width="170" height="65" rx="5" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="760" y="148" width="170" height="20" rx="5" fill="#D1FAE5"/>
+        <rect x="760" y="163" width="170" height="5" fill="#D1FAE5"/>
+        <text x="845" y="162" text-anchor="middle" font-size="10" font-weight="700" fill="#064E3B" font-family="-apple-system,sans-serif">Chashma Nuclear Site</text>
+        <text x="769" y="180" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• C1–C4: 1,330 MW (operating)</text>
+        <text x="769" y="191" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• C5: ~1,200 MW (planned)</text>
+        <text x="769" y="202" font-size="9" fill="#065F46" font-weight="600" font-family="-apple-system,sans-serif">• Northern location — no corridor dependence</text>
+        <line x1="760" y1="178" x2="232" y2="162" stroke="#52B788" stroke-width="1" stroke-dasharray="4 2" opacity="0.6"/>
+
+        <!-- Islamabad -->
+        <circle cx="260" cy="120" r="9" fill="#036B7A" stroke="white" stroke-width="1.5"/>
+        <text x="242" y="115" text-anchor="end" font-size="10" font-weight="600" fill="#036B7A" font-family="-apple-system,sans-serif">Islamabad / Rawat</text>
+
+        <!-- Sheikh Muhammadi -->
+        <circle cx="217" cy="162" r="8" fill="#036B7A" stroke="white" stroke-width="1.5"/>
+        <text x="199" y="159" text-anchor="end" font-size="9" fill="#036B7A" font-family="-apple-system,sans-serif">Sheikh Muhammadi/Tarbela</text>
+        <text x="199" y="171" text-anchor="end" font-size="9" fill="#666" font-family="-apple-system,sans-serif">Hydro evac (overloaded)</text>
+
+        <!-- South generation box -->
+        <rect x="565" y="628" width="165" height="80" rx="5" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="565" y="628" width="165" height="20" rx="5" fill="#FEE2E2"/>
+        <rect x="565" y="643" width="165" height="5" fill="#FEE2E2"/>
+        <text x="647" y="642" text-anchor="middle" font-size="10" font-weight="700" fill="#7F1D1D" font-family="-apple-system,sans-serif">South Generation Cluster</text>
+        <text x="574" y="660" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• Port Qasim Coal: 1,320 MW</text>
+        <text x="574" y="671" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• K2 + K3 Nuclear: 2,290 MW</text>
+        <text x="574" y="682" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• China Hub + HUBCO: ~2,500 MW</text>
+        <text x="574" y="693" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• Thar coal cluster: 2,640 MW</text>
+
+        <!-- North generation box -->
+        <rect x="112" y="120" width="150" height="68" rx="5" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+        <rect x="112" y="120" width="150" height="20" rx="5" fill="#FEF3C7"/>
+        <rect x="112" y="135" width="150" height="5" fill="#FEF3C7"/>
+        <text x="186" y="134" text-anchor="middle" font-size="10" font-weight="700" fill="#78350F" font-family="-apple-system,sans-serif">North Generation</text>
+        <text x="121" y="152" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• Tarbela Hydro: 4,888 MW</text>
+        <text x="121" y="163" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• Haveli/Balloki RLNG: 3,600 MW</text>
+        <text x="121" y="174" font-size="9" fill="#444" font-family="-apple-system,sans-serif">• Chashma C1–C4: 1,330 MW</text>
+
+        <!-- Title -->
+        <rect x="15" y="15" width="290" height="48" rx="5" fill="white" stroke="#DDE0E5" stroke-width="0.5" opacity="0.97"/>
+        <text x="27" y="33" font-size="12" font-weight="700" fill="#036B7A" font-family="-apple-system,sans-serif">Pakistan National Grid — Two Constraints</text>
+        <text x="27" y="47" font-size="10" fill="#666" font-family="-apple-system,sans-serif">Constraint A (Lahore North, 74%) · Constraint B (Southern AC, 26%)</text>
+        <text x="27" y="58" font-size="9" fill="#999" font-family="-apple-system,sans-serif">Schematic — not geographically precise · Source: NEPRA PER Transmission FY2024-25</text>
+      </svg>
+    </div>
+    <p style="font-size:12px;color:var(--text-tertiary);margin-top:.5rem">Constraint zones are illustrative. HVDC line: 886 km. Chashma nuclear site at Mianwali (northern Punjab/KPK border) — its output serves northern load directly with no dependence on the N-S corridor. ★ = priority project.</p>
+  </div>
+
+  <!-- ══════════════ TAB 3: N-S CORRIDOR ══════════════ -->
+  <div id="tab-corridor" class="tab-pane">
+    <div class="section-label">The Central Problem</div>
+    <h2 class="section-title">The North–South Corridor: Two Independent Constraints, One Combined Effect</h2>
+    <p class="section-sub">The NEPRA PER Transmission FY2024-25 explicitly states the congestion has two distinct causes: HVDC underutilisation (Lahore North) and southern AC line overloads (Dadu–Shikarpur, Shikarpur–Guddu, Moro–RYK). These are geographically separate, mechanically independent, and require different infrastructure fixes on different timelines. Treating them as a single problem leads to misallocated capital.</p>
+
+    <div class="two-col" style="margin-bottom:1.5rem">
+      <div class="constraint-box">
+        <div class="cb-header red">Constraint A — HVDC Side (Northern) · Lahore North · 1,300 MW</div>
+        <div class="cb-body">
+          <div class="cb-num" style="color:var(--warning)">1,300 MW</div>
+          <div style="font-size:13px;color:var(--text-tertiary);margin-bottom:.75rem">74% of total curtailment</div>
+          <div class="cb-detail">The ±660 kV HVDC Bipole is rated at 4,000 MW. Its LCC (Line-Commutated Converter) inverter station at Sundar, Lahore requires a strong AC network to absorb high DC power transfers. Under N-1 (one pole trips at 2,000 MW), the surviving pole can carry 2,200 MW maximum overload. The Lahore AC network must instantly absorb the remaining 1,800 MW (= 4,000 − 2,200 MW). Without Lahore North GS, this AC absorption capacity does not exist. ISMO caps HVDC at 2,700 MW — meaning 1,300 MW of potential HVDC throughput is permanently constrained. <strong>Fix: Lahore North GS commissioning.</strong></div>
+        </div>
+      </div>
+      <div class="constraint-box">
+        <div class="cb-header amber">Constraint B — AC Side (Southern) · Line Overloads · ~450 MW</div>
+        <div class="cb-body">
+          <div class="cb-num" style="color:var(--accent)">~450 MW</div>
+          <div style="font-size:13px;color:var(--text-tertiary);margin-bottom:.75rem">26% of total curtailment</div>
+          <div class="cb-detail">The 500 kV AC lines running parallel to the HVDC corridor on the southern side — Dadu–Shikarpur, Shikarpur–Guddu, and Moro–Rahim Yar Khan — are overloaded at N-0 operating conditions. This forces NGC to curtail Port Qasim and Hub China generation even during normal operations, independently of whatever the HVDC is doing. After Lahore North commissions and the HVDC moves toward 4,000 MW, these AC lines become the binding limit on total system southward transfer. <strong>Fix: 500 kV line upgrades (Dadu–Shikarpur, Shikarpur–Guddu, Moro–RYK) — sequenced after Constraint A.</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eng-note">
+      <strong>Why Constraint A must be fixed before Constraint B:</strong> After Lahore North, HVDC can carry 4,000 MW and the remaining AC bottleneck (450 MW) means total transfer reaches only ~4,050–4,200 MW instead of the theoretical 4,500 MW. That remaining gap is worth ~Rs.16 Bn/yr. Before Lahore North, fixing only the southern AC lines would mean the AC corridor could carry 3,200–3,600 MW, but the HVDC is still capped at 2,700 MW — a total ceiling of ~4,500–4,600 MW in theory, but with no improvement in HVDC utilisation. The prioritisation is clear: unlock 1,300 MW at the northern end (P1), then remove the 450 MW AC constraint at the southern end (P3).
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">ATC Analysis</div>
+    <h3 style="font-family:Georgia,serif;font-size:22px;font-weight:400;margin-bottom:1.25rem">Available Transfer Capacity — Before and After</h3>
+    <div class="two-col">
+      <div>
+        <table class="data-table">
+          <thead><tr><th>State</th><th>HVDC (safe)</th><th>AC Parallel</th><th>Total ATC</th><th>Curtailment</th></tr></thead>
+          <tbody>
+            <tr style="background:#FFF5F5"><td><strong>Today (N-0, summer)</strong></td><td style="color:var(--warning)">2,700 MW</td><td>1,800 MW</td><td>4,500 MW</td><td style="color:var(--warning)">1,750 MW</td></tr>
+            <tr style="background:#F0FFF7"><td><strong>After Lahore North only</strong></td><td style="color:var(--success)">4,000 MW</td><td>1,800 MW</td><td>5,800 MW</td><td style="color:var(--success)">~450 MW</td></tr>
+            <tr style="background:#F0FFF7"><td><strong>After Lahore North + AC upgrades</strong></td><td style="color:var(--success)">4,000 MW</td><td>~3,200 MW</td><td>~7,200 MW</td><td style="color:var(--success)">Near zero</td></tr>
+            <tr><td>Winter (today)</td><td>1,800–2,500 MW</td><td>1,800 MW</td><td>2,500–2,800 MW</td><td>Low (demand-driven)</td></tr>
+          </tbody>
+        </table>
+        <div class="eng-note" style="margin-top:1rem">
+          <strong>Engineering note on the summer ATC:</strong> The 4,500 MW figure represents today's stability-constrained limit on the existing AC+DC system. After Lahore North unlocks the HVDC to 4,000 MW and the southern AC lines are upgraded, the new stability limit will be determined by a fresh load-flow and dynamic stability study — the 7,200 MW above is indicative based on AC line thermal ratings, not a committed system limit.
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title teal">HVDC Monthly Loading vs. Rated — FY2024-25</div>
+        <div class="chart-wrap-tall">
+          <canvas id="hvdcLoadChart"></canvas>
+        </div>
+        <p style="font-size:12px;color:var(--text-tertiary);margin-top:.5rem">Grey = 4,000 MW rated. Teal = actual. Gap in every month = idle capacity with full PMLTC payment owed. Post-Lahore North target loading shown as dashed line.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 4: LAHORE NORTH ══════════════ -->
+  <div id="tab-lahore" class="tab-pane">
+    <div class="section-label">The 74% Solution</div>
+    <h2 class="section-title">Lahore North Grid Station: How One Substation Resolves 1,300 MW of Congestion</h2>
+
+    <div class="callout green">
+      <p><strong>The core mechanism:</strong> The ±660 kV HVDC uses Line-Commutated Converter (LCC) technology at both terminals. LCC converters require a strong AC voltage source to commutate — they cannot operate in isolation from the AC network. At the Lahore end, the existing AC network (Sheikhupura, Gatti, Yousafwala substations) can absorb approximately 2,700 MW of DC power under N-1 conditions before voltage drops and commutation failure risk become unacceptable. Lahore North adds a new 500 kV grid station with its associated transformation and sub-transmission lines, raising the Lahore AC network's absorption capacity to support the full 4,000 MW HVDC rating under N-1. The 1,300 MW gain is the direct arithmetic difference between the N-1-limited 2,700 MW ceiling today and the 4,000 MW rated capacity after commissioning.</p>
+    </div>
+
+    <div class="three-col" style="margin-top:1.5rem">
+      <div class="insight-card green">
+        <div class="insight-num">1,300 MW</div>
+        <div class="insight-text">Additional HVDC throughput unlocked. Every megawatt is cheap southern coal and nuclear displacing expensive northern RLNG at Rs.5–8/kWh marginal cost differential.</div>
+      </div>
+      <div class="insight-card teal">
+        <div class="insight-num">Rs.33–56 Bn/yr</div>
+        <div class="insight-text">Annual dispatch substitution saving. Low case: 4,200 GWh × Rs.8/kWh = Rs.33.6 Bn. High case: 7,000 GWh × Rs.8/kWh = Rs.56 Bn. Mid-point: Rs.45 Bn.</div>
+      </div>
+      <div class="insight-card amber">
+        <div class="insight-num">34.9% → 47–55%</div>
+        <div class="insight-text">Expected HVDC utilisation improvement. Current average: 1,397 MW. Post-Lahore North target: 1,880–2,200 MW average. Additional annual energy: 4,200–7,000 GWh.</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Seasonal Dispatch Analysis</div>
+    <h3 style="font-family:Georgia,serif;font-size:22px;font-weight:400;margin-bottom:1.25rem">Month-by-Month: What Actually Changes</h3>
+    <p class="section-sub">The theoretical 1,300 MW capacity gain does not translate uniformly across all months. In winter, northern hydro, gas, and Chashma plants cover more of the load — the HVDC runs below its pre-Lahore-North ceiling for demand reasons, not infrastructure reasons. The gain concentrates overwhelmingly in summer peak months (June–October), which is precisely when Pakistan's electricity crisis is most acute.</p>
+
+    <div class="two-col">
+      <div>
+        <table class="data-table">
+          <thead><tr><th>Month</th><th>Current HVDC (MW)</th><th>Post-LN Target (MW)</th><th>Practical Gain</th><th>Constraint driver</th></tr></thead>
+          <tbody>
+            <tr style="background:#F0FFF7"><td><strong>June</strong></td><td>1,813</td><td>3,000–3,500</td><td style="color:var(--success)"><strong>+1,200–1,700</strong></td><td>Infrastructure</td></tr>
+            <tr style="background:#F0FFF7"><td><strong>July</strong></td><td>2,205</td><td>3,500–4,000</td><td style="color:var(--success)"><strong>+1,300–1,800</strong></td><td>Infrastructure</td></tr>
+            <tr style="background:#F0FFF7"><td><strong>August</strong></td><td>1,829</td><td>3,200–3,800</td><td style="color:var(--success)"><strong>+1,400–2,000</strong></td><td>Infrastructure</td></tr>
+            <tr style="background:#F0FFF7"><td><strong>September</strong></td><td>1,464</td><td>2,800–3,400</td><td style="color:var(--success)"><strong>+1,300–1,900</strong></td><td>Infrastructure</td></tr>
+            <tr><td>October</td><td>1,096</td><td>1,800–2,400</td><td>+700–1,300</td><td>Mixed</td></tr>
+            <tr><td>November–March</td><td>800–1,290</td><td>900–1,500</td><td>+100–300</td><td>Demand (winter)</td></tr>
+            <tr class="total"><td><strong>Annual average</strong></td><td><strong>1,397 MW (34.9%)</strong></td><td><strong>1,880–2,200 MW</strong></td><td class="teal"><strong>+483–803 MW</strong></td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="callout" style="margin-top:.75rem">
+          <p><strong>Why winter gains are small:</strong> The N-1 safe HVDC ceiling today is 2,700 MW. In winter months, HVDC is running at only 800–1,300 MW — well below this ceiling. The constraint is not infrastructure but demand: northern generators already cover winter load. Lahore North therefore does almost nothing in winter. The entire payback is driven by summer performance, which is also when Pakistan's electricity bills are highest and load-shedding is worst.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title teal">Before/After HVDC Utilisation by Month</div>
+        <div class="chart-wrap-tall">
+          <canvas id="beforeAfterChart"></canvas>
+        </div>
+        <p style="font-size:12px;color:var(--text-tertiary);margin-top:.5rem">Teal = current loading. Green = estimated post-Lahore North mid-range. Winter delta is small (demand-constrained). Summer delta is large (infrastructure-constrained).</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">The Four-Year Cost</div>
+    <h3 style="font-family:Georgia,serif;font-size:22px;font-weight:400;margin-bottom:1.25rem">What Delay Has Already Cost</h3>
+    <div class="forty-sixty">
+      <div>
+        <div class="insight-card red" style="margin-bottom:1rem">
+          <div class="insight-num">~Rs.160 Bn</div>
+          <div class="insight-text">Accumulated consumer cost of four-year delay. If HVDC had run at 55% utilisation from October 2021: ~5,000 GWh/yr additional × 4 years × Rs.8/kWh = Rs.160 billion in RLNG that was burned unnecessarily.</div>
+        </div>
+        <div class="insight-card red">
+          <div class="insight-num">Rs.7.39/kWh</div>
+          <div class="insight-text">Effective cost of HVDC energy in FY2023-24 (Rs.97.8 Bn ÷ 13,227 GWh). At 55% utilisation this falls to ~Rs.4.30/kWh — a Rs.3.09/kWh improvement on every HVDC unit, worth ~Rs.33–35 Bn/yr in reduced effective CPP burden.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Timeline of Missed NEPRA Commitments</div>
+        <div class="timeline" style="margin-top:.75rem">
+          <div class="tl-item red">
+            <div class="tl-date">September 2021</div>
+            <div class="tl-title">HVDC commissioned — Lahore North required simultaneously</div>
+            <div class="tl-body">NEPRA tariff determination explicitly required the GS to be operational alongside HVDC commissioning. It was not. The delay begins here.</div>
+          </div>
+          <div class="tl-item red">
+            <div class="tl-date">FY2022-23 (missed)</div>
+            <div class="tl-title">First formal NEPRA completion obligation</div>
+            <div class="tl-body">NGC obligated in November 2021 tariff determination. Missed. Land acquisition disputes and court cases cited.</div>
+          </div>
+          <div class="tl-item amber">
+            <div class="tl-date">August 2024 (missed)</div>
+            <div class="tl-title">Second NEPRA obligation — 500 kV TL Feb 2024, 220 kV TL Mar 2024, GS Aug 2024</div>
+            <div class="tl-body">All three targets missed. NEPRA raised formal concerns in subsequent proceedings.</div>
+          </div>
+          <div class="tl-item amber">
+            <div class="tl-date">April 2025 (missed)</div>
+            <div class="tl-title">Third revised NGC commitment</div>
+            <div class="tl-body">Ongoing land acquisition and court proceedings continued to impede contractor mobilisation.</div>
+          </div>
+          <div class="tl-item green">
+            <div class="tl-date">June 2025 — 96% complete</div>
+            <div class="tl-title">Imminent commissioning</div>
+            <div class="tl-body">NEPRA PER confirms 96% physical progress as of June 2025. Full energisation and stability testing to follow. HVDC utilisation improvement will be observable within 1–2 dispatch cycles.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 5: C5 & BTM ══════════════ -->
+  <div id="tab-c5btm" class="tab-pane">
+    <div class="section-label">Economic Recalibration</div>
+    <h2 class="section-title">How Chashma C5 and BTM Solar Change — and Don't Change — the Investment Case</h2>
+
+    <div class="verdict-box">
+      <p>Two structural changes — Chashma C5 adding ~1,200 MW of new <em>northern</em> nuclear generation, and BTM solar growing at 2–3 GW-DC per year — affect the economics of some TIP projects. They do not affect the case for completing Lahore North. They do <strong>reduce the marginal value of net-new 500 kV AC corridors</strong> beyond what is needed to complement the existing HVDC, and they require P4 projects to be re-modelled before construction commitment.</p>
+    </div>
+
+    <div class="section-label" style="margin-top:1.5rem">Chashma C5</div>
+    <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:400;margin-bottom:1rem">A Northern Plant That Does Not Use the Corridor — But Reduces Its Marginal Value</h3>
+
+    <div class="two-col">
+      <div>
+        <p class="section-sub">Chashma C1–C4 (1,330 MW combined) sits at Mianwali — northern Punjab, on the KPK border. In FY2024-25, C1 operated at 82.3% CUF, C2 at 86.3%, C3 at 86.2%, and C4 at 91.7% — the highest utilisation of any thermal or nuclear units in Pakistan. C5 will be at the same site at ~1,200 MW and a projected 90%+ CUF, generating approximately 9.4 TWh/year. That output serves Punjab load directly. It does not cross the North–South corridor at all.</p>
+        <p class="section-sub">The corridor investment case rests on the marginal cost differential between what the south can supply (coal/nuclear at Rs.10–14/kWh all-in) and what the north currently has to burn when the corridor is constrained (RLNG at Rs.18–22/kWh). C5 displaces approximately 1,000–1,200 MW of that northern RLNG demand permanently — reducing the hours during which the corridor's differential is realised, and therefore reducing the dispatch substitution saving by approximately Rs.18–25 Bn/yr on a steady-state basis.</p>
+        <div class="callout teal">
+          <p><strong>But the HVDC sunk cost argument is unaffected.</strong> Rs.97.8 billion flows to PMLTC whether the HVDC carries 1,400 MW or 4,000 MW. C5 does not reduce this cost by a single rupee. The only lever that changes the effective per-unit HVDC burden is pushing the line harder — which requires Lahore North. This logic holds unconditionally.</p>
+        </div>
+      </div>
+      <div>
+        <table class="data-table">
+          <thead><tr><th>Project</th><th>What Changes</th><th>What Doesn't Change</th></tr></thead>
+          <tbody>
+            <tr><td><strong>P1 Lahore North</strong></td><td>Not affected — C5 doesn't change the HVDC sunk cost recovery logic</td><td style="color:var(--success)">Full annual saving Rs.33–56 Bn/yr</td></tr>
+            <tr><td><strong>P2 Jamshoro TX / Wind</strong></td><td>Not affected by C5 at all (different geography)</td><td style="color:var(--success)">Full value preserved</td></tr>
+            <tr><td><strong>P3 Southern AC upgrades</strong></td><td>Dispatch sub. saving reduced by ~Rs.5–8 Bn/yr due to C5 reducing northern RLNG hours</td><td>Rs.8–11 Bn/yr residual saving still positive</td></tr>
+            <tr><td><strong>P4 Net-new 500 kV corridors</strong></td><td style="color:var(--warning)">C5 reduces northern demand for southern power by ~1,200 MW average; load-flow and demand forecasts need updating</td><td>Physical reliability benefits (N-2 resilience) are unchanged</td></tr>
+          </tbody>
+        </table>
+        <div class="panel" style="margin-top:1rem">
+          <div class="panel-title amber">Chashma Nuclear Fleet — FY2024-25 Performance</div>
+          <div class="chart-wrap-sm">
+            <canvas id="chashmaChart"></canvas>
+          </div>
+          <p style="font-size:12px;color:var(--text-tertiary);margin-top:.5rem">Source: NEPRA PER Generation FY2024-25. C4 achieved 91.7% CUF — highest in the fleet. C5 expected at same or higher performance. All capacity at northern location (Mianwali).</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">BTM Solar</div>
+    <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:400;margin-bottom:1rem">The Duck Curve Strengthens the Evening HVDC Case, Not Weakens It</h3>
+    <div class="two-col">
+      <div>
+        <p class="section-sub">26.8 GW of BTM solar is installed and growing at 2–3 GW-DC per year. The duck curve effect — suppressed grid demand during solar hours (09:00–15:00), steep ramp in the evening (17:00–21:00) — is already visible in ISMO load data. At first glance this appears to reduce the corridor's value: if daytime grid demand falls, the corridor carries less midday power. The conclusion is wrong for two reasons.</p>
+        <p class="section-sub">First, BTM suppresses grid demand specifically during the 2,500–2,900 solar hours per year. The remaining 5,900–6,300 hours — evenings, nights, early mornings — remain entirely grid-dependent. Peak demand in the evening still reaches 14,000–16,000 MW. The corridor is needed for every non-solar hour, and those hours are the hours when Pakistani consumers actually face load-shedding and highest prices.</p>
+        <p class="section-sub">Second, BTM makes the corridor <em>more valuable</em> for baseload plants, not less. As daytime solar suppresses the midday system marginal price to Rs.2–5/kWh, the only plants economical enough to run into this price floor are nuclear and coal — exactly the plants in the South. Those plants stay online through the solar day, and when the evening ramp hits and 10,000–12,000 MW of BTM solar goes dark, they are positioned to serve the evening peak — but only if the corridor can carry them north. Without the corridor, ISMO is forced to keep RLNG running all day at part-load just to be available for 17:00–21:00. The corridor enables baseload to cover the flat portion, and RLNG to cover only the steep ramp it is designed for.</p>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-title teal">BTM Effect on Corridor Value: Day Demand Profile (Illustrative)</div>
+          <div class="chart-wrap-tall">
+            <canvas id="duckChart"></canvas>
+          </div>
+          <p style="font-size:12px;color:var(--text-tertiary);margin-top:.5rem">Illustrative, based on ISMO marginal cost vs. demand data. BTM suppresses midday grid load (reducing corridor daytime throughput) but steepens the evening ramp — when southern baseload dispatched via HVDC is most valuable for avoiding RLNG peaking.</p>
+        </div>
+        <div class="callout teal" style="margin-top:1rem">
+          <p><strong>The P4 re-modelling implication:</strong> Net-new 500 kV AC corridors designed for peak southward transfer must model the reduced daytime throughput from BTM suppression. A corridor sized for 2022 demand assumptions may over-provision daytime capacity while still under-provisioning evening baseload dispatch capacity. The answer may be smarter grid management (DLR, storage) rather than more raw wires.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 6: WIND ══════════════ -->
+  <div id="tab-wind" class="tab-pane">
+    <div class="section-label">Renewable Evacuation</div>
+    <h2 class="section-title">Wind Curtailment: A Separate Problem With a Separate Fix</h2>
+    <div class="verdict-box">
+      <p>519 GWh of zero-marginal-cost wind was physically curtailed in FY2024-25, generating Rs.12.8 billion in NPMV payments. This problem is <strong>structurally independent</strong> of the North–South corridor: the Matiari 500 kV hub (the HVDC anchor) is rated at 4,000 MW against peak wind dispatch of only ~900 MW — the HVDC is not the constraint. The constraint is the 220 kV AC sub-transmission connecting wind farms to Matiari, and it affects zero projects discussed in the N-S corridor section. The fix is local, fast, and has a sub-one-year payback.</p>
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="three-col" style="margin-bottom:1.5rem">
+          <div class="insight-card red">
+            <div class="insight-num">23.8% CUF</div>
+            <div class="insight-text">Lowest of all technology classes. Nuclear: 78.5%. Thar coal: 72.9%. Wind's 6–11 ppt gap from theoretical corridor CUF (30–35%) is entirely grid constraint.</div>
+          </div>
+          <div class="insight-card amber">
+            <div class="insight-num">Rs.12.8 Bn</div>
+            <div class="insight-text">Annual NPMV for 504 GWh (contractual basis). Every rupee attributable to Jhimpir GIS overloading — zero attributable to insufficient wind resource.</div>
+          </div>
+          <div class="insight-card teal">
+            <div class="insight-num">Rs.3.8 Bn</div>
+            <div class="insight-text">Zero-capex NPMV saving available immediately — redirect 194,780 MWh of curtailment from Upfront (Rs.34.68/kWh NPMV) to Cost-Plus (Rs.18.22/kWh) plants via NEPRA directive.</div>
+          </div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Intervention</th><th>Capex</th><th>Annual Saving</th><th>Payback</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>ISMO merit-order curtailment reform</strong></td><td class="teal">Zero</td><td class="teal">Rs.3.8 Bn</td><td>Immediate</td><td><span class="badge badge-red">NEPRA directive needed now</span></td></tr>
+            <tr><td>Jhimpir GIS expansion (900→1,400 MW)</td><td>USD 35–50 Mn</td><td class="teal">Rs.8–10 Bn</td><td>&lt;1 yr</td><td><span class="badge badge-amber">Q2 2026</span></td></tr>
+            <tr><td>Jhimpir–Dhabeji 2nd corridor (220 kV)</td><td>USD 80–120 Mn</td><td class="teal">Rs.4–6 Bn</td><td>2–3 yrs</td><td><span class="badge badge-teal">2026–27</span></td></tr>
+            <tr class="total"><td><strong>Full package</strong></td><td><strong>USD 115–170 Mn</strong></td><td class="teal"><strong>Rs.14–18 Bn/yr</strong></td><td><strong>&lt;1–2 yrs</strong></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title teal">Quarterly Wind Curtailment — FY2024-25 (Physical GWh)</div>
+        <div class="chart-wrap">
+          <canvas id="npmvChart"></canvas>
+        </div>
+        <p style="font-size:12px;color:var(--text-tertiary);margin-top:.5rem">Q1 (Jul–Sep): 184 GWh · Q2 (Oct–Dec): 89 GWh · Q3 (Jan–Mar): 84 GWh · Q4 (Apr–Jun): 162 GWh. Q1+Q4 = 67% of annual curtailment — peak wind seasons, confirming grid overload, not intermittency, as cause.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 7: COST-BENEFIT ══════════════ -->
+  <div id="tab-benefits" class="tab-pane">
+    <div class="section-label">Economic Analysis</div>
+    <h2 class="section-title">Cost–Benefit: Revised for C5 and BTM Reality</h2>
+    <p class="section-sub">Three mutually exclusive, non-overlapping benefit streams. The original analysis has been revised to: (a) eliminate the HVDC sunk-cost double-counting, (b) correct the T&T loss cost range, and (c) reflect the partial reduction in dispatch substitution value from Chashma C5. The HVDC sunk cost (Rs.97.8 Bn/yr fixed payment to PMLTC) is not a separate saving — higher utilisation reduces its per-unit burden, but that effect is already captured in the dispatch substitution saving.</p>
+
+    <div class="three-col">
+      <div class="insight-card green">
+        <div class="insight-num">Rs.20–45 Bn/yr</div>
+        <div class="insight-text"><strong>Dispatch substitution — revised for C5.</strong> Original range Rs.35–70 Bn/yr. C5 (~1,200 MW, 90% CUF, 9.4 TWh/yr) displaces ~Rs.18–25 Bn/yr of RLNG. Revised range: Rs.20–45 Bn/yr (midpoint: Rs.32 Bn/yr). Lahore North alone delivers most of this; southern AC upgrades deliver the remainder.</div>
+      </div>
+      <div class="insight-card teal">
+        <div class="insight-num">Rs.14–18 Bn/yr</div>
+        <div class="insight-text"><strong>Wind NPMV elimination.</strong> Unchanged by C5 or BTM — structurally independent. Full Jhimpir evacuation package eliminates 519 GWh curtailment and Rs.12.8 Bn NPMV. Zero-capex merit-order reform delivers Rs.3.8 Bn immediately.</div>
+      </div>
+      <div class="insight-card green">
+        <div class="insight-num">Rs.3.5–5 Bn/yr</div>
+        <div class="insight-text"><strong>T&T loss reduction (incremental).</strong> Infrastructure improvement: 2.52% → 2.0% = 696 GWh/yr reduction. At blended variable cost Rs.5–7/kWh = Rs.3.5–5 Bn/yr. Separate from the Rs.17–25 Bn total system cost of current losses.</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:1.5rem">
+      <div class="panel">
+        <div class="panel-title teal">Annual Benefit Waterfall — Revised for C5 + BTM (Mid-Range)</div>
+        <div class="chart-wrap-tall">
+          <canvas id="waterfallChart"></canvas>
+        </div>
+        <p style="font-size:12px;color:var(--text-tertiary);margin-top:.5rem">Three non-overlapping streams. Dispatch substitution reduced vs. original analysis to reflect C5 impact. C5 reduces but does not eliminate the corridor benefit.</p>
+      </div>
+      <div>
+        <h4 style="font-size:16px;font-weight:600;margin-bottom:1rem;font-family:Georgia,serif">Payback Period — C5-Adjusted</h4>
+        <table class="data-table">
+          <thead><tr><th>Scenario</th><th>Annual Benefit</th><th>TIP Cost</th><th>Payback</th></tr></thead>
+          <tbody>
+            <tr><td>Conservative (dispatch sub only, with C5)</td><td>Rs.25 Bn</td><td>Rs.510 Bn</td><td>20.4 years</td></tr>
+            <tr><td>Base case (all streams, C5-adjusted)</td><td>Rs.51 Bn</td><td>Rs.510 Bn</td><td>10.0 years</td></tr>
+            <tr class="total"><td>Optimistic (all streams + ancillary reform)</td><td>Rs.80 Bn</td><td>Rs.510 Bn</td><td class="teal">6.4 years</td></tr>
+          </tbody>
+        </table>
+        <div class="callout teal" style="margin-top:1rem">
+          <p><strong>Lahore North alone (Rs.35–50 Bn capex already spent):</strong> The final 4% of construction to energisation costs a fraction of the Rs.45 Bn/yr benefit. Even on the conservative C5-adjusted dispatch saving of Rs.20 Bn/yr, the marginal capex to completion has an effective payback of weeks, not years. This is the most capital-efficient action in the entire Pakistan power sector.</p>
+        </div>
+        <div class="eng-note" style="margin-top:1rem">
+          <strong>On P4 payback:</strong> Net-new 500 kV AC corridors that presuppose demand growth beyond current HVDC capacity now have payback periods extending beyond 15 years under C5 + BTM assumptions. This is the quantitative basis for "refresh economics before committing" — not cancellation, but disciplined sequencing.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 8: TIP ══════════════ -->
+  <div id="tab-tip" class="tab-pane">
+    <div class="section-label">NTDC Transmission Investment Plan</div>
+    <h2 class="section-title">Rs.510 Billion — Revised Prioritisation by Category</h2>
+    <p class="section-sub">The full TIP remains valid as a portfolio. What changes with C5 and BTM is the internal sequencing and the fraction that needs fresh economic validation. Approximately Rs.350–400 billion of the Rs.510 billion is clearly priority P1–P3 work. The remaining Rs.100–150 billion in net-new south-to-north capacity requires updated load-flow modelling before construction contracts are awarded.</p>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title teal">TIP by Category — Revised Priority Assessment</div>
+        <div class="chart-wrap-tall"><canvas id="tipChart"></canvas></div>
+      </div>
+      <div>
+        <table class="data-table">
+          <thead><tr><th>Category</th><th>Projects</th><th>CAPEX (Rs. Mn)</th><th>Priority</th><th>C5/BTM impact</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Constraint Removal / System Expansion</strong></td><td>51</td><td>172,681</td><td><span class="badge badge-amber">P2–P3</span></td><td><span class="badge badge-green">Minimal</span></td></tr>
+            <tr><td><strong>Power Evacuation — HVDC complement</strong></td><td>~15</td><td>~130,000</td><td><span class="badge badge-red">P1</span></td><td><span class="badge badge-green">None</span></td></tr>
+            <tr><td><strong>Power Evacuation — net new 500 kV</strong></td><td>~15</td><td>~147,434</td><td><span class="badge badge-orange">P4 — refresh</span></td><td><span class="badge badge-red">Significant</span></td></tr>
+            <tr><td><strong>Special Economic Zones</strong></td><td>5</td><td>30,369</td><td><span class="badge badge-teal">P3</span></td><td><span class="badge badge-green">None</span></td></tr>
+            <tr><td><strong>Other Development Projects</strong></td><td>13</td><td>29,621</td><td><span class="badge badge-teal">P3</span></td><td><span class="badge badge-green">Minimal</span></td></tr>
+            <tr class="total"><td><strong>Grand Total</strong></td><td><strong>99</strong></td><td><strong>510,105</strong></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="callout" style="margin-top:1rem">
+          <p><strong>The constraint removal category is largely unaffected</strong> by C5 or BTM. Transformer overloads, protection relay deficiencies, and voltage instability at Jamshoro, Lahore Sheikhupura, Gatti, Multan, and Sialkot exist as reliability problems regardless of net power flow levels. A substation that trips under N-1 faults does so whether the system is growing or shrinking.</p>
+        </div>
+        <table class="data-table" style="margin-top:1rem">
+          <thead><tr><th>Overloaded Station</th><th>Type</th><th>Target</th></tr></thead>
+          <tbody>
+            <tr><td>500 kV Jamshoro TX</td><td>Transformation</td><td>2025</td></tr>
+            <tr><td>500 kV Lahore Sheikhupura TX</td><td>Transformation</td><td>2025</td></tr>
+            <tr><td>500 kV Gatti TX</td><td>Transformation</td><td>2025–26</td></tr>
+            <tr><td>220 kV Gakkhar–Sialkot</td><td>Line overload (since 2014)</td><td>Dec 2027</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TAB 9: ROADMAP ══════════════ -->
+  <div id="tab-timeline" class="tab-pane">
+    <div class="section-label">Reform Sequencing</div>
+    <h2 class="section-title">Three-Phase Roadmap — Sequenced by Priority</h2>
+    <p class="section-sub">The roadmap below directly reflects the priority stack. Phase 1 is dominated by completing what is already built (Lahore North) and the zero-capex regulatory action (ISMO reform). Phase 2 addresses the wind bottleneck and reinforces the corridor. Phase 3 completes the N-S AC constraint removal and builds the market architecture that makes BTM an asset rather than a threat.</p>
+    <div class="two-col">
+      <div>
+        <div class="section-label" style="color:var(--warning)">Phase 1 — 2025–2026: Complete What's Built, Reform What's Free</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-date">Q3 2025 — P1 CRITICAL</div>
+            <div class="tl-title">★ Lahore North 500 kV GS — Full Commissioning</div>
+            <div class="tl-body">Energisation and stability testing. HVDC loading moves toward 3,000–4,000 MW in summer months. Constraint A resolved (74%, 1,300 MW). Annual dispatch saving: Rs.33–56 Bn. HVDC per-unit cost falls from Rs.7.39 → Rs.4.30/kWh effective.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">Q3–Q4 2025 — P2 Zero-Capex</div>
+            <div class="tl-title">ISMO Merit-Order Curtailment Reform</div>
+            <div class="tl-body">NEPRA directive requiring Cost-Plus wind plants (Rs.18.22/kWh NPMV) to be curtailed before Upfront plants (Rs.34.68/kWh NPMV). Rs.3.8 Bn annual saving. Single operational protocol change — no infrastructure, no renegotiation.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">Q4 2025 – Q2 2026 — P2</div>
+            <div class="tl-title">Jamshoro 500/220 kV Transformer Augmentation</div>
+            <div class="tl-body">Removes the single-point-of-failure risk at the 10,645 MW southern hub. Enables full N-1-compliant dispatch of Port Qasim and Hub — reinforcing the Lahore North gain at the southern end of the same dispatch chain.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-date">Q2 2026 — P2</div>
+            <div class="tl-title">Jhimpir 220 kV GIS Expansion (900 → 1,400 MW)</div>
+            <div class="tl-body">Eliminates seasonal wind NPMV peaks. Rs.8–10 Bn/yr saving. Capex: USD 35–50 Mn. Sub-one-year payback.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label" style="color:var(--accent)">Phase 2 — 2026–2027: Southern Corridor + Wind 2nd Corridor</div>
+        <div class="timeline">
+          <div class="tl-item amber">
+            <div class="tl-date">Q1–Q2 2026 — P3 (begins)</div>
+            <div class="tl-title">Dadu–Shikarpur 500 kV Upgrade</div>
+            <div class="tl-body">First of three southern AC line upgrades comprising Constraint B. Removes approximately 200 MW of residual curtailment. Land acquisition under way — contracting must begin immediately to hit this window.</div>
+          </div>
+          <div class="tl-item amber">
+            <div class="tl-date">Q3 2026 – Q2 2027 — P3</div>
+            <div class="tl-title">Shikarpur–Guddu + Moro–RYK 500 kV Upgrades</div>
+            <div class="tl-body">Completes Constraint B removal. Residual ~450 MW of curtailment eliminated. Total N-S congestion: near zero. Combined P3 saving: Rs.16 Bn/yr. Note: slightly reduced vs. original estimate due to C5 effect.</div>
+          </div>
+          <div class="tl-item amber">
+            <div class="tl-date">Q3 2026 – Q4 2027 — P2</div>
+            <div class="tl-title">Jhimpir–Dhabeji 2nd Wind Evacuation Corridor (220 kV)</div>
+            <div class="tl-body">Structural elimination of Jhimpir single-point-of-failure. Direct access from Wave-3 wind plants to Matiari 500 kV hub. Capex: USD 80–120 Mn. Eliminates residual NPMV risk.</div>
+          </div>
+          <div class="tl-item amber">
+            <div class="tl-date">Q2–Q4 2026</div>
+            <div class="tl-title">Reactive Power Market — Phase 1 (NEPRA Act §23H(c))</div>
+            <div class="tl-body">Pakistan's first ancillary services market. Creates price signal for voltage support; incentivises STATCOM investment at Matiari and Lahore converters. Enables higher HVDC loading without voltage instability.</div>
+          </div>
+        </div>
+        <div class="section-label" style="color:var(--success);margin-top:1.5rem">Phase 3 — 2027–2030: Market Architecture + P4 Re-evaluation</div>
+        <div class="timeline">
+          <div class="tl-item green">
+            <div class="tl-date">2027</div>
+            <div class="tl-title">Sialkot 500/220/132 kV GS (12-year overload resolved)</div>
+            <div class="tl-body">December 2027 target. Resolves Gakkhar–Sialkot 220 kV overload in place since 2014. Unlocks reliable supply to Pakistan's premier textile export cluster.</div>
+          </div>
+          <div class="tl-item green">
+            <div class="tl-date">2027–2028</div>
+            <div class="tl-title">P4 Net-New 500 kV Corridors — Re-modelled and Phased</div>
+            <div class="tl-body">Updated load-flow analysis incorporating C5 COD, BTM trajectory, and HVDC actual post-Lahore-North utilisation. Proceed only with projects where updated benefit analysis supports positive NPV. Phase construction in tranches to preserve optionality.</div>
+          </div>
+          <div class="tl-item green">
+            <div class="tl-date">2028–2030</div>
+            <div class="tl-title">BESS Integration + Demand Response Market</div>
+            <div class="tl-body">Integrates grid-scale and behind-the-meter storage into ancillary services. Manages the duck curve without over-building wires. Provides inertia-equivalent services as synchronous generation share declines with growing solar penetration.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tabs -->
+
+<footer class="site-footer">
+  <div class="container">
+    <p><strong>Sources:</strong> NEPRA PER Transmission Licensees FY2024-25 · NEPRA PER Generation Sector FY2024-25 · NEPRA State of Industry Report 2024 · NTDC System Needs Assessment Report · ISMO Monthly Marginal Cost vs. Demand Files (FY2024-25) · CPPA-G Dispatch Data · PMLTC HVDC Performance Data · NTDC Revised TIP July 2023</p>
+    <p style="margin-top:.75rem"><strong>Engineering verification notes (v3):</strong> (1) Two-constraint decomposition added: Constraint A (Lahore North / HVDC, 1,300 MW, 74%) and Constraint B (southern AC lines, ~450 MW, 26%) are mechanically independent — fixing A does not fix B and vice versa. (2) Chashma C5 analysis added: C5 at Mianwali has no N-S corridor dependence; it reduces dispatch substitution saving by Rs.18–25 Bn/yr but does not affect HVDC sunk-cost recovery logic. (3) BTM analysis added: duck curve strengthens, not weakens, evening HVDC baseload dispatch value. (4) P4 re-modelling recommendation added: net-new 500 kV corridors beyond HVDC complement require updated load-flow analysis before commitment. (5) All prior engineering corrections from v2 retained.</p>
+    <p style="margin-top:.75rem">© 2026 <strong>Ammar H. Khan</strong> · Pakistan Power Sector Analysis · All figures from NEPRA regulatory publications unless labeled [ESTIMATE]</p>
+  </div>
+</footer>
+
+<script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+const TEAL='#036B7A',AMBER='#C8923A',RED='#9B2335',GREEN='#52B788',GRAY='#CCCCCC',LGRAY='#E5E5E5';
+
+/* HVDC Loading Chart */
+new Chart(document.getElementById('hvdcLoadChart'),{
+  type:'bar',
+  data:{
+    labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'],
+    datasets:[
+      {label:'Rated (4,000 MW)',data:Array(12).fill(4000),backgroundColor:'#E5E5E5',borderWidth:0,borderRadius:3},
+      {label:'Actual (MW)',data:[2205,1829,1464,1096,800,951,1267,920,1290,1534,1600,1813],backgroundColor:TEAL+'BB',borderWidth:0,borderRadius:3}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.parsed.y.toLocaleString()+' MW'}}},
+    scales:{y:{ticks:{callback:v=>v===0?'0':(v/1000).toFixed(0)+'K MW',font:{size:11}},grid:{color:'#F0F0F0'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}
+});
+
+/* Before / After Chart */
+new Chart(document.getElementById('beforeAfterChart'),{
+  type:'bar',
+  data:{
+    labels:['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'],
+    datasets:[
+      {label:'Current loading (MW)',data:[2205,1829,1464,1096,800,951,1267,920,1290,1534,1600,1813],backgroundColor:TEAL+'99',borderWidth:0,borderRadius:3},
+      {label:'Post-Lahore North mid estimate (MW)',data:[3750,3500,3100,2100,1100,1100,1400,1050,1450,1700,1800,2050],backgroundColor:GREEN+'99',borderWidth:0,borderRadius:3}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.parsed.y.toLocaleString()+' MW'}}},
+    scales:{y:{ticks:{callback:v=>v===0?'0':(v/1000).toFixed(1)+'K MW',font:{size:11}},grid:{color:'#F0F0F0'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}
+});
+
+/* Chashma CUF chart */
+new Chart(document.getElementById('chashmaChart'),{
+  type:'bar',
+  data:{
+    labels:['C1','C2','C3','C4','C5 (projected)'],
+    datasets:[{label:'CUF (%)',data:[82.3,86.3,86.2,91.7,90],backgroundColor:[TEAL,TEAL,TEAL,TEAL,GREEN+'AA'],borderWidth:0,borderRadius:3}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.parsed.y.toFixed(1)+'% CUF'}}},
+    scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%',font:{size:11}},grid:{color:'#F0F0F0'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}
+});
+
+/* Duck Curve Chart */
+new Chart(document.getElementById('duckChart'),{
+  type:'line',
+  data:{
+    labels:['06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'],
+    datasets:[
+      {label:'Grid demand — pre-solar (2020)',data:[9200,9800,10800,12200,13400,14000,14200,14000,13800,13500,13200,13500,14000,15200,16000,15500,14200,12000],borderColor:'#AAAAAA',borderWidth:2,fill:false,tension:.4,pointRadius:0},
+      {label:'Grid demand — 2025 (BTM suppression)',data:[8900,9500,10200,10400,9800,9200,8900,8800,9000,9600,11000,13000,14800,15800,16200,15800,14400,12200],borderColor:AMBER,borderWidth:2.5,fill:false,tension:.4,pointRadius:0},
+      {label:'Evening ramp — HVDC needed here',data:[null,null,null,null,null,null,null,null,null,null,null,13000,14800,15800,16200,15800,null,null],borderColor:GREEN,borderWidth:3,fill:false,tension:.4,pointRadius:0,borderDash:[]}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{font:{size:11},boxWidth:12}}},
+    scales:{y:{ticks:{callback:v=>(v/1000).toFixed(0)+'K MW',font:{size:11}},grid:{color:'#F0F0F0'}},x:{ticks:{font:{size:10},maxRotation:45},grid:{display:false}}}}
+});
+
+/* NPMV Chart */
+new Chart(document.getElementById('npmvChart'),{
+  type:'bar',
+  data:{
+    labels:['Q1 Jul–Sep 2024','Q2 Oct–Dec 2024','Q3 Jan–Mar 2025','Q4 Apr–Jun 2025'],
+    datasets:[{label:'Physical curtailment (GWh)',data:[184,89,84,162],backgroundColor:[RED+'CC',AMBER+'CC',AMBER+'CC',RED+'CC'],borderWidth:0,borderRadius:3}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.parsed.y+' GWh physically curtailed'}}},
+    scales:{y:{ticks:{callback:v=>v+' GWh',font:{size:11}},grid:{color:'#F0F0F0'}},x:{ticks:{font:{size:11}},grid:{display:false}}}}
+});
+
+/* Waterfall — revised for C5 */
+new Chart(document.getElementById('waterfallChart'),{
+  type:'bar',
+  data:{
+    labels:['Dispatch sub.\n(C5-adjusted)','Wind NPMV\nelimination','T&T loss\nreduction','Total annual\nbenefit'],
+    datasets:[{label:'Annual Saving (Rs. Bn)',data:[32,14,4,50],backgroundColor:[TEAL,GREEN+'CC',GREEN,AMBER],borderWidth:0,borderRadius:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'Rs.'+ctx.parsed.y+' Bn/yr (C5-adjusted, mid-range)'}}},
+    scales:{y:{ticks:{callback:v=>'Rs.'+v+'Bn',font:{size:11}},grid:{color:'#F0F0F0'}},x:{ticks:{font:{size:11}},grid:{display:false}}}}
+});
+
+/* TIP Doughnut */
+new Chart(document.getElementById('tipChart'),{
+  type:'doughnut',
+  data:{
+    labels:['Power Evac — HVDC complement (P1/P3)','Constraint Removal (P2/P3)','Net-new 500kV (P4 — refresh)','SEZ + Other Dev'],
+    datasets:[{data:[130000,172681,147434,59990],backgroundColor:[TEAL,AMBER,GRAY,'#A0A0A0'],borderWidth:2,borderColor:'#fff',hoverOffset:6}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+    plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:ctx=>ctx.label+': Rs.'+(ctx.parsed/1000).toFixed(0)+' Bn'}}}}
+});
+</script>
+</body>
+</html>
