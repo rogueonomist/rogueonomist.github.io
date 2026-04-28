@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCGCL – Pipeline & Product Status</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bg2: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --green: #52B788;
+  --red: #9B2335;
+  --text: #1A1A1A;
+  --text2: #666666;
+  --text3: #999999;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--bg);color:#2D2D2D;line-height:1.6;font-size:14px}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem 4rem}
+
+/* Header */
+.doc-header{border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;margin-bottom:3rem}
+.doc-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.75rem}
+.doc-title{font-family:Georgia,serif;font-size:38px;font-weight:400;color:var(--text);line-height:1.2;margin-bottom:0.75rem}
+.doc-sub{font-size:15px;color:var(--text2);margin-bottom:1.25rem}
+.doc-meta{display:flex;gap:2rem;flex-wrap:wrap;font-size:12px;color:var(--text3);padding-top:1rem;border-top:1px solid var(--border)}
+.doc-meta span strong{color:var(--text);font-weight:600}
+
+/* Section */
+.section{margin:3rem 0 2rem}
+.section-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.5rem}
+.section-title{font-family:Georgia,serif;font-size:24px;font-weight:400;color:var(--text);margin-bottom:0.5rem}
+.section-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem}
+.exhibit-tag{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.4rem}
+hr.divider{border:none;border-top:1px solid var(--border);margin:2.5rem 0}
+
+/* Grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+
+/* KPI / Insight boxes */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.kpi-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.5rem;border-top:3px solid var(--border);transition:border-color 0.2s}
+.kpi-box.amber{border-top-color:var(--accent)}
+.kpi-box.green{border-top-color:var(--green)}
+.kpi-box.red{border-top-color:var(--red)}
+.kpi-box.slate{border-top-color:#888}
+.kpi-num{font-family:Georgia,serif;font-size:30px;font-weight:400;color:var(--text);line-height:1}
+.kpi-label{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.5rem}
+.kpi-note{font-size:12px;color:var(--accent);margin-top:0.5rem;font-weight:500}
+
+/* Panels */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem}
+.panel-title{font-family:Georgia,serif;font-size:16px;font-weight:400;color:var(--text);margin-bottom:0.25rem}
+.panel-sub{font-size:12px;color:var(--text3);margin-bottom:1rem}
+
+/* Charts */
+.ch-wrap{position:relative;width:100%}
+.ch-260{height:260px}
+.ch-230{height:230px}
+.ch-300{height:300px}
+
+/* Tables */
+.est-table{width:100%;border-collapse:collapse;font-size:12px}
+.est-table th{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);padding:0.6rem 0.75rem;border-bottom:2px solid var(--border);background:var(--bg);text-align:left;white-space:nowrap}
+.est-table td{padding:0.65rem 0.75rem;border-bottom:1px solid var(--border);color:#2D2D2D;vertical-align:middle}
+.est-table tr:last-child td{border-bottom:none}
+.est-table tr:hover td{background:#FAFAFA}
+.est-table .mono{font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;color:var(--text3)}
+.est-table .val{font-family:Georgia,serif;font-size:13px;font-weight:400;text-align:right;white-space:nowrap}
+.est-table .na-val{color:var(--text3);font-style:italic;text-align:right}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+.b-live{background:#EAF5EF;color:#1a6b3c}
+.b-magfa{background:#EBF3FB;color:#1a4f7a}
+.b-ic{background:#EDF7F4;color:#1a5c47}
+.b-ts{background:#FDF3E6;color:#8B5E1A}
+.b-dd{background:#F5F5F5;color:#555}
+.b-init{background:#F9F9F9;color:#888}
+.b-pipe{background:#F3EEF8;color:#5a3a8c}
+.b-active{background:#EAF5EF;color:#1a6b3c}
+.b-review{background:#EBF3FB;color:#1a4f7a}
+.b-struct{background:#FDF3E6;color:#8B5E1A}
+.b-concept{background:#F5F5F5;color:#666}
+.b-prog{background:#FFF3F3;color:#7a1a2a}
+.b-dev{background:#F3EEF8;color:#5a3a8c}
+
+/* Product cards */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.prod-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.25rem;border-left:3px solid var(--border)}
+.prod-card.live{border-left-color:var(--green)}
+.prod-card.struct{border-left-color:var(--accent)}
+.prod-card.review{border-left-color:#888}
+.prod-card.concept{border-left-color:var(--border)}
+.prod-name{font-family:Georgia,serif;font-size:14px;font-weight:400;color:var(--text);margin-bottom:0.25rem}
+.prod-meta{font-size:11px;color:var(--text3);margin-bottom:0.6rem}
+.prod-note{font-size:12px;color:var(--text2);background:var(--bg2);padding:0.5rem 0.75rem;border-radius:4px;line-height:1.5}
+.stage-bar{display:flex;gap:3px;margin:0.5rem 0}
+.sb{height:4px;flex:1;border-radius:2px;background:var(--border)}
+.sb.on{background:var(--green)}
+.sb.amber{background:var(--accent)}
+.sb.gray{background:#aaa}
+.stage-lbl{font-size:10px;color:var(--text3);font-weight:600}
+
+/* Project cards */
+.proj-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.proj-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.25rem}
+.proj-name{font-family:Georgia,serif;font-size:14px;font-weight:400;color:var(--text);margin-bottom:0.2rem}
+.proj-area{font-size:11px;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.75rem}
+.proj-desc{font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:0.75rem}
+
+/* Stat row */
+.stat-row{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;padding:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px}
+.stat-item .s-val{font-family:Georgia,serif;font-size:22px;color:var(--text)}
+.stat-item .s-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:0.2rem}
+
+/* Verdict strip */
+.verdict{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:var(--bg2);border-radius:0 4px 4px 0;margin:1.5rem 0;font-size:13px;color:var(--text2)}
+.verdict strong{color:var(--text);font-weight:600}
+
+/* Footer */
+.doc-footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:12px;color:var(--text3)}
+.doc-footer strong{color:var(--text)}
+
+@media(max-width:768px){
+  .g2,.g3,.g4,.kpi-grid,.prod-grid,.proj-grid,.stat-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-eyebrow">National Credit Guarantee Company Limited · Board Pack · April 2026</div>
+  <h1 class="doc-title">Guarantee Deal Pipeline<br>&amp; Product Status</h1>
+  <p class="doc-sub">Prepared for the Chairperson, Board of Directors · Origination, Product Development &amp; Strategic Projects</p>
+  <div class="doc-meta">
+    <span><strong>Pipeline Value</strong> · PKR 16.4 Bn (quantified)</span>
+    <span><strong>Active Deals</strong> · 31 engagements, 28 unique institutions</span>
+    <span><strong>Products in Pipeline</strong> · 14 across 8 segments</span>
+    <span><strong>Classification</strong> · Board Confidential</span>
+    <span><strong>Rating</strong> · AAA · SBP Recognised</span>
+  </div>
+</div>
+
+<!-- ─────────────────────────── SECTION A ─────────────────────────── -->
+<div class="section-eyebrow">Section A</div>
+<h2 class="section-title">Executive Snapshot</h2>
+<p class="section-sub">Portfolio-level origination metrics as at April 2026</p>
+
+<!-- Exhibit A-1 -->
+<div class="exhibit-tag">Exhibit A-1 · Headline Portfolio Metrics</div>
+<div class="kpi-grid">
+  <div class="kpi-box amber">
+    <div class="kpi-num">PKR 16.4Bn</div>
+    <div class="kpi-label">Quantified Pipeline Value</div>
+    <div class="kpi-note">+ 17 additional TBD engagements</div>
+  </div>
+  <div class="kpi-box green">
+    <div class="kpi-num">31</div>
+    <div class="kpi-label">Active Deal Engagements</div>
+    <div class="kpi-note">Across 28 unique institutions</div>
+  </div>
+  <div class="kpi-box slate">
+    <div class="kpi-num">14</div>
+    <div class="kpi-label">Products in Development</div>
+    <div class="kpi-note">3 products live &amp; in-placed</div>
+  </div>
+  <div class="kpi-box red">
+    <div class="kpi-num">11</div>
+    <div class="kpi-label">Strategic Projects</div>
+    <div class="kpi-note">Climate, capital markets &amp; advisory</div>
+  </div>
+</div>
+
+<div class="g2">
+  <div class="panel">
+    <div class="exhibit-tag">Exhibit A-2</div>
+    <div class="panel-title">Pipeline Value by Product Category</div>
+    <div class="panel-sub">Quantified PKR pipeline · 18 confirmed deals</div>
+    <div class="ch-wrap ch-260"><canvas id="cA2" role="img" aria-label="Pipeline by category donut chart">FI Guarantees 13.2Bn, Portfolio 1Bn, Advisory 1Bn, Tech/Sukuk 1Bn, STFF/Special 0.5Bn, Corp/Consortium 0.2Bn, Microfinance 0.5Bn</canvas></div>
+  </div>
+  <div class="panel">
+    <div class="exhibit-tag">Exhibit A-3</div>
+    <div class="panel-title">Deal Stage Distribution</div>
+    <div class="panel-sub">Number of deals at each origination stage · 28 active engagements</div>
+    <div class="ch-wrap ch-260"><canvas id="cA3" role="img" aria-label="Deals by origination stage bar chart">Initial 16, DD 4, Term Sheet 3, IC 1, MAGFA 3, First Issuance 1</canvas></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ─────────────────────────── SECTION B ─────────────────────────── -->
+<div class="section-eyebrow">Section B</div>
+<h2 class="section-title">Guarantee Deal Pipeline</h2>
+<p class="section-sub">Institution-level tracking across the 21-stage NCGCL origination framework · MAGFA as master agreement instrument</p>
+
+<!-- Exhibit B-1 -->
+<div class="panel" style="margin-bottom:1.5rem">
+  <div class="exhibit-tag">Exhibit B-1</div>
+  <div class="panel-title">Top Deals by Guarantee Value</div>
+  <div class="panel-sub">PKR Mn · 12 largest quantified deals · Colour indicates origination stage</div>
+  <div class="ch-wrap ch-300"><canvas id="cB1" role="img" aria-label="Top 12 deals horizontal bar">BAFL 2000, JSBL 2000, BOP 2000, HBL MFB 1500, UBL 1500, and others</canvas></div>
+</div>
+
+<!-- Exhibit B-2 -->
+<div class="panel" style="margin-bottom:1.5rem">
+  <div class="exhibit-tag">Exhibit B-2</div>
+  <div class="panel-title">Guarantee Deal Tracker — Active Engagements</div>
+  <div class="panel-sub">All In Progress deals · Status reflects most recent update</div>
+  <div style="overflow-x:auto">
+  <table class="est-table">
+    <thead>
+      <tr>
+        <th>Deal ID</th>
+        <th>Institution</th>
+        <th>Product Type</th>
+        <th>Guarantee Amount</th>
+        <th>Stage</th>
+        <th>Latest Status Note</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono">GUA-2025-001</td><td><strong>PMIC</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 1,000 Mn</td><td><span class="badge b-live">First Issuance Ready</span></td><td style="font-size:12px">Fee received; guarantee forms awaited. System demo to be arranged.</td></tr>
+      <tr><td class="mono">GUA-2025-005</td><td><strong>HBL FI</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 1,000 Mn</td><td><span class="badge b-magfa">MAGFA Finalised</span></td><td style="font-size:12px">Agreement finalised; HBL confirming system access. Demo to follow.</td></tr>
+      <tr><td class="mono">GUA-2025-003</td><td><strong>BIPL</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 200 Mn</td><td><span class="badge b-magfa">MAGFA Review</span></td><td style="font-size:12px">Response to BIPL comments sent; final review and confirmation targeted this week.</td></tr>
+      <tr><td class="mono">GUA-2025-010</td><td><strong>NRSP</strong></td><td>Credit Guarantee – Corp</td><td class="val">PKR 70 Mn</td><td><span class="badge b-magfa">MAGFA Stage</span></td><td style="font-size:12px">HBL–NRSP arrangement for NOC release finalised; NCGCL guarantee to replace cash margin.</td></tr>
+      <tr><td class="mono">GUA-2025-006</td><td><strong>JS Bank (JSBL)</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 2,000 Mn</td><td><span class="badge b-ic">IC Approval</span></td><td style="font-size:12px">Approval under process at JSBL. Satisfactory CCO &amp; Treasurer meeting held; process expediting.</td></tr>
+      <tr><td class="mono">GUA-2025-004</td><td><strong>Bank Alfalah (BAFL)</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 2,000 Mn</td><td><span class="badge b-ts">Term Sheet</span></td><td style="font-size:12px">Revised term sheet shared with BAFL. Corporate Farming &amp; Supply Chain also deliberated.</td></tr>
+      <tr><td class="mono">GUA-2026-031</td><td><strong>Bank of Punjab</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 2,000 Mn</td><td><span class="badge b-ts">Term Sheet</span></td><td style="font-size:12px">Satisfactory meeting with Head of FIs. Draft term sheet shared; response awaited.</td></tr>
+      <tr><td class="mono">GUA-2025-002</td><td><strong>HBL MFB</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 1,500 Mn</td><td><span class="badge b-ts">Term Sheet</span></td><td style="font-size:12px">Awaiting feedback from HBL MFB; acknowledgment of follow-up received.</td></tr>
+      <tr><td class="mono">GUA-2025-008</td><td><strong>UBL</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 1,500 Mn</td><td><span class="badge b-dd">Due Diligence</span></td><td style="font-size:12px">Follow-up meeting to be arranged this week.</td></tr>
+      <tr><td class="mono">GUA-2025-011</td><td><strong>Haball</strong></td><td>Credit Guarantee – Tech</td><td class="val">PKR 500 Mn</td><td><span class="badge b-dd">Due Diligence</span></td><td style="font-size:12px">System demo to NCGCL team to be scheduled. Supply chain collaboration explored.</td></tr>
+      <tr><td class="mono">GUA-2025-015</td><td><strong>Daewoo</strong></td><td>Credit Guarantee – STFF</td><td class="val">PKR 500 Mn</td><td><span class="badge b-dd">Due Diligence</span></td><td style="font-size:12px">Financial model and waste management data awaited.</td></tr>
+      <tr><td class="mono">GUA-2025-000</td><td><strong>UNIDO</strong></td><td>Consortium Guarantee</td><td class="val">PKR 80 Mn</td><td><span class="badge b-dd">Consortium DD</span></td><td style="font-size:12px">Phase 1 findings shared. Multi-stakeholder meeting with PFIs, PAIDAR, UNIDO to be arranged.</td></tr>
+      <tr><td class="mono">GUA-2026-026</td><td><strong>Askari Bank</strong></td><td>Guarantee &amp; IB Advisory</td><td class="val">PKR 1,000 Mn</td><td><span class="badge b-init">Initial Engagement</span></td><td style="font-size:12px">Portfolio &amp; Sukuk guarantees + Treasury credit line discussed. NDA signed.</td></tr>
+      <tr><td class="mono">GUA-2026-030</td><td><strong>Bank of Khyber</strong></td><td>Credit Guarantee – Portfolio</td><td class="val">PKR 1,000 Mn</td><td><span class="badge b-init">MoU Stage</span></td><td style="font-size:12px">MoU draft finalised; signing ceremony targeted 2nd week May in Peshawar.</td></tr>
+      <tr><td class="mono">GUA-2025-007</td><td><strong>Meezan Bank</strong></td><td>Credit Guarantee – FI</td><td class="val">PKR 1,000 Mn</td><td><span class="badge b-init">Initial Engagement</span></td><td style="font-size:12px">CEO-level discussion to be initiated with Faisal.</td></tr>
+      <tr><td class="mono">GUA-2025-020</td><td><strong>Halan Microfinance</strong></td><td>Microfinance Guarantee</td><td class="val">PKR 500 Mn</td><td><span class="badge b-init">Initial Engagement</span></td><td style="font-size:12px">Meeting to be arranged by CEO.</td></tr>
+      <tr><td class="mono">SUK-2026-021</td><td><strong>Haball – Sukuk</strong></td><td>Sukuk</td><td class="val">PKR 500 Mn</td><td><span class="badge b-init">NDA Signed</span></td><td style="font-size:12px">NDA signed. 2nd meeting scheduled for next week.</td></tr>
+      <tr><td class="mono">GUA-2025-010b</td><td><strong>HBL Zarai</strong></td><td>Credit Guarantee – Corp</td><td class="val">PKR 37.5 Mn</td><td><span class="badge b-init">Concept Stage</span></td><td style="font-size:12px">Concept paper under internal review per Research Head &amp; CEO discussion.</td></tr>
+      <tr><td class="mono">GUA-2025-013</td><td><strong>Pak China</strong></td><td>Credit Guarantee – Portfolio</td><td class="na-val">TBD</td><td><span class="badge b-init">MoU Signed</span></td><td style="font-size:12px">MoU signed. Follow-up meetings pending; main POC on leave.</td></tr>
+      <tr><td class="mono">GUA-2025-012b</td><td><strong>Pak Oman</strong></td><td>Credit Guarantee – Portfolio</td><td class="na-val">TBD</td><td><span class="badge b-init">MoU Signing</span></td><td style="font-size:12px">MoU signing targeted week of 06-May-26.</td></tr>
+      <tr><td class="mono">GUA-2025-021</td><td><strong>Pak Kuwait</strong></td><td>Credit Guarantee – Portfolio</td><td class="na-val">TBD</td><td><span class="badge b-init">Initial Engagement</span></td><td style="font-size:12px">2nd meeting pending; supply chain with Haball under consideration.</td></tr>
+      <tr><td class="mono">GUA-2025-014</td><td><strong>Pak Brunei</strong></td><td>Credit Guarantee – Portfolio</td><td class="na-val">TBD</td><td><span class="badge b-init">Initial Engagement</span></td><td style="font-size:12px">Engagement in early stages.</td></tr>
+      <tr><td class="mono">GUA-2025-012</td><td><strong>Allied Bank (ABL)</strong></td><td>Credit Guarantee – Portfolio</td><td class="na-val">TBD</td><td><span class="badge b-init">Initial Engagement</span></td><td style="font-size:12px">Meeting with RCH scheduled for next week.</td></tr>
+      <tr><td class="mono">GUA-2026-029</td><td><strong>Climate Core Asia</strong></td><td>Equity Guarantee</td><td class="na-val">TBD</td><td><span class="badge b-init">LOI Received</span></td><td style="font-size:12px">Letters of interest: Pak Libya (PKR 300 Mn) &amp; Saudi Pak (PKR 1 Bn). Licensing in 2–3 weeks.</td></tr>
+      <tr><td class="mono">GUA-2026-028</td><td><strong>WASL Mobility Modaraba</strong></td><td>2-3 Wheeler Pilot</td><td class="na-val">TBD</td><td><span class="badge b-init">Preliminary DD</span></td><td style="font-size:12px">Portfolio &amp; Sukuk guarantees discussed with CFO. Documentation and risk framework requested.</td></tr>
+      <tr><td class="mono">GUA-2026-027</td><td><strong>Pak Libya</strong></td><td>Guarantee &amp; IB Advisory</td><td class="na-val">TBD</td><td><span class="badge b-pipe">Engagement Pending</span></td><td style="font-size:12px">Meeting to be arranged post CEO availability.</td></tr>
+      <tr><td class="mono">GUA-2026-025</td><td><strong>Neem Financial Services</strong></td><td>Earned Wage Access</td><td class="na-val">TBD</td><td><span class="badge b-pipe">Early Engagement</span></td><td style="font-size:12px">Information shared. Company to stabilise prior to guarantee discussion.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:11px;color:var(--text3);margin-top:0.75rem">Note: Al Habib, HMB, Al Baraka, Faysal, Pak Libya, PFSL and Cash Now are in the tracker with engagement pending; amounts TBD.</p>
+</div>
+
+<!-- Exhibit B-3 + B-4 -->
+<div class="g2">
+  <div class="panel">
+    <div class="exhibit-tag">Exhibit B-3</div>
+    <div class="panel-title">Pipeline by Origination Team</div>
+    <div class="panel-sub">PKR Mn · All confirmed amounts by originating function</div>
+    <div class="ch-wrap ch-230"><canvas id="cB3" role="img" aria-label="Pipeline by team horizontal bar">CGO 9270Mn, Senior Mgmt 4000Mn, ALM/Structured 1500Mn, Consortium 580Mn, Research 37Mn</canvas></div>
+  </div>
+  <div class="panel">
+    <div class="exhibit-tag">Exhibit B-4</div>
+    <div class="panel-title">Pipeline by Deal Status Category</div>
+    <div class="panel-sub">Deal count · 28 active In Progress engagements</div>
+    <div class="ch-wrap ch-230"><canvas id="cB4" role="img" aria-label="Deal status pie chart">Initial 16, DD 4, Term Sheet 3, MAGFA 3, IC 1, First Issuance 1</canvas></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ─────────────────────────── SECTION C ─────────────────────────── -->
+<div class="section-eyebrow">Section C</div>
+<h2 class="section-title">Product Pipeline Status</h2>
+<p class="section-sub">14 products across 4 development stages — SME, Agriculture, Microfinance, Climate, Capital Markets &amp; FinTech</p>
+
+<div class="exhibit-tag" style="margin-bottom:0.75rem">Exhibit C-1 · Product Development Stage Tracker</div>
+
+<div style="display:flex;gap:1.5rem;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-bottom:1rem">
+  <span style="color:#1a6b3c">● Live / In-Placed</span>
+  <span style="color:var(--accent)">● Structuring / Piloting</span>
+  <span style="color:#555">● Stakeholder / Board Review</span>
+  <span style="color:#aaa">● Concept / Research</span>
+</div>
+
+<div class="prod-grid">
+
+  <div class="prod-card live">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">SME Guarantee Programme</div>
+      <span class="badge b-live">Live</span>
+    </div>
+    <div class="prod-meta">SME · Account &amp; FL/SL · POC: Majid</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><span class="stage-lbl" style="margin-left:6px;color:#1a6b3c">Stage 4</span></div>
+    <div class="prod-note">In-placed · Active FI onboarding and discussions in progress</div>
+  </div>
+
+  <div class="prod-card live">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">Agriculture Guarantee Structure</div>
+      <span class="badge b-live">Live</span>
+    </div>
+    <div class="prod-meta">Agriculture · Joint FL &amp; SL · POC: Majid</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><span class="stage-lbl" style="margin-left:6px;color:#1a6b3c">Stage 4</span></div>
+    <div class="prod-note">In-placed · FI onboarding active · BOK horticulture &amp; agri expansion planned</div>
+  </div>
+
+  <div class="prod-card live">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">Microfinance On-Lending Guarantee</div>
+      <span class="badge b-live">Live</span>
+    </div>
+    <div class="prod-meta">Microenterprises · Joint FL &amp; SL · POC: Majid</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><span class="stage-lbl" style="margin-left:6px;color:#1a6b3c">Stage 4</span></div>
+    <div class="prod-note">In-placed · On-lending arrangements with MFIs under active development</div>
+  </div>
+
+  <div class="prod-card struct">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">Digital Lending Guarantee</div>
+      <span class="badge b-struct">Structuring</span>
+    </div>
+    <div class="prod-meta">MSME &amp; Agri · Pari Passu · POC: Majid</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb amber"></div><span class="stage-lbl" style="margin-left:6px;color:var(--accent)">Stage 3</span></div>
+    <div class="prod-note">Term sheet at closure with Bank Alfalah · Covers Embedded, COD, POS, Merchant financing</div>
+  </div>
+
+  <div class="prod-card struct">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">Credit Enhancer – Capital Markets</div>
+      <span class="badge b-struct">PSX Review</span>
+    </div>
+    <div class="prod-meta">Bond Market · Account Level · POC: Saira</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb amber"></div><span class="stage-lbl" style="margin-left:6px;color:var(--accent)">Stage 3</span></div>
+    <div class="prod-note">Deck framing NCGCL as PSX credit enhancer under internal review; PSX submission to follow</div>
+  </div>
+
+  <div class="prod-card struct">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">GIZ Project – BG&amp;BE Pakistan</div>
+      <span class="badge b-struct">Active</span>
+    </div>
+    <div class="prod-meta">Climate · Joint FL &amp; SL · POC: Shajeea</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb amber"></div><span class="stage-lbl" style="margin-left:6px;color:var(--accent)">Stage 3</span></div>
+    <div class="prod-note">Concept paper submitted to GIZ team on April 17, 2026 · SME carbon efficiency + TA scope</div>
+  </div>
+
+  <div class="prod-card struct">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">IFC Partnership</div>
+      <span class="badge b-struct">Active</span>
+    </div>
+    <div class="prod-meta">Multi-Sector · TBD · POC: Saher</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb amber"></div><span class="stage-lbl" style="margin-left:6px;color:var(--accent)">Stage 3</span></div>
+    <div class="prod-note">Concept paper shared with IFC team on April 20, 2026 · Collaboration areas provided</div>
+  </div>
+
+  <div class="prod-card review">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">HBL Zarai Collaboration</div>
+      <span class="badge b-review">Board Agenda</span>
+    </div>
+    <div class="prod-meta">Agriculture Value Chain · Portfolio Level · POC: Adil</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb gray"></div><div class="sb"></div><span class="stage-lbl" style="margin-left:6px">Stage 2</span></div>
+    <div class="prod-note">Concept paper ready; expected to be tabled at upcoming Board Guarantee Meeting</div>
+  </div>
+
+  <div class="prod-card review">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">Equity Fund Guarantee Paper</div>
+      <span class="badge b-review">Board Review</span>
+    </div>
+    <div class="prod-meta">Climate Finance · Portfolio Level · POC: Shajeea</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb gray"></div><div class="sb"></div><span class="stage-lbl" style="margin-left:6px">Stage 2</span></div>
+    <div class="prod-note">Paper prepared to absorb investor risk for climate-focused capital formation; to be circulated to Board for feedback</div>
+  </div>
+
+  <div class="prod-card review">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">SECP Invoice Discounting Framework</div>
+      <span class="badge b-review">Stakeholder</span>
+    </div>
+    <div class="prod-meta">SME · Anchor Risk – Pari Passu · POC: Majid</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb gray"></div><div class="sb"></div><span class="stage-lbl" style="margin-left:6px">Stage 2</span></div>
+    <div class="prod-note">NCGCL facilitating SECP framework on Invoice Discounting; SECP soliciting NBFI &amp; FI feedback</div>
+  </div>
+
+  <div class="prod-card review">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">Corporate Guarantees</div>
+      <span class="badge b-review">CEO Review</span>
+    </div>
+    <div class="prod-meta">Corporate Entities · Account Level · POC: Adil</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb gray"></div><div class="sb"></div><span class="stage-lbl" style="margin-left:6px">Stage 2</span></div>
+    <div class="prod-note">CEO paper under review and alignment; PARCO meeting to be scheduled</div>
+  </div>
+
+  <div class="prod-card review">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">FinTech / Start-up Financing</div>
+      <span class="badge b-review">Pilot ID'd</span>
+    </div>
+    <div class="prod-meta">FinTech · Account Level · POC: Majid</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb on"></div><div class="sb gray"></div><div class="sb"></div><span class="stage-lbl" style="margin-left:6px">Stage 2</span></div>
+    <div class="prod-note">On-lending FI model for FinTech; Smart Finance Fintech identified as pilot candidate</div>
+  </div>
+
+  <div class="prod-card concept">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">EXIM Bank Collaboration</div>
+      <span class="badge b-concept">Concept</span>
+    </div>
+    <div class="prod-meta">Trade Finance · TBD · POC: Falak</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb"></div><div class="sb"></div><div class="sb"></div><span class="stage-lbl" style="margin-left:6px">Stage 1</span></div>
+    <div class="prod-note">Draft concept paper prepared; to be shared with relevant EXIM Bank body</div>
+  </div>
+
+  <div class="prod-card concept">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+      <div class="prod-name">Horticulture &amp; Agri Value Chain</div>
+      <span class="badge b-concept">Research</span>
+    </div>
+    <div class="prod-meta">Agriculture · TBD · POC: Adil</div>
+    <div class="stage-bar"><div class="sb on"></div><div class="sb"></div><div class="sb"></div><div class="sb"></div><span class="stage-lbl" style="margin-left:6px">Stage 1</span></div>
+    <div class="prod-note">SWAT region field visit scoped and finalised; BOK team aligned for field engagement</div>
+  </div>
+
+</div>
+
+<!-- Exhibit C-2 + C-3 -->
+<div class="g2">
+  <div class="panel">
+    <div class="exhibit-tag">Exhibit C-2</div>
+    <div class="panel-title">Products by Business Segment</div>
+    <div class="panel-sub">Count of products in development pipeline by sector</div>
+    <div class="ch-wrap ch-230"><canvas id="cC2" role="img" aria-label="Products by segment donut">SME 3, Agriculture 3, Climate 3, MSME/Agri 1, FinTech 1, Trade 1, Bond Market 1, Corporate 1</canvas></div>
+  </div>
+  <div class="panel">
+    <div class="exhibit-tag">Exhibit C-3</div>
+    <div class="panel-title">Products by Development Stage</div>
+    <div class="panel-sub">Stage 1 = Concept · Stage 2 = Review · Stage 3 = Structuring · Stage 4 = Live</div>
+    <div class="ch-wrap ch-230"><canvas id="cC3" role="img" aria-label="Products by stage bar">Live 3, Structuring 4, Board Review 4, Concept 2</canvas></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ─────────────────────────── SECTION D ─────────────────────────── -->
+<div class="section-eyebrow">Section D</div>
+<h2 class="section-title">Strategic Projects</h2>
+<p class="section-sub">Thematic initiatives across climate finance, capital markets, electrification &amp; multilateral partnerships</p>
+
+<div class="exhibit-tag" style="margin-bottom:0.75rem">Exhibit D-1 · Strategic Project Register</div>
+<div class="proj-grid">
+
+  <div class="proj-card">
+    <div class="proj-name">GIZ Project – BG&amp;BE Pakistan</div>
+    <div class="proj-area">Climate Finance · SME</div>
+    <div class="proj-desc">International collaboration supporting SME carbon efficiency and upscaling. Technical assistance for newer SMEs. Concept paper submitted to GIZ on April 17, 2026. Joint FL &amp; SL arrangement proposed.</div>
+    <span class="badge b-live">Active – Concept Submitted</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">Climate Core Asia – Equity Guarantee</div>
+    <div class="proj-area">Climate Finance · Equity</div>
+    <div class="proj-desc">Portfolio-level guarantee to absorb investor risk for climate-focused equity funds. Firm letters of interest received from Pak Libya (PKR 300 Mn) and Saudi Pak (PKR 1 Bn). Licensing to be finalised in 2–3 weeks.</div>
+    <span class="badge b-live">Active – LOIs Received</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">Green Sukuk – Capital Markets</div>
+    <div class="proj-area">Capital Markets · Sukuk</div>
+    <div class="proj-desc">NCGCL as credit enhancer and risk absorber for the PSX green bond market. Deck prepared framing NCGCL's role; under internal review before PSX submission. Account-level guarantee structure.</div>
+    <span class="badge b-review">In Review – PSX Submission Pending</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">GCF Proposal – PCFGF</div>
+    <div class="proj-area">Climate Finance · Multilateral</div>
+    <div class="proj-desc">Pakistan Climate Finance Guarantee Facility targeting Green Climate Fund. Structured to mobilise blended finance for Pakistan's climate adaptation and mitigation priorities. Cross-referenced with OPM Mitigation Action Facility.</div>
+    <span class="badge b-review">In Structuring</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">OPM – Mitigation Action Facility</div>
+    <div class="proj-area">Climate Finance · Multilateral</div>
+    <div class="proj-desc">GCF-linked mitigation facility in collaboration with multilateral partners including OPM. Supports Pakistan's nationally determined contributions and cross-border climate finance architecture.</div>
+    <span class="badge b-review">In Progress</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">Electrification Product Suite</div>
+    <div class="proj-area">Energy Finance · EV &amp; Appliances</div>
+    <div class="proj-desc">Multi-product guarantee suite covering electric vehicles, 2-3 wheeler financing (WASL Mobility), and energy-efficient appliances. Links to on-bill repayment infrastructure and DISCO distribution network.</div>
+    <span class="badge b-struct">Product Design Phase</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">EV Research</div>
+    <div class="proj-area">Energy Finance · Research</div>
+    <div class="proj-desc">Foundational market research underpinning NCGCL's EV and 2-3 wheeler guarantee product design. Informs WASL Mobility Modaraba deal structuring and future electrification pipeline.</div>
+    <span class="badge b-concept">Research Phase</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">Hyfin – Solar Securitisation</div>
+    <div class="proj-area">Climate Finance · Solar</div>
+    <div class="proj-desc">Guarantee product for solar asset securitisation, enabling risk transfer from solar ESCO portfolios to capital markets. Builds on NCGCL's credit enhancement positioning at PSX.</div>
+    <span class="badge b-dev">In Development</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">SolarTech Financing</div>
+    <div class="proj-area">Climate Finance · Solar</div>
+    <div class="proj-desc">Rooftop and distributed solar financing guarantee product targeting residential and commercial consumers. Structured with NCGCL second-loss coverage to unlock FI lending to the solar segment.</div>
+    <span class="badge b-dev">In Development</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">SECP ESG Funds</div>
+    <div class="proj-area">Regulatory · ESG</div>
+    <div class="proj-desc">NCGCL facilitating SECP's Invoice Discounting framework and ESG fund ecosystem. SECP actively soliciting feedback from NBFIs and FIs. Anchor risk pari-passu guarantee structure proposed.</div>
+    <span class="badge b-review">Regulatory Engagement – Active</span>
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-name">Impact Assessment</div>
+    <div class="proj-area">Analytics · Portfolio</div>
+    <div class="proj-desc">Portfolio-wide impact measurement framework to quantify NCGCL's additionality across credit access, employment, women's income, and emissions reduction. Supports multilateral reporting requirements.</div>
+    <span class="badge b-review">Framework Development</span>
+  </div>
+
+</div>
+
+<!-- Exhibit D-2 -->
+<div class="panel" style="margin-bottom:1.5rem">
+  <div class="exhibit-tag">Exhibit D-2 · Climate &amp; Green Finance Project Cross-Reference</div>
+  <div class="panel-title">Strategic Project Summary</div>
+  <div class="panel-sub">Cross-reference of strategic projects with pipeline and product linkages</div>
+  <div style="overflow-x:auto">
+  <table class="est-table">
+    <thead>
+      <tr><th>Project</th><th>Thematic Area</th><th>Status</th><th>Pipeline Linkage</th><th>Partner / Counterparty</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>GCF Proposal – PCFGF</strong></td><td>Climate Finance</td><td><span class="badge b-review">Structuring</span></td><td>Hyfin Securitisation, SolarTech, OPM</td><td>Green Climate Fund</td></tr>
+      <tr><td><strong>GIZ – BG&amp;BE Pakistan</strong></td><td>Climate / SME</td><td><span class="badge b-live">Concept Submitted</span></td><td>SME Guarantee Programme</td><td>GIZ (Germany)</td></tr>
+      <tr><td><strong>Climate Core Asia – Equity</strong></td><td>Climate Equity</td><td><span class="badge b-live">LOIs Received</span></td><td>GUA-2026-029; Pak Libya, Saudi Pak</td><td>Climate Core Asia</td></tr>
+      <tr><td><strong>Green Sukuk – Capital Markets</strong></td><td>Bond Market</td><td><span class="badge b-review">PSX Submission</span></td><td>Credit Enhancer Product, Haball Sukuk</td><td>PSX, Capital Markets</td></tr>
+      <tr><td><strong>Electrification Product Suite</strong></td><td>EV / Energy</td><td><span class="badge b-struct">Product Design</span></td><td>GUA-2026-028 WASL Mobility</td><td>K-Electric / DISCOs</td></tr>
+      <tr><td><strong>Hyfin – Solar Securitisation</strong></td><td>Solar Finance</td><td><span class="badge b-dev">Development</span></td><td>SolarTech Financing, GCF Proposal</td><td>Hyfin, PSX</td></tr>
+      <tr><td><strong>SECP ESG Funds</strong></td><td>Regulatory / ESG</td><td><span class="badge b-review">Active</span></td><td>Invoice Discounting Framework</td><td>SECP</td></tr>
+      <tr><td><strong>OPM – Mitigation Action Facility</strong></td><td>Climate / Multilateral</td><td><span class="badge b-review">In Progress</span></td><td>GCF Proposal, Impact Assessment</td><td>OPM, GCF</td></tr>
+      <tr><td><strong>IFC Partnership</strong></td><td>Multi-Sector</td><td><span class="badge b-live">Paper Shared</span></td><td>SME, Agri, Climate products</td><td>IFC (World Bank Group)</td></tr>
+      <tr><td><strong>Impact Assessment</strong></td><td>Analytics</td><td><span class="badge b-review">Development</span></td><td>All live products, GCF, IFC</td><td>Multilateral reporting</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ─────────────────────────── SECTION E ─────────────────────────── -->
+<div class="section-eyebrow">Section E</div>
+<h2 class="section-title">Pipeline Analytics</h2>
+<p class="section-sub">Origination velocity, stage concentration and institutional type breakdown</p>
+
+<div class="g2" style="margin-bottom:1.5rem">
+  <div class="panel">
+    <div class="exhibit-tag">Exhibit E-1</div>
+    <div class="panel-title">Origination Funnel — PKR Value by Stage</div>
+    <div class="panel-sub">Quantified deals only · Indicates capital concentration at each stage</div>
+    <div class="ch-wrap ch-260"><canvas id="cE1" role="img" aria-label="Pipeline value by origination stage bar chart">Initial 3537Mn, DD 2580Mn, Term Sheet 5500Mn, IC 2000Mn, MAGFA 1270Mn, First Issuance 1000Mn</canvas></div>
+  </div>
+  <div class="panel">
+    <div class="exhibit-tag">Exhibit E-2</div>
+    <div class="panel-title">Pipeline Institutions by Type</div>
+    <div class="panel-sub">Count of unique institutions by category across tracker</div>
+    <div class="ch-wrap ch-260"><canvas id="cE2" role="img" aria-label="Institutions by type bar chart">Commercial Banks 12, DFIs/Modarabas 6, MFBs/MFIs 4, Tech/FinTech 3, Others 3, Multilateral 2</canvas></div>
+  </div>
+</div>
+
+<!-- Exhibit E-3 -->
+<div class="exhibit-tag" style="margin-bottom:0.75rem">Exhibit E-3 · Origination Statistics at a Glance</div>
+<div class="stat-row">
+  <div class="stat-item"><div class="s-val" style="color:#1a6b3c">1</div><div class="s-lbl">First Issuance Ready</div></div>
+  <div class="stat-item"><div class="s-val" style="color:#1a4f7a">3</div><div class="s-lbl">MAGFA / Legal Stage</div></div>
+  <div class="stat-item"><div class="s-val" style="color:#1a5c47">1</div><div class="s-lbl">IC / Approval Stage</div></div>
+  <div class="stat-item"><div class="s-val" style="color:var(--accent)">3</div><div class="s-lbl">Term Sheet Stage</div></div>
+  <div class="stat-item"><div class="s-val" style="color:#555">4</div><div class="s-lbl">Due Diligence</div></div>
+  <div class="stat-item"><div class="s-val" style="color:var(--text3)">16</div><div class="s-lbl">Initial Engagement</div></div>
+</div>
+
+<!-- Footer -->
+<div class="doc-footer">
+  <div><strong>NCGCL</strong> · Guarantee Deal Pipeline &amp; Product Status · April 2026</div>
+  <div>Prepared for the Chairperson, Board of Directors</div>
+  <div style="color:var(--text3)">Board Confidential · AAA Rated · SBP Recognised</div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+const acc = '#C8923A', grn = '#52B788', red = '#9B2335', gry = '#999999';
+const b2 = '#6EA8C4', b3 = '#7B9E8F', b4 = '#C4A882';
+const pal = [grn, acc, '#888', '#bbb', red, '#6EA8C4', '#C4A882', gry];
+const defTooltip = { backgroundColor:'rgba(26,26,26,0.92)', titleFont:{size:11}, bodyFont:{size:11}, padding:10 };
+const defLegend = (pos='right') => ({ position:pos, labels:{ font:{size:10}, boxWidth:10, padding:8 } });
+
+// A-2 Donut
+new Chart(document.getElementById('cA2'),{
+  type:'doughnut',
+  data:{
+    labels:['Credit Guarantee – FI','Credit Guarantee – Portfolio','Guarantee & IB Advisory','Tech / Sukuk / Innovation','STFF / Specialised','Corp / Consortium','Microfinance'],
+    datasets:[{data:[13200,1000,1000,1000,500,187.5,500],backgroundColor:pal,borderWidth:2,borderColor:'#fff'}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:defLegend('right'),tooltip:{...defTooltip,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}}}
+});
+
+// A-3 Stage Bar
+new Chart(document.getElementById('cA3'),{
+  type:'bar',
+  data:{
+    labels:['Initial','Due Diligence','Term Sheet','IC Approval','Legal / MAGFA','First Issuance'],
+    datasets:[{label:'Deals',data:[16,4,3,1,3,1],backgroundColor:['#D0D0D0','#AAA','#C8923A','#7B9E8F','#6EA8C4','#52B788'],borderRadius:4,borderSkipped:false}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.raw} deals`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F0F0F0'},ticks:{font:{size:10},stepSize:2}}}}
+});
+
+// B-1 Top Deals Horizontal
+new Chart(document.getElementById('cB1'),{
+  type:'bar',
+  data:{
+    labels:['Bank Alfalah','JS Bank','Bank of Punjab','HBL MFB','UBL','PMIC','HBL FI','Meezan Bank','Askari Bank','Bank of Khyber','Haball','Daewoo'],
+    datasets:[{label:'Guarantee Amount (PKR Mn)',data:[2000,2000,2000,1500,1500,1000,1000,1000,1000,1000,500,500],backgroundColor:[acc,acc,acc,'#6EA8C4','#6EA8C4',grn,grn,'#AAA','#888','#888','#7B9E8F','#7B9E8F'],borderRadius:3,borderSkipped:false}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}},scales:{x:{grid:{color:'#F0F0F0'},ticks:{font:{size:10},callback:v=>'PKR '+(v/1000).toFixed(0)+'Bn'}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+// B-3 Team Bar
+new Chart(document.getElementById('cB3'),{
+  type:'bar',
+  data:{
+    labels:['Guarantee Origination (CGO)','Senior Mgmt / CEO-Led','ALM / Structured Products','Consortium / Multilateral','Research Origination'],
+    datasets:[{label:'PKR Mn',data:[9270,4000,1500,580,37.5],backgroundColor:[grn,acc,'#6EA8C4','#7B9E8F',gry],borderRadius:3,borderSkipped:false}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}},scales:{x:{grid:{color:'#F0F0F0'},ticks:{font:{size:10},callback:v=>v>=1000?(v/1000).toFixed(1)+'Bn':v}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+// B-4 Status Pie
+new Chart(document.getElementById('cB4'),{
+  type:'pie',
+  data:{
+    labels:['Initial Engagement','Due Diligence','Term Sheet','Legal / MAGFA','IC Approval','First Issuance Ready'],
+    datasets:[{data:[16,4,3,3,1,1],backgroundColor:['#D0D0D0','#AAA',acc,'#6EA8C4','#7B9E8F',grn],borderWidth:2,borderColor:'#fff'}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:defLegend('right'),tooltip:{...defTooltip,callbacks:{label:c=>` ${c.raw} deals`}}}}
+});
+
+// C-2 Segment Donut
+new Chart(document.getElementById('cC2'),{
+  type:'doughnut',
+  data:{
+    labels:['SME','Agriculture','Climate Finance','MSME & Agri','FinTech','Trade Finance','Bond Market','Corporate'],
+    datasets:[{data:[3,3,3,1,1,1,1,1],backgroundColor:pal,borderWidth:2,borderColor:'#fff'}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:defLegend('right'),tooltip:{...defTooltip,callbacks:{label:c=>` ${c.raw} products`}}}}
+});
+
+// C-3 Stage Bar
+new Chart(document.getElementById('cC3'),{
+  type:'bar',
+  data:{
+    labels:['Stage 1\nConcept','Stage 2\nBoard Review','Stage 3\nStructuring','Stage 4\nLive'],
+    datasets:[{label:'Products',data:[2,4,4,3],backgroundColor:['#D0D0D0','#888',acc,grn],borderRadius:4,borderSkipped:false}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.raw} products`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F0F0F0'},ticks:{font:{size:10},stepSize:1}}}}
+});
+
+// E-1 Funnel Value
+new Chart(document.getElementById('cE1'),{
+  type:'bar',
+  data:{
+    labels:['Initial','Due Diligence','Term Sheet','IC / Approval','MAGFA / Legal','First Issuance'],
+    datasets:[{label:'PKR Mn',data:[3537,2580,5500,2000,1270,1000],backgroundColor:['#D0D0D0','#AAA',acc,'#7B9E8F','#6EA8C4',grn],borderRadius:3,borderSkipped:false}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F0F0F0'},ticks:{font:{size:10},callback:v=>'PKR '+(v/1000).toFixed(0)+'Bn'}}}}
+});
+
+// E-2 Institution Type
+new Chart(document.getElementById('cE2'),{
+  type:'bar',
+  data:{
+    labels:['Commercial Banks','DFIs / Modarabas','MFBs / MFIs','Tech / FinTech','Others','Multilateral'],
+    datasets:[{label:'Institutions',data:[12,6,4,3,3,2],backgroundColor:[grn,acc,'#6EA8C4','#888','#AAA',gry],borderRadius:3,borderSkipped:false}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.raw} institutions`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#F0F0F0'},ticks:{font:{size:10},stepSize:2}}}}
+});
+</script>
+
+</body>
+</html>
