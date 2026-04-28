@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Solar Saved Pakistan From Load Shedding: June–July 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #FFFFFF;
+  --secondary: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --success: #52B788;
+  --warning: #9B2335;
+  --blue: #2563EB;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: var(--primary);
+  color: #2D2D2D;
+  line-height: 1.6;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+/* Header */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 2.5rem 0 2rem;
+  margin-bottom: 2rem;
+}
+.byline {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+  color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.75rem;
+}
+h1 {
+  font-family: Georgia, serif; font-size: 32px; font-weight: 400;
+  color: var(--text-primary); line-height: 1.2; margin-bottom: 0.75rem;
+}
+.subtitle { font-size: 14px; color: var(--text-secondary); line-height: 1.6; max-width: 700px; }
+
+/* KPI strip */
+.kpi-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1rem; margin-bottom: 2rem;
+}
+.kpi {
+  background: var(--secondary); border: 1px solid var(--border);
+  border-top: 3px solid var(--border); padding: 1.25rem 1rem; border-radius: 6px;
+}
+.kpi.amber { border-top-color: var(--accent); }
+.kpi.green { border-top-color: var(--success); }
+.kpi.red   { border-top-color: var(--warning); }
+.kpi.blue  { border-top-color: var(--blue); }
+.kpi-val {
+  font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: var(--text-primary); line-height: 1;
+}
+.kpi-lbl { font-size: 11px; color: var(--text-tertiary); margin-top: 0.4rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 2rem; border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem; padding: 0;
+}
+.tab-btn {
+  background: none; border: none; padding: 0.875rem 0;
+  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; letter-spacing: 0.06em; text-transform: uppercase;
+  transition: all 0.2s;
+}
+.tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Panels */
+.panel {
+  background: var(--secondary); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;
+}
+.panel-title {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 1.25rem;
+}
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+
+/* Interactive Forecaster */
+.forecaster {
+  background: var(--primary); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem;
+}
+.forecaster-header {
+  background: var(--text-primary); color: #fff;
+  padding: 1.25rem 1.5rem;
+}
+.forecaster-header h3 {
+  font-family: Georgia, serif; font-weight: 400; font-size: 18px; margin-bottom: 0.25rem;
+}
+.forecaster-header p { font-size: 12px; color: rgba(255,255,255,0.7); }
+.forecaster-body { padding: 1.5rem; }
+
+.month-tabs { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+.month-tab {
+  padding: 0.5rem 1.25rem; border: 1px solid var(--border);
+  border-radius: 4px; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--text-secondary); transition: all 0.2s;
+}
+.month-tab.active {
+  background: var(--accent); border-color: var(--accent); color: #fff;
+}
+
+.controls-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.control-group label {
+  display: block; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-secondary); margin-bottom: 0.5rem;
+}
+input[type="range"] {
+  width: 100%; height: 4px; -webkit-appearance: none;
+  background: var(--border); border-radius: 2px; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--accent); cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.slider-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-tertiary); margin-top: 0.4rem;
+}
+.current-val {
+  font-family: Georgia, serif; font-size: 22px; color: var(--text-primary);
+  font-weight: 400; margin-bottom: 0.25rem;
+}
+
+/* Day type toggle */
+.toggle-row { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.5rem; }
+.toggle-btn {
+  padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 4px;
+  background: none; cursor: pointer; font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); transition: all 0.2s;
+}
+.toggle-btn.active {
+  background: #1A1A1A; border-color: #1A1A1A; color: #fff;
+}
+
+/* Result display */
+.result-box {
+  background: #1A1A1A; border-radius: 8px; padding: 1.5rem;
+  text-align: center; position: relative; overflow: hidden;
+}
+.result-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 4px; background: var(--accent);
+}
+.result-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+.result-val {
+  font-family: Georgia, serif; font-size: 42px; font-weight: 400; color: #fff; line-height: 1; margin-bottom: 0.5rem;
+}
+.result-val span { font-size: 20px; color: rgba(255,255,255,0.6); }
+.result-delta { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 1rem; }
+.result-band {
+  display: inline-block; padding: 0.3rem 0.75rem; border-radius: 20px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.band-cool { background: #0ea5e9; color: #fff; }
+.band-normal { background: var(--success); color: #fff; }
+.band-warm { background: #f59e0b; color: #fff; }
+.band-hot { background: #ef4444; color: #fff; }
+.band-extreme { background: #9B2335; color: #fff; }
+
+/* Decomposition bar */
+.decomp { margin-top: 1.25rem; }
+.decomp-row {
+  display: flex; align-items: center; gap: 0.75rem;
+  font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem;
+}
+.decomp-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.decomp-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+.decomp-num { min-width: 70px; text-align: right; font-weight: 600; }
+
+/* Tables */
+.est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.est-table th {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: var(--text-primary);
+  text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border);
+  background: var(--secondary); text-transform: uppercase;
+}
+.est-table td {
+  padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border); color: #2D2D2D;
+}
+.est-table tr:hover td { background: var(--secondary); }
+.est-table tr:last-child td { border-bottom: none; }
+.tag {
+  display: inline-block; padding: 0.15rem 0.5rem; border-radius: 10px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.tag-green { background: rgba(82,183,136,0.12); color: #2d8a5e; }
+.tag-amber { background: rgba(200,146,58,0.12); color: var(--accent); }
+.tag-red   { background: rgba(155,35,53,0.12); color: var(--warning); }
+.tag-blue  { background: rgba(37,99,235,0.12); color: var(--blue); }
+
+/* Chart container */
+.chart-wrap { position: relative; height: 280px; }
+
+/* Methodology */
+.method-box {
+  background: var(--secondary); border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  padding: 1.25rem 1.5rem; border-radius: 4px; margin-bottom: 1rem;
+  font-size: 13px; line-height: 1.7; color: #3D3D3D;
+}
+.method-box strong { color: var(--text-primary); }
+.note { font-size: 11px; color: var(--text-tertiary); margin-top: 1rem; font-style: italic; }
+
+
+/* Load shedding calculator */
+.load-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.input-card { background: var(--primary); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
+.input-card h3 { font-family: Georgia, serif; font-weight: 400; font-size: 18px; color: var(--text-primary); margin-bottom: 0.35rem; }
+.input-card p { font-size: 12px; color: var(--text-secondary); margin-bottom: 1rem; }
+.ls-kpis { display:grid; grid-template-columns: repeat(4, 1fr); gap:0.75rem; margin: 1rem 0 1.25rem; }
+.ls-kpi { background:#fff; border:1px solid var(--border); border-radius:6px; padding:0.9rem; }
+.ls-kpi .v { font-family:Georgia, serif; font-size:24px; line-height:1; color:var(--text-primary); }
+.ls-kpi .l { margin-top:0.35rem; font-size:10px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.06em; }
+.ls-kpi.red { border-top:3px solid var(--warning); }
+.ls-kpi.amber { border-top:3px solid var(--accent); }
+.ls-kpi.blue { border-top:3px solid var(--blue); }
+.ls-kpi.green { border-top:3px solid var(--success); }
+.ls-summary { background:#1A1A1A; color:#fff; border-radius:8px; padding:1.25rem; margin-bottom:1rem; }
+.ls-summary .big { font-family:Georgia, serif; font-size:38px; line-height:1; margin:0.35rem 0; }
+.ls-summary .small { color:rgba(255,255,255,0.72); font-size:12px; line-height:1.6; }
+.ls-summary .pill { display:inline-block; margin-top:0.6rem; padding:0.25rem 0.65rem; border-radius:999px; background:rgba(200,146,58,0.18); color:#f1d199; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; }
+.window-card-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; margin-bottom:1.5rem; }
+.window-card { border:1px solid var(--border); background:#fff; border-radius:8px; padding:1rem; }
+.window-card h4 { font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-secondary); margin-bottom:0.6rem; }
+.window-card .mw { font-family:Georgia, serif; font-size:26px; color:var(--text-primary); }
+.window-card .meta { color:var(--text-tertiary); font-size:11px; margin-top:0.25rem; line-height:1.5; }
+.assumption-toggle { margin-top:1rem; padding:0.9rem 1rem; border:1px solid var(--border); border-left:4px solid var(--success); background:#fff; border-radius:6px; }
+.assumption-toggle label { display:flex; align-items:flex-start; gap:0.65rem; font-size:12px; line-height:1.55; color:var(--text-secondary); text-transform:none; letter-spacing:0; font-weight:500; margin:0; }
+.assumption-toggle input { margin-top:0.25rem; transform:scale(1.1); }
+.assumption-toggle strong { color:var(--text-primary); }
+.mode-note { background:#F8FFF9; border:1px solid rgba(82,183,136,0.35); border-left:4px solid var(--success); border-radius:6px; padding:0.9rem 1rem; margin-bottom:1rem; font-size:12px; line-height:1.65; color:#2D5F46; }
+.load-note { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--warning); padding: 1rem 1.25rem; border-radius: 4px; font-size: 13px; color:#3D3D3D; line-height:1.65; }
+@media(max-width: 768px){ .load-grid, .window-card-grid { grid-template-columns:1fr; } .ls-kpis { grid-template-columns:1fr 1fr; } }
+
+
+/* Solar thesis overview */
+.thesis-panel {
+  background: linear-gradient(135deg, #FAFAFA 0%, #FFFFFF 58%, rgba(200,146,58,0.08) 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: -0.5rem 0 2rem;
+}
+.thesis-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem;
+}
+.thesis-panel h2 {
+  font-family: Georgia, serif; font-size: 24px; font-weight: 400;
+  color: var(--text-primary); margin-bottom: 0.65rem; line-height: 1.25;
+}
+.thesis-panel p { font-size: 14px; color: var(--text-secondary); max-width: 900px; }
+.thesis-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.1rem;
+}
+.thesis-card {
+  background: rgba(255,255,255,0.72); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1rem;
+}
+.thesis-card .v { font-family: Georgia, serif; font-size: 25px; color: var(--text-primary); line-height: 1; }
+.thesis-card .l { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.45rem; }
+@media(max-width: 768px){ .thesis-grid { grid-template-columns: 1fr; } }
+
+/* Responsive */
+@media(max-width: 768px){
+  .kpi-strip { grid-template-columns: 1fr 1fr; }
+  .two-col, .three-col, .controls-row { grid-template-columns: 1fr; }
+  h1 { font-size: 24px; }
+  .result-val { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="byline">Ammar H. Khan · Power Sector Analysis · April 2026</div>
+  <h1>How Solar Saved Pakistan From Load Shedding<br>June–July 2026 Heatwave + RLNG Blockade Stress Test</h1>
+  <div class="subtitle">
+    A temperature-indexed adequacy model showing how behind-the-meter solar can absorb sunshine-hour deficits,
+    conserve scarce RLNG for the post-sunset bridge, and convert a broad all-day load-shedding crisis into a focused
+    evening and late-night dispatch challenge.
+  </div>
+</div>
+
+<!-- SOLAR THESIS OVERVIEW -->
+<div class="thesis-panel">
+  <div class="thesis-eyebrow">Brief overview</div>
+  <h2>BTM solar changes the crisis geometry: daylight shortage disappears; the problem moves to 18:00–02:00.</h2>
+  <p>
+    Under the RLNG blockade assumption, Pakistan has only three LNG cargoes available and no Qatar baseline flows.
+    Without the recent surge in behind-the-meter solar, the system would face material shortages across both daytime
+    and evening hours during a heatwave. With enough BTM solar to absorb the sunshine-hour deficit, load shedding during
+    09:00–16:00 falls to zero in the default calculator mode. Scarce RLNG can then be rationed for the post-sunset cooling
+    bridge, where BTM solar is gone, residential cooling demand remains high, and hot-night demand can persist beyond midnight.
+  </p>
+  <div class="thesis-grid">
+    <div class="thesis-card">
+      <div class="v">0 MW</div>
+      <div class="l">Modeled sunshine deficit when BTM absorption is ON</div>
+    </div>
+    <div class="thesis-card">
+      <div class="v">18:00–02:00</div>
+      <div class="l">Critical post-sunset bridge to be covered by RLNG + hydel + response</div>
+    </div>
+    <div class="thesis-card">
+      <div class="v">+1 cargo</div>
+      <div class="l">Recommended 45-day buffer above the 3 confirmed cargoes</div>
+    </div>
+  </div>
+</div>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi amber">
+    <div class="kpi-val">23,817</div>
+    <div class="kpi-lbl">Jun 2025 System Peak (MW, excl. KE)</div>
+  </div>
+  <div class="kpi blue">
+    <div class="kpi-val">23,066</div>
+    <div class="kpi-lbl">Jul 2024 System Peak (MW, excl. KE)</div>
+  </div>
+  <div class="kpi green">
+    <div class="kpi-val">350</div>
+    <div class="kpi-lbl">Est. Temp Sensitivity (MW per °C, Jun)</div>
+  </div>
+  <div class="kpi red">
+    <div class="kpi-val">41.8°C</div>
+    <div class="kpi-lbl">Jun 2025 Lahore Avg Max Temp (PMD+anomaly)</div>
+  </div>
+</div>
+
+<!-- INTERACTIVE FORECASTER -->
+<div class="forecaster">
+  <div class="forecaster-header">
+    <h3>Interactive Peak Demand Forecaster — June/July 2026</h3>
+    <p>Slide to set Lahore daily maximum temperature and day type. Forecast updates live.</p>
+  </div>
+  <div class="forecaster-body">
+    <div class="month-tabs">
+      <button class="month-tab active" onclick="setMonth('jun')">June 2026 (Pre-Monsoon)</button>
+      <button class="month-tab" onclick="setMonth('jul')">July 2026 (Monsoon)</button>
+    </div>
+
+    <div class="controls-row">
+      <div class="control-group">
+        <label>Lahore Daily Max Temperature</label>
+        <div class="current-val" id="tval">40.4°C</div>
+        <input type="range" id="tslider" min="32" max="48" step="0.5" value="40.4"
+               oninput="updateForecast()">
+        <div class="slider-label">
+          <span>32°C (Cool)</span>
+          <span>40°C (Normal)</span>
+          <span>48°C (Extreme)</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Day Type</label>
+        <div style="margin-bottom:0.75rem">
+          <div class="toggle-row">
+            <button class="toggle-btn active" id="btn-wd" onclick="setDay('weekday')">Mon–Thu / Sat</button>
+            <button class="toggle-btn" id="btn-we" onclick="setDay('weekend')">Friday / Sunday</button>
+          </div>
+        </div>
+        <div class="note" style="margin-top:0; font-size:12px; color: var(--text-secondary);">
+          Weekend discount (~900 MW) reflects reduced commercial &amp; industrial load. 
+          Residential cooling load remains active on hot weekends.
+        </div>
+      </div>
+    </div>
+
+    <div class="result-box">
+      <div class="result-label">Forecast System Peak Demand (excl. KE)</div>
+      <div class="result-val" id="result-val">— <span>MW</span></div>
+      <div class="result-delta" id="result-delta">— vs Jun 2025 baseline</div>
+      <div id="result-band" class="result-band band-normal">—</div>
+
+      <div class="decomp" id="decomp">
+        <div class="decomp-row">
+          <span style="min-width:120px">Structural Baseline</span>
+          <div class="decomp-bar"><div class="decomp-fill" id="bar-base" style="background:#52B788;width:60%"></div></div>
+          <span class="decomp-num" id="num-base">23,600 MW</span>
+        </div>
+        <div class="decomp-row">
+          <span style="min-width:120px">Temp Effect</span>
+          <div class="decomp-bar"><div class="decomp-fill" id="bar-temp" style="background:#C8923A;width:20%"></div></div>
+          <span class="decomp-num" id="num-temp">+0 MW</span>
+        </div>
+        <div class="decomp-row">
+          <span style="min-width:120px">Day-type Discount</span>
+          <div class="decomp-bar"><div class="decomp-fill" id="bar-dow" style="background:#9B2335;width:0%"></div></div>
+          <span class="decomp-num" id="num-dow">0 MW</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('scenario')">Scenario Matrix</button>
+  <button class="tab-btn" onclick="showTab('history')">Historical Context</button>
+  <button class="tab-btn" onclick="showTab('loadshed')">Solar Bridge Calculator</button>
+  <button class="tab-btn" onclick="showTab('method')">Methodology</button>
+</div>
+
+<!-- SCENARIO MATRIX TAB -->
+<div id="tab-scenario" class="tab-content active">
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">June 2026 — Weekday Peak Scenarios</div>
+      <table class="est-table">
+        <tr>
+          <th>Scenario</th>
+          <th>Lahore Tmax</th>
+          <th>Forecast (MW)</th>
+          <th>Band</th>
+        </tr>
+        <tr>
+          <td>Cool June (early rain)</td>
+          <td>37°C</td>
+          <td>22,083</td>
+          <td><span class="tag tag-green">Cool</span></td>
+        </tr>
+        <tr>
+          <td>Normal (30-yr avg)</td>
+          <td>40.4°C</td>
+          <td>23,273</td>
+          <td><span class="tag tag-blue">Normal</span></td>
+        </tr>
+        <tr>
+          <td>Warm (+1σ, ~42°C)</td>
+          <td>42.0°C</td>
+          <td>23,833</td>
+          <td><span class="tag tag-amber">Warm</span></td>
+        </tr>
+        <tr>
+          <td>Hot (+1.5σ, ~43°C)</td>
+          <td>43.5°C</td>
+          <td>24,358</td>
+          <td><span class="tag tag-amber">Hot</span></td>
+        </tr>
+        <tr>
+          <td><strong>Very Hot (2025-like, 44°C)</strong></td>
+          <td><strong>44.5°C</strong></td>
+          <td><strong>24,708</strong></td>
+          <td><span class="tag tag-red">Very Hot</span></td>
+        </tr>
+        <tr>
+          <td>Extreme (≥46°C)</td>
+          <td>46.0°C</td>
+          <td>25,233</td>
+          <td><span class="tag tag-red">Extreme</span></td>
+        </tr>
+      </table>
+      <div class="note">
+        Baseline: Jun 2025 peak (23,817 MW) adjusted for net BTM suppression (−600 MW) and demand growth (+400 MW) = 23,617 MW at 41.8°C. Temperature coefficient: 350 MW/°C.
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">July 2026 — Weekday Peak Scenarios</div>
+      <table class="est-table">
+        <tr>
+          <th>Scenario</th>
+          <th>Lahore Tmax</th>
+          <th>Forecast (MW)</th>
+          <th>Band</th>
+        </tr>
+        <tr>
+          <td>Heavy monsoon (early, wet)</td>
+          <td>32.5°C</td>
+          <td>21,843</td>
+          <td><span class="tag tag-green">Cool</span></td>
+        </tr>
+        <tr>
+          <td>Normal (30-yr avg)</td>
+          <td>36.1°C</td>
+          <td>22,563</td>
+          <td><span class="tag tag-blue">Normal</span></td>
+        </tr>
+        <tr>
+          <td>Warm monsoon (+1σ)</td>
+          <td>37.5°C</td>
+          <td>22,843</td>
+          <td><span class="tag tag-amber">Warm</span></td>
+        </tr>
+        <tr>
+          <td>Late/dry monsoon</td>
+          <td>39.0°C</td>
+          <td>23,143</td>
+          <td><span class="tag tag-amber">Hot</span></td>
+        </tr>
+        <tr>
+          <td><strong>Very dry (+2σ)</strong></td>
+          <td><strong>40.5°C</strong></td>
+          <td><strong>23,443</strong></td>
+          <td><span class="tag tag-red">Very Hot</span></td>
+        </tr>
+        <tr>
+          <td>Extreme (delayed monsoon)</td>
+          <td>42.0°C</td>
+          <td>23,743</td>
+          <td><span class="tag tag-red">Extreme</span></td>
+        </tr>
+      </table>
+      <div class="note">
+        Baseline: Jul 2024 peak (23,066 MW) adjusted for net BTM suppression (−800 MW YoY×2) and demand growth (+500 MW) = 22,766 MW at 37.2°C. Temperature coefficient: 200 MW/°C (monsoon months; reduced by cloud cover and humidity damping). All monsoon scenarios assume fully active monsoon.
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Sensitivity Cross-Table: Forecast Peak Demand MW (ISMO, Excl. KE) — June 2026, Weekday</div>
+    <table class="est-table">
+      <tr>
+        <th>Temperature →</th>
+        <th>37°C (Cool)</th>
+        <th>40.4°C (Normal)</th>
+        <th>42°C (Warm)</th>
+        <th>44°C (Hot)</th>
+        <th>46°C (Extreme)</th>
+      </tr>
+      <tr>
+        <td><strong>High BTM growth</strong><br><span style="font-size:11px;color:#999">(−1,000 MW net)</span></td>
+        <td>21,683</td><td>22,873</td><td>23,433</td><td>24,133</td><td>24,833</td>
+      </tr>
+      <tr style="background:#fafafa">
+        <td><strong>Base case</strong><br><span style="font-size:11px;color:#999">(−200 MW net)</span></td>
+        <td>22,083</td><td>23,273</td><td>23,833</td><td>24,533</td><td>25,233</td>
+      </tr>
+      <tr>
+        <td><strong>Low BTM growth</strong><br><span style="font-size:11px;color:#999">(+400 MW net)</span></td>
+        <td>22,483</td><td>23,673</td><td>24,233</td><td>24,933</td><td>25,633</td>
+      </tr>
+    </table>
+    <div class="note">
+      Add ~2,800 MW (K-Electric) for total national system peak. BTM growth scenarios reflect uncertainty in new rooftop solar additions (6–10 GW/yr pace vs slowdown).
+    </div>
+  </div>
+</div>
+
+<!-- HISTORICAL CONTEXT TAB -->
+<div id="tab-history" class="tab-content">
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Historical Monthly System Peak — Summer Months (incl. KE)</div>
+      <div class="chart-wrap"><canvas id="historicalChart"></canvas></div>
+      <div class="note">Source: NEPRA State of Industry 2024 (Table 56). FY24-25 values: ISMO + ~2,800 MW KE estimate.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">FY 2024-25 Daily Peak Demand — June 2025 (ISMO, Excl. KE)</div>
+      <div class="chart-wrap"><canvas id="june25Chart"></canvas></div>
+      <div class="note">System peak of 23,817 MW reached on 20 June 2025 during a heat wave when Lahore temperatures approached 44–45°C (Dawn report, June 2025).</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Observed Summer Peak Demand (MW)</div>
+    <table class="est-table">
+      <tr>
+        <th>Period</th><th>Month</th><th>Peak MW</th><th>Coverage</th><th>Context</th>
+      </tr>
+      <tr><td>FY 2021-22</td><td>June</td><td>30,231</td><td>Incl. KE</td><td><span class="tag tag-red">All-time high; pre-BTM era</span></td></tr>
+      <tr><td>FY 2022-23</td><td>June</td><td>29,051</td><td>Incl. KE</td><td><span class="tag tag-amber">High; early BTM onset</span></td></tr>
+      <tr><td>FY 2023-24</td><td>July</td><td>29,890</td><td>Incl. KE</td><td><span class="tag tag-amber">July 2023; very hot</span></td></tr>
+      <tr><td>FY 2023-24</td><td>June</td><td>27,474</td><td>Incl. KE</td><td><span class="tag tag-amber">June 2024; BTM suppression begins</span></td></tr>
+      <tr><td>FY 2024-25</td><td>June</td><td>23,817</td><td>Excl. KE</td><td><span class="tag tag-green">~26,617 incl. KE; BTM suppression ~3–4 GW</span></td></tr>
+      <tr><td>FY 2024-25</td><td>July</td><td>23,066</td><td>Excl. KE</td><td><span class="tag tag-green">~25,866 incl. KE</span></td></tr>
+    </table>
+    <div class="note">
+      The structural decline from FY21-22 peak of 30,231 MW to FY24-25 adjusted peak of ~26,617 MW — despite rising temperatures — reflects approximately 3–4 GW of BTM solar displacement on grid peak demand (Stranded BTM Solar Analysis, Ammar H. Khan, 2025).
+    </div>
+  </div>
+
+  <div class="method-box">
+    <strong>Key Structural Insight:</strong> Pakistan's summer grid peak demand (incl. KE) has declined from 30,231 MW in June 2022 to approximately 26,617 MW in June 2025 — a reduction of ~3,600 MW — even as temperatures have trended warmer (+0.5–1.4°C annual anomaly per PMD). This counter-intuitive pattern is driven by behind-the-meter solar installations suppressing daytime cooling demand at the grid level. Without BTM growth, the grid peak in June 2025 would have likely approached 28,500–30,000 MW.
+  </div>
+</div>
+
+
+<!-- LOAD SHEDDING CALCULATOR TAB -->
+<div id="tab-loadshed" class="tab-content">
+  <div class="panel">
+    <div class="panel-title">Solar Bridge Calculator — Temperature × RLNG Cargo Availability</div>
+    <div class="load-grid">
+      <div class="input-card">
+        <h3>Inputs</h3>
+        <p>Change temperature, cargo availability, horizon, emergency support and protected-load share. Default mode shows the central thesis: new BTM solar absorbs sunshine-hour deficits, while scarce RLNG is conserved for the 18:00–02:00 post-sunset bridge.</p>
+        <div class="month-tabs">
+          <button class="month-tab active" id="ls-month-jun" onclick="setLsMonth('jun')">June stress shape</button>
+          <button class="month-tab" id="ls-month-jul" onclick="setLsMonth('jul')">July stress shape</button>
+        </div>
+        <div class="controls-row">
+          <div class="control-group">
+            <label>Lahore Daily Max Temperature</label>
+            <div class="current-val" id="ls-tval">44.5°C</div>
+            <input type="range" id="ls-tslider" min="32" max="48" step="0.5" value="44.5" oninput="updateLoadShedding(true)">
+            <div class="slider-label"><span>Cool</span><span>Heatwave</span><span>Extreme</span></div>
+          </div>
+          <div class="control-group">
+            <label>RLNG Cargoes Available</label>
+            <div class="current-val" id="ls-cargo-val">3.0 cargoes</div>
+            <input type="range" id="ls-cargoes" min="0" max="10" step="0.5" value="3" oninput="updateLoadShedding()">
+            <div class="slider-label"><span>0</span><span>3 confirmed</span><span>10</span></div>
+          </div>
+        </div>
+        <div class="controls-row">
+          <div class="control-group">
+            <label>Planning Horizon</label>
+            <div class="current-val" id="ls-horizon-val">45 days</div>
+            <input type="range" id="ls-horizon" min="30" max="75" step="15" value="45" oninput="updateLoadShedding()">
+            <div class="slider-label"><span>30d</span><span>45d</span><span>60–75d</span></div>
+          </div>
+          <div class="control-group">
+            <label>Firm Emergency Support</label>
+            <div class="current-val" id="ls-mitigation-val">300 MW</div>
+            <input type="range" id="ls-mitigation" min="0" max="1000" step="50" value="300" oninput="updateLoadShedding()">
+            <div class="slider-label"><span>0 MW</span><span>limited</span><span>1,000 MW</span></div>
+          </div>
+        </div>
+        <div class="control-group" style="margin-top:1rem">
+          <label>Protected / Non-Sheddable Load Share</label>
+          <div class="current-val" id="ls-protected-val">55%</div>
+          <input type="range" id="ls-protected" min="35" max="70" step="5" value="55" oninput="updateLoadShedding()">
+          <div class="slider-label"><span>35%</span><span>55% central</span><span>70%</span></div>
+        </div>
+        <div class="assumption-toggle">
+          <label>
+            <input type="checkbox" id="ls-btm-absorbs" checked onchange="updateLoadShedding()">
+            <span><strong>BTM solar absorbs sunshine deficit.</strong><br>When ON, the model sets 09:00–16:00 load shedding to zero and conserves RLNG for the 18:00–02:00 post-sunset bridge. When OFF, the model uses an all-day RLNG shortfall allocation.</span>
+          </label>
+        </div>
+      </div>
+      <div>
+        <div class="ls-summary">
+          <div class="result-label">Peak Load Shedding Requirement</div>
+          <div class="big" id="ls-peak-deficit">— MW</div>
+          <div class="small" id="ls-summary-text">—</div>
+          <div class="pill" id="ls-risk-pill">—</div>
+        </div>
+        <div class="ls-kpis">
+          <div class="ls-kpi blue"><div class="v" id="ls-demand-peak">—</div><div class="l">Forecast Peak Demand</div></div>
+          <div class="ls-kpi amber"><div class="v" id="ls-rlng-gap">—</div><div class="l">Bridge / RLNG Gap</div></div>
+          <div class="ls-kpi red"><div class="v" id="ls-exposed-hours">—</div><div class="l">Exposed Feeder Hours</div></div>
+          <div class="ls-kpi green"><div class="v" id="ls-cargo-need">—</div><div class="l">More Cargoes Needed</div></div>
+        </div>
+        <div class="load-note">
+          <strong>Important:</strong> This assumes no Qatar baseline flows; selected cargoes are the only RLNG available and are mainly allocated to power. One cargo is treated as ~700 GWh. In the default BTM mode, daylight deficits are absorbed by behind-the-meter solar and LNG is rationed primarily to the post-sunset bridge.
+        </div>
+      </div>
+    </div>
+    <div class="mode-note" id="ls-mode-note">—</div>
+    <div class="window-card-grid">
+      <div class="window-card"><h4>Sunshine hours · 09:00–16:00</h4><div class="mw" id="sun-mw">— MW</div><div class="meta" id="sun-meta">—</div></div>
+      <div class="window-card"><h4>Evening hours · 18:00–23:00</h4><div class="mw" id="eve-mw">— MW</div><div class="meta" id="eve-meta">—</div></div>
+      <div class="window-card"><h4>Late-night carryover · 00:00–02:00</h4><div class="mw" id="night-mw">— MW</div><div class="meta" id="night-meta">—</div></div>
+      <div class="window-card"><h4>Post-sunset bridge · 18:00–02:00</h4><div class="mw" id="bridge-mw">— MW</div><div class="meta" id="bridge-meta">—</div></div>
+    </div>
+    <div class="two-col">
+      <div class="panel" style="margin-bottom:0">
+        <div class="panel-title">Hourly Load Shedding Requirement (MW)</div>
+        <div class="chart-wrap"><canvas id="loadShedChart"></canvas></div>
+        <div class="note">Hourly shortage = modeled residual after selected LNG cargoes are allocated. In default BTM mode, 09:00–16:00 is set to zero deficit and LNG is conserved for the post-sunset bridge.</div>
+      </div>
+      <div class="panel" style="margin-bottom:0">
+        <div class="panel-title">Window Results</div>
+        <table class="est-table" id="ls-window-table">
+          <tr><th>Window</th><th>Peak Deficit</th><th>Unserved Energy</th><th>Hours Affected</th><th>Exposed Feeder Eq.</th></tr>
+        </table>
+        <div class="note">Exposed feeder equivalent scales system-average outage hours by the share of load that can actually be curtailed after protecting essential/high-priority feeders.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- METHODOLOGY TAB -->
+<div id="tab-method" class="tab-content">
+  <div class="method-box">
+    <strong>Demand Data:</strong> ISMO/CPPA-G hourly System Demand Profile file (FY 2024-25, July 2024 – June 2025),
+    8,760 hourly observations, excluding K-Electric. Daily peak = maximum hourly reading per calendar day.
+    Historical FY 2019-20 through FY 2023-24 peaks from NEPRA State of Industry Report 2024 (Table 56),
+    which includes K-Electric.
+  </div>
+  <div class="method-box">
+    <strong>Temperature Data:</strong> Daily Lahore maximum temperature reconstructed from PMD published monthly
+    mean-maximum climate normals (1961–1990 baseline, Lahore Airport WMO 41640) plus PMD-reported
+    year-specific anomalies for Punjab/Lahore (June 2024: +0.5°C; July 2024: +1.1°C; June 2025: +1.4°C estimated).
+    Specific heatwave days anchored to documented observations (Dawn, 9–12 June 2025: Lahore 44–45°C).
+    <strong>Caveat:</strong> Daily temperature series is reconstructed, not observed. The framework should be
+    re-validated against PMD station data (WMO 41640) when available.
+  </div>
+  <div class="method-box">
+    <strong>Temperature Sensitivity (350 MW/°C, June; 200 MW/°C, July):</strong> Derived from observed
+    demand range during June 2025. Documented peak demand of 23,817 MW at ~44°C vs shoulder-period weekday
+    demand of ~20,000–21,000 MW at ~40–41°C implies approximately 700–950 MW per °C across the 40–44°C range
+    (ISMO basis, excl. KE). A conservative central estimate of 350 MW/°C is applied to reflect that
+    some within-month demand variation is driven by load shedding and non-temperature factors.
+    July coefficient of 200 MW/°C is lower because monsoon cloud cover, humidity, and precipitation
+    suppress the cooling-demand response to temperature.
+  </div>
+  <div class="method-box">
+    <strong>Structural Baseline for FY 2026:</strong> Starting from FY 2024-25 observed peaks,
+    two adjustments are applied: (1) BTM solar suppression: an estimated −600 MW for June and −800 MW
+    for July (cumulative, reflecting ~3–5 GW of new BTM capacity additions at approximately
+    15–20% daytime grid displacement per GW); (2) Underlying demand growth: +400–500 MW
+    (estimated from economic activity recovery at ~1–2% annual demand growth rate, partially offset
+    by energy efficiency improvements). Net structural change is approximately −200 MW for June
+    and −300 MW for July versus FY25 baseline.
+  </div>
+  <div class="method-box">
+    <strong>Weekend Discount (~900 MW):</strong> Applied for Friday and Sunday. Reflects reduced
+    commercial, institutional and industrial loads. Residential cooling load does not decline proportionally
+    on hot weekends, so the discount is lower on extreme temperature days. Applied as flat adjustment
+    in this framework; a more precise model would make the discount temperature-dependent.
+  </div>
+  <div class="method-box">
+    <strong>Monsoon Onset Uncertainty:</strong> The July scenarios assume the Pakistani monsoon
+    is active and producing rainfall. If the monsoon is significantly delayed (>15 days late, as can
+    occur in El Niño years), July temperatures can remain in the 40–42°C range and peak demand could
+    approach the upper scenario band. A delayed monsoon is the primary tail risk for July 2026.
+  </div>
+
+  <div class="method-box">
+    <strong>Solar Bridge Calculator:</strong> The calculator assumes no Qatar baseline flows and treats selected LNG cargoes as the only RLNG available for the planning horizon. One cargo is treated as approximately 700 GWh of power-equivalent energy. Hourly demand shape is taken from the uploaded ISMO peak-day profiles: June 20, 2025 for June stress and July 11, 2024 for July stress. Hourly RLNG dispatch is scaled to the OMO-adjusted requirement of 72.7 GWh/day for June and 78.8 GWh/day for July. In the default mode, new BTM solar is assumed to absorb any 09:00–16:00 sunshine-hour deficit, so the model conserves scarce RLNG for the 18:00–02:00 evening and hot-night bridge. This mode materially reduces required cargoes: over a 45-day horizon, 3 cargoes are close to sufficient on a strict energy basis, while 1 additional cargo is recommended as a buffer; over a 60-day horizon, 1 additional cargo is the minimum and 2 are recommended. Users can turn the BTM assumption OFF to see the all-day RLNG shortfall case.
+  </div>
+
+  <div class="note" style="margin-top:1.5rem">
+    Framework prepared by Ammar H. Khan, April 2026. Data sources: ISMO/CPPA-G, NEPRA State of Industry
+    2024, Pakistan Meteorological Department Monthly Climate Summaries (June–July 2024; June 2025). 
+    All ISMO figures exclude K-Electric; add ~2,800 MW for full national system peak.
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+// ── MODEL PARAMETERS ─────────────────────────────────────────────────────────
+const JUNE_BASE   = 23617;   // MW at 41.8°C
+const JUNE_REF_T  = 41.8;    // °C
+const JUNE_COEF   = 350;     // MW/°C
+const JULY_BASE   = 22766;   // MW at 37.2°C
+const JULY_REF_T  = 37.2;    // °C
+const JULY_COEF   = 200;     // MW/°C
+const WE_DISCOUNT = 900;     // MW
+const LNG_CARGO_GWH = 700;     // Conservative power-equivalent energy per cargo
+const HOURLY_MODEL = {"jun": {"demand": [23817.306, 23586.090399999997, 23315.6577, 22797.6524, 22250.386, 21734.879, 20275.1892, 19009.415699999998, 19033.1077, 19075.463600000003, 18455.1836, 18324.7877, 17971.034399999997, 18829.728600000002, 19907.693, 20516.8222, 20804.313, 20978.8341, 20127.884100000003, 20494.771800000002, 21795.9356, 22594.5359, 22750.0818, 23593.4918], "rlng": [4006.167, 4009.1899999999996, 3678.268, 3536.595, 3489.2760000000003, 3651.529, 3491.6539999999995, 3479.9839999999995, 3458.9190000000003, 3173.9950000000003, 3031.5820000000003, 3243.9410000000003, 3133.4539999999997, 3201.9590000000003, 3203.9359999999997, 3439.599, 3253.9149999999995, 3262.627, 3135.624, 3180.91, 3592.148, 3687.0429999999997, 3738.529, 4364.649], "profilePeak": 23817.306, "baseRlngGwh": 72.7, "label": "June 2026 / June 2025 ISMO peak-day shape"}, "jul": {"demand": [20972.112699999998, 20351.3213, 19689.563, 19336.0026, 19152.239, 18881.8233, 17991.060100000002, 17639.954100000003, 18056.5911, 18835.4938, 18879.1528, 18799.895800000002, 18861.1928, 19391.6071, 20152.9065, 20657.228300000002, 20510.4686, 19908.2734, 19434.1692, 20324.4447, 21879.6877, 22400.514199999998, 22691.9463, 23065.9374], "rlng": [4269.446, 3873.39, 3761.759, 3528.1259999999997, 3655.1639999999993, 3747.212, 3520.3390000000004, 3328.504, 3324.403, 3147.057, 3113.4289999999996, 3215.652, 3327.5149999999994, 3674.927, 3844.905, 3997.085, 3722.1749999999997, 3544.7680000000005, 3565.3220000000006, 3733.8810000000003, 3924.198, 4005.041, 4010.4420000000005, 4127.9169999999995], "profilePeak": 23065.9374, "baseRlngGwh": 78.8, "label": "July 2026 / July 2024 ISMO peak-day shape"}};
+
+let currentMonth = 'jun';
+let currentDay   = 'weekday';
+
+function forecastFor(month, day, tmax) {
+  const base  = month === 'jun' ? JUNE_BASE   : JULY_BASE;
+  const refT  = month === 'jun' ? JUNE_REF_T  : JULY_REF_T;
+  const coef  = month === 'jun' ? JUNE_COEF   : JULY_COEF;
+  const dow   = day === 'weekday' ? 0 : WE_DISCOUNT;
+  const tempEffect = coef * (tmax - refT);
+  return { base, tempEffect, dow, total: Math.round(base + tempEffect - dow) };
+}
+
+function forecast(tmax) {
+  return forecastFor(currentMonth, currentDay, tmax);
+}
+
+function getBand(tmax) {
+  if (currentMonth === 'jun') {
+    if (tmax < 38) return { cls:'band-cool', label:'Cool' };
+    if (tmax < 41) return { cls:'band-normal', label:'Normal' };
+    if (tmax < 43) return { cls:'band-warm', label:'Warm' };
+    if (tmax < 45) return { cls:'band-hot', label:'Hot' };
+    return { cls:'band-extreme', label:'Extreme' };
+  } else {
+    if (tmax < 33) return { cls:'band-cool', label:'Cool' };
+    if (tmax < 36) return { cls:'band-normal', label:'Normal' };
+    if (tmax < 38) return { cls:'band-warm', label:'Warm' };
+    if (tmax < 40) return { cls:'band-hot', label:'Hot' };
+    return { cls:'band-extreme', label:'Extreme' };
+  }
+}
+
+function updateForecast(syncLoad = true) {
+  const tmax = parseFloat(document.getElementById('tslider').value);
+  document.getElementById('tval').textContent = tmax.toFixed(1) + '°C';
+  const f = forecast(tmax);
+  document.getElementById('result-val').innerHTML = f.total.toLocaleString() + ' <span>MW</span>';
+
+  const ref = currentMonth === 'jun' ? 23817 : 23066;
+  const delta = f.total - ref;
+  const sign  = delta >= 0 ? '+' : '';
+  document.getElementById('result-delta').textContent =
+    sign + delta.toLocaleString() + ' MW vs ' + (currentMonth === 'jun' ? 'Jun 2025' : 'Jul 2024') + ' actual peak';
+
+  const band = getBand(tmax);
+  const bd = document.getElementById('result-band');
+  bd.className = 'result-band ' + band.cls;
+  bd.textContent = band.label;
+
+  // Decomposition bars
+  const maxMW = 28000;
+  document.getElementById('bar-base').style.width = (f.base / maxMW * 100) + '%';
+  document.getElementById('bar-temp').style.width = (Math.max(0, Math.abs(f.tempEffect)) / 3000 * 100) + '%';
+  document.getElementById('bar-temp').style.background = f.tempEffect >= 0 ? '#C8923A' : '#52B788';
+  document.getElementById('bar-dow').style.width  = (f.dow / maxMW * 100) + '%';
+
+  document.getElementById('num-base').textContent = f.base.toLocaleString() + ' MW';
+  document.getElementById('num-temp').textContent = (f.tempEffect >= 0 ? '+' : '') + Math.round(f.tempEffect).toLocaleString() + ' MW';
+  document.getElementById('num-dow').textContent  = '−' + f.dow.toLocaleString() + ' MW';
+  if (document.getElementById('ls-tslider') && syncLoad) {
+    const lsSlider = document.getElementById('ls-tslider');
+    lsSlider.value = tmax;
+    document.getElementById('ls-tval').textContent = tmax.toFixed(1) + '°C';
+    updateLoadShedding(false);
+  }
+}
+
+function setMonth(m) {
+  currentMonth = m;
+  document.querySelectorAll('.month-tab').forEach((b,i) => {
+    b.classList.toggle('active', (i===0&&m==='jun')||(i===1&&m==='jul'));
+  });
+  const slider = document.getElementById('tslider');
+  slider.min = m === 'jun' ? 32 : 28;
+  slider.max = m === 'jun' ? 48 : 44;
+  slider.value = m === 'jun' ? 40.4 : 36.1;
+  if (document.getElementById('ls-tslider')) {
+    const lsSlider = document.getElementById('ls-tslider');
+    lsSlider.min = m === 'jun' ? 32 : 28;
+    lsSlider.max = m === 'jun' ? 48 : 44;
+    if (Math.abs(parseFloat(lsSlider.value) - parseFloat(slider.value)) > 0.01) { lsSlider.value = slider.value; }
+    document.getElementById('ls-month-jun')?.classList.toggle('active', m==='jun');
+    document.getElementById('ls-month-jul')?.classList.toggle('active', m==='jul');
+  }
+  updateForecast();
+}
+
+function setDay(d) {
+  currentDay = d;
+  document.getElementById('btn-wd').classList.toggle('active', d==='weekday');
+  document.getElementById('btn-we').classList.toggle('active', d==='weekend');
+  updateForecast();
+  if (document.getElementById('ls-tslider')) updateLoadShedding(false);
+}
+
+function showTab(t) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  const tabs = ['scenario','history','loadshed','method'];
+  const idx = tabs.indexOf(t);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  document.getElementById('tab-' + t).classList.add('active');
+  if (t === 'history') renderCharts();
+  if (t === 'loadshed') updateLoadShedding(false);
+}
+
+
+
+// ── LOAD SHEDDING MODEL ──────────────────────────────────────────────────────
+let loadShedChart = null;
+function setLsMonth(m) {
+  currentMonth = m;
+  document.getElementById('ls-month-jun').classList.toggle('active', m==='jun');
+  document.getElementById('ls-month-jul').classList.toggle('active', m==='jul');
+  const s = document.getElementById('ls-tslider');
+  s.min = m === 'jun' ? 32 : 28;
+  s.max = m === 'jun' ? 48 : 44;
+  s.value = m === 'jun' ? 44.5 : 40.5;
+  updateLoadShedding(true);
+}
+function fmt(n, d=0) { return Number(n).toLocaleString(undefined, {maximumFractionDigits:d, minimumFractionDigits:d}); }
+function getLoadModelInputs() {
+  const t = parseFloat(document.getElementById('ls-tslider').value);
+  const cargoes = parseFloat(document.getElementById('ls-cargoes').value);
+  const horizon = parseFloat(document.getElementById('ls-horizon').value);
+  const mitigation = parseFloat(document.getElementById('ls-mitigation').value);
+  const protectedShare = parseFloat(document.getElementById('ls-protected').value) / 100;
+  const btmAbsorbs = document.getElementById('ls-btm-absorbs') ? document.getElementById('ls-btm-absorbs').checked : true;
+  return { t, cargoes, horizon, mitigation, protectedShare, btmAbsorbs };
+}
+function computeLoadShedding(cargoOverride=null) {
+  const inp = getLoadModelInputs();
+  if (cargoOverride !== null) inp.cargoes = cargoOverride;
+  const month = currentMonth;
+  const model = HOURLY_MODEL[month];
+  const f = forecastFor(month, currentDay, inp.t);
+  const baseDemandPeak = month === 'jun' ? JUNE_BASE : JULY_BASE;
+  const baseRlngGwh = model.baseRlngGwh;
+  const availableGwhDay = inp.cargoes * LNG_CARGO_GWH / inp.horizon;
+  const rlngProfileSum = model.rlng.reduce((a,b)=>a+b,0);
+  const sunshineHours = new Set([9,10,11,12,13,14,15,16]);
+  const bridgeHours = new Set([18,19,20,21,22,23,0,1,2]);
+  const hourly = [];
+
+  for (let h=0; h<24; h++) {
+    const shape = model.demand[h] / model.profilePeak;
+    const forecastDemand = shape * f.total;
+    const baselineDemand = shape * baseDemandPeak;
+    const tempUplift = Math.max(0, forecastDemand - baselineDemand);
+    const baseRlngMwh = (model.rlng[h] / rlngProfileSum) * baseRlngGwh * 1000;
+    hourly.push({ h, demand: forecastDemand, baselineDemand, tempUplift, baseRlngMwh, rlngLost:0, deficit:0, bridgeNeed:0, btmAbsorbed:0 });
+  }
+
+  let bridgeNeedMwh = 0;
+  if (inp.btmAbsorbs) {
+    // New default: BTM absorbs sunshine deficit and scarce LNG is reserved for 18:00–02:00.
+    hourly.forEach(x => {
+      if (sunshineHours.has(x.h)) {
+        x.btmAbsorbed = Math.max(0, x.baseRlngMwh + x.tempUplift);
+        x.deficit = 0;
+      } else if (bridgeHours.has(x.h)) {
+        x.bridgeNeed = Math.max(0, x.baseRlngMwh + x.tempUplift - inp.mitigation);
+        bridgeNeedMwh += x.bridgeNeed;
+      } else {
+        x.deficit = 0;
+      }
+    });
+    const availableMwh = availableGwhDay * 1000;
+    const shortageFrac = bridgeNeedMwh > 0 ? Math.max(0, 1 - availableMwh / bridgeNeedMwh) : 0;
+    hourly.forEach(x => {
+      if (bridgeHours.has(x.h)) {
+        x.rlngLost = x.bridgeNeed * shortageFrac;
+        x.deficit = x.rlngLost;
+      }
+    });
+  } else {
+    // Legacy stress case: all-day RLNG shortfall is distributed across the full 24-hour profile.
+    const rlngLossFracAllDay = Math.max(0, Math.min(1, 1 - availableGwhDay / baseRlngGwh));
+    hourly.forEach(x => {
+      x.rlngLost = x.baseRlngMwh * rlngLossFracAllDay;
+      x.deficit = Math.max(0, x.rlngLost + x.tempUplift - inp.mitigation);
+    });
+    bridgeNeedMwh = hourly.filter(x => bridgeHours.has(x.h)).reduce((a,x)=>a + Math.max(0, x.baseRlngMwh + x.tempUplift - inp.mitigation), 0);
+  }
+
+  const totalEnergyGwh = hourly.reduce((a,x)=>a+x.deficit,0)/1000;
+  const avgDemandGw = hourly.reduce((a,x)=>a+x.demand,0)/24/1000;
+  const systemHours = totalEnergyGwh / Math.max(0.1, avgDemandGw);
+  const sheddable = Math.max(0.15, 1 - inp.protectedShare);
+  const exposedHours = systemHours / sheddable;
+  const peakDeficit = Math.max(...hourly.map(x=>x.deficit));
+  const peakHour = hourly.find(x=>x.deficit===peakDeficit).h;
+  const bridgeNeedGwh = bridgeNeedMwh / 1000;
+  const rlngGapGwh = inp.btmAbsorbs ? Math.max(0, bridgeNeedGwh - availableGwhDay) : Math.max(0, baseRlngGwh - availableGwhDay);
+  const rlngLossFrac = inp.btmAbsorbs ? (bridgeNeedGwh > 0 ? Math.max(0, 1 - availableGwhDay / bridgeNeedGwh) : 0) : Math.max(0, Math.min(1, 1 - availableGwhDay / baseRlngGwh));
+  return { inp, month, f, hourly, baseRlngGwh, availableGwhDay, bridgeNeedGwh, rlngGapGwh, rlngLossFrac, totalEnergyGwh, systemHours, exposedHours, peakDeficit, peakHour };
+}
+function windowStats(res, name, hours) {
+  const rows = hours.map(h => res.hourly[h]);
+  const energy = rows.reduce((a,x)=>a+x.deficit,0)/1000;
+  const avgDemandGw = rows.reduce((a,x)=>a+x.demand,0)/rows.length/1000;
+  const peak = Math.max(...rows.map(x=>x.deficit));
+  const demandPeak = Math.max(...rows.map(x=>x.demand));
+  const affected = rows.filter(x=>x.deficit > 100).length;
+  const systemHrs = energy / Math.max(0.1, avgDemandGw);
+  const sheddable = Math.max(0.15, 1 - res.inp.protectedShare);
+  const exposed = systemHrs / sheddable;
+  return { name, hours, peak, demandPeak, energy, affected, systemHrs, exposed };
+}
+function findCargoesNeeded() {
+  for (let c=0; c<=12.05; c+=0.05) {
+    const r = computeLoadShedding(c);
+    if (r.totalEnergyGwh < 0.05 && r.peakDeficit < 50) return c;
+  }
+  return 12;
+}
+function updateLoadShedding(syncMain=false) {
+  if (!document.getElementById('ls-tslider')) return;
+  const inp = getLoadModelInputs();
+  document.getElementById('ls-tval').textContent = inp.t.toFixed(1) + '°C';
+  document.getElementById('ls-cargo-val').textContent = inp.cargoes.toFixed(1) + ' cargoes';
+  document.getElementById('ls-horizon-val').textContent = inp.horizon.toFixed(0) + ' days';
+  document.getElementById('ls-mitigation-val').textContent = fmt(inp.mitigation) + ' MW';
+  document.getElementById('ls-protected-val').textContent = fmt(inp.protectedShare*100) + '%';
+  if (syncMain) {
+    const mainSlider = document.getElementById('tslider');
+    if (mainSlider) { mainSlider.value = inp.t; updateForecast(false); }
+  }
+  const res = computeLoadShedding();
+  const cargoNeed = findCargoesNeeded();
+  const addCargo = Math.max(0, cargoNeed - res.inp.cargoes);
+  const risk = res.peakDeficit >= 3000 ? 'Extreme Load-Shedding Risk' : res.peakDeficit >= 2000 ? 'Severe Load-Shedding Risk' : res.peakDeficit >= 1000 ? 'Material Load-Shedding Risk' : res.peakDeficit >= 250 ? 'Manageable Stress' : 'Low Stress';
+  document.getElementById('ls-peak-deficit').textContent = fmt(res.peakDeficit) + ' MW';
+  document.getElementById('ls-summary-text').textContent = (res.inp.btmAbsorbs ? 'BTM mode ON: sunshine-hour deficit is absorbed and LNG is reserved for 18:00–02:00. ' : 'BTM mode OFF: all-day RLNG shortfall allocation. ') + 'Peak shortage occurs around ' + String(res.peakHour).padStart(2,'0') + ':00. Unserved energy is ' + fmt(res.totalEnergyGwh,1) + ' GWh/day, equal to ' + fmt(res.systemHours,1) + ' system-average outage hours or approximately ' + fmt(res.exposedHours,1) + ' hours on exposed feeders.';
+  document.getElementById('ls-risk-pill').textContent = risk;
+  document.getElementById('ls-demand-peak').textContent = fmt(res.f.total/1000,1) + ' GW';
+  document.getElementById('ls-rlng-gap').textContent = fmt(res.rlngGapGwh,1) + ' GWh/d';
+  document.getElementById('ls-exposed-hours').textContent = fmt(res.exposedHours,1) + 'h';
+  document.getElementById('ls-cargo-need').textContent = fmt(addCargo,1);
+  document.getElementById('ls-mode-note').innerHTML = res.inp.btmAbsorbs ? '<strong>BTM absorption mode is ON.</strong> The 09:00–16:00 sunshine deficit is set to zero, and LNG cargoes are allocated against the post-sunset bridge requirement of ' + fmt(res.bridgeNeedGwh,1) + ' GWh/day. Available LNG is ' + fmt(res.availableGwhDay,1) + ' GWh/day; residual bridge gap is ' + fmt(res.rlngGapGwh,1) + ' GWh/day.' : '<strong>BTM absorption mode is OFF.</strong> The calculator is allocating the RLNG shortfall across the full 24-hour profile; sunshine-hour deficits may therefore appear.';
+  const sun = windowStats(res, 'Sunshine · 09:00–16:00', [9,10,11,12,13,14,15,16]);
+  const eve = windowStats(res, 'Evening · 18:00–23:00', [18,19,20,21,22,23]);
+  const night = windowStats(res, 'Late-night · 00:00–02:00', [0,1,2]);
+  const bridge = windowStats(res, 'Post-sunset bridge · 18:00–02:00', [18,19,20,21,22,23,0,1,2]);
+  const all = windowStats(res, 'Full day', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]);
+  const setCard = (prefix, w) => {
+    document.getElementById(prefix+'-mw').textContent = fmt(w.peak) + ' MW';
+    document.getElementById(prefix+'-meta').innerHTML = 'Window peak demand: ' + fmt(w.demandPeak) + ' MW<br>Unserved: ' + fmt(w.energy,1) + ' GWh · affected hours: ' + w.affected + '<br>Exposed feeder eq.: ' + fmt(w.exposed,1) + ' hrs';
+  };
+  setCard('sun', sun); setCard('eve', eve); setCard('night', night); setCard('bridge', bridge);
+  const rows = [sun,eve,night,bridge,all].map(w => '<tr><td><strong>'+w.name+'</strong></td><td>'+fmt(w.peak)+' MW</td><td>'+fmt(w.energy,1)+' GWh</td><td>'+w.affected+' hrs</td><td>'+fmt(w.exposed,1)+' hrs</td></tr>').join('');
+  document.getElementById('ls-window-table').innerHTML = '<tr><th>Window</th><th>Peak Deficit</th><th>Unserved Energy</th><th>Hours Affected</th><th>Exposed Feeder Eq.</th></tr>' + rows;
+  const ctx = document.getElementById('loadShedChart');
+  if (ctx && typeof Chart !== 'undefined') {
+    const labels = res.hourly.map(x => String(x.h).padStart(2,'0') + ':00');
+    const data = res.hourly.map(x => Math.round(x.deficit));
+    if (loadShedChart) {
+      loadShedChart.data.labels = labels;
+      loadShedChart.data.datasets[0].data = data;
+      loadShedChart.update();
+    } else {
+      loadShedChart = new Chart(ctx.getContext('2d'), {
+        type: 'bar',
+        data: { labels, datasets: [{ label: 'Load shedding requirement (MW)', data, backgroundColor: '#9B2335', borderRadius: 3 }] },
+        options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:c=>' '+fmt(c.raw)+' MW shortage' } } }, scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v), font:{size:11} }, grid:{ color:'#E5E5E5' } }, x:{ ticks:{ maxTicksLimit:12, font:{size:10} }, grid:{ display:false } } } }
+      });
+    }
+  }
+}
+
+// ── CHARTS ───────────────────────────────────────────────────────────────────
+let chartsRendered = false;
+function renderCharts() {
+  if (chartsRendered) return;
+  chartsRendered = true;
+
+  // Historical monthly peak chart
+  const histCtx = document.getElementById('historicalChart').getContext('2d');
+  new Chart(histCtx, {
+    type: 'bar',
+    data: {
+      labels: ['FY19-20','FY20-21','FY21-22','FY22-23','FY23-24','FY24-25\n(adj.)'],
+      datasets: [
+        { label: 'June Peak (MW)', data: [24349,26682,30231,29051,27474,26617],
+          backgroundColor: '#C8923A', borderRadius: 3 },
+        { label: 'July Peak (MW)', data: [24927,26085,28650,28447,29890,25866],
+          backgroundColor: '#2563EB', borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position:'bottom', labels: { font:{ size:11 }, boxWidth:12 } },
+        tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + c.raw.toLocaleString() + ' MW' } }
+      },
+      scales: {
+        y: { beginAtZero: false, min: 22000,
+             ticks: { callback: v => (v/1000).toFixed(0) + 'k', font:{size:11} },
+             grid: { color: '#E5E5E5' } },
+        x: { ticks: { font:{size:11} }, grid: { display: false } }
+      }
+    }
+  });
+
+  // June 2025 daily demand
+  const juneLabels = [];
+  const juneData   = [];
+  // Representative June 2025 weekday peaks (from ISMO data)
+  const june25 = [
+    [1,21055],[2,19442],[3,19012],[4,18477],[5,19149],
+    [6,20096],[7,20480],[8,21420],[9,20850],[10,21657],
+    [11,22360],[12,23050],[13,23035],[14,22555],[15,22300],
+    [16,21724],[17,21940],[18,23204],[19,23529],[20,23817],
+    [21,23796],[22,23006],[23,23503],[24,23639],[25,22909],
+    [26,22061],[27,22788],[28,22640],[29,22250],[30,22952]
+  ];
+  june25.forEach(([d,v]) => { juneLabels.push('Jun ' + d); juneData.push(v); });
+
+  const june25Ctx = document.getElementById('june25Chart').getContext('2d');
+  new Chart(june25Ctx, {
+    type: 'line',
+    data: {
+      labels: juneLabels,
+      datasets: [{
+        label: 'Daily Peak (MW)',
+        data: juneData,
+        borderColor: '#9B2335',
+        backgroundColor: 'rgba(155,35,53,0.06)',
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: '#9B2335',
+        fill: true, tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ' ' + c.raw.toLocaleString() + ' MW' } },
+        annotation: {}
+      },
+      scales: {
+        y: { beginAtZero: false, min: 16000,
+             ticks: { callback: v => (v/1000).toFixed(1) + 'k', font:{size:11} },
+             grid: { color:'#E5E5E5' } },
+        x: { ticks: { maxTicksLimit:10, font:{size:10} }, grid:{ display:false } }
+      }
+    }
+  });
+}
+
+// Initialise
+updateForecast(false);
+updateLoadShedding(false);
+</script>
+</body>
+</html>
