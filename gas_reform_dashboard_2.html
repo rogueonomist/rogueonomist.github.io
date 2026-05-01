@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Gas Sector Reform — Minister's Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --primary: #FFFFFF;
+    --secondary: #FAFAFA;
+    --border: #E5E5E5;
+    --accent: #C8923A;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --success: #52B788;
+    --warning: #9B2335;
+    --blue: #2563EB;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: var(--primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  .page-header {
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 0 1.5rem;
+    background: var(--primary);
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  h1.page-title {
+    font-family: Georgia, serif;
+    font-size: 34px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+  .page-subtitle { font-size: 14px; color: var(--text-secondary); max-width: 720px; line-height: 1.7; }
+  .meta-row {
+    display: flex; align-items: center; gap: 1.5rem;
+    margin-top: 1.25rem;
+    font-size: 12px; color: var(--text-tertiary);
+  }
+  .meta-tag {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: #FFF5E6; color: #8B5E1A;
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* NAV TABS */
+  .tab-bar {
+    display: flex; gap: 0; border-bottom: 1px solid var(--border);
+    background: var(--primary); position: sticky; top: 0; z-index: 10;
+    padding: 0 2rem;
+  }
+  .tab-btn {
+    background: none; border: none; border-bottom: 2px solid transparent;
+    padding: 0.9rem 1.25rem;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-tertiary); cursor: pointer;
+    transition: all 0.2s; margin-bottom: -1px; white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text-primary); }
+  .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+  .tab-content { display: none; padding: 2.5rem 0; }
+  .tab-content.active { display: block; }
+
+  /* SECTION STYLES */
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+  .section-title {
+    font-family: Georgia, serif; font-size: 24px; font-weight: 400;
+    color: var(--text-primary); margin-bottom: 0.75rem; line-height: 1.2;
+  }
+  .section-intro { font-size: 14px; color: var(--text-secondary); line-height: 1.7; max-width: 800px; margin-bottom: 2rem; }
+
+  /* GRIDS */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+  .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 2rem; }
+
+  /* KPI CARDS */
+  .kpi {
+    border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem;
+    background: var(--primary); position: relative; overflow: hidden;
+  }
+  .kpi.red { border-top: 3px solid var(--warning); }
+  .kpi.amber { border-top: 3px solid var(--accent); }
+  .kpi.green { border-top: 3px solid var(--success); }
+  .kpi.blue { border-top: 3px solid var(--blue); }
+  .kpi-val {
+    font-family: Georgia, serif; font-size: 30px; font-weight: 400;
+    color: var(--text-primary); line-height: 1; margin-bottom: 0.4rem;
+  }
+  .kpi-val.sm { font-size: 22px; }
+  .kpi-label { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+  .kpi-source { font-size: 11px; color: var(--text-tertiary); margin-top: 0.5rem; }
+
+  /* PANELS */
+  .panel {
+    border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem;
+    background: var(--primary);
+  }
+  .panel-title {
+    font-size: 13px; font-weight: 600; color: var(--text-primary);
+    margin-bottom: 1rem; letter-spacing: 0.02em;
+  }
+  .panel-sub { font-size: 12px; color: var(--text-tertiary); margin-bottom: 1rem; }
+
+  /* TABLES */
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.data-table th {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); text-align: left; padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border); background: var(--secondary);
+  }
+  table.data-table td {
+    padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--text-primary);
+    vertical-align: top;
+  }
+  table.data-table tr:last-child td { border-bottom: none; }
+  table.data-table tr:hover td { background: var(--secondary); }
+  .td-red { color: var(--warning); font-weight: 600; }
+  .td-green { color: var(--success); font-weight: 600; }
+  .td-amber { color: var(--accent); font-weight: 600; }
+  .td-bold { font-weight: 600; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--secondary); border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem; border-radius: 0 6px 6px 0; margin: 1.5rem 0;
+    font-size: 13px; color: var(--text-primary); line-height: 1.6;
+  }
+  .callout.red { border-left-color: var(--warning); }
+  .callout.green { border-left-color: var(--success); }
+  .callout strong { font-weight: 600; }
+
+  /* CALCULATOR */
+  .calc-panel {
+    background: var(--secondary); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1.5rem;
+  }
+  .calc-title { font-family: Georgia, serif; font-size: 17px; font-weight: 400; margin-bottom: 0.25rem; }
+  .calc-sub { font-size: 12px; color: var(--text-tertiary); margin-bottom: 1.5rem; }
+  .calc-row { margin-bottom: 1rem; }
+  .calc-label {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--text-secondary); margin-bottom: 0.35rem;
+  }
+  .calc-label span { font-weight: 600; color: var(--text-primary); }
+  input[type=range] {
+    width: 100%; height: 4px; appearance: none;
+    background: var(--border); border-radius: 2px; cursor: pointer; outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none; width: 16px; height: 16px;
+    background: var(--text-primary); border-radius: 50%; cursor: pointer;
+  }
+  .calc-result {
+    margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.25rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;
+  }
+  .result-item { background: var(--primary); border: 1px solid var(--border); border-radius: 6px; padding: 0.875rem; }
+  .result-val { font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: var(--text-primary); line-height: 1; }
+  .result-label { font-size: 11px; color: var(--text-tertiary); margin-top: 0.3rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* TIMELINE / SEQUENCE */
+  .timeline { display: flex; gap: 0; margin-bottom: 2rem; }
+  .tl-item { flex: 1; position: relative; }
+  .tl-item:not(:last-child)::after {
+    content: ''; position: absolute; top: 22px; right: 0;
+    width: calc(100% - 3rem); height: 2px; background: var(--border);
+    z-index: 0;
+  }
+  .tl-dot {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--secondary);
+    border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: var(--text-primary);
+    position: relative; z-index: 1; margin-bottom: 0.75rem;
+  }
+  .tl-dot.active { background: var(--text-primary); border-color: var(--text-primary); color: #fff; }
+  .tl-dot.green { background: var(--success); border-color: var(--success); color: #fff; }
+  .tl-dot.amber { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tl-label { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+  .tl-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.5; }
+  .tl-year { font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 0.25rem; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+  /* PILL BADGE */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  }
+  .badge-red { background: #FDECEA; color: var(--warning); }
+  .badge-green { background: #E8F5EE; color: #2D7A56; }
+  .badge-amber { background: #FFF3E0; color: #9B6A1A; }
+
+  /* WATERFALL */
+  .waterfall-row {
+    display: flex; align-items: center; gap: 1rem; padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border); font-size: 13px;
+  }
+  .waterfall-label { flex: 1; color: var(--text-secondary); }
+  .waterfall-bar-wrap { flex: 2; height: 20px; background: var(--secondary); border-radius: 3px; overflow: hidden; }
+  .waterfall-bar { height: 100%; border-radius: 3px; }
+  .waterfall-val { width: 80px; text-align: right; font-weight: 600; color: var(--text-primary); font-size: 12px; }
+
+  @media (max-width: 768px) {
+    .grid-4, .grid-3, .grid-2, .grid-2-1, .grid-1-2 { grid-template-columns: 1fr; }
+    h1.page-title { font-size: 26px; }
+    .tab-btn { padding: 0.75rem 0.875rem; font-size: 11px; }
+    .kpi-val { font-size: 24px; }
+    .timeline { flex-direction: column; }
+    .tl-item:not(:last-child)::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div class="eyebrow">Ministry of Energy — Petroleum Division · April 2026 · Restricted</div>
+    <h1 class="page-title">Pakistan Gas Sector Reform<br>Comprehensive Policy Dashboard</h1>
+    <p class="page-subtitle">A quantitative analysis of the three-front fiscal crisis facing Pakistan's gas sector — tariff collapse, a US$1.3 billion LPG import burden, and subsidised residential consumption — with a sequenced reform architecture generating US$2.5+ billion per year in foreign exchange savings by FY2030.</p>
+    <div class="meta-row">
+      <span class="meta-tag">Restricted</span>
+      <span>Primary sources: SNGPL ERR FY2026-27 · SSGC ERR FY2026-27 · Pakistan Energy Yearbook 2024-25 · Census 2023</span>
+    </div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('overview')">Crisis Overview</button>
+  <button class="tab-btn" onclick="switchTab('tariff')">Tariff Gap</button>
+  <button class="tab-btn" onclick="switchTab('lpg')">LPG Market</button>
+  <button class="tab-btn" onclick="switchTab('electrification')">Electrification</button>
+  <button class="tab-btn" onclick="switchTab('solutions')">Reform Path</button>
+  <button class="tab-btn" onclick="switchTab('calculators')">Calculators</button>
+</div>
+
+<!-- ====== TAB: OVERVIEW ====== -->
+<div id="tab-overview" class="tab-content active">
+  <div class="container">
+
+    <div class="section-label">Sector Diagnosis</div>
+    <div class="section-title">Pakistan's gas sector is facing a compounding fiscal crisis</div>
+    <p class="section-intro">Three simultaneous structural failures — tariffs set at a fraction of cost recovery, a US$1.3 billion LPG import bill concentrated in commercial users, and subsidised residential gas directed at water heating — compound annually into an unsustainable quasi-fiscal liability exceeding Rs. 1 trillion in accumulated shortfalls.</p>
+
+    <!-- KPI CARDS ROW 1 -->
+    <div class="grid-4">
+      <div class="kpi red">
+        <div class="kpi-val">Rs. 1.1T+</div>
+        <div class="kpi-label">Combined accumulated utility shortfalls (SNGPL + SSGC GDS)</div>
+        <div class="kpi-source">FY2026-27 ERR Petitions</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-val">US$1.31B</div>
+        <div class="kpi-label">Annual LPG import bill — 77% import dependence</div>
+        <div class="kpi-source">Pakistan Energy Yearbook 2024-25</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-val">Rs. 375B</div>
+        <div class="kpi-label">SSGC annual gas shortfall — Rs. 2,012/MMBtu gap</div>
+        <div class="kpi-source">SSGC ERR FY2026-27</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-val">US$2.5B+</div>
+        <div class="kpi-label">Annual FX savings potential by FY2030 — full reform</div>
+        <div class="kpi-source">This document — synthesis</div>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="kpi blue">
+        <div class="kpi-val sm">Rs. 576B</div>
+        <div class="kpi-label">SNGPL prior-year accumulated shortfall</div>
+        <div class="kpi-source">SNGPL ERR FY2026-27</div>
+      </div>
+      <div class="kpi blue">
+        <div class="kpi-val sm">Rs. 545B</div>
+        <div class="kpi-label">SSGC Gas Development Surcharge receivable (sovereign liability)</div>
+        <div class="kpi-source">SSGC ERR FY2026-27</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-val sm">12.1M</div>
+        <div class="kpi-label">Domestic piped gas households — receiving implicit subsidy</div>
+        <div class="kpi-source">FY2026-27 ERR Petitions</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-val sm">1.609M</div>
+        <div class="kpi-label">LPG-primary households — Census 2023 Table 22</div>
+        <div class="kpi-source">PBS Census 2023</div>
+      </div>
+    </div>
+
+    <!-- CHART: THREE FRONT CRISIS -->
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title">Annual quasi-fiscal deficit — current trajectory vs. reform path</div>
+        <div class="panel-sub">Rs. billion per year. Without reform, shortfalls compound at Rs. 300–400B/year.</div>
+        <div style="position: relative; height: 280px;">
+          <canvas id="deficitChart" role="img" aria-label="Line chart showing gas sector deficit with and without reform from FY2026 to FY2030">Deficit trajectory: without reform grows to 800B+ by FY2030; with reform falls to 150-200B.</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Foreign exchange savings — cumulative by reform pillar (FY2030)</div>
+        <div class="panel-sub">USD million per year, at FY2030 full implementation scenario.</div>
+        <div style="position: relative; height: 280px;">
+          <canvas id="fxSavingsChart" role="img" aria-label="Bar chart showing FX savings by reform pillar">FX savings: geyser electrification 1650M, C&I LPG conversion 284M, urban LPG 91M, UFG reduction 80M.</canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- THREE CRISIS PILLARS -->
+    <div class="section-label" style="margin-top: 1rem;">Three Structural Failures</div>
+    <div class="grid-3" style="margin-top: 0.75rem;">
+      <div class="panel">
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--warning); text-transform: uppercase; margin-bottom: 0.5rem;">Pillar I — Tariff Collapse</div>
+        <div style="font-family: Georgia, serif; font-size: 18px; margin-bottom: 0.75rem; line-height: 1.25;">Protected households pay Rs. 200/MMBtu against a cost of Rs. 1,757/MMBtu</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">An effective subsidy of Rs. 1,507/MMBtu — an 8.8× tariff gap — for the lowest slab. Accumulated over 12.1 million domestic consumers, this creates Pakistan's largest undisclosed budgetary liability, growing by Rs. 300–400B per year without structural intervention.</div>
+        <div class="callout red" style="margin-top: 1rem;">SNGPL's proposed flat rate of Rs. 1,757/MMBtu would be the most significant residential tariff restructuring in Pakistan's gas sector history.</div>
+      </div>
+      <div class="panel">
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem;">Pillar II — LPG Import Burden</div>
+        <div style="font-family: Georgia, serif; font-size: 18px; margin-bottom: 0.75rem; line-height: 1.25;">US$1.31 billion import bill — two-thirds of which is addressable commercial demand</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">The 1.47 million tonnes of C&I LPG is not market preference — it is the accumulated effect of gas network exclusion. Commercial users pay Rs. 7,084/MMBtu for LPG when RLNG is available at Rs. 3,652/MMBtu. Converting 90% of this demand yields US$284M/year in net FX savings without a single rupee of subsidy.</div>
+        <div class="callout" style="margin-top: 1rem;"><strong>Commercial users are now the single largest LPG-consuming category at 42.8%</strong> — overtaking households (33.2%). This fundamentally shifts the policy priority.</div>
+      </div>
+      <div class="panel">
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--blue); text-transform: uppercase; margin-bottom: 0.5rem;">Pillar III — Subsidised Non-Essential Use</div>
+        <div style="font-family: Georgia, serif; font-size: 18px; margin-bottom: 0.75rem; line-height: 1.25;">70% of residential gas goes to water and space heating — not cooking</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">The majority of the residential gas subsidy does not heat a cooking pot — it fuels gas geysers and space heaters at below-cost prices. Full geyser electrification alone would avoid ~US$1.65B/year in RLNG imports. At the Rs. 1,757/MMBtu tariff threshold, heat pump payback falls to 2.9 years — making switching economically rational.</div>
+        <div class="callout green" style="margin-top: 1rem;">Tariff reform is the trigger: once gas is priced at cost recovery, household electrification becomes self-executing.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== TAB: TARIFF GAP ====== -->
+<div id="tab-tariff" class="tab-content">
+  <div class="container">
+
+    <div class="section-label">Fiscal Architecture</div>
+    <div class="section-title">The tariff gap: what consumers pay vs. what gas costs</div>
+    <p class="section-intro">Both utilities operate under prescribed tariffs that are a fraction of cost recovery. For SNGPL's most protected slab, the effective subsidy is Rs. 1,507–1,557 per MMBtu — a transfer that constitutes Pakistan's largest quasi-fiscal liability but does not appear on any official budget line.</p>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title">Current tariff vs. cost of service (Rs./MMBtu) — by consumer segment</div>
+        <div class="panel-sub">Source: SNGPL ERR FY2026-27; SSGC ERR FY2026-27. Cost-of-service = proposed/estimated full recovery rate.</div>
+        <div style="position: relative; height: 320px;">
+          <canvas id="tariffGapChart" role="img" aria-label="Grouped bar chart comparing current tariff against cost of service per consumer segment">Consumer segments range from protected domestic (200 Rs/MMBtu) to CNG (3750 Rs/MMBtu) — only CNG exceeds cost of service.</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">SNGPL: prior-year shortfall accumulation</div>
+        <div class="panel-sub">Rs. billion. Shortfalls have compounded into an Rs. 576 billion liability. At current pace, the position doubles in under 4 years without tariff correction.</div>
+        <div style="position: relative; height: 320px;">
+          <canvas id="shortfallChart" role="img" aria-label="Bar chart showing SNGPL annual shortfall accumulation over recent years">SNGPL prior shortfall has reached Rs. 576 billion.</canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top: 1rem;">Segment-by-Segment Analysis</div>
+    <div class="panel" style="margin-top: 0.75rem;">
+      <div class="panel-title">Tariff vs. cost-of-service gap — full breakdown by consumer segment</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Consumer Segment</th>
+            <th>Current Rate (Rs./MMBtu)</th>
+            <th>Cost of Service (Rs./MMBtu)</th>
+            <th>Implicit Subsidy/Unit</th>
+            <th>Annual Subsidy Est.</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-bold">SNGPL Protected Domestic (≤0.5 hm³)</td>
+            <td>Rs. 200–250</td>
+            <td>~Rs. 1,757</td>
+            <td class="td-red">Rs. 1,507–1,557</td>
+            <td>~Rs. 85–90 bn</td>
+            <td><span class="badge badge-red">8.8× gap</span></td>
+          </tr>
+          <tr>
+            <td>SNGPL Unprotected Domestic (mid-upper slabs)</td>
+            <td>Rs. 500–1,900</td>
+            <td>~Rs. 1,757</td>
+            <td class="td-red">Rs. 0 to ~Rs. 1,257</td>
+            <td>Variable</td>
+            <td><span class="badge badge-amber">Partial gap</span></td>
+          </tr>
+          <tr>
+            <td>SSGC Domestic (all slabs, blended average)</td>
+            <td>~Rs. 500–1,000</td>
+            <td>~Rs. 2,500–3,000</td>
+            <td class="td-red">~Rs. 1,500–2,500</td>
+            <td>~Rs. 130–175 bn</td>
+            <td><span class="badge badge-red">Major gap</span></td>
+          </tr>
+          <tr>
+            <td>SSGC Commercial</td>
+            <td>~Rs. 1,100</td>
+            <td>~Rs. 2,500</td>
+            <td class="td-red">~Rs. 1,400</td>
+            <td>Substantial</td>
+            <td><span class="badge badge-red">Subsidised</span></td>
+          </tr>
+          <tr>
+            <td>CNG (both utilities)</td>
+            <td>Rs. 3,750</td>
+            <td>~Rs. 1,757</td>
+            <td class="td-green">Negative — over-recovery</td>
+            <td>Cross-subsidy source</td>
+            <td><span class="badge badge-green">Over-recovery</span></td>
+          </tr>
+          <tr>
+            <td>Cement — SNGPL</td>
+            <td>Rs. 4,400</td>
+            <td>~Rs. 1,757</td>
+            <td class="td-green">Negative — over-recovery</td>
+            <td>Cross-subsidy source</td>
+            <td><span class="badge badge-green">Over-recovery</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout red">
+      <strong>The RLNG diversion problem (SNGPL):</strong> SNGPL is diverting 32,197 BBTU of higher-cost RLNG into the indigenous gas pool and charging it at indigenous gas prices. This Rs. 93,637 million subsidy-within-a-subsidy will worsen as domestic production declines — eventually making the true marginal cost of every system gas consumer equivalent to full RLNG import parity regardless of billing category.
+    </div>
+
+    <div class="grid-2" style="margin-top: 2rem;">
+      <div class="panel">
+        <div class="panel-title">SNGPL: Proposed flat tariff vs. current slab structure (Rs./MMBtu)</div>
+        <div style="position: relative; height: 260px;">
+          <canvas id="slabChart" role="img" aria-label="Horizontal bar chart comparing SNGPL's current slab tariffs with proposed flat rate">SNGPL proposes replacing 8 slabs with a single Rs. 1757 rate; protected households face 8.8x increase.</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Combined utility financial position — FY2026-27</div>
+        <div style="height: 260px; display: flex; flex-direction: column; justify-content: space-around; padding: 0.5rem 0;">
+          <div class="waterfall-row">
+            <div class="waterfall-label">SNGPL prior-year shortfall</div>
+            <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width: 100%; background: var(--warning);"></div></div>
+            <div class="waterfall-val td-red">Rs. 576B</div>
+          </div>
+          <div class="waterfall-row">
+            <div class="waterfall-label">SSGC GDS receivable (sovereign contingent)</div>
+            <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width: 95%; background: var(--warning);"></div></div>
+            <div class="waterfall-val td-red">Rs. 545B</div>
+          </div>
+          <div class="waterfall-row">
+            <div class="waterfall-label">SSGC annual shortfall (FY2026-27)</div>
+            <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width: 65%; background: var(--accent);"></div></div>
+            <div class="waterfall-val td-amber">Rs. 376B</div>
+          </div>
+          <div class="waterfall-row" style="border-top: 2px solid var(--text-primary); margin-top: 0.5rem;">
+            <div class="waterfall-label td-bold">Total accumulated exposure</div>
+            <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width: 100%; background: var(--text-primary);"></div></div>
+            <div class="waterfall-val td-bold">Rs. 1.1T+</div>
+          </div>
+          <div style="margin-top: 1.5rem; font-size: 12px; color: var(--text-tertiary);">SSGC UFG loss: 11.89% indigenous gas, 12.61% RLNG — both above the 7% international benchmark. Each 1% UFG reduction saves ~Rs. 3B/year.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== TAB: LPG MARKET ====== -->
+<div id="tab-lpg" class="tab-content">
+  <div class="container">
+
+    <div class="section-label">LPG Market Analysis</div>
+    <div class="section-title">A US$1.31 billion import burden — two-thirds in addressable commercial demand</div>
+    <p class="section-intro">Pakistan Energy Yearbook 2024-25 reveals a structurally transformed LPG market: commercial users (42.8%) now exceed households (33.2%) as the single largest consuming category. The dominant LPG reform target is therefore not rural cooking — it is businesses and industries paying Rs. 7,084/MMBtu who would rationally shift to piped RLNG at Rs. 3,652/MMBtu.</p>
+
+    <div class="grid-3">
+      <div class="kpi amber">
+        <div class="kpi-val">2.198M</div>
+        <div class="kpi-label">Total LPG consumption, 2024-25 — tonnes per year</div>
+        <div class="kpi-source">Pakistan Energy Yearbook 2024-25</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-val">1.685M</div>
+        <div class="kpi-label">LPG imports — 77% of total consumption, US$1.31B import bill</div>
+        <div class="kpi-source">Pakistan Energy Yearbook 2024-25</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-val">US$5.01</div>
+        <div class="kpi-label">Net FX saving per MMBtu — LPG (US$18.05) vs. RLNG (US$13.04)</div>
+        <div class="kpi-source">LPG-to-RLNG Policy Note, April 2026</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title">LPG consumption by sector — 2024-25 (Pakistan Energy Yearbook)</div>
+        <div class="panel-sub">The commercial sector alone (42.8%) now exceeds the domestic share (33.2%), fundamentally shifting the reform priority from household cooking to commercial conversion.</div>
+        <div style="display: flex; gap: 16px; margin-bottom: 8px; font-size: 12px; color: var(--text-secondary);">
+          <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #C8923A;"></span>Commercial 42.8%</span>
+          <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #52B788;"></span>Domestic 33.2%</span>
+          <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #2563EB;"></span>Industrial 24.0%</span>
+        </div>
+        <div style="position: relative; height: 260px;">
+          <canvas id="lpgSectorChart" role="img" aria-label="Pie chart of LPG consumption by sector: commercial 42.8%, domestic 33.2%, industrial 24%">LPG sector breakdown: commercial 42.8%, domestic 33.2%, industrial 24%.</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Net FX savings — C&I LPG to RLNG transition scenarios</div>
+        <div class="panel-sub">Net saving = LPG imports avoided minus incremental RLNG cost. Policy target: 90% transition by FY2028.</div>
+        <div style="display: flex; gap: 16px; margin-bottom: 8px; font-size: 12px; color: var(--text-secondary);">
+          <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #52B788;"></span>Net FX saving (USD mn)</span>
+          <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #C8923A; opacity: 0.6;"></span>Consumer saving (Rs. bn)</span>
+        </div>
+        <div style="position: relative; height: 260px;">
+          <canvas id="lpgConversionChart" role="img" aria-label="Bar chart showing net FX savings and consumer savings at 25, 50, 75, 90 and 100 percent C&I LPG transition scenarios">At 90% transition: USD 284M FX saving and Rs. 195B consumer saving per year.</canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- LPG DETAIL TABLE -->
+    <div class="panel">
+      <div class="panel-title">C&I LPG to RLNG transition — full scenario analysis</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Transition Scenario</th>
+            <th>LPG Displaced (tonnes)</th>
+            <th>Gross LPG Avoided (US$M)</th>
+            <th>Incremental RLNG Cost (US$M)</th>
+            <th>Net FX Saving/Yr</th>
+            <th>C&I Consumer Saving/Yr</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>25% transition</td><td>367,050</td><td>US$284M</td><td>US$205M</td><td class="td-green">US$79M</td><td>Rs. 54B</td></tr>
+          <tr><td>50% transition</td><td>734,099</td><td>US$569M</td><td>US$411M</td><td class="td-green">US$158M</td><td>Rs. 108B</td></tr>
+          <tr><td>75% transition</td><td>1,101,148</td><td>US$853M</td><td>US$616M</td><td class="td-green">US$237M</td><td>Rs. 162B</td></tr>
+          <tr style="background: #F0FDF4;">
+            <td class="td-bold">90% transition (policy target)</td>
+            <td class="td-bold">1,321,378</td>
+            <td class="td-bold">US$1,024M</td>
+            <td class="td-bold">US$740M</td>
+            <td class="td-green" style="font-size: 15px;">US$284M</td>
+            <td class="td-bold">Rs. 195B</td>
+          </tr>
+          <tr><td>100% (theoretical maximum)</td><td>1,468,198</td><td>US$1,138M</td><td>US$822M</td><td class="td-green">US$316M</td><td>Rs. 216B</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top: 1.5rem;">
+      <div class="panel">
+        <div class="panel-title">LPG import bill sensitivity (US$ billion/year)</div>
+        <div style="position: relative; height: 220px;">
+          <canvas id="lpgSensChart" role="img" aria-label="Bar chart of LPG import bill at different price assumptions from 650 to 850 USD per tonne">At benchmark price of USD 775/tonne, annual LPG import bill is USD 1.31 billion.</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Priority C&I conversion targets</div>
+        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 1rem;">Ranked by conversion ease and volume. Focus: commercial cluster access to existing piped network.</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);">
+            <div style="min-width: 22px; height: 22px; background: var(--warning); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; margin-top: 1px;">1</div>
+            <div><div style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Restaurants, hotels, bakeries, commercial kitchens</div><div style="font-size: 12px; color: var(--text-tertiary);">High LPG use, fixed premises, immediate savings — highest conversion priority</div></div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);">
+            <div style="min-width: 22px; height: 22px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; margin-top: 1px;">2</div>
+            <div><div style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Industrial estates and SME clusters</div><div style="font-size: 12px; color: var(--text-tertiary);">LPG boilers, ovens, dryers, kilns — cluster conversion reduces last-mile cost</div></div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);">
+            <div style="min-width: 22px; height: 22px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; margin-top: 1px;">3</div>
+            <div><div style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Food processing, textiles, ceramics, chemicals</div><div style="font-size: 12px; color: var(--text-tertiary);">Need stable thermal energy — burner conversion is feasible with RLNG firm supply</div></div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+            <div style="min-width: 22px; height: 22px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; margin-top: 1px;">4</div>
+            <div><div style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Malls, hospitals, universities, bulk tank users</div><div style="font-size: 12px; color: var(--text-tertiary);">Easiest to identify and convert — procurement already organised at bulk level</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== TAB: ELECTRIFICATION ====== -->
+<div id="tab-electrification" class="tab-content">
+  <div class="container">
+
+    <div class="section-label">Demand-Side Reform</div>
+    <div class="section-title">Residential electrification: the highest-impact demand lever available</div>
+    <p class="section-intro">70% of residential piped gas goes to water heating (55%) and space heating (15%) — not cooking. Full geyser electrification alone would avoid ~US$1.65 billion per year in RLNG imports. At SNGPL's proposed Rs. 1,757/MMBtu rate, heat pump geyser payback falls to 2.9 years — making electrification economically self-executing.</p>
+
+    <div class="grid-4">
+      <div class="kpi blue">
+        <div class="kpi-val">55%</div>
+        <div class="kpi-label">Residential gas used for water heating (geysers) — single largest end-use</div>
+        <div class="kpi-source">Project baseline</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-val">15%</div>
+        <div class="kpi-label">Space heating share — targeted by heat pump HVAC programme</div>
+        <div class="kpi-source">Project baseline</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-val">2.9 yrs</div>
+        <div class="kpi-label">HP geyser payback at Rs. 1,757/MMBtu tariff — 4-person household</div>
+        <div class="kpi-source">FY2026-27 Deep Dive</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-val">US$1.65B</div>
+        <div class="kpi-label">Annual RLNG import saving — full geyser electrification</div>
+        <div class="kpi-source">RLNG parity basis</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title">Residential piped gas — end-use decomposition</div>
+        <div class="panel-sub">12.1 million households · ~1.53 MMBtu/HH/month · 230,198 MMCF/year total. The dominant reform lever is water heating, not cooking.</div>
+        <div style="display: flex; gap: 16px; margin-bottom: 8px; font-size: 12px; color: var(--text-secondary);">
+          <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #2563EB;"></span>Water heating 55%</span>
+          <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #C8923A;"></span>Cooking 30%</span>
+          <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 10px; height: 10px; border-radius: 2px; background: #52B788;"></span>Space heating 15%</span>
+        </div>
+        <div style="position: relative; height: 260px;">
+          <canvas id="endUseChart" role="img" aria-label="Pie chart of residential gas end-use: water heating 55%, cooking 30%, space heating 15%">Residential gas end-use: water heating 55% (126,609 MMCF/yr), cooking 30% (69,059 MMCF/yr), space heating 15% (34,530 MMCF/yr).</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">HP geyser payback period vs. tariff level (Rs./MMBtu) — 4-person household</div>
+        <div class="panel-sub">Payback calculated at Rs. 180,000–250,000 capital cost, 0.85 MMBtu/month gas saving. At Rs. 1,757 (SNGPL proposed rate), payback = 2.9 years — within household rational preference threshold.</div>
+        <div style="position: relative; height: 260px;">
+          <canvas id="paybackChart" role="img" aria-label="Line chart showing heat pump geyser payback period declining as gas tariff rises">At Rs. 800/MMBtu payback is 6.5 years; at Rs. 1757 it falls to 2.9 years.</canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- END-USE TABLE -->
+    <div class="panel">
+      <div class="panel-title">Residential end-use decomposition — reform levers by use category</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>End-Use</th>
+            <th>Share</th>
+            <th>MMBtu/HH/Month</th>
+            <th>MMCF/yr (12M HH)</th>
+            <th>RLNG Import Saving (Full Electrification)</th>
+            <th>Primary Reform Lever</th>
+            <th>Payback (at Rs. 1,757)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-bold">Water heating (geyser)</td>
+            <td class="td-blue" style="color: var(--blue); font-weight: 600;">~55%</td>
+            <td>~0.85</td>
+            <td>~126,609</td>
+            <td class="td-green">~US$1.65B/year</td>
+            <td>Heat pump geyser (COP 3.5–4.0)</td>
+            <td class="td-green">2.9–5.5 yrs</td>
+          </tr>
+          <tr>
+            <td class="td-bold">Cooking (gas stove)</td>
+            <td class="td-amber">~30%</td>
+            <td>~0.46</td>
+            <td>~69,059</td>
+            <td>~US$0.90B/year</td>
+            <td>Induction (strong for LPG HH; marginal for piped gas at Rs. 1,757)</td>
+            <td>~1.6 yrs (LPG HH)</td>
+          </tr>
+          <tr>
+            <td class="td-bold">Space heating (seasonal)</td>
+            <td style="color: var(--success); font-weight: 600;">~15%</td>
+            <td>~0.22</td>
+            <td>~34,530</td>
+            <td>~US$0.45B/year</td>
+            <td>Heat pump HVAC (reverse-cycle AC)</td>
+            <td>5–7 yrs</td>
+          </tr>
+          <tr style="background: var(--secondary);">
+            <td class="td-bold">TOTAL</td>
+            <td class="td-bold">100%</td>
+            <td class="td-bold">~1.53</td>
+            <td class="td-bold">~230,198</td>
+            <td class="td-green" style="font-size: 15px;">~US$2.18B/year</td>
+            <td colspan="2" style="font-size: 12px; color: var(--text-tertiary);">Full electrification scenario — all end-uses</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top: 1.5rem;">
+      <div class="panel">
+        <div class="panel-title">Phased electrification RLNG saving — adoption scenarios (US$M/year)</div>
+        <div style="position: relative; height: 220px;">
+          <canvas id="phasedSavingChart" role="img" aria-label="Stacked bar chart showing phased RLNG savings by year for geyser and space heating electrification">Year 5 scenario: 50% geyser + 40% space heating adoption yields USD 1.04B annual saving.</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">LPG-to-induction: the stovetop water heating factor</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1rem;">LPG households consume ~3.5× more cooking fuel per capita than piped gas households because 30–40% of LPG use is stovetop water heating — LPG households heat water on the stove, not in a dedicated geyser.</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1rem;">Induction conversion for LPG households therefore eliminates both cooking and a significant water-heating load simultaneously — making it particularly high-impact.</div>
+        <table class="data-table" style="font-size: 12px;">
+          <thead><tr><th>LPG HH Metric</th><th>Estimate</th></tr></thead>
+          <tbody>
+            <tr><td>LPG HH (Census 2023)</td><td>1,609,038</td></tr>
+            <tr><td>Per-HH LPG consumption</td><td>~37.8 kg/month</td></tr>
+            <tr><td>Cooking share of LPG use</td><td>~60–70%</td></tr>
+            <tr><td>Stovetop water heating share</td><td>~30–40%</td></tr>
+            <tr><td>Induction payback (LPG HH)</td><td class="td-green">~1.6 years</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== TAB: SOLUTIONS ====== -->
+<div id="tab-solutions" class="tab-content">
+  <div class="container">
+
+    <div class="section-label">Reform Architecture</div>
+    <div class="section-title">A four-pillar, sequenced reform generating US$2.5B+ per year by FY2030</div>
+    <p class="section-intro">The reform architecture integrates four pillars in deliberate sequence. Tariff rationalisation must precede electrification — switching becomes economically irrational if gas remains priced below cost. C&I LPG conversion runs in parallel and requires no subsidy. The sequence: Tariff Reform → Induction Adoption → Heat Pump Scaling.</p>
+
+    <!-- SEQUENCING TIMELINE -->
+    <div class="section-label" style="margin-top: 0.5rem;">Implementation Sequencing</div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1rem 0 2rem; padding: 1.5rem; background: var(--secondary); border-radius: 8px; border: 1px solid var(--border);">
+      <div>
+        <div class="tl-year">Now — FY2026-27</div>
+        <div class="tl-label">Tariff Rationalisation</div>
+        <div class="tl-desc" style="margin-top: 0.4rem; font-size: 12px; color: var(--text-tertiary);">SNGPL flat rate Rs. 1,757; SSGC phased escalation. BISP compensatory transfers activated. GDS sukuk bond issuance. New connection moratorium enforced.</div>
+      </div>
+      <div>
+        <div class="tl-year">FY2026-28</div>
+        <div class="tl-label">C&I LPG Conversion</div>
+        <div class="tl-desc" style="margin-top: 0.4rem; font-size: 12px; color: var(--text-tertiary);">50% C&I LPG converted to RLNG (US$158M FX saving). Priority: restaurants, hotels, bakeries, industrial clusters within network reach.</div>
+      </div>
+      <div>
+        <div class="tl-year">FY2027-29</div>
+        <div class="tl-label">HP Geyser Programme</div>
+        <div class="tl-desc" style="margin-top: 0.4rem; font-size: 12px; color: var(--text-tertiary);">Subsidised HP geyser rollout — 40% capital grant, 4 million households by FY2030. ADB/GCF concessional financing. UFG reduction via SCADA upgrades.</div>
+      </div>
+      <div>
+        <div class="tl-year">FY2030+</div>
+        <div class="tl-label">Full Reform Impact</div>
+        <div class="tl-desc" style="margin-top: 0.4rem; font-size: 12px; color: var(--text-tertiary);">US$2.5B+/year FX saving. Gas quasi-fiscal deficit reduced 60%. Residential share of gas sales below 20%. GDS receivable resolved via sukuk absorption.</div>
+      </div>
+    </div>
+
+    <!-- SAVINGS CHART -->
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title">Annual fiscal savings — full reform scenario (Rs. billion)</div>
+        <div class="panel-sub">Stacked by reform pillar. Net fiscal position positive from Year 1 after BISP transfers. Source: Exhibit 22, April 2026 Reform Plan.</div>
+        <div style="position: relative; height: 280px;">
+          <canvas id="fiscalSavingsChart" role="img" aria-label="Stacked bar chart of annual fiscal savings by reform pillar over 10 years">Year 1 savings Rs. 87B, Year 3 Rs. 228B, Year 10 Rs. 595B from tariff, geyser, LPG and UFG reduction.</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Energy security balance sheet — FY2026-27 vs. FY2030 target</div>
+        <div style="position: relative; height: 280px;">
+          <canvas id="balanceSheetChart" role="img" aria-label="Grouped bar chart comparing current and FY2030 target states for key energy security metrics">RLNG imports fall 39%, LPG imports fall 47%, combined import bill falls 35-40% by FY2030.</canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRAMME COSTS TABLE -->
+    <div class="panel">
+      <div class="panel-title">Programme cost estimates — Year 1 and 5-year horizon</div>
+      <div class="panel-sub" style="margin-bottom: 1rem;">Net fiscal position is positive from Year 1 — annual savings of Rs. 87B exceed programme costs of Rs. 68B in Year 1.</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Programme Cost Item</th>
+            <th>Year 1 (Rs. bn)</th>
+            <th>5-Year Total (Rs. bn)</th>
+            <th>Funding Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>BISP gas tariff compensatory transfers</td><td>45</td><td>180</td><td>Federal budget — petroleum levy surplus</td></tr>
+          <tr><td>HP geyser capital grant (40% subsidy)</td><td>15</td><td>75</td><td>ADB/GCF concessional loans</td></tr>
+          <tr><td>LPG induction financing (revolving credit)</td><td>0</td><td>0</td><td>Commercial bank lending — self-liquidating from savings</td></tr>
+          <tr><td>SSGC UFG reduction capex (SCADA, metering)</td><td>8</td><td>25</td><td>OGRA capex allowance within revenue requirement</td></tr>
+          <tr><td>GDS sukuk bond (sovereign guarantee — not budgetary outlay)</td><td>GoP guarantee</td><td>Rs. 545B bond</td><td>Sukuk/bond market — MoF sovereign guarantee</td></tr>
+          <tr style="background: #F0FDF4;">
+            <td class="td-bold">TOTAL (budgetary expenditure)</td>
+            <td class="td-bold">Rs. 68B</td>
+            <td class="td-bold">Rs. 280B</td>
+            <td class="td-green">Offset by Rs. 87–228B/yr in annual savings</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ENERGY SECURITY TABLE -->
+    <div class="panel" style="margin-top: 1.5rem;">
+      <div class="panel-title">Energy security balance sheet — current state vs. FY2030 target</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Current State (FY2026-27)</th>
+            <th>Target State (FY2030)</th>
+            <th>Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Pakistan RLNG imports (MMCF/yr)</td><td>~490,000+</td><td>~300,000</td><td class="td-green">−39%</td></tr>
+          <tr><td>Annual RLNG import bill (USD)</td><td>~USD 3.5–4.0B</td><td>~USD 2.5B</td><td class="td-green">−30%</td></tr>
+          <tr><td>Annual LPG import bill (USD)</td><td>~USD 1.31B</td><td>~USD 0.70B</td><td class="td-green">−47%</td></tr>
+          <tr><td>Combined gas + LPG import bill</td><td>~USD 4.8–5.3B</td><td>~USD 3.2B</td><td class="td-green">−35–40%</td></tr>
+          <tr><td>Gas sector annual quasi-fiscal deficit</td><td>~Rs. 400–500B/yr</td><td>~Rs. 150–200B/yr</td><td class="td-green">−60%</td></tr>
+          <tr><td>HP geyser installed base</td><td>~50,000 (negligible)</td><td>~4 million+</td><td class="td-green">+8,000%</td></tr>
+          <tr><td>LPG HH converted to induction</td><td>~200,000 (early adopters)</td><td>~8 million</td><td class="td-green">+4,000%</td></tr>
+          <tr><td>Residential share of total gas sales</td><td>~32%</td><td>&lt;20%</td><td class="td-green">Electrification impact</td></tr>
+          <tr><td>GDS receivable on SSGC balance sheet</td><td>Rs. 545B</td><td>Rs. 0 (sukuk absorbed)</td><td class="td-green">Normalised</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== TAB: CALCULATORS ====== -->
+<div id="tab-calculators" class="tab-content">
+  <div class="container">
+
+    <div class="section-label">Interactive Tools</div>
+    <div class="section-title">Household and sector savings calculators</div>
+    <p class="section-intro">Use these tools to model the financial impact of gas tariff changes, heat pump geyser adoption, and C&I LPG conversion at different parameter settings. All calculations are grounded in the primary source data from OGRA determinations and the Pakistan Energy Yearbook 2024-25.</p>
+
+    <div class="grid-2">
+
+      <!-- CALCULATOR 1: HOUSEHOLD SAVINGS -->
+      <div class="calc-panel">
+        <div class="calc-title">Household Heat Pump Geyser Calculator</div>
+        <div class="calc-sub">Calculates annual savings and payback period for heat pump geyser adoption at a given tariff level</div>
+
+        <div class="calc-row">
+          <div class="calc-label">Monthly gas consumption (MMBtu) <span id="gasConsLabel">1.53</span></div>
+          <input type="range" min="0.5" max="3.0" step="0.01" value="1.53" oninput="calcHousehold()" id="gasConsSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">Gas tariff (Rs./MMBtu) <span id="tariffLabel">1,757</span></div>
+          <input type="range" min="200" max="3000" step="10" value="1757" oninput="calcHousehold()" id="tariffSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">Water heating share of gas use <span id="whShareLabel">55%</span></div>
+          <input type="range" min="30" max="75" step="1" value="55" oninput="calcHousehold()" id="whShareSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">HP geyser capital cost (Rs.) <span id="capexLabel">180,000</span></div>
+          <input type="range" min="120000" max="300000" step="5000" value="180000" oninput="calcHousehold()" id="capexSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">HP COP (coefficient of performance) <span id="copLabel">3.5</span></div>
+          <input type="range" min="2.0" max="5.0" step="0.1" value="3.5" oninput="calcHousehold()" id="copSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">Electricity tariff (Rs./kWh) <span id="elecTariffLabel">50</span></div>
+          <input type="range" min="30" max="80" step="1" value="50" oninput="calcHousehold()" id="elecTariffSlider">
+        </div>
+
+        <div class="calc-result">
+          <div class="result-item">
+            <div class="result-val" id="gasMonthly">Rs. 0</div>
+            <div class="result-label">Current monthly gas bill (water heating)</div>
+          </div>
+          <div class="result-item">
+            <div class="result-val" id="hpMonthly">Rs. 0</div>
+            <div class="result-label">HP geyser monthly electricity cost</div>
+          </div>
+          <div class="result-item" style="border-top: 2px solid var(--success);">
+            <div class="result-val" id="annualSaving" style="color: var(--success);">Rs. 0</div>
+            <div class="result-label">Annual net saving (gas minus electricity)</div>
+          </div>
+          <div class="result-item" style="border-top: 2px solid var(--accent);">
+            <div class="result-val" id="paybackYrs" style="color: var(--accent);">0 yrs</div>
+            <div class="result-label">Simple payback period</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATOR 2: C&I LPG -->
+      <div class="calc-panel">
+        <div class="calc-title">C&I LPG to RLNG Conversion Calculator</div>
+        <div class="calc-sub">Models net FX savings and consumer savings at a given C&I LPG conversion rate</div>
+
+        <div class="calc-row">
+          <div class="calc-label">C&I LPG transition rate <span id="transRateLabel">90%</span></div>
+          <input type="range" min="0" max="100" step="1" value="90" oninput="calcLPG()" id="transRateSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">LPG import price (US$/tonne) <span id="lpgPriceLabel">775</span></div>
+          <input type="range" min="600" max="1000" step="10" value="775" oninput="calcLPG()" id="lpgPriceSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">RLNG benchmark (US$/MMBtu) <span id="rlngPriceLabel">13.04</span></div>
+          <input type="range" min="10" max="20" step="0.1" value="13.04" oninput="calcLPG()" id="rlngPriceSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">PKR/USD exchange rate <span id="fxRateLabel">280</span></div>
+          <input type="range" min="250" max="320" step="5" value="280" oninput="calcLPG()" id="fxRateSlider">
+        </div>
+
+        <div style="margin-top: 0.5rem; padding: 0.75rem; background: var(--primary); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; color: var(--text-secondary);">
+          <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.4rem;">Calculation basis (fixed)</div>
+          Total C&I LPG: 1,468,198 tonnes/yr (1.47M tonnes) · MMBtu conversion: 42.93 MMBtu/tonne · LPG retail price: Rs. 7,084/MMBtu · RLNG cost-reflective tariff: Rs. 3,652/MMBtu
+        </div>
+
+        <div class="calc-result">
+          <div class="result-item">
+            <div class="result-val" id="lpgDisplaced">0</div>
+            <div class="result-label">LPG displaced (000 tonnes/yr)</div>
+          </div>
+          <div class="result-item">
+            <div class="result-val" id="grossAvoided">US$0M</div>
+            <div class="result-label">Gross LPG imports avoided</div>
+          </div>
+          <div class="result-item" style="border-top: 2px solid var(--success);">
+            <div class="result-val" id="netFxSaving" style="color: var(--success);">US$0M</div>
+            <div class="result-label">Net FX saving per year</div>
+          </div>
+          <div class="result-item" style="border-top: 2px solid var(--accent);">
+            <div class="result-val" id="consumerSaving" style="color: var(--accent);">Rs. 0B</div>
+            <div class="result-label">Annual C&I consumer saving</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TARIFF REFORM CALCULATOR -->
+    <div class="calc-panel" style="margin-top: 1.5rem;">
+      <div class="calc-title">National Electrification Savings Model</div>
+      <div class="calc-sub">Models national RLNG import savings based on geyser and space heating electrification adoption across 12.1 million piped gas households</div>
+
+      <div class="grid-3" style="margin-bottom: 0;">
+        <div class="calc-row">
+          <div class="calc-label">HP geyser adoption rate <span id="geyserAdoptLabel">50%</span></div>
+          <input type="range" min="0" max="100" step="1" value="50" oninput="calcNational()" id="geyserAdoptSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">Space heating electrification rate <span id="spaceAdoptLabel">40%</span></div>
+          <input type="range" min="0" max="100" step="1" value="40" oninput="calcNational()" id="spaceAdoptSlider">
+        </div>
+        <div class="calc-row">
+          <div class="calc-label">RLNG import price (US$/MMBtu) <span id="rlngNatLabel">13.04</span></div>
+          <input type="range" min="10" max="20" step="0.1" value="13.04" oninput="calcNational()" id="rlngNatSlider">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.25rem;">
+        <div class="result-item">
+          <div class="result-val" id="geyserMMCF">0</div>
+          <div class="result-label">Gas saved — geysers (MMCF/yr)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="spaceMMCF">0</div>
+          <div class="result-label">Gas saved — space heating (MMCF/yr)</div>
+        </div>
+        <div class="result-item" style="border-top: 2px solid var(--success);">
+          <div class="result-val" id="totalRLNGSaving" style="color: var(--success);">US$0M</div>
+          <div class="result-label">Annual RLNG import saving</div>
+        </div>
+        <div class="result-item" style="border-top: 2px solid var(--accent);">
+          <div class="result-val" id="combinedFX" style="color: var(--accent);">US$0M</div>
+          <div class="result-label">Combined RLNG + LPG savings</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ========================
+// TAB NAVIGATION
+// ========================
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ========================
+// CHART COLORS
+// ========================
+const RED = '#9B2335';
+const AMBER = '#C8923A';
+const GREEN = '#52B788';
+const BLUE = '#2563EB';
+const GRAY = '#999999';
+const DARK = '#1A1A1A';
+const BORDER_COLOR = '#E5E5E5';
+
+const chartDefaults = {
+  font: { family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif", size: 12 },
+  color: '#666666'
+};
+Chart.defaults.font = chartDefaults.font;
+Chart.defaults.color = chartDefaults.color;
+
+function gridLines() {
+  return { color: BORDER_COLOR, drawBorder: false };
+}
+
+// ========================
+// OVERVIEW CHARTS
+// ========================
+new Chart(document.getElementById('deficitChart'), {
+  type: 'line',
+  data: {
+    labels: ['FY2026', 'FY2027', 'FY2028', 'FY2029', 'FY2030'],
+    datasets: [
+      {
+        label: 'Without reform',
+        data: [450, 550, 660, 730, 820],
+        borderColor: RED,
+        backgroundColor: 'rgba(155,35,53,0.08)',
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: RED,
+        borderDash: [],
+      },
+      {
+        label: 'With reform',
+        data: [450, 380, 280, 200, 175],
+        borderColor: GREEN,
+        backgroundColor: 'rgba(82,183,136,0.08)',
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: GREEN,
+        borderDash: [6,3],
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 16, font: { size: 12 } } },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': Rs. ' + c.parsed.y + 'B' } }
+    },
+    scales: {
+      x: { grid: gridLines() },
+      y: { grid: gridLines(), ticks: { callback: v => 'Rs. ' + v + 'B' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('fxSavingsChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Geyser\nelectrification', 'C&I LPG\nconversion', 'Urban domestic\nLPG', 'UFG reduction\n& efficiency'],
+    datasets: [{
+      label: 'FX Saving (USD million/year)',
+      data: [1650, 284, 91, 80],
+      backgroundColor: [GREEN, AMBER, BLUE, GRAY],
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => 'US$' + c.parsed.y + 'M/yr' } }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: gridLines(), ticks: { callback: v => 'US$' + v + 'M' } }
+    }
+  }
+});
+
+// ========================
+// TARIFF CHARTS
+// ========================
+new Chart(document.getElementById('tariffGapChart'), {
+  type: 'bar',
+  data: {
+    labels: ['SNGPL Protected\nDomestic', 'SNGPL Upper\nSlabs', 'SSGC Domestic\n(blended)', 'SSGC\nCommercial', 'CNG', 'Cement\n(SNGPL)'],
+    datasets: [
+      {
+        label: 'Current tariff (Rs./MMBtu)',
+        data: [225, 1000, 750, 1100, 3750, 4400],
+        backgroundColor: RED,
+        borderRadius: 3,
+        borderSkipped: false,
+      },
+      {
+        label: 'Cost of service (Rs./MMBtu)',
+        data: [1757, 1757, 2750, 2500, 1757, 1757],
+        backgroundColor: 'rgba(200,146,58,0.35)',
+        borderRadius: 3,
+        borderSkipped: false,
+        borderColor: AMBER,
+        borderWidth: 1.5,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 16, font: { size: 12 } } },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': Rs. ' + Math.round(c.parsed.y).toLocaleString() } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: gridLines(), ticks: { callback: v => 'Rs. ' + v } }
+    }
+  }
+});
+
+new Chart(document.getElementById('shortfallChart'), {
+  type: 'bar',
+  data: {
+    labels: ['FY2021', 'FY2022', 'FY2023', 'FY2024', 'FY2025', 'FY2026-27\n(Accumulated)'],
+    datasets: [{
+      label: 'SNGPL Annual Shortfall (Rs. bn)',
+      data: [55, 80, 110, 130, 155, 576],
+      backgroundColor: [RED, RED, RED, RED, RED, '#5C0011'],
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => 'Rs. ' + c.parsed.y + 'B' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: gridLines(), ticks: { callback: v => 'Rs. ' + v + 'B' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('slabChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Slab 1\n(≤0.5 hm³)', 'Slab 2', 'Slab 3', 'Slab 4', 'Slab 5', 'Slab 6', 'Slab 7', 'Slab 8+', 'Proposed\nFlat Rate'],
+    datasets: [
+      {
+        label: 'Current slab rate',
+        data: [200, 400, 600, 900, 1100, 1500, 1900, 3000, null],
+        backgroundColor: 'rgba(155,35,53,0.5)',
+        borderRadius: 3,
+        borderSkipped: false,
+        borderColor: RED,
+        borderWidth: 1,
+      },
+      {
+        label: 'Proposed flat rate',
+        data: [null, null, null, null, null, null, null, null, 1757],
+        backgroundColor: DARK,
+        borderRadius: 3,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 16, font: { size: 12 } } },
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: gridLines(), ticks: { callback: v => 'Rs. ' + v } }
+    }
+  }
+});
+
+// ========================
+// LPG CHARTS
+// ========================
+new Chart(document.getElementById('lpgSectorChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Commercial (42.8%)', 'Domestic (33.2%)', 'Industrial (24.0%)'],
+    datasets: [{
+      data: [42.8, 33.2, 24.0],
+      backgroundColor: [AMBER, GREEN, BLUE],
+      borderWidth: 0,
+      hoverOffset: 8,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => c.label + ': ' + c.parsed + '%' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('lpgConversionChart'), {
+  type: 'bar',
+  data: {
+    labels: ['25%', '50%', '75%', '90% (target)', '100%'],
+    datasets: [
+      {
+        label: 'Net FX saving (USD mn)',
+        data: [79, 158, 237, 284, 316],
+        backgroundColor: GREEN,
+        borderRadius: 3,
+        borderSkipped: false,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Consumer saving (Rs. bn)',
+        data: [54, 108, 162, 195, 216],
+        backgroundColor: 'rgba(200,146,58,0.45)',
+        borderRadius: 3,
+        borderSkipped: false,
+        yAxisID: 'y1',
+        borderColor: AMBER,
+        borderWidth: 1,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {}
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: gridLines(), position: 'left', ticks: { callback: v => 'US$' + v + 'M' } },
+      y1: { position: 'right', grid: { display: false }, ticks: { callback: v => 'Rs.' + v + 'B' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('lpgSensChart'), {
+  type: 'bar',
+  data: {
+    labels: ['US$650/t', 'US$700/t', 'US$775/t\n(benchmark)', 'US$850/t'],
+    datasets: [{
+      label: 'Annual LPG import bill (US$B)',
+      data: [1.10, 1.18, 1.31, 1.43],
+      backgroundColor: [GRAY, GRAY, AMBER, RED],
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => 'US$' + c.parsed.y.toFixed(2) + 'B/yr' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: gridLines(), min: 0.9, max: 1.6, ticks: { callback: v => 'US$' + v + 'B' } }
+    }
+  }
+});
+
+// ========================
+// ELECTRIFICATION CHARTS
+// ========================
+new Chart(document.getElementById('endUseChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Water heating / geysers (55%)', 'Cooking (30%)', 'Space heating (15%)'],
+    datasets: [{
+      data: [55, 30, 15],
+      backgroundColor: [BLUE, AMBER, GREEN],
+      borderWidth: 0,
+      hoverOffset: 8,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => c.label + ': ' + c.parsed + '%' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('paybackChart'), {
+  type: 'line',
+  data: {
+    labels: ['Rs. 500', 'Rs. 800', 'Rs. 1,000', 'Rs. 1,200', 'Rs. 1,500', 'Rs. 1,757', 'Rs. 2,000', 'Rs. 2,500', 'Rs. 3,000'],
+    datasets: [
+      {
+        label: 'Payback (years) — Rs. 180K capex',
+        data: [16.1, 9.7, 7.7, 6.3, 4.9, 4.1, 3.6, 2.8, 2.3],
+        borderColor: DARK,
+        backgroundColor: 'rgba(26,26,26,0.06)',
+        fill: true,
+        tension: 0.4,
+        borderWidth: 2,
+        pointRadius: 5,
+        pointBackgroundColor: DARK,
+      },
+      {
+        label: 'Payback (years) — Rs. 250K capex',
+        data: [22.4, 13.5, 10.7, 8.8, 6.8, 5.7, 5.0, 3.9, 3.2],
+        borderColor: AMBER,
+        backgroundColor: 'rgba(200,146,58,0)',
+        fill: false,
+        tension: 0.4,
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: AMBER,
+        borderDash: [5,3],
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 16, font: { size: 12 } } },
+      annotation: {},
+      tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.parsed.y.toFixed(1) + ' yrs' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: gridLines(), min: 0, max: 25, ticks: { callback: v => v + ' yrs' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('phasedSavingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+    datasets: [
+      {
+        label: 'Geyser electrification saving (US$M)',
+        data: [83, 248, 413, 742, 825],
+        backgroundColor: BLUE,
+        borderRadius: 3,
+        borderSkipped: false,
+      },
+      {
+        label: 'Space heating electrification saving (US$M)',
+        data: [22, 67, 112, 157, 202],
+        backgroundColor: 'rgba(37,99,235,0.35)',
+        borderRadius: 3,
+        borderSkipped: false,
+        borderColor: BLUE,
+        borderWidth: 1,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 16, font: { size: 12 } } },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': US$' + c.parsed.y + 'M' } }
+    },
+    scales: {
+      x: { grid: { display: false }, stacked: true },
+      y: { grid: gridLines(), stacked: true, ticks: { callback: v => 'US$' + v + 'M' } }
+    }
+  }
+});
+
+// ========================
+// SOLUTIONS CHARTS
+// ========================
+new Chart(document.getElementById('fiscalSavingsChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Year 1', 'Year 3', 'Year 10'],
+    datasets: [
+      {
+        label: 'Tariff correction (quasi-fiscal transfer reduction)',
+        data: [40, 100, 200],
+        backgroundColor: GREEN,
+        borderRadius: 3,
+        borderSkipped: false,
+      },
+      {
+        label: 'HP geyser programme',
+        data: [18, 62, 210],
+        backgroundColor: BLUE,
+        borderRadius: 3,
+        borderSkipped: false,
+      },
+      {
+        label: 'LPG induction conversion',
+        data: [8, 30, 120],
+        backgroundColor: AMBER,
+        borderRadius: 3,
+        borderSkipped: false,
+      },
+      {
+        label: 'UFG reduction + capex avoided',
+        data: [21, 36, 65],
+        backgroundColor: GRAY,
+        borderRadius: 3,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 12, font: { size: 11 } } },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': Rs. ' + c.parsed.y + 'B' } }
+    },
+    scales: {
+      x: { grid: { display: false }, stacked: true },
+      y: { grid: gridLines(), stacked: true, ticks: { callback: v => 'Rs. ' + v + 'B' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('balanceSheetChart'), {
+  type: 'bar',
+  data: {
+    labels: ['RLNG imports\n(bn US$)', 'LPG imports\n(bn US$)', 'Combined import\nbill (bn US$)', 'Gas quasi-fiscal\ndeficit (Rs. 100B)'],
+    datasets: [
+      {
+        label: 'Current (FY2026-27)',
+        data: [3.75, 1.31, 5.05, 4.5],
+        backgroundColor: RED,
+        borderRadius: 3,
+        borderSkipped: false,
+      },
+      {
+        label: 'Target (FY2030)',
+        data: [2.5, 0.7, 3.2, 1.75],
+        backgroundColor: GREEN,
+        borderRadius: 3,
+        borderSkipped: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 16, font: { size: 12 } } },
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: gridLines() }
+    }
+  }
+});
+
+// ========================
+// CALCULATORS
+// ========================
+function fmt(n) { return Math.round(n).toLocaleString(); }
+function fmtDec(n, d) { return parseFloat(n.toFixed(d)); }
+
+function calcHousehold() {
+  const gasCons = parseFloat(document.getElementById('gasConsSlider').value);
+  const tariff = parseFloat(document.getElementById('tariffSlider').value);
+  const whShare = parseFloat(document.getElementById('whShareSlider').value) / 100;
+  const capex = parseFloat(document.getElementById('capexSlider').value);
+  const cop = parseFloat(document.getElementById('copSlider').value);
+  const elecTariff = parseFloat(document.getElementById('elecTariffSlider').value);
+
+  document.getElementById('gasConsLabel').textContent = fmtDec(gasCons, 2);
+  document.getElementById('tariffLabel').textContent = fmt(tariff);
+  document.getElementById('whShareLabel').textContent = Math.round(parseFloat(document.getElementById('whShareSlider').value)) + '%';
+  document.getElementById('capexLabel').textContent = fmt(capex);
+  document.getElementById('copLabel').textContent = fmtDec(cop, 1);
+  document.getElementById('elecTariffLabel').textContent = fmt(elecTariff);
+
+  // Gas cost for water heating only
+  const gasWH = gasCons * whShare; // MMBtu/month
+  const gasMonthCost = gasWH * tariff; // Rs/month
+
+  // HP electricity cost — 1 MMBtu = 293.07 kWh
+  const kWhPerMMBtu = 293.07;
+  const elecKwh = (gasWH / cop) * kWhPerMMBtu;
+  const elecMonthlyCost = elecKwh * elecTariff;
+
+  const annualSaving = (gasMonthCost - elecMonthlyCost) * 12;
+  const payback = annualSaving > 0 ? capex / annualSaving : Infinity;
+
+  document.getElementById('gasMonthly').textContent = 'Rs. ' + fmt(gasMonthCost);
+  document.getElementById('hpMonthly').textContent = 'Rs. ' + fmt(elecMonthlyCost);
+  document.getElementById('annualSaving').textContent = 'Rs. ' + fmt(annualSaving);
+  document.getElementById('paybackYrs').textContent = payback < 50 ? fmtDec(payback, 1) + ' yrs' : 'Not viable';
+}
+
+function calcLPG() {
+  const transRate = parseFloat(document.getElementById('transRateSlider').value) / 100;
+  const lpgPrice = parseFloat(document.getElementById('lpgPriceSlider').value);
+  const rlngPrice = parseFloat(document.getElementById('rlngPriceSlider').value);
+  const fxRate = parseFloat(document.getElementById('fxRateSlider').value);
+
+  document.getElementById('transRateLabel').textContent = Math.round(transRate * 100) + '%';
+  document.getElementById('lpgPriceLabel').textContent = fmt(lpgPrice);
+  document.getElementById('rlngPriceLabel').textContent = fmtDec(rlngPrice, 2);
+  document.getElementById('fxRateLabel').textContent = fmt(fxRate);
+
+  const totalCI = 1468198; // tonnes/yr
+  const displaced = totalCI * transRate;
+  const mmbtuPerTonne = 42.93;
+  const displacedMMBtu = displaced * mmbtuPerTonne;
+  const lpgImportBasis = lpgPrice / mmbtuPerTonne; // USD/MMBtu
+  const grossAvoided = (displaced * lpgPrice) / 1e6; // USD M
+  const rlngCost = (displacedMMBtu * rlngPrice) / 1e6; // USD M
+  const netFX = grossAvoided - rlngCost;
+
+  // Consumer saving in PKR
+  const lpgRetail = 7084; // Rs/MMBtu
+  const rlngRetail = 3652; // Rs/MMBtu
+  const consumerSavingRs = (displacedMMBtu * (lpgRetail - rlngRetail)) / 1e9; // Rs billion
+
+  document.getElementById('lpgDisplaced').textContent = fmt(displaced / 1000);
+  document.getElementById('grossAvoided').textContent = 'US$' + fmtDec(grossAvoided, 0) + 'M';
+  document.getElementById('netFxSaving').textContent = 'US$' + fmtDec(netFX, 0) + 'M';
+  document.getElementById('consumerSaving').textContent = 'Rs. ' + fmtDec(consumerSavingRs, 0) + 'B';
+}
+
+function calcNational() {
+  const geyserAdopt = parseFloat(document.getElementById('geyserAdoptSlider').value) / 100;
+  const spaceAdopt = parseFloat(document.getElementById('spaceAdoptSlider').value) / 100;
+  const rlngNat = parseFloat(document.getElementById('rlngNatSlider').value);
+
+  document.getElementById('geyserAdoptLabel').textContent = Math.round(geyserAdopt * 100) + '%';
+  document.getElementById('spaceAdoptLabel').textContent = Math.round(spaceAdopt * 100) + '%';
+  document.getElementById('rlngNatLabel').textContent = fmtDec(rlngNat, 2);
+
+  // Base: 126,609 MMCF/yr geysers, 34,530 MMCF/yr space heating
+  const geyserBase = 126609;
+  const spaceBase = 34530;
+
+  const geyserSaved = geyserBase * geyserAdopt;
+  const spaceSaved = spaceBase * spaceAdopt;
+  const totalSaved = geyserSaved + spaceSaved; // MMCF/yr = MMBtu/yr (approx — 1 MMCF ~ 1000 MMBtu)
+
+  // Convert MMCF to MMBtu: 1 MMCF = 1,000,000 cu ft, 1 cu ft gas ~ 1 MMBtu/1000
+  const totalMMBtu = totalSaved * 1000; // thousands of MMBtu
+  const totalUSD_M = (totalMMBtu * rlngNat) / 1e6;
+
+  // Add C&I LPG at 90% scenario for combined
+  const ciLPG = 284; // USD M
+
+  document.getElementById('geyserMMCF').textContent = fmt(Math.round(geyserSaved));
+  document.getElementById('spaceMMCF').textContent = fmt(Math.round(spaceSaved));
+  document.getElementById('totalRLNGSaving').textContent = 'US$' + fmtDec(totalUSD_M, 0) + 'M';
+  document.getElementById('combinedFX').textContent = 'US$' + fmtDec(totalUSD_M + ciLPG, 0) + 'M';
+}
+
+// Init calculators
+calcHousehold();
+calcLPG();
+calcNational();
+</script>
+
+</body>
+</html>
