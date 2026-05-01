@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SECMC Thar Block II — Tariff Evolution, Scale Economics & Electrification Roadmap</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bg2: #FAFAFA;
+  --bg3: #F7F4EF;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --accent2: #A97924;
+  --green: #52B788;
+  --green2: #1a6b3c;
+  --red: #9B2335;
+  --blue: #6EA8C4;
+  --slate: #667085;
+  --text: #1A1A1A;
+  --text2: #666666;
+  --text3: #999999;
+  --shadow: rgba(26,26,26,0.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--bg);color:#2D2D2D;line-height:1.6;font-size:14px}
+.container{max-width:1180px;margin:0 auto;padding:0 1.5rem 4rem}
+
+/* Header */
+.doc-header{border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;margin-bottom:2.5rem;position:relative}
+.doc-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.75rem}
+.doc-title{font-family:Georgia,serif;font-size:40px;font-weight:400;color:var(--text);line-height:1.16;margin-bottom:0.75rem;max-width:980px}
+.doc-sub{font-size:15px;color:var(--text2);margin-bottom:1.25rem;max-width:940px}
+.doc-meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:12px;color:var(--text3);padding-top:1rem;border-top:1px solid var(--border)}
+.doc-meta span strong{color:var(--text);font-weight:600}
+.nav-strip{position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(10px);z-index:10;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0.75rem 1.5rem;display:flex;gap:1.2rem;flex-wrap:wrap;font-size:12px;color:var(--text3)}
+.nav-inner a{text-decoration:none;color:var(--text2)}
+.nav-inner a:hover{color:var(--accent)}
+
+/* Sections */
+.section{margin:3rem 0 2rem}
+.section-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.5rem}
+.section-title{font-family:Georgia,serif;font-size:25px;font-weight:400;color:var(--text);margin-bottom:0.5rem}
+.section-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;max-width:920px}
+.exhibit-tag{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.4rem}
+hr.divider{border:none;border-top:1px solid var(--border);margin:2.75rem 0}
+
+/* Layout */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:0.85rem}
+
+/* KPI / Insight boxes */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.6rem}
+.kpi-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.35rem;border-top:3px solid var(--border);transition:border-color 0.2s;box-shadow:0 6px 20px var(--shadow)}
+.kpi-box.amber{border-top-color:var(--accent)}
+.kpi-box.green{border-top-color:var(--green)}
+.kpi-box.red{border-top-color:var(--red)}
+.kpi-box.slate{border-top-color:#888}
+.kpi-box.blue{border-top-color:var(--blue)}
+.kpi-num{font-family:Georgia,serif;font-size:30px;font-weight:400;color:var(--text);line-height:1}
+.kpi-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.55rem}
+.kpi-note{font-size:12px;color:var(--accent);margin-top:0.45rem;font-weight:500;line-height:1.4}
+
+/* Panels */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.45rem;box-shadow:0 6px 20px var(--shadow)}
+.panel.white{background:var(--bg)}
+.panel-title{font-family:Georgia,serif;font-size:16px;font-weight:400;color:var(--text);margin-bottom:0.25rem}
+.panel-sub{font-size:12px;color:var(--text3);margin-bottom:1rem}
+.callout{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:var(--bg2);border-radius:0 4px 4px 0;margin:1.2rem 0;font-size:13px;color:var(--text2)}
+.callout strong{color:var(--text);font-weight:600}
+
+/* Charts */
+.ch-wrap{position:relative;width:100%}
+.ch-220{height:220px}.ch-240{height:240px}.ch-260{height:260px}.ch-300{height:300px}.ch-340{height:340px}.ch-380{height:380px}
+
+/* Tables */
+.est-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--bg)}
+.est-table th{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);padding:0.62rem 0.75rem;border-bottom:2px solid var(--border);background:var(--bg);text-align:left;white-space:nowrap}
+.est-table td{padding:0.68rem 0.75rem;border-bottom:1px solid var(--border);color:#2D2D2D;vertical-align:top}
+.est-table tr:last-child td{border-bottom:none}
+.est-table tr:hover td{background:#FAFAFA}
+.est-table .mono{font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;color:var(--text3)}
+.est-table .val{font-family:Georgia,serif;font-size:13px;font-weight:400;text-align:right;white-space:nowrap;color:var(--text)}
+.est-table .small{font-size:11px;color:var(--text2);line-height:1.45}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+.b-scale{background:#FDF3E6;color:#8B5E1A}.b-opt{background:#EAF5EF;color:#1a6b3c}.b-reg{background:#EBF3FB;color:#1a4f7a}.b-risk{background:#FFF3F3;color:#7a1a2a}.b-dev{background:#F5F5F5;color:#555}
+
+/* Sliders */
+.model-shell{display:grid;grid-template-columns:360px 1fr;gap:1.25rem;align-items:start}
+.control-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.1rem;margin-bottom:0.9rem}
+.control-head{display:flex;justify-content:space-between;align-items:baseline;gap:0.75rem;margin-bottom:0.55rem}
+.control-label{font-size:12px;font-weight:600;color:var(--text);letter-spacing:0.02em}
+.control-value{font-family:Georgia,serif;font-size:18px;color:var(--accent)}
+.control-help{font-size:11px;color:var(--text3);line-height:1.4;margin-bottom:0.65rem}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.scenario-buttons{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem}
+.scenario-buttons button{border:1px solid var(--border);background:var(--bg);border-radius:6px;padding:0.65rem 0.5rem;font-size:11px;color:var(--text2);cursor:pointer;transition:0.15s}
+.scenario-buttons button:hover{border-color:var(--accent);color:var(--text)}
+.scenario-buttons button.primary{background:var(--accent);color:white;border-color:var(--accent)}
+
+/* Output cards */
+.output-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem;margin-bottom:1rem}
+.out-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.9rem;border-left:3px solid var(--border)}
+.out-card.amber{border-left-color:var(--accent)}.out-card.green{border-left-color:var(--green)}.out-card.blue{border-left-color:var(--blue)}.out-card.red{border-left-color:var(--red)}
+.out-val{font-family:Georgia,serif;font-size:24px;color:var(--text);line-height:1}
+.out-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:0.45rem}
+.out-note{font-size:11px;color:var(--text2);margin-top:0.4rem;line-height:1.35}
+
+/* Roadmap */
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem}
+.road-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.15rem;border-top:3px solid var(--border)}
+.road-card.amber{border-top-color:var(--accent)}.road-card.green{border-top-color:var(--green)}.road-card.blue{border-top-color:var(--blue)}.road-card.red{border-top-color:var(--red)}
+.road-title{font-family:Georgia,serif;font-size:15px;color:var(--text);margin-bottom:0.25rem}
+.road-meta{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.6rem}
+.road-card ul{padding-left:1rem;color:var(--text2);font-size:12px;line-height:1.55}
+
+/* Heatmap */
+.heat-table{width:100%;border-collapse:separate;border-spacing:5px;font-size:11px}
+.heat-table th{color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;padding:0.4rem;text-align:center}
+.heat-table td{padding:0.55rem;border-radius:4px;text-align:center;font-family:Georgia,serif;border:1px solid rgba(255,255,255,0.6)}
+.heat-good{background:#EAF5EF;color:#1a6b3c}.heat-mid{background:#FDF3E6;color:#8B5E1A}.heat-high{background:#FFF3F3;color:#7a1a2a}.heat-neutral{background:#F5F5F5;color:#555}
+
+.doc-footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:12px;color:var(--text3)}
+.doc-footer strong{color:var(--text)}
+.note{font-size:11px;color:var(--text3);line-height:1.5;margin-top:0.8rem}
+.formula{font-family:'SFMono-Regular',Consolas,monospace;background:#fff;border:1px solid var(--border);border-radius:4px;padding:0.6rem;font-size:11px;color:var(--text2);overflow:auto}
+
+@media(max-width:980px){.model-shell{grid-template-columns:1fr}.kpi-grid,.g4,.roadmap,.output-strip{grid-template-columns:1fr 1fr}.g3,.g5{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.g2,.g3,.g4,.g5,.kpi-grid,.roadmap,.output-strip{grid-template-columns:1fr}.doc-title{font-size:31px}.container{padding:0 1rem 3rem}.nav-inner{padding:0.75rem 1rem}.ch-340,.ch-380{height:300px}}
+@media print{.nav-strip,.scenario-buttons,input[type=range]{display:none}.panel,.kpi-box,.road-card,.out-card{box-shadow:none}.container{max-width:100%;padding:0 0.4in}.doc-title{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="nav-strip">
+  <div class="nav-inner">
+    <a href="#snapshot">Snapshot</a>
+    <a href="#tariff">Tariff Evidence</a>
+    <a href="#capex">CAPEX Scale Curve</a>
+    <a href="#components">Component Decomposition</a>
+    <a href="#model">Dynamic Tariff Model</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#annex">Annex</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-eyebrow">SECMC · Thar Block II · Tariff Evolution & Future Cost Curve</div>
+  <h1 class="doc-title">From First-of-Kind Cost to Scale Economics:<br>Interactive Tariff Dashboard</h1>
+  <p class="doc-sub">A board-style analytical artifact showing how scale, regulatory discipline, operational optimization, and mine electrification can bend the Thar coal tariff curve downward over successive expansions.</p>
+  <div class="doc-meta">
+    <span><strong>Historical Scope</strong> · Contract Stage to MYT</span>
+    <span><strong>Scale Path</strong> · 3.8 → 7.6 → 11.2 MTPA</span>
+    <span><strong>Forward Model</strong> · 11.2 → 30.0 MTPA</span>
+    <span><strong>Currency</strong> · USD / tonne</span>
+    <span><strong>Orientation</strong> · Conservative decision support</span>
+  </div>
+</div>
+
+<!-- SNAPSHOT -->
+<section id="snapshot" class="section">
+  <div class="section-eyebrow">Section A</div>
+  <h2 class="section-title">Executive Snapshot</h2>
+  <p class="section-sub">The core evidence is clear: the first phase carried pioneer infrastructure costs; subsequent phases diluted fixed costs across higher coal volumes. The next tariff frontier is less about repeating the same expansion model and more about combining scale with fuel efficiency, grid power, electrification, IPCC/conveyorization, telemetry and tighter financing discipline.</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-box amber">
+      <div class="kpi-num">47.92</div>
+      <div class="kpi-label">Phase I COD Tariff</div>
+      <div class="kpi-note">USD/t at 3.8 MTPA</div>
+    </div>
+    <div class="kpi-box green">
+      <div class="kpi-num">32.01</div>
+      <div class="kpi-label">Phase III CS Review</div>
+      <div class="kpi-note">USD/t at 11.2 MTPA</div>
+    </div>
+    <div class="kpi-box blue">
+      <div class="kpi-num">~72%</div>
+      <div class="kpi-label">Lower CAPEX Intensity</div>
+      <div class="kpi-note">Phase II incremental vs Phase I</div>
+    </div>
+    <div class="kpi-box slate">
+      <div class="kpi-num">46%</div>
+      <div class="kpi-label">Capacity Payment Compression</div>
+      <div class="kpi-note">31.90 → 17.02 USD/t</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit A-1</div>
+      <div class="panel-title">Decision-Maker Narrative</div>
+      <div class="panel-sub">What the tariff history actually proves</div>
+      <div class="callout"><strong>Thar coal was not cheap from day one.</strong> It was expensive because Pakistan opened a first-of-kind lignite mine in a remote desert with no mature mining ecosystem. The relevant policy question is whether each incremental tonne is becoming cheaper than the previous tonne. The tariff record shows that it is.</div>
+      <table class="est-table">
+        <tbody>
+          <tr><td><span class="badge b-scale">Scale</span></td><td>Existing pit, CHS, dewatering systems, roads, workshops, mine infrastructure and operating knowledge are spread over larger volumes.</td></tr>
+          <tr><td><span class="badge b-reg">Regulation</span></td><td>TCEB determinations reduced unjustified capex, financing, ROEDC and pass-through claims, forcing efficiency into the tariff.</td></tr>
+          <tr><td><span class="badge b-opt">Optimization</span></td><td>Localization, vendor development, contractor-miner transition, fleet upscaling and telemetry reduce avoidable operating cost.</td></tr>
+          <tr><td><span class="badge b-risk">Future Frontier</span></td><td>Diesel exposure, haul distance, fleet age and mine depth now require electrification, IPCC/conveyors and fuel-efficiency benchmarking.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit A-2</div>
+      <div class="panel-title">Historical Tariff Direction</div>
+      <div class="panel-sub">Determined levelized tariff across regulatory milestones</div>
+      <div class="ch-wrap ch-300"><canvas id="tariffLine"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TARIFF EVOLUTION -->
+<section id="tariff" class="section">
+  <div class="section-eyebrow">Section B</div>
+  <h2 class="section-title">Tariff Evolution: The Mechanics of Scale</h2>
+  <p class="section-sub">The tariff moved from a high first-of-kind cost structure to a lower-cost scale structure. The decline is strongest on the capacity side, because early mine-opening infrastructure is amortized over larger output.</p>
+
+  <div class="g2" style="margin-bottom:1.25rem">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit B-1</div>
+      <div class="panel-title">Capacity vs Production Payment</div>
+      <div class="panel-sub">USD/t · Capacity payment falls materially while production cost remains operationally sensitive</div>
+      <div class="ch-wrap ch-300"><canvas id="stackTariff"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit B-2</div>
+      <div class="panel-title">Requested vs Determined Tariff</div>
+      <div class="panel-sub">Regulatory discipline reduced tariff relative to petitions</div>
+      <div class="ch-wrap ch-300"><canvas id="requestedDetermined"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel white">
+    <div class="exhibit-tag">Exhibit B-3 · Comprehensive Phase-by-Phase Tariff Evolution</div>
+    <div class="panel-title">Historical Tariff Record</div>
+    <div class="panel-sub">Contract-stage, financial-close, COD and MYT figures are not perfectly like-for-like, but the direction of travel is unambiguous.</div>
+    <div style="overflow-x:auto">
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th>Milestone</th><th>Capacity Context</th><th>Requested Tariff</th><th>Determined Tariff</th><th>Capacity Payment</th><th>Production Payment</th><th>Strategic Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>2015 Contract Stage</strong></td><td>3.8 MTPA ramping to 6.5 MTPA</td><td class="val">69.22 / 49.93</td><td class="val">46.13</td><td class="val">32.49</td><td class="val">13.64</td><td class="small">The first tariff already anticipated that scale would reduce cost; the composite tariff was materially below the stand-alone 3.8 MTPA petition.</td></tr>
+          <tr><td><strong>Phase I COD</strong></td><td>3.8 MTPA</td><td class="val">59.05</td><td class="val">47.92</td><td class="val">31.90</td><td class="val">16.03</td><td class="small">The first operating phase carried mine opening, debt service, ROE/ROEDC, working capital and fixed O&M.</td></tr>
+          <tr><td><strong>Phase II FC</strong></td><td>7.6 MTPA</td><td class="val">43.74</td><td class="val">40.84</td><td class="val">25.06</td><td class="val">15.77</td><td class="small">Incremental expansion was cheaper because core infrastructure had already been built.</td></tr>
+          <tr><td><strong>Phase II COD</strong></td><td>7.6 MTPA</td><td class="val">46.90</td><td class="val">36.72</td><td class="val">20.37</td><td class="val">16.34</td><td class="small">COD actualization confirmed material capacity-payment compression.</td></tr>
+          <tr><td><strong>Phase III CS Review</strong></td><td>11.2 MTPA</td><td class="val">35.61</td><td class="val">32.01</td><td class="val">17.02</td><td class="val">14.99</td><td class="small">The scale curve becomes visible: fixed cost per tonne falls as mine infrastructure supports larger throughput.</td></tr>
+          <tr><td><strong>Initial MYT</strong></td><td>7.6 to 11.2 MTPA</td><td class="val">37.30</td><td class="val">34.77</td><td class="val">19.23</td><td class="val">15.53</td><td class="small">MYT actualization and carry-forward balances can move the tariff relative to pure contract-stage numbers.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Note: USD/t figures are compiled from the supplied tariff-evolution materials. Where documents refer to petition, COD, contract-stage review and MYT values, the dashboard keeps the regulatory stage explicitly visible to avoid false like-for-like comparison.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CAPEX -->
+<section id="capex" class="section">
+  <div class="section-eyebrow">Section C</div>
+  <h2 class="section-title">CAPEX Dilution: The Strongest Proof of Scale Economics</h2>
+  <p class="section-sub">The most compelling metric is not only the tariff per tonne. It is the incremental capital cost per MTPA of annual production capacity. As the mine platform exists, new capacity becomes progressively cheaper to add.</p>
+
+  <div class="g2" style="margin-bottom:1.25rem">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit C-1</div>
+      <div class="panel-title">CAPEX per Incremental MTPA</div>
+      <div class="panel-sub">USD million per MTPA · Phase I vs incremental expansions</div>
+      <div class="ch-wrap ch-300"><canvas id="capexBar"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit C-2</div>
+      <div class="panel-title">Tariff and CAPEX Move Together</div>
+      <div class="panel-sub">Lower incremental CAPEX enables lower capacity payment and tariff</div>
+      <div class="ch-wrap ch-300"><canvas id="capexScatter"></canvas></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="panel white">
+      <div class="exhibit-tag">Exhibit C-3</div>
+      <div class="panel-title">Incremental CAPEX Efficiency</div>
+      <div class="panel-sub">The first 3.8 MTPA carried mine-opening platform costs; subsequent tranches used the platform.</div>
+      <table class="est-table">
+        <thead><tr><th>Expansion Phase</th><th>Capacity Added</th><th>Cost Basis</th><th>CAPEX / MTPA</th><th>Interpretation</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Phase I</strong></td><td>3.8 MTPA</td><td class="val">USD 611.14 Mn</td><td class="val">160.82</td><td class="small">Includes initial pit development, dewatering, CHS, roads, workshops, mine services and financing setup.</td></tr>
+          <tr><td><strong>Phase II Incremental</strong></td><td>+3.8 MTPA</td><td class="val">USD 168.32 Mn</td><td class="val">44.30</td><td class="small">About 72% lower intensity than Phase I on the determined project-cost basis.</td></tr>
+          <tr><td><strong>Phase III Incremental</strong></td><td>+3.6 MTPA</td><td class="val">USD 66.78 Mn</td><td class="val">18.55</td><td class="small">Represents deeper infrastructure reuse, CHS leverage and more optimized expansion planning.</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Note: The source materials include both USD 158.64 Mn and USD 168.32 Mn Phase-II cost bases depending on regulatory stage/cost classification. This dashboard uses USD 168.32 Mn for the conservative Phase-II comparison and flags the reconciliation in the annex.</p>
+    </div>
+    <div class="panel white">
+      <div class="exhibit-tag">Exhibit C-4</div>
+      <div class="panel-title">Shared Infrastructure Economics</div>
+      <div class="panel-sub">Coal Handling System as a physical example of scale</div>
+      <table class="est-table">
+        <tbody>
+          <tr><td><span class="badge b-scale">CHS</span></td><td>Three crushers, including one 2,500 t/h crusher, stockpiles, stacker/reclaimers, silos and conveyors support larger throughput.</td></tr>
+          <tr><td><span class="badge b-reg">TCEB Review</span></td><td>Phase-II CHS incremental allowance was limited because the existing/planned configuration was deemed sufficient for 7.6 MTPA.</td></tr>
+          <tr><td><span class="badge b-opt">Phase III Effect</span></td><td>Integrated front-loaded CHS investment helped avoid duplicated infrastructure and supported the ultra-low Phase-III incremental CAPEX.</td></tr>
+          <tr><td><span class="badge b-dev">Policy Lesson</span></td><td>Future expansion should approve infrastructure only where it clearly lowers life-cycle cost per tonne, not where it duplicates already available capacity.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COMPONENTS -->
+<section id="components" class="section">
+  <div class="section-eyebrow">Section D</div>
+  <h2 class="section-title">Component Decomposition: What Fell, What Did Not</h2>
+  <p class="section-sub">The capacity-payment component fell sharply; the production-payment component remained more resilient because it is tied to physical mining realities: haul distance, mine depth, truck age, road condition, diesel price, spares, tyres, drainage and dispatch efficiency.</p>
+
+  <div class="g2" style="margin-bottom:1.25rem">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit D-1</div>
+      <div class="panel-title">Phase I COD vs 2025 MYT Petition</div>
+      <div class="panel-sub">USD/t · Component-level change</div>
+      <div class="ch-wrap ch-340"><canvas id="componentBar"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit D-2</div>
+      <div class="panel-title">Where the Next Savings Must Come From</div>
+      <div class="panel-sub">Indicative savings opportunity by lever</div>
+      <div class="ch-wrap ch-340"><canvas id="savingsRadar"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel white">
+    <div class="exhibit-tag">Exhibit D-3 · Component Comparison</div>
+    <div class="panel-title">Capacity Payment Was Compressed; Fuel and Asset Replacement Remain the Frontier</div>
+    <div style="overflow-x:auto">
+      <table class="est-table">
+        <thead><tr><th>Component</th><th>Phase I COD</th><th>2025 MYT Petition</th><th>Direction</th><th>Interpretation</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Production Payment</strong></td><td class="val">16.03</td><td class="val">17.41</td><td><span class="badge b-risk">↑</span></td><td class="small">Variable mining cost is exposed to diesel, fleet age, haul distance and operating conditions.</td></tr>
+          <tr><td><strong>Capacity Payment</strong></td><td class="val">31.90</td><td class="val">19.89</td><td><span class="badge b-opt">↓</span></td><td class="small">Fixed cost, debt service and returns were spread across larger volumes.</td></tr>
+          <tr><td><strong>Fixed O&M</strong></td><td class="val">7.45</td><td class="val">6.64</td><td><span class="badge b-opt">↓</span></td><td class="small">Scale and localization lower fixed O&M per tonne.</td></tr>
+          <tr><td><strong>Insurance</strong></td><td class="val">0.99</td><td class="val">0.62</td><td><span class="badge b-opt">↓</span></td><td class="small">Larger production base dilutes insurance cost per tonne.</td></tr>
+          <tr><td><strong>Power Cost</strong></td><td class="val">1.84</td><td class="val">1.50</td><td><span class="badge b-opt">↓</span></td><td class="small">Partial improvement; major upside remains through grid/mine-mouth power and solar.</td></tr>
+          <tr><td><strong>Working Capital</strong></td><td class="val">3.33</td><td class="val">1.95</td><td><span class="badge b-opt">↓</span></td><td class="small">Mature operating cycle and TCPBA discipline reduce per-tonne burden.</td></tr>
+          <tr><td><strong>Principal + Interest</strong></td><td class="val">9.31</td><td class="val">4.21</td><td><span class="badge b-opt">↓</span></td><td class="small">Debt service per tonne falls as initial debt is repaid and incremental CAPEX is cheaper.</td></tr>
+          <tr><td><strong>ROE + ROEDC</strong></td><td class="val">8.98</td><td class="val">4.97</td><td><span class="badge b-opt">↓</span></td><td class="small">Equity-return burden per tonne declines with scale and larger denominator.</td></tr>
+          <tr><td><strong>Fuel</strong></td><td class="val">6.75</td><td class="val">6.82</td><td><span class="badge b-risk">≈/↑</span></td><td class="small">Fuel is now the main efficiency frontier; scale alone does not solve fuel intensity.</td></tr>
+          <tr><td><strong>Asset Replacement</strong></td><td class="val">2.68</td><td class="val">3.58</td><td><span class="badge b-risk">↑</span></td><td class="small">Reflects aging/larger fleet and the need for sustaining capital reserves.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- DYNAMIC MODEL -->
+<section id="model" class="section">
+  <div class="section-eyebrow">Section E</div>
+  <h2 class="section-title">Dynamic Tariff Prediction Model</h2>
+  <p class="section-sub">Use the controls below to test how future tariff could evolve as production scales up and electrification/optimization measures are implemented. The model is intentionally conservative and transparent: it is a planning simulator, not a regulatory determination.</p>
+
+  <div class="model-shell">
+    <div class="panel white">
+      <div class="exhibit-tag">Model Controls</div>
+      <div class="panel-title">Scenario Builder</div>
+      <div class="panel-sub">Select a preset or adjust the sliders.</div>
+      <div class="scenario-buttons">
+        <button onclick="setScenario('base')">Status Quo</button>
+        <button onclick="setScenario('scale')">Scale Only</button>
+        <button onclick="setScenario('discipline')">Scale + Discipline</button>
+        <button class="primary" onclick="setScenario('electrified')">Electrified Mine</button>
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Mine Capacity</div><div id="capVal" class="control-value">20.0 MTPA</div></div>
+        <div class="control-help">Higher MTPA spreads fixed costs and platform infrastructure over more tonnes.</div>
+        <input id="capacity" type="range" min="11.2" max="30" value="20" step="0.1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Mobile Fleet Electrification</div><div id="evVal" class="control-value">55%</div></div>
+        <div class="control-help">Share of diesel truck/service vehicle work replaced by EV/trolley-assist/electric traction economics.</div>
+        <input id="evShare" type="range" min="0" max="85" value="55" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">IPCC / Conveyor Adoption</div><div id="ipccVal" class="control-value">40%</div></div>
+        <div class="control-help">Share of haulage burden shifted from batch truck haulage to continuous grid-powered conveyor/IPCC systems.</div>
+        <input id="ipccShare" type="range" min="0" max="80" value="40" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Fuel Efficiency / Telemetry Gain</div><div id="fuelVal" class="control-value">15%</div></div>
+        <div class="control-help">Improvement from litres/BCM benchmarking, haul-road discipline, idle-time reduction, payload monitoring and dispatch optimization.</div>
+        <input id="fuelEff" type="range" min="0" max="30" value="15" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Grid / Solar Power Optimization</div><div id="gridVal" class="control-value">75%</div></div>
+        <div class="control-help">Share of static loads optimized through grid, mine-mouth power, solar BOOT, VFD motors and efficient electrical systems.</div>
+        <input id="gridOpt" type="range" min="0" max="100" value="75" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Financing / TCPBA Discipline</div><div id="finVal" class="control-value">10%</div></div>
+        <div class="control-help">Reduction in debt service, working capital and financing leakage through tighter spreads, clawbacks and annual reconciliation.</div>
+        <input id="finOpt" type="range" min="0" max="20" value="10" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Scale Elasticity</div><div id="elasVal" class="control-value">0.55</div></div>
+        <div class="control-help">How strongly fixed/capacity payment declines with scale. Higher value means stronger fixed-cost dilution.</div>
+        <input id="elasticity" type="range" min="0.30" max="0.80" value="0.55" step="0.01" oninput="updateModel()">
+      </div>
+    </div>
+
+    <div>
+      <div class="output-strip">
+        <div class="out-card amber"><div id="predTariff" class="out-val">—</div><div class="out-lbl">Predicted Tariff</div><div class="out-note">USD/t under current scenario</div></div>
+        <div class="out-card green"><div id="totalSaving" class="out-val">—</div><div class="out-lbl">Saving vs MYT Baseline</div><div class="out-note">Reduction from 37.30 USD/t reference</div></div>
+        <div class="out-card blue"><div id="capPayOut" class="out-val">—</div><div class="out-lbl">Capacity Payment</div><div class="out-note">Scale-adjusted USD/t</div></div>
+        <div class="out-card red"><div id="prodPayOut" class="out-val">—</div><div class="out-lbl">Production Payment</div><div class="out-note">Optimization-adjusted USD/t</div></div>
+      </div>
+
+      <div class="g2" style="margin-bottom:1.25rem">
+        <div class="panel">
+          <div class="exhibit-tag">Exhibit E-1</div>
+          <div class="panel-title">Projected Tariff Curve</div>
+          <div class="panel-sub">Modelled USD/t as mine capacity scales under selected efficiency assumptions</div>
+          <div class="ch-wrap ch-300"><canvas id="projectionLine"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="exhibit-tag">Exhibit E-2</div>
+          <div class="panel-title">Current Scenario Decomposition</div>
+          <div class="panel-sub">Capacity vs production cost under selected assumptions</div>
+          <div class="ch-wrap ch-300"><canvas id="modelStack"></canvas></div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="panel">
+          <div class="exhibit-tag">Exhibit E-3</div>
+          <div class="panel-title">Savings Waterfall</div>
+          <div class="panel-sub">Indicative movement from MYT petition baseline to scenario tariff</div>
+          <div class="ch-wrap ch-260"><canvas id="waterfall"></canvas></div>
+        </div>
+        <div class="panel white">
+          <div class="exhibit-tag">Exhibit E-4</div>
+          <div class="panel-title">Model Mechanics</div>
+          <div class="panel-sub">Transparent formula used for the dashboard</div>
+          <div class="formula">
+Base tariff = 37.30 = 19.89 capacity + 17.41 production<br>
+Capacity payment = 19.89 × (11.2 / MTPA)<sup>elasticity</sup> × (1 - financing optimization × 0.35)<br>
+Fuel cost = 6.82 × (1 - fuel efficiency) × (1 - 0.55 × EV share) × (1 - 0.45 × IPCC share)<br>
+Power cost = 1.50 × (1 - 0.25 × grid/solar optimization)<br>
+Other production = asset replacement + other O&M, adjusted modestly for EV/IPCC and scale.<br>
+Predicted tariff = adjusted capacity payment + adjusted production payment.
+          </div>
+          <p class="note">The model deliberately avoids aggressive assumptions. It gives partial credit for electrification because EVs/IPCC reduce fuel and maintenance but require charging infrastructure, replacement capital and operating validation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel white" style="margin-top:1.25rem">
+    <div class="exhibit-tag">Exhibit E-5 · Tariff Sensitivity Matrix</div>
+    <div class="panel-title">Future Tariff Sensitivity: Capacity vs Electrification</div>
+    <div class="panel-sub">USD/t · Assumes current slider settings for IPCC, fuel efficiency, grid optimization, financing discipline and elasticity; rows vary capacity and columns vary mobile fleet electrification.</div>
+    <div style="overflow-x:auto">
+      <table id="heatTable" class="heat-table"></table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ROADMAP -->
+<section id="roadmap" class="section">
+  <div class="section-eyebrow">Section F</div>
+  <h2 class="section-title">Roadmap for Further Cost Reduction</h2>
+  <p class="section-sub">The next tariff reduction requires a performance-linked expansion framework: scale should be approved, but each additional tonne should be cheaper through hard targets on fuel intensity, electrification, financing discipline and infrastructure reuse.</p>
+
+  <div class="roadmap">
+    <div class="road-card amber">
+      <div class="road-title">1. Scale with Glidepath</div>
+      <div class="road-meta">Capacity payment discipline</div>
+      <ul>
+        <li>Approve expansions with declining tariff glidepath.</li>
+        <li>Benchmark incremental CAPEX per MTPA.</li>
+        <li>Prevent duplicated infrastructure and overcapitalization.</li>
+      </ul>
+    </div>
+    <div class="road-card green">
+      <div class="road-title">2. Fuel Benchmarking</div>
+      <div class="road-meta">Production payment control</div>
+      <ul>
+        <li>Adopt litres/BCM target converging to ≤0.80 L/BCM.</li>
+        <li>Mandate GPS, engine telematics and payload monitoring.</li>
+        <li>Track USD/BCM, idle time, road resistance and availability.</li>
+      </ul>
+    </div>
+    <div class="road-card blue">
+      <div class="road-title">3. Electrify Static Loads</div>
+      <div class="road-meta">Immediate diesel displacement</div>
+      <ul>
+        <li>Grid/mine-mouth power for dewatering, workshops and CHS.</li>
+        <li>Solar BOOT and storage for critical loads.</li>
+        <li>VFD motors and efficient pumping systems.</li>
+      </ul>
+    </div>
+    <div class="road-card red">
+      <div class="road-title">4. Electrify Haulage</div>
+      <div class="road-meta">Structural OPEX reduction</div>
+      <ul>
+        <li>EV dump truck and trolley-assist pilots.</li>
+        <li>IPCC/conveyor feasibility and phase-gated deployment.</li>
+        <li>Tariff recognition based on verified life-cycle cost.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-top:1.25rem">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit F-1</div>
+      <div class="panel-title">Optimization Lever Map</div>
+      <div class="panel-sub">Which tariff component each intervention targets</div>
+      <div style="overflow-x:auto">
+        <table class="est-table">
+          <thead><tr><th>Lever</th><th>Target Component</th><th>Tariff Logic</th><th>Implementation Discipline</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Further scale-up</strong></td><td>Capacity payment</td><td>Dilutes fixed costs, ROE/ROEDC, debt service and insurance.</td><td>Declining capex/MTPA benchmark and no duplicated CHS/infrastructure.</td></tr>
+            <tr><td><strong>Fleet renewal + telemetry</strong></td><td>Fuel, spares, maintenance</td><td>Reduces litres/BCM, idle time and maintenance cost per BCM.</td><td>Monthly reporting of fuel intensity, availability and operator behavior.</td></tr>
+            <tr><td><strong>Grid/mine-mouth power</strong></td><td>Power and diesel generation</td><td>Replaces high-cost diesel generation with local electricity.</td><td>Dedicated auxiliary supply, audited kWh cost and reliability tracking.</td></tr>
+            <tr><td><strong>EV dump trucks</strong></td><td>Fuel and variable O&M</td><td>Replaces imported diesel with domestic electricity and lower drivetrain maintenance.</td><td>Pilots first; tariff recognition only after verified life-cycle cost.</td></tr>
+            <tr><td><strong>IPCC/conveyors</strong></td><td>Haulage, fuel, roads</td><td>Continuous electric haulage can structurally lower ton-km cost.</td><td>Feasibility, mine geometry, capex discipline and availability guarantees.</td></tr>
+            <tr><td><strong>TCPBA/clawbacks</strong></td><td>Working capital, liquidity</td><td>Returns over-recoveries and interest income to consumers.</td><td>Annual reconciliation, external audit and capped quarterly adjustment.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit F-2</div>
+      <div class="panel-title">Future Performance Dashboard</div>
+      <div class="panel-sub">Metrics that should be embedded into the next MYT / COD true-up</div>
+      <div class="ch-wrap ch-300"><canvas id="metricBar"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ANNEX -->
+<section id="annex" class="section">
+  <div class="section-eyebrow">Annex</div>
+  <h2 class="section-title">Model Assumptions and Data Notes</h2>
+  <p class="section-sub">The dashboard is designed to be transparent, conservative and editable. All main assumptions are visible below so that the model can be adjusted when updated regulatory determinations, audited accounts or technical feasibility studies become available.</p>
+
+  <div class="g2">
+    <div class="panel white">
+      <div class="exhibit-tag">Annex A</div>
+      <div class="panel-title">Baseline Tariff Components Used in Model</div>
+      <table class="est-table">
+        <thead><tr><th>Component</th><th>Baseline USD/t</th><th>Model Treatment</th></tr></thead>
+        <tbody>
+          <tr><td>Capacity payment</td><td class="val">19.89</td><td class="small">Scaled by capacity elasticity and financing discipline.</td></tr>
+          <tr><td>Fuel</td><td class="val">6.82</td><td class="small">Reduced by fuel efficiency, EV adoption and IPCC adoption.</td></tr>
+          <tr><td>Power</td><td class="val">1.50</td><td class="small">Reduced by grid/solar optimization for static loads.</td></tr>
+          <tr><td>Asset replacement</td><td class="val">3.58</td><td class="small">Partly reduced by electrification/IPCC but preserved conservatively for sustaining capital.</td></tr>
+          <tr><td>Other production O&M</td><td class="val">5.51</td><td class="small">Includes residual variable production cost after identified fuel, power and replacement components.</td></tr>
+          <tr><td><strong>Total reference tariff</strong></td><td class="val"><strong>37.30</strong></td><td class="small">2025 MYT petition reference used for dynamic scenario baseline.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel white">
+      <div class="exhibit-tag">Annex B</div>
+      <div class="panel-title">Important Cautions</div>
+      <table class="est-table">
+        <tbody>
+          <tr><td><span class="badge b-risk">Not a Determination</span></td><td>The model is an indicative planning tool and does not replace TCEB tariff determination, COD true-up or MYT reconciliation.</td></tr>
+          <tr><td><span class="badge b-dev">Stage Differences</span></td><td>Contract, FC, COD and MYT numbers reflect different assumptions for FX, diesel, CPI, interest rates, mine plan and true-up items.</td></tr>
+          <tr><td><span class="badge b-scale">CAPEX Reconciliation</span></td><td>Phase-II incremental cost is reported with slightly different bases across the supplied materials; the conservative model uses USD 168.32 Mn while preserving the lower USD 158.64 Mn reference in the narrative.</td></tr>
+          <tr><td><span class="badge b-opt">Electrification</span></td><td>EV/IPCC benefits are credited only partially because capex, charging infrastructure, battery replacement, availability and mine-cycle performance must be verified.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="doc-footer">
+  <div><strong>SECMC / Thar Block II</strong> · Tariff Evolution, Scale Economics & Electrification Roadmap</div>
+  <div>Interactive planning dashboard · Conservative orientation</div>
+  <div style="color:var(--text3)">Prepared for decision support · USD/t estimates are indicative</div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+const acc = '#C8923A', grn = '#52B788', red = '#9B2335', gry = '#999999', blue = '#6EA8C4', slate = '#667085';
+const pal = [grn, acc, blue, '#888', red, '#7B9E8F', '#C4A882', gry];
+const defTooltip = { backgroundColor:'rgba(26,26,26,0.92)', titleFont:{size:11}, bodyFont:{size:11}, padding:10 };
+const grid = { color:'#F0F0F0' };
+const tick = { font:{size:10} };
+const usdTick = v => '$' + Number(v).toFixed(0);
+
+const phases = ['Phase I COD','Phase II FC','Phase II COD','Phase III CS','Initial MYT'];
+const capacities = [3.8,7.6,7.6,11.2,11.2];
+const requested = [59.05,43.74,46.90,35.61,37.30];
+const determined = [47.92,40.84,36.72,32.01,34.77];
+const capPay = [31.90,25.06,20.37,17.02,19.23];
+const prodPay = [16.03,15.77,16.34,14.99,15.53];
+const capexPer = [160.82,44.30,18.55];
+const capexLabels = ['Phase I\n3.8 MTPA','Phase II\n+3.8 MTPA','Phase III\n+3.6 MTPA'];
+
+Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif";
+Chart.defaults.color = '#666666';
+
+function makeChart(id, config){ return new Chart(document.getElementById(id), config); }
+
+makeChart('tariffLine',{
+  type:'line',
+  data:{labels:phases,datasets:[
+    {label:'Determined tariff',data:determined,borderColor:acc,backgroundColor:'rgba(200,146,58,0.12)',fill:true,tension:0.28,pointRadius:4,pointBackgroundColor:acc},
+    {label:'Capacity payment',data:capPay,borderColor:blue,backgroundColor:'rgba(110,168,196,0.08)',fill:false,tension:0.28,pointRadius:3},
+    {label:'Production payment',data:prodPay,borderColor:grn,backgroundColor:'rgba(82,183,136,0.08)',fill:false,tension:0.28,pointRadius:3}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:{...tick,callback:usdTick},title:{display:true,text:'USD/t',font:{size:10}}}}}
+});
+
+makeChart('stackTariff',{
+  type:'bar',
+  data:{labels:phases,datasets:[
+    {label:'Capacity payment',data:capPay,backgroundColor:blue,borderRadius:3,borderSkipped:false},
+    {label:'Production payment',data:prodPay,backgroundColor:grn,borderRadius:3,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{stacked:true,grid:{display:false},ticks:tick},y:{stacked:true,grid,ticks:{...tick,callback:usdTick}}}}
+});
+
+makeChart('requestedDetermined',{
+  type:'bar',
+  data:{labels:phases,datasets:[
+    {label:'Requested',data:requested,backgroundColor:'#D0D0D0',borderRadius:3,borderSkipped:false},
+    {label:'Determined',data:determined,backgroundColor:acc,borderRadius:3,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid:{display:false},ticks:tick},y:{beginAtZero:true,grid,ticks:{...tick,callback:usdTick}}}}
+});
+
+makeChart('capexBar',{
+  type:'bar',
+  data:{labels:capexLabels,datasets:[{label:'USD Mn per MTPA',data:capexPer,backgroundColor:[red,acc,grn],borderRadius:4,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` USD ${c.raw.toFixed(2)} Mn/MTPA`}}},scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:{...tick,callback:v=>'USD '+v+'Mn'}}}}
+});
+
+makeChart('capexScatter',{
+  type:'scatter',
+  data:{datasets:[
+    {label:'Phase I',data:[{x:160.82,y:47.92}],backgroundColor:red,pointRadius:7},
+    {label:'Phase II COD',data:[{x:44.30,y:36.72}],backgroundColor:acc,pointRadius:7},
+    {label:'Phase III CS',data:[{x:18.55,y:32.01}],backgroundColor:grn,pointRadius:7}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: CAPEX ${c.raw.x.toFixed(1)} USD Mn/MTPA; tariff ${c.raw.y.toFixed(2)} USD/t`}}},scales:{x:{grid,title:{display:true,text:'CAPEX / MTPA (USD Mn)',font:{size:10}},ticks:tick},y:{grid,title:{display:true,text:'Determined tariff (USD/t)',font:{size:10}},ticks:{...tick,callback:usdTick}}}}
+});
+
+makeChart('componentBar',{
+  type:'bar',
+  data:{labels:['Production','Capacity','Fixed O&M','Insurance','Power','Working Capital','Principal + Interest','ROE + ROEDC','Fuel','Asset Replacement'],datasets:[
+    {label:'Phase I COD',data:[16.03,31.90,7.45,0.99,1.84,3.33,9.31,8.98,6.75,2.68],backgroundColor:'#D0D0D0',borderRadius:3,borderSkipped:false},
+    {label:'2025 MYT Petition',data:[17.41,19.89,6.64,0.62,1.50,1.95,4.21,4.97,6.82,3.58],backgroundColor:acc,borderRadius:3,borderSkipped:false}
+  ]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid,ticks:{...tick,callback:usdTick}},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+makeChart('savingsRadar',{
+  type:'radar',
+  data:{labels:['Scale / Fixed Cost','Debt & TCPBA','Fuel Efficiency','Grid Power','EV Fleet','IPCC / Conveyors','Local O&M'],datasets:[
+    {label:'Near-term certainty',data:[85,70,65,75,35,25,70],borderColor:acc,backgroundColor:'rgba(200,146,58,0.16)',pointBackgroundColor:acc},
+    {label:'Long-term impact',data:[80,45,70,65,85,90,60],borderColor:grn,backgroundColor:'rgba(82,183,136,0.12)',pointBackgroundColor:grn}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:defTooltip},scales:{r:{beginAtZero:true,max:100,grid:{color:'#EFEFEF'},angleLines:{color:'#EFEFEF'},pointLabels:{font:{size:10}},ticks:{display:false}}}}
+});
+
+makeChart('metricBar',{
+  type:'bar',
+  data:{labels:['USD/BCM moved','Litres/BCM','kWh/BCM','Truck-hour productivity','Idle time','Equipment availability','Maintenance/BCM','Rolling resistance'],datasets:[{label:'Priority for MYT monitoring',data:[95,95,80,78,75,72,70,65],backgroundColor:[acc,acc,blue,grn,red,grn,blue,'#888'],borderRadius:3,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` Priority score: ${c.raw}/100`}}},scales:{x:{max:100,grid,ticks:tick},y:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+let projectionChart, modelStackChart, waterfallChart;
+function val(id){ return parseFloat(document.getElementById(id).value); }
+function fmt(x,d=2){ return Number(x).toFixed(d); }
+
+function calcTariff(capacity, ev, ipcc, fuelEff, gridOpt, finOpt, elasticity){
+  const baseCap = 11.2;
+  const baseCapacityPay = 19.89;
+  const baseFuel = 6.82;
+  const basePower = 1.50;
+  const baseAsset = 3.58;
+  const baseOther = 5.51;
+
+  const scaleFactor = Math.pow(baseCap / capacity, elasticity);
+  const financeFactor = 1 - (finOpt/100)*0.35;
+  let capacityPayment = baseCapacityPay * scaleFactor * financeFactor;
+
+  let fuel = baseFuel * (1 - fuelEff/100) * (1 - 0.55*ev/100) * (1 - 0.45*ipcc/100);
+  let power = basePower * (1 - 0.25*gridOpt/100);
+  let asset = baseAsset * (1 - 0.08*ev/100) * (1 - 0.05*ipcc/100);
+  let other = baseOther * (1 - 0.04*Math.max(0,capacity-baseCap)/(30-baseCap)) * (1 - 0.04*ipcc/100);
+  let productionPayment = Math.max(8.5, fuel + power + asset + other);
+
+  let tariff = capacityPayment + productionPayment;
+  return {tariff, capacityPayment, productionPayment, fuel, power, asset, other, scaleSaving: 19.89 - (19.89*scaleFactor), financeSaving: (19.89*scaleFactor) - capacityPayment};
+}
+
+function getInputs(){
+  return {capacity:val('capacity'),ev:val('evShare'),ipcc:val('ipccShare'),fuelEff:val('fuelEff'),gridOpt:val('gridOpt'),finOpt:val('finOpt'),elasticity:val('elasticity')};
+}
+
+function updateLabels(i){
+  document.getElementById('capVal').innerText = fmt(i.capacity,1)+' MTPA';
+  document.getElementById('evVal').innerText = fmt(i.ev,0)+'%';
+  document.getElementById('ipccVal').innerText = fmt(i.ipcc,0)+'%';
+  document.getElementById('fuelVal').innerText = fmt(i.fuelEff,0)+'%';
+  document.getElementById('gridVal').innerText = fmt(i.gridOpt,0)+'%';
+  document.getElementById('finVal').innerText = fmt(i.finOpt,0)+'%';
+  document.getElementById('elasVal').innerText = fmt(i.elasticity,2);
+}
+
+function updateModel(){
+  const i = getInputs(); updateLabels(i);
+  const r = calcTariff(i.capacity,i.ev,i.ipcc,i.fuelEff,i.gridOpt,i.finOpt,i.elasticity);
+  document.getElementById('predTariff').innerText = '$'+fmt(r.tariff,2);
+  document.getElementById('totalSaving').innerText = '$'+fmt(37.30-r.tariff,2);
+  document.getElementById('capPayOut').innerText = '$'+fmt(r.capacityPayment,2);
+  document.getElementById('prodPayOut').innerText = '$'+fmt(r.productionPayment,2);
+
+  // projection line over capacity
+  const xs = [];
+  const ys = [];
+  for(let c=11.2;c<=30.01;c+=0.8){
+    xs.push(c.toFixed(1));
+    ys.push(calcTariff(c,i.ev,i.ipcc,i.fuelEff,i.gridOpt,i.finOpt,i.elasticity).tariff);
+  }
+  projectionChart.data.labels = xs;
+  projectionChart.data.datasets[0].data = ys;
+  projectionChart.data.datasets[1].data = xs.map(_=>37.30);
+  projectionChart.update();
+
+  modelStackChart.data.datasets[0].data = [19.89, r.capacityPayment];
+  modelStackChart.data.datasets[1].data = [17.41, r.productionPayment];
+  modelStackChart.update();
+
+  const baseNoScale = calcTariff(11.2,0,0,0,0,0,i.elasticity);
+  const scaleOnly = calcTariff(i.capacity,0,0,0,0,0,i.elasticity);
+  const fuelOnly = calcTariff(i.capacity,i.ev,i.ipcc,i.fuelEff,0,0,i.elasticity);
+  const gridOnly = calcTariff(i.capacity,i.ev,i.ipcc,i.fuelEff,i.gridOpt,0,i.elasticity);
+  const final = r;
+  waterfallChart.data.datasets[0].data = [37.30, scaleOnly.tariff, fuelOnly.tariff, gridOnly.tariff, final.tariff];
+  waterfallChart.update();
+
+  buildHeat(i);
+}
+
+function setScenario(name){
+  const map = {
+    base:{capacity:11.2,ev:0,ipcc:0,fuelEff:0,gridOpt:20,finOpt:0,elasticity:0.55},
+    scale:{capacity:20,ev:0,ipcc:0,fuelEff:5,gridOpt:25,finOpt:3,elasticity:0.55},
+    discipline:{capacity:20,ev:25,ipcc:15,fuelEff:15,gridOpt:65,finOpt:10,elasticity:0.60},
+    electrified:{capacity:20,ev:55,ipcc:40,fuelEff:15,gridOpt:75,finOpt:10,elasticity:0.55}
+  }[name];
+  document.getElementById('capacity').value = map.capacity;
+  document.getElementById('evShare').value = map.ev;
+  document.getElementById('ipccShare').value = map.ipcc;
+  document.getElementById('fuelEff').value = map.fuelEff;
+  document.getElementById('gridOpt').value = map.gridOpt;
+  document.getElementById('finOpt').value = map.finOpt;
+  document.getElementById('elasticity').value = map.elasticity;
+  updateModel();
+}
+
+function buildHeat(i){
+  const caps = [11.2,15,20,25,30];
+  const evs = [0,25,50,75,85];
+  let html = '<thead><tr><th>Capacity / EV</th>' + evs.map(e=>`<th>${e}% EV</th>`).join('') + '</tr></thead><tbody>';
+  caps.forEach(c=>{
+    html += `<tr><th>${c} MTPA</th>`;
+    evs.forEach(e=>{
+      const t = calcTariff(c,e,i.ipcc,i.fuelEff,i.gridOpt,i.finOpt,i.elasticity).tariff;
+      let cls = t < 25 ? 'heat-good' : (t < 31 ? 'heat-mid' : 'heat-high');
+      if(c===11.2 && e===0) cls='heat-neutral';
+      html += `<td class="${cls}">$${t.toFixed(1)}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('heatTable').innerHTML = html;
+}
+
+projectionChart = makeChart('projectionLine',{
+  type:'line',
+  data:{labels:[],datasets:[
+    {label:'Projected tariff',data:[],borderColor:acc,backgroundColor:'rgba(200,146,58,0.12)',fill:true,tension:0.30,pointRadius:2},
+    {label:'MYT petition reference',data:[],borderColor:'#D0D0D0',borderDash:[5,5],fill:false,pointRadius:0}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid:{display:false},ticks:tick,title:{display:true,text:'Capacity (MTPA)',font:{size:10}}},y:{grid,ticks:{...tick,callback:usdTick},title:{display:true,text:'USD/t',font:{size:10}}}}}
+});
+
+modelStackChart = makeChart('modelStack',{
+  type:'bar',
+  data:{labels:['MYT reference','Selected scenario'],datasets:[
+    {label:'Capacity payment',data:[19.89,0],backgroundColor:blue,borderRadius:3,borderSkipped:false},
+    {label:'Production payment',data:[17.41,0],backgroundColor:grn,borderRadius:3,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{stacked:true,grid:{display:false},ticks:tick},y:{stacked:true,grid,ticks:{...tick,callback:usdTick}}}}
+});
+
+waterfallChart = makeChart('waterfall',{
+  type:'bar',
+  data:{labels:['MYT baseline','After scale','After fuel/EV/IPCC','After grid/solar','Final incl. finance'],datasets:[{label:'Tariff after lever',data:[],backgroundColor:[red,acc,blue,grn,'#888'],borderRadius:3,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid,ticks:{...tick,callback:usdTick}}}}
+});
+
+updateModel();
+</script>
+</body>
+</html>
