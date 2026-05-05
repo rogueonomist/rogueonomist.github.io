@@ -1,0 +1,3029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Can Pakistan Engineer Itself to the Next Level — IEEE Pakistan AGM 2026</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #FFFFFF;
+      --secondary: #FAFAFA;
+      --border: #E5E5E5;
+      --accent: #C8923A;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --success: #52B788;
+      --warning: #9B2335;
+      --blue: #2563EB;
+      --steel: #334155;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: var(--primary);
+      color: #2D2D2D;
+      line-height: 1.6;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* HERO */
+    .hero {
+      background: #FFFFFF;
+      color: var(--text-primary);
+      padding: 3.5rem 0 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: Georgia, serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      max-width: 760px;
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 640px;
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-meta-item { font-size: 12px; color: var(--text-tertiary); }
+    .hero-meta-item strong { color: var(--text-secondary); font-weight: 500; }
+
+    /* HERO KPIs */
+    .hero-kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      background: var(--border);
+      border-top: 1px solid var(--border);
+      margin-top: 0;
+    }
+    .hero-kpi {
+      background: var(--secondary);
+      padding: 1.5rem 1.25rem;
+      border-top: 3px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .hero-kpi:hover { border-top-color: var(--accent); background: #FFFFFF; }
+    .hero-kpi-num {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .hero-kpi-label { font-size: 10px; color: var(--text-tertiary); margin-top: 0.4rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .hero-kpi-delta { font-size: 11px; color: var(--accent); margin-top: 0.3rem; font-weight: 500; }
+
+    /* NAV */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0;
+    }
+    .nav-inner {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 1rem 1.25rem;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      margin-bottom: -1px;
+    }
+    .nav-btn:hover { color: var(--text-primary); }
+    .nav-btn.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+
+    /* SECTIONS */
+    .section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: Georgia, serif; font-size: 30px; font-weight: 400;
+      color: var(--text-primary); margin-bottom: 0.75rem; line-height: 1.2;
+    }
+    .section-intro { font-size: 15px; color: var(--text-secondary); max-width: 760px; line-height: 1.75; margin-bottom: 2.5rem; }
+
+    /* GRIDS */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+    .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; }
+    .five-col { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+
+    /* PANELS */
+    .panel {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+    .panel-title {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 1rem;
+    }
+    .panel-h { font-family: Georgia, serif; font-size: 18px; color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 400; }
+
+    /* INSIGHT BOXES */
+    .insight-box {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--success);
+      padding: 1.25rem;
+      border-radius: 4px;
+    }
+    .insight-box.amber { border-top-color: var(--accent); }
+    .insight-box.red { border-top-color: var(--warning); }
+    .insight-box.blue { border-top-color: #2563EB; }
+    .insight-box.steel { border-top-color: var(--steel); }
+    .insight-num {
+      font-family: Georgia, serif; font-size: 26px; color: var(--text-primary); line-height: 1;
+    }
+    .insight-text { font-size: 12px; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5; }
+
+    /* TABLES */
+    .est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .est-table th {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--text-primary); text-align: left; padding: 0.75rem;
+      border-bottom: 1px solid var(--border); background: var(--primary); text-transform: uppercase;
+    }
+    .est-table td { padding: 0.75rem; border-bottom: 1px solid var(--border); color: #2D2D2D; }
+    .est-table tr:hover td { background: var(--secondary); }
+    .est-table .highlight td { background: #FFF8EE; font-weight: 500; }
+    .td-green { color: var(--success); font-weight: 600; }
+    .td-amber { color: var(--accent); font-weight: 600; }
+    .td-red { color: var(--warning); font-weight: 600; }
+
+    /* VERDICT */
+    .verdict {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .verdict-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.4rem;
+    }
+    .verdict-text { font-size: 14px; color: #2D2D2D; line-height: 1.75; }
+
+    /* NARRATIVE */
+    .narrative { padding: 0; font-size: 14px; color: #3D3D3D; line-height: 1.8; }
+    .narrative p { margin-bottom: 1rem; }
+    .narrative.caution {
+      background: #FFFBF5;
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 4px 4px 0;
+      margin: 1.5rem 0;
+    }
+
+    /* CHART CONTAINERS */
+    .chart-wrap { position: relative; height: 260px; }
+    .chart-wrap.tall { height: 320px; }
+    .chart-wrap.short { height: 200px; }
+
+    /* PROGRESS BAR */
+    .progress-track { background: var(--border); border-radius: 4px; height: 8px; margin: 0.4rem 0 0.8rem; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); }
+
+    /* VALUE CHAIN */
+    .vc-row { display: flex; align-items: center; gap: 0; margin-bottom: 1rem; }
+    .vc-step {
+      flex: 1; background: var(--secondary); border: 1px solid var(--border);
+      padding: 0.75rem 0.5rem; text-align: center; font-size: 11px;
+      font-weight: 600; color: var(--text-primary); text-transform: uppercase;
+      letter-spacing: 0.05em; position: relative; cursor: default;
+      transition: background 0.2s;
+    }
+    .vc-step:hover { background: #FFF8EE; }
+    .vc-step.active-step { background: #0F172A; color: #F8FAFC; border-color: #0F172A; }
+    .vc-step.potential { background: #ECFDF5; border-color: var(--success); color: #166534; }
+    .vc-arrow { color: var(--accent); font-size: 18px; padding: 0 4px; flex-shrink: 0; }
+    .vc-val { font-size: 10px; font-weight: 700; color: var(--accent); margin-top: 3px; }
+
+    /* SLIDER */
+    input[type=range] {
+      -webkit-appearance: none; width: 100%; height: 4px;
+      background: var(--border); border-radius: 4px; outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 18px; height: 18px;
+      background: var(--accent); border-radius: 50%; cursor: pointer;
+    }
+    .slider-row { display: flex; align-items: center; gap: 1rem; margin: 0.75rem 0; }
+    .slider-label { font-size: 12px; color: var(--text-secondary); min-width: 140px; }
+    .slider-val { font-size: 14px; font-weight: 600; color: var(--text-primary); min-width: 50px; text-align: right; }
+
+    /* SECTOR CARD */
+    .sector-card {
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 1.25rem; background: var(--primary);
+      border-top: 3px solid var(--border);
+      transition: all 0.2s; cursor: default;
+    }
+    .sector-card:hover { border-top-color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .sector-icon { font-size: 24px; margin-bottom: 0.75rem; }
+    .sector-name { font-family: Georgia, serif; font-size: 15px; color: var(--text-primary); margin-bottom: 0.4rem; font-weight: 400; }
+    .sector-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+    .sector-tag {
+      display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; background: #F0F0F0; color: var(--text-secondary);
+      padding: 2px 6px; border-radius: 3px; margin-top: 0.5rem;
+    }
+    .sector-tag.green { background: #ECFDF5; color: #166534; }
+    .sector-tag.amber { background: #FFF8EE; color: #92400E; }
+
+    /* MILESTONE TIMELINE */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .tl-item { position: relative; margin-bottom: 1.5rem; }
+    .tl-dot {
+      position: absolute; left: -1.5rem; top: 4px; width: 14px; height: 14px;
+      border-radius: 50%; background: var(--border); border: 2px solid var(--primary);
+    }
+    .tl-dot.active { background: var(--accent); }
+    .tl-dot.future { background: var(--success); }
+    .tl-year { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; }
+    .tl-title { font-family: Georgia, serif; font-size: 14px; color: var(--text-primary); margin: 0.2rem 0; font-weight: 400; }
+    .tl-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* COMPARE BAR */
+    .cbar-row { margin-bottom: 1.25rem; }
+    .cbar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 0.35rem; }
+    .cbar-label strong { color: var(--text-primary); font-weight: 600; }
+    .cbar-track { background: var(--border); border-radius: 3px; height: 20px; position: relative; overflow: hidden; }
+    .cbar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; color: white; }
+
+    /* MINERAL CARD */
+    .mineral-card {
+      background: var(--secondary); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1.5rem; border-top: 3px solid var(--steel);
+    }
+    .mineral-icon { font-size: 28px; margin-bottom: 0.75rem; }
+    .mineral-name { font-family: Georgia, serif; font-size: 16px; color: var(--text-primary); margin-bottom: 0.25rem; font-weight: 400; }
+    .mineral-stat { font-size: 20px; font-family: Georgia, serif; color: var(--accent); }
+    .mineral-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-top: 0.5rem; }
+
+    /* FOOTER */
+    .footer {
+      background: #0F172A; color: #64748B;
+      padding: 2rem 0; text-align: center; font-size: 12px;
+    }
+    .footer strong { color: #94A3B8; }
+
+    /* PRINT / CALLOUT */
+    .callout {
+      background: #0F172A; color: #F8FAFC;
+      padding: 2.5rem; border-radius: 6px; margin: 2rem 0;
+      border-left: 4px solid var(--accent);
+    }
+    .callout h3 { font-family: Georgia, serif; font-size: 22px; font-weight: 400; margin-bottom: 0.75rem; }
+    .callout p { font-size: 14px; color: #94A3B8; line-height: 1.75; }
+
+    /* PHASE BOX */
+    .phase-box {
+      background: var(--secondary); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1.5rem;
+    }
+    .phase-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 3px; display: inline-block; margin-bottom: 0.75rem;
+    }
+    .phase-label.p1 { background: #FFF8EE; color: #92400E; }
+    .phase-label.p2 { background: #ECFDF5; color: #166534; }
+    .phase-label.p3 { background: #EFF6FF; color: #1D4ED8; }
+    .phase-title { font-family: Georgia, serif; font-size: 16px; color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 400; }
+    .phase-years { font-size: 11px; color: var(--text-tertiary); margin-bottom: 0.75rem; font-weight: 600; letter-spacing: 0.05em; }
+    .phase-items { list-style: none; }
+    .phase-items li { font-size: 12px; color: var(--text-secondary); padding: 0.3rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; }
+    .phase-items li:last-child { border-bottom: none; }
+    .phase-items li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+    /* ACTIVE SECTION HIGHLIGHT */
+    .section.active-section { scroll-margin-top: 52px; }
+
+    @media (max-width: 768px) {
+      .two-col, .three-col, .four-col, .five-col { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 28px; }
+      .hero-kpis { grid-template-columns: repeat(2, 1fr); }
+      .vc-row { flex-direction: column; }
+      .vc-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">IEEE Pakistan — Annual General Meeting 2026</div>
+    <h1>Can Pakistan Engineer Itself to the Next Level?</h1>
+    <div class="hero-sub">A data-driven roadmap for how engineering, manufacturing, and strategic investment can propel Pakistan from lower-middle to upper-middle income status over the next 25 years.</div>
+    <div class="hero-meta">
+      <div class="hero-meta-item">Speaker: <strong>Ammar H. Khan</strong></div>
+      <div class="hero-meta-item">CEO, NCGCL &nbsp;·&nbsp; Advisor, Power Ministry &nbsp;·&nbsp; Professor, IBA Karachi</div>
+      <div class="hero-meta-item">May 2026</div>
+    </div>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <div class="hero-kpi-num">$1,558</div>
+        <div class="hero-kpi-label">GDP per capita (2024)</div>
+        <div class="hero-kpi-delta">Lower-middle income</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-num">$4,466</div>
+        <div class="hero-kpi-label">Upper-middle threshold</div>
+        <div class="hero-kpi-delta">Target: 2.9× today</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-num">7.5%</div>
+        <div class="hero-kpi-label">Annual GDP growth needed</div>
+        <div class="hero-kpi-delta">vs. 4.2% historical avg</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-num">14%</div>
+        <div class="hero-kpi-label">Investment / GDP today</div>
+        <div class="hero-kpi-delta">Need: 28%+ like Vietnam</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-num">$100B+</div>
+        <div class="hero-kpi-label">Reko Diq mineral value</div>
+        <div class="hero-kpi-delta">World's largest copper-gold</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<div class="sticky-nav">
+  <div class="container">
+    <div class="nav-inner">
+      <button class="nav-btn active" onclick="scrollToSection('s1', this)">01 · Diagnosis</button>
+      <button class="nav-btn" onclick="scrollToSection('s2', this)">02 · Growth Math</button>
+      <button class="nav-btn" onclick="scrollToSection('s3', this)">03 · Energy & Minerals</button>
+      <button class="nav-btn" onclick="scrollToSection('s4', this)">04 · Manufacturing GVCs</button>
+      <button class="nav-btn" onclick="scrollToSection('s4b', this)">05 · Investment Calculus</button>
+      <button class="nav-btn" onclick="scrollToSection('s5', this)">06 · Agriculture Engineering</button>
+      <button class="nav-btn" onclick="scrollToSection('s6', this)">07 · Engineering Roadmap</button>
+      <button class="nav-btn" onclick="scrollToSection('s7', this)">08 · BCG 2050 Scenarios</button>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1: DIAGNOSIS -->
+<div class="section" id="s1">
+  <div class="container">
+    <div class="section-label">01 · The Starting Point</div>
+    <div class="section-title">Pakistan's Economic Anatomy: Where We Stand</div>
+    <div class="section-intro">To understand where Pakistan must go, we must first be honest about where it is. Pakistan's GDP composition reveals a structurally distorted economy — one that consumes far more than it produces, invests too little, and exports even less. The contrast with a median upper-middle income country is stark and instructive.</div>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">GDP Composition: Pakistan vs. Upper-Middle Income (% of GDP)</div>
+        <div class="chart-wrap tall"><canvas id="gdpCompChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Export Structure: Pakistan vs. Peers (% of total exports, 2024)</div>
+        <div class="chart-wrap tall"><canvas id="exportChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="four-col" style="margin-bottom:2rem;">
+      <div class="insight-box red">
+        <div class="insight-num">82%</div>
+        <div class="insight-text">Consumption as % of GDP — highest among all major emerging economies. Leaves no room for investment or savings.</div>
+      </div>
+      <div class="insight-box red">
+        <div class="insight-num">14%</div>
+        <div class="insight-text">Gross fixed capital formation (investment/GDP). Half the level of Vietnam (33%) or Bangladesh (32%) during growth phases.</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">$27.7B</div>
+        <div class="insight-text">Annual merchandise exports (FY2024) — barely 8% of GDP. Vietnam exports $355B on a smaller base.</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">61%</div>
+        <div class="insight-text">Textile/apparel share of exports — a dangerous monoculture with minimal technology content and stagnant unit values.</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Structural Scorecard: Pakistan vs. Comparators (Key Economic Ratios)</div>
+      <table class="est-table">
+        <tr>
+          <th>Indicator</th>
+          <th>Pakistan</th>
+          <th>Bangladesh</th>
+          <th>Vietnam</th>
+          <th>Thailand</th>
+          <th>Upper-Mid Median</th>
+          <th>Gap</th>
+        </tr>
+        <tr>
+          <td>GDP per capita (USD)</td>
+          <td class="td-red">$1,558</td>
+          <td>$2,688</td>
+          <td>$4,316</td>
+          <td>$7,805</td>
+          <td>$6,000+</td>
+          <td class="td-red">2.9–5.0×</td>
+        </tr>
+        <tr>
+          <td>Investment / GDP</td>
+          <td class="td-red">14%</td>
+          <td>32%</td>
+          <td>33%</td>
+          <td>24%</td>
+          <td>27–30%</td>
+          <td class="td-red">+13–16 pts</td>
+        </tr>
+        <tr>
+          <td>Exports / GDP</td>
+          <td class="td-red">8%</td>
+          <td>14%</td>
+          <td>93%</td>
+          <td>65%</td>
+          <td>35–45%</td>
+          <td class="td-red">+27–37 pts</td>
+        </tr>
+        <tr>
+          <td>Manufacturing / GDP</td>
+          <td class="td-amber">12%</td>
+          <td>20%</td>
+          <td>25%</td>
+          <td>27%</td>
+          <td>22–28%</td>
+          <td class="td-amber">+10–16 pts</td>
+        </tr>
+        <tr>
+          <td>GVC Participation Index</td>
+          <td class="td-red">26%</td>
+          <td>31%</td>
+          <td>65%</td>
+          <td>58%</td>
+          <td>50–60%</td>
+          <td class="td-red">+24–34 pts</td>
+        </tr>
+        <tr>
+          <td>FDI / GDP (avg 5yr)</td>
+          <td class="td-red">0.6%</td>
+          <td>0.7%</td>
+          <td>6.0%</td>
+          <td>2.8%</td>
+          <td>3.0–5.0%</td>
+          <td class="td-red">+2.4–4.4 pts</td>
+        </tr>
+        <tr class="highlight">
+          <td>Electricity cost (industrial)</td>
+          <td class="td-red">$0.19/kWh</td>
+          <td>$0.09/kWh</td>
+          <td>$0.07/kWh</td>
+          <td>$0.10/kWh</td>
+          <td>$0.07–0.10/kWh</td>
+          <td class="td-red">2–2.7× too high</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Structural Diagnosis</div>
+      <div class="verdict-text">Pakistan's economic crisis is not a crisis of consumption — it is a crisis of <em>production</em>. The economy is locked in a low-investment, low-productivity, low-export equilibrium sustained by remittances and periodic IMF support. Breaking this equilibrium requires simultaneously raising investment from 14% to 28%+ of GDP, reducing the cost of energy from $0.19/kWh to under $0.09/kWh, and inserting Pakistani manufacturing into global value chains. These three variables are not independent — they are deeply interlinked. And all three require sophisticated engineering to unlock.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: GROWTH MATH -->
+<div class="section" id="s2">
+  <div class="container">
+    <div class="section-label">02 · The Arithmetic of Ascent</div>
+    <div class="section-title">How Much Growth, For How Long?</div>
+    <div class="section-intro">Becoming an upper-middle income country is not about a single burst of growth. It requires sustained, compounding expansion over multiple decades. Given Pakistan's population growth rate of ~2% per annum, GDP must grow significantly faster than population to meaningfully raise per capita income. The interactive calculator below maps Pakistan's trajectory under different growth assumptions.</div>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">GDP Per Capita Trajectory: 2024–2050</div>
+        <div class="chart-wrap tall"><canvas id="growthChart"></canvas></div>
+        <div class="narrative caution" style="margin-top:1rem;">
+          <p><strong>Key assumption:</strong> Population grows at 1.9%/year (declining from 2.4% today as fertility transitions). Income milestone thresholds at $4,466 (upper-middle) and $12,000+ (high-income entry).</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="margin-bottom:1.5rem;">Growth Scenario Explorer</div>
+        <div class="slider-row">
+          <div class="slider-label">GDP Growth Rate (%)</div>
+          <input type="range" id="gdpGrowthSlider" min="3" max="11" value="7.5" step="0.5" oninput="updateGrowthCalc()">
+          <div class="slider-val" id="gdpGrowthVal">7.5%</div>
+        </div>
+        <div class="slider-row">
+          <div class="slider-label">Population Growth (%)</div>
+          <input type="range" id="popGrowthSlider" min="1.0" max="2.5" value="1.9" step="0.1" oninput="updateGrowthCalc()">
+          <div class="slider-val" id="popGrowthVal">1.9%</div>
+        </div>
+        <div style="margin-top:1.5rem; padding:1.25rem; background:var(--secondary); border:1px solid var(--border); border-radius:4px;">
+          <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;">Projected Outcomes</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+              <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:0.25rem;">Per capita in 2035</div>
+              <div style="font-family:Georgia,serif;font-size:20px;" id="pc2035">$2,845</div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:0.25rem;">Per capita in 2050</div>
+              <div style="font-family:Georgia,serif;font-size:20px;" id="pc2050">$6,210</div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:0.25rem;">Upper-middle reached by</div>
+              <div style="font-family:Georgia,serif;font-size:20px;" id="umicYear">2043</div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:0.25rem;">Total GDP in 2050</div>
+              <div style="font-family:Georgia,serif;font-size:20px;" id="totalGDP">$2.8T</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+            <div id="scenarioVerdict" style="font-size:13px;line-height:1.6;color:#2D2D2D;"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;">
+          <div class="panel-title" style="margin-bottom:0.75rem;">Historical Benchmarks: Sustained Growth Episodes</div>
+          <table class="est-table">
+            <tr><th>Country</th><th>Period</th><th>Avg GDP Growth</th><th>Outcome</th></tr>
+            <tr><td>South Korea</td><td>1965–1995</td><td class="td-green">9.1%</td><td>LIC → High income</td></tr>
+            <tr><td>Vietnam</td><td>1990–2020</td><td class="td-green">7.0%</td><td>LIC → Lower-mid</td></tr>
+            <tr><td>China</td><td>1980–2010</td><td class="td-green">10.1%</td><td>LIC → Upper-mid</td></tr>
+            <tr><td>Bangladesh</td><td>2000–2020</td><td class="td-amber">6.5%</td><td>LIC → Lower-mid</td></tr>
+            <tr class="highlight"><td>Pakistan (needed)</td><td>2025–2050</td><td class="td-amber">7.5%+</td><td>LMI → Upper-mid</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Investment Gap: What Pakistan Must Mobilise</div>
+        <div class="chart-wrap"><canvas id="investmentChart"></canvas></div>
+      </div>
+      <div>
+        <div class="panel-title" style="margin-bottom:1rem;">The Investment Constraint</div>
+        <div class="narrative">
+          <p>At 14% of GDP, Pakistan's investment rate is structurally inadequate. Every percentage point increase in investment/GDP, at current GDP of ~$341B, requires mobilising an additional <strong>$3.4 billion</strong>. To reach 28% — Vietnam's level during its high-growth decade — Pakistan must find <strong>~$47B in additional annual investment</strong>.</p>
+          <p>This does not come from the state alone. The state creates the conditions. The private sector, domestic and foreign, deploys the capital. The role of catalytic finance — credit guarantees, blended finance instruments, de-risking mechanisms — becomes central to unlocking private investment at scale.</p>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <div class="cbar-row">
+            <div class="cbar-label"><span><strong>Pakistan (current)</strong></span><span>14% / GDP</span></div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:28%;background:#9B2335;">14%</div></div>
+          </div>
+          <div class="cbar-row">
+            <div class="cbar-label"><span>Bangladesh (2015)</span><span>32% / GDP</span></div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:64%;background:#C8923A;">32%</div></div>
+          </div>
+          <div class="cbar-row">
+            <div class="cbar-label"><span>Vietnam (peak growth)</span><span>33% / GDP</span></div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:66%;background:#52B788;">33%</div></div>
+          </div>
+          <div class="cbar-row">
+            <div class="cbar-label"><span>China (2000–2010)</span><span>42% / GDP</span></div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:84%;background:#334155;">42%</div></div>
+          </div>
+          <div class="cbar-row">
+            <div class="cbar-label"><span><strong>Pakistan (target 2035)</strong></span><span>28% / GDP</span></div>
+            <div class="cbar-track"><div class="cbar-fill" style="width:56%;background:#2563EB;opacity:0.7;">28%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: ENERGY & MINERALS -->
+<div class="section" id="s3">
+  <div class="container">
+    <div class="section-label">03 · The Physical Foundation</div>
+    <div class="section-title">Affordable Energy & Indigenous Minerals: The Competitive Backbone</div>
+    <div class="section-intro">No manufacturing revolution is possible at electricity costs of $0.19/kWh. Pakistan's industrial electricity tariff is 2–2.7× higher than Vietnam, Bangladesh, or China — making every energy-intensive product uncompetitive before it leaves the factory gate. Simultaneously, Pakistan sits atop some of the world's largest untapped mineral deposits. The convergence of Thar coal for baseload power and Reko Diq copper for value-chain manufacturing is the most powerful structural opportunity Pakistan has ever had.</div>
+
+    <div class="callout">
+      <h3>The Energy Paradox: Power-Rich, Energy-Poor</h3>
+      <p>Pakistan has 46,605 MW of installed capacity yet pays the highest industrial electricity rates in South Asia. Circular debt exceeding PKR 2.8 trillion, capacity payments for idle plants, and regressive cross-subsidies have created a system that is simultaneously expensive for industry and financially unsustainable. Structural energy reform — not just new generation — is the prerequisite for industrialisation.</p>
+    </div>
+
+    <!-- SCATTER: Energy per capita vs GDP per capita -->
+    <div class="panel" style="margin:2rem 0;">
+      <div class="panel-title">The Iron Law of Prosperity: Energy Consumption per Capita vs. GDP per Capita (2023)</div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;align-items:start;">
+        <div class="chart-wrap" style="height:340px;"><canvas id="energyGDPScatter"></canvas></div>
+        <div>
+          <div class="narrative" style="padding:0;">
+            <p>The relationship between energy consumption and economic output is one of the most robust correlations in development economics. No country in history has crossed into upper-middle income status while remaining energy-poor. The data is unambiguous: <strong>energy access is a prerequisite, not a consequence, of prosperity.</strong></p>
+            <p>Pakistan consumes ~500 kWh per capita per year — among the lowest of any major economy. The global average is ~3,400 kWh. Germany uses ~6,700 kWh. South Korea, which completed its income ascent in 40 years, reached 12,000 kWh per capita. Vietnam, currently at 2,500 kWh, is scaling rapidly as manufacturing deepens.</p>
+          </div>
+          <div style="margin-top:1rem;">
+            <div class="insight-box red" style="margin-bottom:0.75rem;">
+              <div class="insight-num">500 kWh</div>
+              <div class="insight-text">Pakistan's per capita electricity consumption — 85% below the global average of 3,400 kWh</div>
+            </div>
+            <div class="insight-box amber">
+              <div class="insight-num">6.8×</div>
+              <div class="insight-text">Pakistan must multiply its per capita energy consumption to reach upper-middle income, mirroring Vietnam's growth trajectory</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin:2rem 0;">
+      <div class="panel">
+        <div class="panel-title">Industrial Electricity Cost Comparison (USD/kWh, 2024)</div>
+        <div class="chart-wrap tall"><canvas id="energyChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Energy Cost Sensitivity: Manufacturing Viability Threshold</div>
+        <div class="chart-wrap tall"><canvas id="energyViabilityChart"></canvas></div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary);line-height:1.6;">
+          Energy cost as % of total production cost for key energy-intensive industries. At $0.19/kWh Pakistan is uncompetitive. Target: $0.06–0.08/kWh through Thar coal + renewables.
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIMATE COOLING DEMAND SECTION -->
+    <div style="border-top:1px solid var(--border);padding-top:2rem;margin-top:1rem;">
+      <div class="section-label">The Climate Energy Multiplier</div>
+      <div class="section-title" style="font-size:22px;margin-bottom:0.5rem;">Rising Temperatures, Rising Demand: The Cooling Crisis Pakistan Must Engineer For</div>
+      <div class="section-intro" style="margin-bottom:1.5rem;">Pakistan already ranks among the world's most climate-vulnerable nations. Average temperatures have risen 0.6°C since 1960 and are projected to increase a further 2–4°C by 2050 under moderate scenarios. This is not merely an environmental concern — it is an economic and engineering emergency. Residential and commercial cooling demand is set to become Pakistan's fastest-growing energy load, requiring a transformation in how cooling is produced, delivered, and engineered.</div>
+
+      <div class="two-col" style="margin-bottom:1.5rem;">
+        <div class="panel">
+          <div class="panel-title">Pakistan Cooling Demand Projection: 2024–2050 (GWh/year)</div>
+          <div class="chart-wrap tall"><canvas id="coolingDemandChart"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Extreme Heat Days per Year: Pakistan Cities (Days above 45°C)</div>
+          <div class="chart-wrap tall"><canvas id="heatDaysChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="three-col" style="margin-bottom:1.5rem;">
+        <div class="insight-box red">
+          <div class="insight-num">+2.7°C</div>
+          <div class="insight-text">Projected average temperature rise in Pakistan by 2050 (IPCC moderate scenario). Jacobabad already recorded 51°C — the human wet-bulb limit.</div>
+        </div>
+        <div class="insight-box amber">
+          <div class="insight-num">3× growth</div>
+          <div class="insight-text">Residential and commercial cooling load by 2040 vs. 2024, driven by urbanisation, rising incomes, and intensifying heat. Will require 15,000–20,000 MW of additional capacity dedicated to cooling alone.</div>
+        </div>
+        <div class="insight-box">
+          <div class="insight-num">$8.5B/year</div>
+          <div class="insight-text">Estimated economic productivity loss from heat stress by 2030 (ILO projections adjusted for Pakistan). Agriculture and outdoor labour bear 80% of this burden.</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:1.5rem;">
+        <div class="panel-title">Engineering the Cooling Response: Indigenous Solutions Pakistan Must Develop</div>
+        <table class="est-table">
+          <tr>
+            <th>Cooling Technology</th>
+            <th>Application</th>
+            <th>Current Pakistan Status</th>
+            <th>Engineering Gap</th>
+            <th>Potential Impact</th>
+          </tr>
+          <tr>
+            <td><strong>High-efficiency inverter ACs</strong></td>
+            <td>Residential, commercial</td>
+            <td>90%+ imported; no domestic manufacturing</td>
+            <td>Build domestic compressor & heat-exchanger manufacturing; license Korean/Japanese tech</td>
+            <td class="td-green">40–50% energy saving vs. conventional AC; $2B import substitution</td>
+          </tr>
+          <tr>
+            <td><strong>Evaporative / Indirect Evaporative Coolers</strong></td>
+            <td>Dry climate zones (Punjab, Sindh)</td>
+            <td>Basic desert coolers; no IEC technology</td>
+            <td>Engineer two-stage IEC units suitable for Pakistan's dry heat; 10× more efficient than conventional AC</td>
+            <td class="td-green">Could cool 40M homes at 1/8th the energy; exportable to GCC, MENA</td>
+          </tr>
+          <tr>
+            <td><strong>District Cooling Systems</strong></td>
+            <td>High-density urban areas, SEZs</td>
+            <td>Zero deployment; unplanned</td>
+            <td>Civil + mechanical engineering for chilled water networks in Karachi, Lahore new developments; Thar industrial zones</td>
+            <td class="td-amber">30–40% system efficiency gains; reduces peak grid load by 2,000–3,000 MW</td>
+          </tr>
+          <tr>
+            <td><strong>Solar-powered cooling</strong></td>
+            <td>Agriculture cold chain, off-grid communities</td>
+            <td>Pilot projects only; not at scale</td>
+            <td>DC-powered solar AC/refrigeration for farm pre-coolers; solar cold storage units; PV-direct drive</td>
+            <td class="td-green">Doubles cold chain penetration; recovers $3B in post-harvest losses</td>
+          </tr>
+          <tr>
+            <td><strong>Green building & passive cooling</strong></td>
+            <td>New construction</td>
+            <td>No building energy code enforced</td>
+            <td>Enforce thermal envelope standards; mandate cool roofs, shade design; climate-adaptive architecture engineering</td>
+            <td class="td-green">Reduces new building cooling load by 25–35% before a single AC is switched on</td>
+          </tr>
+          <tr>
+            <td><strong>Thermal energy storage (TES)</strong></td>
+            <td>Commercial buildings, hospitals, industry</td>
+            <td>Near zero deployment</td>
+            <td>Ice/chilled water storage — cool at night (off-peak), use by day; shifts peak load; enables smaller, cheaper grid infrastructure</td>
+            <td class="td-amber">Cuts peak cooling demand by 30–40%; reduces need for peaking generation</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="two-col">
+        <div class="narrative caution">
+          <p><strong>The Double Bind — and the Engineering Opportunity:</strong> Rising temperatures simultaneously increase energy demand for cooling and reduce the productivity of agricultural and outdoor labour. Pakistan faces the paradox of needing more energy precisely as the climate makes energy production harder (reservoir levels fall, solar panels overheat above 45°C, thermal plant efficiency drops). This is not a problem that can be wished away — it requires engineered solutions: smarter grids, indigenous cooling technology, passive building design, distributed solar, and — critically — an industrial policy that makes Pakistan a <em>manufacturer</em> of cooling solutions rather than an importer of them.</p>
+        </div>
+        <div>
+          <div class="panel-title" style="margin-bottom:1rem;">Pakistan's Cooling Technology Export Potential</div>
+          <div class="narrative">
+            <p>The GCC, MENA, and South/Central Asian markets — Pakistan's natural trade neighbourhood — all face the same intensifying heat crisis. Saudi Arabia, UAE, Iran, Egypt, and Central Asian republics will collectively spend hundreds of billions on cooling infrastructure over the next 25 years.</p>
+            <p>Pakistan, with its engineering base, Thar-powered electricity, copper from Reko Diq for heat exchangers, and direct geographic access to these markets, is positioned to become a regional manufacturer and exporter of cooling technology — if it makes the engineering investment now.</p>
+          </div>
+          <div style="margin-top:1.25rem;padding:1.25rem;background:var(--secondary);border:1px solid var(--border);border-top:3px solid var(--success);border-radius:4px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:0.75rem;">Cooling Technology Export Opportunity</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+              <div style="font-size:12px;color:var(--text-secondary);">GCC cooling market size (2030): <strong style="color:var(--text-primary);">$28B/year</strong></div>
+              <div style="font-size:12px;color:var(--text-secondary);">MENA AC market CAGR: <strong style="color:var(--text-primary);">6.8%/year</strong></div>
+              <div style="font-size:12px;color:var(--text-secondary);">Pakistan IEC export potential: <strong style="color:var(--success);">$500M–$2B</strong></div>
+              <div style="font-size:12px;color:var(--text-secondary);">Cold chain equipment exports: <strong style="color:var(--success);">$300M–$800M</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2rem;">Pakistan's Mineral Endowment — The Sleeping Giant</div>
+    <div style="margin:1rem 0 2rem;">
+      <div class="three-col" style="margin-bottom:1.5rem;">
+        <div class="mineral-card" style="border-top-color:var(--accent);">
+          <div class="mineral-icon">⛏️</div>
+          <div class="mineral-name">Reko Diq — Copper & Gold</div>
+          <div class="mineral-stat">$100B+</div>
+          <div class="mineral-desc">5.9 billion tonnes of ore. ~41.5 million tonnes of contained copper and 2,200 tonnes of gold. One of the world's five largest undeveloped copper-gold deposits, located in Chagai, Balochistan. First production: 2028. Barrick Gold (50%) / Pakistan entities (50%).</div>
+        </div>
+        <div class="mineral-card" style="border-top-color:#64748B;">
+          <div class="mineral-icon">🏭</div>
+          <div class="mineral-name">Thar Coal — Lignite Reserves</div>
+          <div class="mineral-stat">175B tonnes</div>
+          <div class="mineral-desc">One of the world's largest lignite deposits, spanning 9,000 km² in Sindh. Current output ~7 MT/year from Thar Block II. Calorific value 2,500–3,500 kcal/kg. Mine-mouth power cost: PKR 8–12/kWh vs grid average PKR 40+. Pathway to sub-$0.06/kWh baseload industrial power.</div>
+        </div>
+        <div class="mineral-card" style="border-top-color:var(--success);">
+          <div class="mineral-icon">🌋</div>
+          <div class="mineral-name">Other Strategic Minerals</div>
+          <div class="mineral-stat">Multi-sector</div>
+          <div class="mineral-desc">Saindak copper-gold (Balochistan, operational); chromite (largest reserves in South Asia, 420M tonnes estimated); rock salt (Khewra — world's 2nd largest, 6.7B tonnes); marble & granite; iron ore (Chiniot — ~530M tonnes, FMC deposit); rare earth elements in various locations.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Value Chain: From Raw Copper Ore to Finished Products — Pakistan's Opportunity</div>
+      <div style="margin-top:1rem;">
+        <div class="vc-row" style="margin-bottom:0.5rem;">
+          <div class="vc-step">
+            <div>Ore Mining</div>
+            <div class="vc-val">$50–80/t</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-step">
+            <div>Concentrate</div>
+            <div class="vc-val">$500/t</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-step active-step">
+            <div>Blister Copper</div>
+            <div class="vc-val">$5,000/t</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-step potential">
+            <div>Refined Cathode</div>
+            <div class="vc-val">$9,500/t</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-step potential">
+            <div>Wire Rods</div>
+            <div class="vc-val">$11,000/t</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-step potential">
+            <div>Electrical Cable</div>
+            <div class="vc-val">$15,000/t</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-step potential">
+            <div>EV Wiring</div>
+            <div class="vc-val">$25,000+/t</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:1rem;margin-top:0.75rem;font-size:12px;">
+          <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:12px;background:#0F172A;border-radius:2px;display:inline-block;"></span> Reko Diq planned (2028)</span>
+          <span style="display:flex;align-items:center;gap:0.3rem;"><span style="width:12px;height:12px;background:#ECFDF5;border:1px solid var(--success);border-radius:2px;display:inline-block;"></span> Engineering-enabled potential</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="panel-title" style="margin-bottom:1rem;">Thar Coal: The Industrial Power Strategy</div>
+        <div class="narrative">
+          <p>The pathway to competitive industrial electricity in Pakistan runs through Thar. Mine-mouth power generation from Thar lignite already produces electricity at PKR 8–12/kWh in captive industrial zones — compared to the national grid average of PKR 40+. This is not a marginal difference; it is a 3–4× cost advantage for any manufacturer co-located with Thar power.</p>
+          <p>Phase I of the Thar Coal & Energy Board's industrial vision envisions dedicated <strong>Special Economic Zones powered exclusively by mine-mouth electricity</strong>, targeting energy costs of $0.05–0.07/kWh for anchor industries. Energy-intensive sectors — aluminium smelting (15,000 kWh/tonne), copper refining (2,500 kWh/tonne), electrochemical manufacturing, cement, and ferro-alloys — become viable only at these cost points.</p>
+        </div>
+        <div class="narrative caution">
+          <p><strong>The EV Revolution Tailwind:</strong> Global copper demand is projected to double by 2035 driven by electric vehicles (each requiring 83 kg of copper vs 23 kg for ICE) and grid infrastructure. Pakistan, with Reko Diq coming online in 2028, is positioned to supply the copper revolution — but only if it builds refining and fabrication capacity domestically, not export raw concentrate.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Energy-Intensive Industry Viability by Electricity Cost</div>
+        <table class="est-table">
+          <tr>
+            <th>Industry</th>
+            <th>kWh/tonne</th>
+            <th>Energy % cost</th>
+            <th>Break-even price</th>
+            <th>Pakistan viable?</th>
+          </tr>
+          <tr>
+            <td>Aluminium smelting</td>
+            <td>15,000</td>
+            <td>35–40%</td>
+            <td>&lt;$0.06</td>
+            <td class="td-red">❌ At $0.19</td>
+          </tr>
+          <tr>
+            <td>Copper refining</td>
+            <td>2,500</td>
+            <td>15–20%</td>
+            <td>&lt;$0.09</td>
+            <td class="td-red">❌ At $0.19</td>
+          </tr>
+          <tr>
+            <td>Ferro-silicon</td>
+            <td>8,000</td>
+            <td>40–50%</td>
+            <td>&lt;$0.05</td>
+            <td class="td-red">❌ At $0.19</td>
+          </tr>
+          <tr>
+            <td>Cement</td>
+            <td>120 (elec)</td>
+            <td>12–18%</td>
+            <td>&lt;$0.12</td>
+            <td class="td-amber">⚠️ Marginal</td>
+          </tr>
+          <tr>
+            <td>Steel (EAF)</td>
+            <td>400</td>
+            <td>20–25%</td>
+            <td>&lt;$0.10</td>
+            <td class="td-red">❌ At $0.19</td>
+          </tr>
+          <tr>
+            <td>Textiles</td>
+            <td>1,800</td>
+            <td>15–25%</td>
+            <td>&lt;$0.12</td>
+            <td class="td-amber">⚠️ Strained</td>
+          </tr>
+          <tr class="highlight">
+            <td>All above (Thar SEZ)</td>
+            <td>—</td>
+            <td>—</td>
+            <td>$0.05–0.07</td>
+            <td class="td-green">✅ Viable</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: MANUFACTURING & GVCs -->
+<div class="section" id="s4">
+  <div class="container">
+    <div class="section-label">04 · The Integration Imperative</div>
+    <div class="section-title">Global Value Chains: Pakistan's Missing Linkage</div>
+    <div class="section-intro">A middle-income economy is, by definition, deeply embedded in global value chains. It does not merely export commodities — it exports engineering. It produces components that are assembled elsewhere, provides services to global supply chains, and attracts foreign investment because of its manufacturing capability. At a GVC participation index of just 26%, Pakistan is almost entirely absent from the networks that drive modern wealth creation.</div>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">GVC Participation Index: Pakistan vs. Peers</div>
+        <div class="chart-wrap tall"><canvas id="gvcChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Pakistan's Current Export Basket vs. Target 2040</div>
+        <div class="chart-wrap short"><canvas id="exportMixChart"></canvas></div>
+        <div style="margin-top:1rem;">
+          <div class="narrative">
+            <p>Pakistan's current export basket is one of the least diversified in the world for an economy of its size. Textiles alone account for 61%. The target 2040 basket shifts toward engineering goods, processed minerals, chemicals, and food processing — all requiring deeper GVC integration and manufacturing capability.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:1.5rem;">Priority Manufacturing Sectors: Engineering-Intensive, Export-Ready</div>
+    <div class="three-col" style="margin:1rem 0 2rem;">
+      <div class="sector-card">
+        <div class="sector-icon">🔋</div>
+        <div class="sector-name">Electrical Components & EV Supply Chain</div>
+        <div class="sector-desc">Pakistan's copper endowment (Reko Diq) positions it to supply the global EV revolution. Wire harnesses, copper bus bars, charging infrastructure components, battery current collectors. Each EV requires 83 kg of copper. Global EV production hits 40M units/year by 2030.</div>
+        <span class="sector-tag green">High Priority</span>
+        <span class="sector-tag amber">Energy Intensive</span>
+      </div>
+      <div class="sector-card">
+        <div class="sector-icon">⚙️</div>
+        <div class="sector-name">Automotive Components & Engineering Parts</div>
+        <div class="sector-desc">Pakistan has an 800,000-unit/year auto assembly base but imports 60%+ of components. Engineering the domestic component industry (stampings, castings, fasteners, plastic mouldings) builds GVC depth. Adjacent: agricultural machinery, industrial equipment, defence components.</div>
+        <span class="sector-tag green">High Priority</span>
+      </div>
+      <div class="sector-card">
+        <div class="sector-icon">🏗️</div>
+        <div class="sector-name">Construction Materials & Infrastructure</div>
+        <div class="sector-desc">Chiniot iron ore (530M tonnes) + Thar coal-based DRI (direct reduced iron) + electric arc furnaces = domestic steel. Pakistan imports $2.5B of steel annually. A domestic steel industry anchors construction, manufacturing, and engineering exports.</div>
+        <span class="sector-tag amber">Medium Priority</span>
+      </div>
+      <div class="sector-card">
+        <div class="sector-icon">🧪</div>
+        <div class="sector-name">Chemicals, Fertilisers & Agrochemicals</div>
+        <div class="sector-desc">Thar coal to methanol pathway unlocks feedstock for fertilisers, plastics, solvents, and specialty chemicals. Pakistan imports $4B of chemicals annually. Methanol-to-olefins (MTO) technology converts coal to plastics. Agrochemical exports serve a $230B global market.</div>
+        <span class="sector-tag green">High Priority</span>
+        <span class="sector-tag amber">Thar-linked</span>
+      </div>
+      <div class="sector-card">
+        <div class="sector-icon">🌾</div>
+        <div class="sector-name">Food Processing & Agro-Industry</div>
+        <div class="sector-desc">Pakistan wastes 35–40% of perishable produce post-harvest. Engineering cold chains, grading facilities, and food processing plants converts agricultural surplus into packaged exports. Pakistan's halal food export potential: $5B → $25B. The global halal market is $3.2 trillion.</div>
+        <span class="sector-tag green">Immediate Priority</span>
+      </div>
+      <div class="sector-card">
+        <div class="sector-icon">🖥️</div>
+        <div class="sector-name">Technology-Enabled Manufacturing (Industry 4.0)</div>
+        <div class="sector-desc">Electronics assembly, PCB manufacturing, semiconductor packaging, and IoT device production. Pakistan has 600,000+ IT professionals but exports mostly services. Moving into hardware — even assembly/packaging of imported components — builds the GVC integration that services alone cannot.</div>
+        <span class="sector-tag amber">Medium Priority</span>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">The GVC Entry Ladder: How Countries Move Up</div>
+      <table class="est-table">
+        <tr>
+          <th>Stage</th>
+          <th>Description</th>
+          <th>Pakistan Today</th>
+          <th>What's Required</th>
+          <th>Engineering Role</th>
+        </tr>
+        <tr>
+          <td><strong>Stage 1</strong><br><span style="font-size:11px;color:var(--text-tertiary)">Commodity</span></td>
+          <td>Raw material / crop export</td>
+          <td class="td-amber">✓ Cotton, wheat, ore</td>
+          <td>Already here — but zero value-add</td>
+          <td>Agricultural engineering</td>
+        </tr>
+        <tr>
+          <td><strong>Stage 2</strong><br><span style="font-size:11px;color:var(--text-tertiary)">Processing</span></td>
+          <td>Semi-processed goods (yarn, concentrate)</td>
+          <td class="td-amber">✓ Textile yarn, knitwear</td>
+          <td>Deepen processing; minerals needed</td>
+          <td>Chemical, materials eng</td>
+        </tr>
+        <tr>
+          <td><strong>Stage 3</strong><br><span style="font-size:11px;color:var(--text-tertiary)">Component</span></td>
+          <td>Engineered components for global assembly</td>
+          <td class="td-red">✗ Near absent</td>
+          <td>Precision manufacturing; QA systems</td>
+          <td>Mechanical, industrial eng</td>
+        </tr>
+        <tr>
+          <td><strong>Stage 4</strong><br><span style="font-size:11px;color:var(--text-tertiary)">Sub-Assembly</span></td>
+          <td>Assembled modules (engines, PCBs)</td>
+          <td class="td-red">✗ Absent</td>
+          <td>Attract anchor OEM; standards compliance</td>
+          <td>Electrical, systems eng</td>
+        </tr>
+        <tr>
+          <td><strong>Stage 5</strong><br><span style="font-size:11px;color:var(--text-tertiary)">Branding</span></td>
+          <td>Own-brand finished products for export</td>
+          <td class="td-red">✗ Marginal</td>
+          <td>30+ years away; build Stage 3–4 first</td>
+          <td>Design, systems eng</td>
+        </tr>
+        <tr class="highlight">
+          <td colspan="5" style="text-align:center;font-size:12px;color:var(--text-secondary);">
+            <strong>Pakistan's strategic priority: Move from Stage 2 → Stage 3 by 2035, Stage 3 → Stage 4 by 2045.</strong> Vietnam took 20 years (1990–2010) to traverse Stage 1–3. Korea traversed all five stages in 40 years.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">The GVC Imperative</div>
+      <div class="verdict-text">Pakistan's export stagnation is not a demand problem — it is a supply-side engineering deficit. The world does not lack demand for copper wire, automotive components, food processing equipment, or agro-chemicals. It lacks confidence that Pakistan can deliver them at scale, on spec, and on time. That confidence is built through engineering standards, quality systems, industrial zone infrastructure, and — above all — affordable, reliable power. Every one of these is an engineering problem with an engineering solution.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4b: INVESTMENT CALCULUS -->
+<div class="section" id="s4b">
+  <div class="container">
+    <div class="section-label">05 · Working Backwards</div>
+    <div class="section-title">The Investment Calculus: What $122B of Exports Actually Requires</div>
+    <div class="section-intro">The export trajectory is an aspiration until it is disaggregated into the physical capital, annual capex, and engineering workforce that must be deployed to realise it. Working backwards from the 2050 export target using sector-specific asset turnover ratios reveals the precise scale of investment Pakistan must mobilise — and the engineering talent pipeline that must be built to deploy that capital productively.</div>
+
+    <!-- TOP KPI ROW -->
+    <div class="four-col" style="margin-bottom:2rem;">
+      <div class="insight-box steel">
+        <div class="insight-num">$147B</div>
+        <div class="insight-text">Total fixed asset base required in export-oriented manufacturing and enabling infrastructure by 2050 — from ~$30B today. A 4.9× expansion.</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">$117B</div>
+        <div class="insight-text">Net new investment needed in export-facing sectors over 25 years (2025–2050), averaging $4.7B/year — but heavily back-loaded toward 2032–2042.</div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-num">$5.8B/yr</div>
+        <div class="insight-text">Peak annual manufacturing capex required in Phase 2 (2032–2042) — vs. barely $1.5B/year in export-oriented investment today. A 3.9× step-up.</div>
+      </div>
+      <div class="insight-box blue">
+        <div class="insight-num">78,000+</div>
+        <div class="insight-text">Engineers needed directly in export manufacturing by 2050 — across metallurgy, chemicals, food tech, precision manufacturing, and electrical engineering.</div>
+      </div>
+    </div>
+
+    <!-- EXPORT COMPOSITION EVOLUTION CHART -->
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">Export Composition by Sector — Evolution 2024 to 2050 ($B)</div>
+        <div class="chart-wrap" style="height:310px;"><canvas id="exportCompositionChart"></canvas></div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary);line-height:1.5;">Textiles remain the anchor but fall from 61% to 20% of the basket. Minerals & metals and food processing become the dominant growth vectors, with engineering goods rising from near-zero to 15% of exports by 2050.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Annual Export-Sector Capex Requirement by Phase ($B/year)</div>
+        <div class="chart-wrap" style="height:310px;"><canvas id="capexPhasingChart"></canvas></div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary);line-height:1.5;">Capex must ramp steeply from $1.5B/year today to $6–7B/year by 2035–2040. This represents the single most critical financing challenge — and the central role for instruments like credit guarantees, blended finance, and anchor FDI.</div>
+      </div>
+    </div>
+
+    <!-- MASTER INVESTMENT TABLE -->
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Sector-by-Sector Investment Decomposition: From Export Target to Capex Requirement</div>
+      <div style="overflow-x:auto;margin-top:0.75rem;">
+        <table class="est-table">
+          <tr>
+            <th>Sector</th>
+            <th>2035 Export Target</th>
+            <th>2050 Export Target</th>
+            <th>Asset Turnover<br><span style="font-weight:400;text-transform:none;letter-spacing:0;">(Revenue ÷ Fixed Assets)</span></th>
+            <th>Fixed Asset Base<br>Required by 2050</th>
+            <th>New Investment<br>2025–2050</th>
+            <th>Avg Annual<br>Capex (Peak)</th>
+            <th>Payback Period</th>
+            <th>Lead Engineering</th>
+          </tr>
+          <tr>
+            <td><strong>Textiles & Apparel</strong></td>
+            <td>$22B</td>
+            <td>$25B</td>
+            <td style="text-align:center;">1.35×</td>
+            <td>$18.5B</td>
+            <td>$10B</td>
+            <td class="td-amber">$0.7–1.0B</td>
+            <td>7–10 yrs</td>
+            <td>Mechanical, Industrial</td>
+          </tr>
+          <tr>
+            <td><strong>Food Processing & Agro</strong></td>
+            <td>$14B</td>
+            <td>$27B</td>
+            <td style="text-align:center;">1.55×</td>
+            <td>$17.4B</td>
+            <td>$15B</td>
+            <td class="td-amber">$0.8–1.2B</td>
+            <td>6–9 yrs</td>
+            <td>Chemical, Biosystems, Mech</td>
+          </tr>
+          <tr>
+            <td><strong>Minerals & Metals</strong><br><span style="font-size:11px;color:var(--text-tertiary)">(copper, aluminium, gold)</span></td>
+            <td>$9B</td>
+            <td>$24B</td>
+            <td style="text-align:center;">0.42×</td>
+            <td>$57.1B</td>
+            <td>$52B</td>
+            <td class="td-red">$2.5–3.5B</td>
+            <td>12–18 yrs</td>
+            <td>Metallurgy, Mining, Chemical</td>
+          </tr>
+          <tr>
+            <td><strong>Engineering & Auto Components</strong></td>
+            <td>$9B</td>
+            <td>$18B</td>
+            <td style="text-align:center;">0.85×</td>
+            <td>$21.2B</td>
+            <td>$19B</td>
+            <td class="td-amber">$1.0–1.5B</td>
+            <td>8–12 yrs</td>
+            <td>Mechanical, Electrical, Systems</td>
+          </tr>
+          <tr>
+            <td><strong>Chemicals & Pharmaceuticals</strong><br><span style="font-size:11px;color:var(--text-tertiary)">(Thar-linked methanol, fertiliser)</span></td>
+            <td>$8B</td>
+            <td>$13B</td>
+            <td style="text-align:center;">0.52×</td>
+            <td>$25.0B</td>
+            <td>$23B</td>
+            <td class="td-red">$1.0–1.5B</td>
+            <td>10–15 yrs</td>
+            <td>Chemical, Process, Materials</td>
+          </tr>
+          <tr>
+            <td><strong>Technology & Electronics</strong></td>
+            <td>$4B</td>
+            <td>$8B</td>
+            <td style="text-align:center;">2.10×</td>
+            <td>$3.8B</td>
+            <td>$3B</td>
+            <td class="td-green">$0.2–0.3B</td>
+            <td>4–6 yrs</td>
+            <td>Electrical, Software, Systems</td>
+          </tr>
+          <tr>
+            <td><strong>Cold Chain & Logistics Infra</strong><br><span style="font-size:11px;color:var(--text-tertiary)">(enabling infrastructure)</span></td>
+            <td>—</td>
+            <td>—</td>
+            <td style="text-align:center;">1.20×</td>
+            <td>$4.2B</td>
+            <td>$3.5B</td>
+            <td class="td-green">$0.2–0.4B</td>
+            <td>8–12 yrs</td>
+            <td>Civil, Mechanical, Refrigeration</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>TOTAL</strong></td>
+            <td><strong>$66B</strong></td>
+            <td><strong>$115B+</strong></td>
+            <td style="text-align:center;"><strong>0.78× blended</strong></td>
+            <td><strong>$147B</strong></td>
+            <td><strong>$117B</strong></td>
+            <td class="td-amber"><strong>$4.7B avg</strong></td>
+            <td><strong>9–13 yrs avg</strong></td>
+            <td><strong>All disciplines</strong></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ASSET TURNOVER & CAPITAL INTENSITY PANEL -->
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">Capital Intensity vs. Export Value: The Sector Trade-offs</div>
+        <div class="chart-wrap tall"><canvas id="assetTurnoverChart"></canvas></div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary);line-height:1.5;">Bubble size = cumulative capex required 2025–2050. Minerals & metals is the largest single investment but with the longest payback. Technology is capital-light but market-constrained. Food processing is the most attractive risk-return profile.</div>
+      </div>
+      <div>
+        <div class="panel-title" style="margin-bottom:1rem;">The Capital Intensity Paradox</div>
+        <div class="narrative">
+          <p>The sectors offering the highest export value — minerals & metals, chemicals — are precisely the most capital-intensive, with asset turnover ratios below 0.5×. Every dollar of copper or chemical export requires $2–2.4 in fixed assets. This is the structural reason Pakistan cannot self-finance its industrial transformation: the capital requirement vastly exceeds domestic savings capacity.</p>
+          <p>The financing architecture for Pakistan's transition must therefore be stratified. <strong>High-turnover sectors</strong> (technology, food processing, textiles) can be led by domestic private capital and SME financing. <strong>Medium-intensity sectors</strong> (automotive components, engineering goods) require anchor FDI to seed supplier ecosystems. <strong>Capital-intensive sectors</strong> (copper smelting, aluminium, chemicals) require sovereign-backed project finance, strategic foreign investment, and long-tenure debt instruments — the kind of patient capital that public-private credit guarantee institutions are specifically designed to mobilise.</p>
+        </div>
+        <div class="narrative caution" style="margin-top:1rem;">
+          <p><strong>The Minerals & Metals Exception:</strong> Of the $52B new investment needed in minerals & metals, approximately $22B is already committed under the Reko Diq Phase 1 and Phase 2 project structure (Barrick + Pakistani state entities + project finance). This reduces the financing gap to ~$30B in additional upstream and downstream metals processing — still a very large number, but one within range if Pakistan creates the right regulatory and infrastructure conditions for FDI.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUMULATIVE CAPEX WATERFALL -->
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Cumulative Investment Build-up by Sector: 2025–2050 (Stacked, $B)</div>
+      <div class="chart-wrap" style="height:300px;"><canvas id="cumulativeCapexChart"></canvas></div>
+    </div>
+
+    <!-- ENGINEERING TALENT SECTION -->
+    <div style="border-top:1px solid var(--border);padding-top:2rem;margin-top:0.5rem;">
+      <div class="section-label">The Human Capital Equation</div>
+      <div class="section-title" style="font-size:22px;margin-bottom:0.5rem;">Engineering Talent: The Scarcest Input</div>
+      <div class="section-intro" style="margin-bottom:1.5rem;">Capital without engineers is inert. The $117B investment programme requires a workforce that can design, build, operate, and continuously improve the industrial plant that generates those exports. Working backwards from output targets using sector-specific engineering intensity ratios reveals a talent demand that Pakistan's current engineering pipeline is not structured to meet.</div>
+
+      <div class="two-col" style="margin-bottom:2rem;">
+        <div class="panel">
+          <div class="panel-title">Engineering Talent Demand by Sector (Direct Employment, 2050)</div>
+          <div class="chart-wrap tall"><canvas id="engTalentChart"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Engineering Graduate Supply vs. Manufacturing Demand: Pakistan</div>
+          <div class="chart-wrap tall"><canvas id="engSupplyChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:2rem;">
+        <div class="panel-title">Engineering Talent Demand Decomposition: Working Backwards from Exports</div>
+        <table class="est-table">
+          <tr>
+            <th>Sector</th>
+            <th>2050 Export Revenue</th>
+            <th>Engineers per $B Revenue<br><span style="font-weight:400;text-transform:none;letter-spacing:0;">(industry benchmark)</span></th>
+            <th>Engineers Required<br>by 2050</th>
+            <th>Key Engineering Disciplines</th>
+            <th>Current Pakistan Supply</th>
+            <th>Gap</th>
+          </tr>
+          <tr>
+            <td><strong>Textiles & Apparel</strong></td>
+            <td>$25B</td>
+            <td style="text-align:center;">180</td>
+            <td style="text-align:center;">4,500</td>
+            <td>Textile, Mechanical, Industrial</td>
+            <td class="td-amber">~3,200/yr graduating</td>
+            <td class="td-amber">Moderate</td>
+          </tr>
+          <tr>
+            <td><strong>Food Processing & Agro</strong></td>
+            <td>$27B</td>
+            <td style="text-align:center;">290</td>
+            <td style="text-align:center;">7,800</td>
+            <td>Food Science, Chemical, Biosystems, Mechanical</td>
+            <td class="td-red">~800/yr graduating</td>
+            <td class="td-red">Severe</td>
+          </tr>
+          <tr>
+            <td><strong>Minerals & Metals</strong></td>
+            <td>$24B</td>
+            <td style="text-align:center;">420</td>
+            <td style="text-align:center;">10,100</td>
+            <td>Metallurgy, Mining, Chemical, Process</td>
+            <td class="td-red">~500/yr graduating</td>
+            <td class="td-red">Critical</td>
+          </tr>
+          <tr>
+            <td><strong>Engineering & Auto Components</strong></td>
+            <td>$18B</td>
+            <td style="text-align:center;">820</td>
+            <td style="text-align:center;">14,800</td>
+            <td>Mechanical, Electrical, Precision Mfg, Tooling</td>
+            <td class="td-amber">~4,500/yr graduating</td>
+            <td class="td-amber">Significant</td>
+          </tr>
+          <tr>
+            <td><strong>Chemicals & Pharmaceuticals</strong></td>
+            <td>$13B</td>
+            <td style="text-align:center;">650</td>
+            <td style="text-align:center;">8,450</td>
+            <td>Chemical, Process, Materials, Safety</td>
+            <td class="td-red">~1,200/yr graduating</td>
+            <td class="td-red">Severe</td>
+          </tr>
+          <tr>
+            <td><strong>Technology & Electronics</strong></td>
+            <td>$8B</td>
+            <td style="text-align:center;">1,100</td>
+            <td style="text-align:center;">8,800</td>
+            <td>Electrical, Software, Systems, PCB/Hardware</td>
+            <td class="td-green">~12,000/yr graduating</td>
+            <td class="td-green">Adequate if retained</td>
+          </tr>
+          <tr>
+            <td><strong>Cold Chain & Logistics</strong></td>
+            <td>—</td>
+            <td style="text-align:center;">350</td>
+            <td style="text-align:center;">3,500</td>
+            <td>Refrigeration, Civil, Logistics Systems</td>
+            <td class="td-red">~200/yr graduating</td>
+            <td class="td-red">Critical</td>
+          </tr>
+          <tr>
+            <td><strong>Cross-sector (QA, HSE, Automation)</strong></td>
+            <td>—</td>
+            <td>—</td>
+            <td style="text-align:center;">20,000</td>
+            <td>Industrial Eng, Systems, Quality, Safety</td>
+            <td class="td-red">~1,000/yr graduating</td>
+            <td class="td-red">Severe</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>TOTAL</strong></td>
+            <td><strong>$115B+</strong></td>
+            <td style="text-align:center;"><strong>~680 avg</strong></td>
+            <td style="text-align:center;"><strong>77,950</strong></td>
+            <td><strong>Broad manufacturing disciplines</strong></td>
+            <td class="td-red"><strong>~23,400/yr in mfg</strong></td>
+            <td class="td-red"><strong>~54,550 total gap</strong></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- TALENT GAP ANALYSIS -->
+      <div class="two-col">
+        <div>
+          <div class="panel-title" style="margin-bottom:1rem;">Closing the Engineering Talent Gap: What Must Change</div>
+          <div class="narrative">
+            <p>Pakistan produces approximately 100,000 engineering graduates per year — a number that appears adequate until you examine the discipline mix. Over 60% graduate in civil and software engineering, while the manufacturing disciplines that export-led growth demands — metallurgy, chemical engineering, food technology, precision mechanics, refrigeration — account for fewer than 8% of annual graduates.</p>
+            <p>The talent gap is not primarily a quantity problem. It is a <strong>composition and retention problem.</strong> Pakistan produces engineers and then exports them to the Gulf, UK, and North America. The manufacturing sector fails to retain talent because it offers lower compensation than IT services or construction, and operates in an environment of unreliable power, import restrictions on equipment, and limited career progression. Fixing the engineering talent pipeline is inseparable from fixing the industrial environment that engineers work in.</p>
+          </div>
+          <div class="narrative caution" style="margin-top:1rem;">
+            <p><strong>The Diaspora Dividend:</strong> An estimated 800,000 Pakistani engineers work abroad, including ~40,000 in manufacturing roles in the GCC, UK, and North America. A targeted "engineering repatriation" programme — offering 20% salary top-ups, tax concessions, and equity participation in strategic industrial projects — could bring back 15,000–20,000 experienced manufacturing engineers within a decade. Korea ran precisely this programme in the 1970s–80s to staff POSCO Steel and Hyundai's early plants.</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Three Levers to Close the Engineering Talent Gap</div>
+          <div style="margin-top:0.5rem;">
+            <div style="padding:1rem 0;border-bottom:1px solid var(--border);">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.4rem;">
+                <div style="font-size:13px;font-weight:600;color:var(--text-primary);">1 · Curriculum Rebalancing</div>
+                <div style="font-size:11px;color:var(--success);font-weight:600;">+18,000 mfg graduates/yr</div>
+              </div>
+              <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">HEC mandates: double intake in metallurgy, chemical, food technology, and manufacturing engineering programmes. Co-locate new seats at Thar, Chiniot, and Karachi port industrial zones. Industry-university joint labs to replace theoretical curricula with plant-floor problem-solving.</div>
+            </div>
+            <div style="padding:1rem 0;border-bottom:1px solid var(--border);">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.4rem;">
+                <div style="font-size:13px;font-weight:600;color:var(--text-primary);">2 · Diaspora Repatriation</div>
+                <div style="font-size:11px;color:var(--success);font-weight:600;">+15,000 experienced engineers</div>
+              </div>
+              <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Target 800,000 Pakistani engineers abroad. Offer: equity in strategic industrial projects, 3-year income tax holidays, fast-track housing access in industrial zones, matched pension contributions. Korea's KIST model: returning PhD engineers seeded domestic R&D institutions in the 1970s.</div>
+            </div>
+            <div style="padding:1rem 0;border-bottom:1px solid var(--border);">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.4rem;">
+                <div style="font-size:13px;font-weight:600;color:var(--text-primary);">3 · Vocational Engineering Pipeline</div>
+                <div style="font-size:11px;color:var(--success);font-weight:600;">+25,000 technologists/yr</div>
+              </div>
+              <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Not every role requires a 4-year degree. Germany's Meister system, Korea's polytechnic colleges — 2-year applied engineering qualifications in CNC machining, welding, PLC programming, refrigeration, and food processing can fill 30% of the talent demand at half the training cost.</div>
+            </div>
+            <div style="padding:1rem 0;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.4rem;">
+                <div style="font-size:13px;font-weight:600;color:var(--text-primary);">4 · Retention via Industrial Pay Parity</div>
+                <div style="font-size:11px;color:var(--success);font-weight:600;">Halve emigration rate</div>
+              </div>
+              <div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">Manufacturing engineering pay in Pakistan is 40–60% below IT services. Industrial policy must include sector-wage frameworks, profit-sharing mandates in export enterprises, and engineer-specific housing schemes in industrial clusters to make manufacturing careers competitive with services and emigration.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM VERDICT -->
+      <div class="verdict" style="margin-top:2rem;">
+        <div class="verdict-label">The Investment Calculus — Closing Argument</div>
+        <div class="verdict-text">The export trajectory is not a forecast — it is a contract between investment and output. Every $1B of export revenue requires a fixed asset base of between $0.5B (in technology) and $2.4B (in mineral smelting). The aggregate demand for fixed capital — $147B by 2050 — is not fantastical for an economy of Pakistan's size; it is equivalent to roughly 43% of today's GDP deployed cumulatively over 25 years, averaging $5.9B/year. What makes it demanding is the concentration in capital-intensive, long-payback sectors that require patient, catalytic financing structures, reliable energy, deep engineering expertise, and institutional credibility. Pakistan has the minerals, the land, the agricultural endowment, and the population. What it must build — urgently — is the engineering talent, the energy infrastructure, and the institutional scaffolding that converts those endowments into exported value. <strong>That is, in every sense of the term, an engineering problem.</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: AGRICULTURE ENGINEERING -->
+<div class="section" id="s5">
+  <div class="container">
+    <div class="section-label">05 · The First Lever</div>
+    <div class="section-title">Agriculture Engineering: The $20B Export Opportunity Hiding in Plain Sight</div>
+    <div class="section-intro">Pakistan is a top-10 global producer of wheat, rice, cotton, sugarcane, and mangoes. Yet agricultural exports total just $5 billion annually. The gap between Pakistan's natural agricultural endowment and its export realisation is the largest single untapped opportunity in the economy — and it is almost entirely an engineering gap. Cold chains, mechanisation, processing facilities, precision farming, and logistics infrastructure are the difference between a subsistence crop and a global export commodity.</div>
+
+    <div class="three-col" style="margin-bottom:2rem;">
+      <div class="insight-box red">
+        <div class="insight-num">35–40%</div>
+        <div class="insight-text">Post-harvest losses of fruits & vegetables in Pakistan — compared to &lt;5% in Netherlands or &lt;10% in India. Engineering cold chains would recover ~$3B of lost output annually.</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">3.0 MT/ha</div>
+        <div class="insight-text">Pakistan wheat yield vs. 5.2 MT/ha in Punjab (India) and 8.9 MT/ha in Germany. Precision irrigation, certified seed, and mechanised harvesting can close this gap by 40–60%.</div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-num">$3.2T</div>
+        <div class="insight-text">Global halal food market by 2025. Pakistan is the world's 2nd-largest Muslim country with ideal geographic access to GCC, Central Asia, and ASEAN halal markets.</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">Agricultural Yield Gap: Pakistan vs. Best Practice (key crops)</div>
+        <div class="chart-wrap tall"><canvas id="yieldChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Agricultural Export Potential: Current vs. Engineered Scenario</div>
+        <div class="chart-wrap tall"><canvas id="agriExportChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:1rem;">Engineering Interventions Across the Agricultural Value Chain</div>
+    <div style="margin:1.5rem 0 2rem;">
+      <div style="overflow-x:auto;">
+        <table class="est-table">
+          <tr>
+            <th>Value Chain Stage</th>
+            <th>Current State</th>
+            <th>Engineering Intervention</th>
+            <th>Annual Economic Impact</th>
+            <th>Export Multiplier</th>
+          </tr>
+          <tr>
+            <td><strong>Pre-Farm</strong><br>Seed & Inputs</td>
+            <td>60% uncertified seed; manual fertiliser application; no soil sensors</td>
+            <td>Precision agriculture: drone seeding, soil IoT sensors, variable-rate fertilisation, certified GM/hybrid seed programmes</td>
+            <td class="td-green">+$4.5B output value</td>
+            <td>1.8–2.2×</td>
+          </tr>
+          <tr>
+            <td><strong>Irrigation</strong><br>Water Management</td>
+            <td>95% flood irrigation; 45% water efficiency; deteriorating canal system</td>
+            <td>Drip/sprinkler systems, laser land levelling (saves 25–30% water), canal rehabilitation, telemetric water monitoring</td>
+            <td class="td-green">+$2.8B savings + yield</td>
+            <td>1.4×</td>
+          </tr>
+          <tr>
+            <td><strong>Farm Mechanisation</strong></td>
+            <td>1 tractor per 100 ha (vs. 1 per 15 ha in India); manual harvesting; crop losses 8–12% in harvest</td>
+            <td>Domestically manufactured combine harvesters, rice transplanters, cotton pickers; small-farm mechanisation leasing; 200,000+ machine deployment by 2035</td>
+            <td class="td-amber">+$3.2B output</td>
+            <td>1.6×</td>
+          </tr>
+          <tr>
+            <td><strong>Post-Harvest</strong><br>Cold Chain</td>
+            <td>3,000 cold storage facilities vs. 35,000 needed; zero refrigerated trucking fleet; 40% losses</td>
+            <td>PKR 500B cold chain investment: Solar-powered farm-gate pre-coolers; refrigerated logistics fleet; 50 regional cold hubs linked to dry ports</td>
+            <td class="td-green">+$5.8B recovered output</td>
+            <td>2.5×</td>
+          </tr>
+          <tr>
+            <td><strong>Processing</strong><br>Value-Addition</td>
+            <td>90% of agricultural exports are raw/minimally processed; near-zero fruit juices, IQF vegetables, ready meals</td>
+            <td>50 integrated food parks; IQF (Individual Quick Freeze) facilities; Aseptic juice lines; Mango puree plants targeting GCC/EU; Halal certified slaughter-to-pack facilities</td>
+            <td class="td-green">+$8.0B export value</td>
+            <td>3.5×</td>
+          </tr>
+          <tr>
+            <td><strong>Logistics</strong><br>Market Access</td>
+            <td>Fragmented market linkages; 2,000+ middlemen; no direct farm-to-exporter digital platforms; poor port efficiency</td>
+            <td>Digital commodity exchange; AI-driven demand-supply matching; Reefer container hubs at Karachi/Gwadar; Direct airline cargo from Sialkot for perishables</td>
+            <td class="td-amber">+$2.2B efficiency gains</td>
+            <td>1.5×</td>
+          </tr>
+          <tr class="highlight">
+            <td colspan="3"><strong>Total Engineered Agricultural Export Potential</strong></td>
+            <td class="td-green"><strong>$25–30B/year by 2040</strong></td>
+            <td><strong>vs. $5B today</strong></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="narrative caution">
+      <p><strong>Case Study — Vietnam's Agricultural Transformation:</strong> In 1990, Vietnam exported $700M of agricultural products (rice, rubber, coffee) — barely more than Pakistan today. By investing in cold chains, coffee processing infrastructure, shrimp aquaculture technology, and modern logistics, Vietnam now exports $53B in agricultural products annually. The core technology was not exotic — it was engineering: refrigeration systems, food processing equipment, packaging machinery, port infrastructure. Pakistan's natural endowment — land, climate, water — is superior. What it lacks is engineering deployment.</p>
+    </div>
+
+    <div class="two-col" style="margin-top:2rem;">
+      <div>
+        <div class="panel-title" style="margin-bottom:1rem;">The Mango Case: Engineering a Premium Export</div>
+        <div class="narrative">
+          <p>Pakistan produces 1.8 million tonnes of mangoes annually — the 4th largest globally. Yet mango exports total just $85 million, versus India's $560M and Thailand's $1.3B. The gap? Cold chain engineering and post-harvest technology.</p>
+          <p>Pakistan's Chaunsa and Sindhri varieties command premiums in the Middle East and UK, but arrive with &gt;30% shelf loss due to improper storage and temperature breaks. A programme of 200 solar-powered pre-coolers at farm gate, 40 packhouses with MAP (Modified Atmosphere Packaging), and reefer trucking to Karachi could grow mango exports to $800M within a decade — requiring no new land, no new varieties, and no new markets. Only <strong>engineering.</strong></p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Where Does Pakistan Stand vs. Agricultural Exporters?</div>
+        <table class="est-table">
+          <tr>
+            <th>Country</th>
+            <th>Agri Exports</th>
+            <th>Processing %</th>
+            <th>Cold Chain Penetration</th>
+          </tr>
+          <tr><td>Netherlands</td><td>$113B</td><td>78%</td><td class="td-green">95%</td></tr>
+          <tr><td>Vietnam</td><td>$53B</td><td>52%</td><td class="td-green">60%</td></tr>
+          <tr><td>Thailand</td><td>$39B</td><td>65%</td><td class="td-amber">55%</td></tr>
+          <tr><td>India</td><td>$53B</td><td>18%</td><td class="td-amber">22%</td></tr>
+          <tr class="highlight"><td>Pakistan</td><td>$5B</td><td>12%</td><td class="td-red">8%</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: ENGINEERING ROADMAP -->
+<div class="section" id="s6">
+  <div class="container">
+    <div class="section-label">06 · The Engineering Blueprint</div>
+    <div class="section-title">Engineering Pakistan's Ascent: A 25-Year Roadmap</div>
+    <div class="section-intro">The transition from a lower-middle income to an upper-middle income country is not primarily a political problem or a cultural one. It is an engineering and institutional problem — one of building the physical, digital, and human infrastructure that allows an economy to produce more, at higher quality, for competitive export. Every solution proposed in this analysis is, at its core, an engineering challenge. Here is how Pakistan's engineering community can lead the charge.</div>
+
+    <div class="three-col" style="margin-bottom:2.5rem;">
+      <div class="phase-box">
+        <div class="phase-label p1">Phase 1: Foundation</div>
+        <div class="phase-title">Infrastructure & Energy Reform</div>
+        <div class="phase-years">2025–2032 · 7 Years</div>
+        <ul class="phase-items">
+          <li>Thar coal SEZs: 5,000 MW baseload for industry at $0.06/kWh</li>
+          <li>Reko Diq Phase 1: Copper concentrate to copper cathode domestically</li>
+          <li>National cold chain backbone: 50 regional hubs, 5,000 pre-coolers</li>
+          <li>Industrial zones at Thar, Chiniot, Gawadar with plug-and-play utilities</li>
+          <li>Energy circular debt resolution: Capacity payment reform, DISCO unbundling</li>
+          <li>Agricultural mechanisation: 50,000 new machines, domestic manufacturing</li>
+          <li>Engineering curriculum reform: 40% practical/lab; industry partnerships</li>
+        </ul>
+      </div>
+      <div class="phase-box">
+        <div class="phase-label p2">Phase 2: Industrialisation</div>
+        <div class="phase-title">Manufacturing & GVC Entry</div>
+        <div class="phase-years">2032–2042 · 10 Years</div>
+        <ul class="phase-items">
+          <li>Copper wire rod & electrical cable export industry: $3B/year</li>
+          <li>Aluminium smelter (Thar-powered): 200,000 tonnes/year capacity</li>
+          <li>Automotive component ecosystem: 500 Tier-1/2 suppliers</li>
+          <li>Food processing exports: $15B/year (mango, citrus, dairy, halal meat)</li>
+          <li>Steel from Chiniot iron ore (DRI-EAF route): 2 MT/year</li>
+          <li>Chemical industry: Thar coal to methanol to fertiliser/plastics</li>
+          <li>100,000 engineers/year graduating; 30% in manufacturing disciplines</li>
+        </ul>
+      </div>
+      <div class="phase-box">
+        <div class="phase-label p3">Phase 3: Sophistication</div>
+        <div class="phase-title">Technology Deepening & Exports</div>
+        <div class="phase-years">2042–2050 · 8 Years</div>
+        <ul class="phase-items">
+          <li>EV supply chain integration: Copper wire harnesses for Asian OEMs</li>
+          <li>Precision engineering: Aerospace components, medical devices</li>
+          <li>Reko Diq: Full copper cathode + downstream products export at $8B/year</li>
+          <li>Agri-exports: $25B+/year, processed and branded</li>
+          <li>Domestic R&D spending: 1.5% of GDP (from 0.2% today)</li>
+          <li>Pakistan GVC participation: 50%+ (from 26% today)</li>
+          <li>Total exports: $120B+/year (from $27B today)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">The Engineering Disciplines That Will Build Pakistan's Future</div>
+      <div class="three-col" style="margin-top:1rem;">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;">⚡ Electrical & Power Engineering</div>
+          <ul style="font-size:12px;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+            <li>Grid modernisation & HVDC transmission</li>
+            <li>Solar + Thar coal hybrid grid design</li>
+            <li>Industrial power electronics</li>
+            <li>Copper wire fabrication technology</li>
+            <li>Smart metering & SCADA systems</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;">⚙️ Mechanical & Manufacturing Engineering</div>
+          <ul style="font-size:12px;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+            <li>Agricultural machinery design & localisation</li>
+            <li>Automotive component manufacturing</li>
+            <li>CNC machining, precision casting</li>
+            <li>Cold chain refrigeration systems</li>
+            <li>Food processing plant engineering</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;">🧪 Chemical & Materials Engineering</div>
+          <ul style="font-size:12px;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+            <li>Copper hydrometallurgy & smelting</li>
+            <li>Coal-to-methanol / coal-to-chemicals</li>
+            <li>Fertiliser & agrochemical synthesis</li>
+            <li>Aluminium smelting process engineering</li>
+            <li>Food science & preservation engineering</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;">🌾 Agricultural & Biosystems Engineering</div>
+          <ul style="font-size:12px;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+            <li>Drip/sprinkler irrigation design</li>
+            <li>Precision agriculture & drone systems</li>
+            <li>Post-harvest technology</li>
+            <li>Laser land levelling</li>
+            <li>Agro-processing plant design</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;">🖥️ Software & Systems Engineering</div>
+          <ul style="font-size:12px;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+            <li>Industry 4.0 / IIoT implementation</li>
+            <li>Supply chain digitalisation</li>
+            <li>Agricultural market platforms</li>
+            <li>Grid management software</li>
+            <li>Quality management systems (ISO/TS)</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;">🏗️ Civil & Infrastructure Engineering</div>
+          <ul style="font-size:12px;color:var(--text-secondary);line-height:1.8;padding-left:1rem;">
+            <li>Industrial zone master planning</li>
+            <li>Port & dry port engineering (Gwadar)</li>
+            <li>Canal rehabilitation & lining</li>
+            <li>Thar desert infrastructure</li>
+            <li>Logistics hub design & construction</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Export Trajectory: The Engineered Pakistan vs. Status Quo</div>
+      <div class="chart-wrap tall"><canvas id="trajectoryChart"></canvas></div>
+    </div>
+
+    <div class="callout" style="background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);">
+      <h3>The Engineering Covenant: What Pakistan's Engineers Must Commit To</h3>
+      <p>The countries that escaped the middle-income trap did so through the sustained, disciplined application of engineering to economic problems. South Korea built POSCO Steel, Hyundai, Samsung — not through luck, but through engineering ambition and institutional commitment. Vietnam attracted Samsung's global manufacturing hub by building engineers who could run precision assembly lines. China became the world's factory by solving, one by one, the engineering problems that global production requires.</p>
+      <p style="margin-top:1rem;">Pakistan's engineers — the audience in this room — are not the inheritors of a broken system. You are the architects of the system that replaces it. Thar coal needs electrical engineers to design mine-mouth power plants. Reko Diq needs metallurgical engineers to build the refinery. The mango farmer needs an agricultural engineer to design the pre-cooler. The food exporter needs a packaging engineer to meet EU standards. The EV revolution needs a copper wire engineer who understands tolerance to a micron. These are not abstract policy problems. They are <strong>engineering projects waiting for engineers bold enough to claim them.</strong></p>
+    </div>
+
+    <div style="margin-top:2rem;">
+      <div class="section-label">The Milestone Path: 25 Years of Engineering-Led Growth</div>
+      <div class="two-col" style="margin-top:1rem;">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot active"></div>
+            <div class="tl-year">2025–2027</div>
+            <div class="tl-title">The Enabling Conditions</div>
+            <div class="tl-desc">Energy reform: Resolve circular debt; Thar Block III-IV SEZ power; industrial tariff below $0.10/kWh. Reko Diq: begin Phase 1 construction. National cold chain policy enacted. Engineering universities: Industry Partnership Framework launched.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot active"></div>
+            <div class="tl-year">2028–2032</div>
+            <div class="tl-title">First Industrial Output</div>
+            <div class="tl-desc">Reko Diq Phase 1 online: 200,000 tonnes copper cathode/year. First Thar SEZ operational: 2,000 MW industrial zone. Aluminium smelting feasibility → FID. Agricultural mechanisation: 100,000 machines deployed. Agri exports breach $10B mark.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot future"></div>
+            <div class="tl-year">2033–2038</div>
+            <div class="tl-title">Manufacturing Scale-Up</div>
+            <div class="tl-desc">Copper wire rod & cable: $1.5B exports. Food processing parks: 25 operational. Automotive components: GVC integration with 3+ OEM supply chains. GDP growth: 7.5%+ for first sustained 5-year run. Per capita income: $2,800+.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot future"></div>
+            <div class="tl-year">2039–2044</div>
+            <div class="tl-title">Upper-Middle Income Entry</div>
+            <div class="tl-desc">Total exports: $70B+. Reko Diq full capacity: $5B+ export earnings. Thar chemicals: methanol/fertiliser/petrochemicals complex operational. GVC participation: 45%+. Engineers per 10,000 population: from 25 to 80. Per capita income: $4,500+.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot future"></div>
+            <div class="tl-year">2045–2050</div>
+            <div class="tl-title">The Engineered Pakistan</div>
+            <div class="tl-desc">Total exports: $120B+. Per capita income: $6,000–8,000. Manufacturing/GDP: 22%+. GVC participation: 52%+. R&D/GDP: 1.0%+. Pakistan ranked in top-40 economies globally. The engineering generation of 2026 built this.</div>
+          </div>
+        </div>
+        <div>
+          <div class="panel">
+            <div class="panel-title">What IEEE Pakistan Must Lead</div>
+            <div class="narrative" style="margin-top:0;">
+              <p>IEEE Pakistan has 18,000+ members across electrical, electronics, and computer engineering. This is not a passive audience for Pakistan's industrial transition — it is the technical leadership class that must drive it.</p>
+            </div>
+            <div style="margin-top:1rem;">
+              <div style="padding:0.75rem;border-bottom:1px solid var(--border);">
+                <div style="font-size:12px;font-weight:600;color:var(--text-primary);">Standards Advocacy</div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:0.25rem;">Push for IEC/ISO adoption in Pakistani manufacturing. Standards are the entry ticket to GVCs. IEEE should drive PSQCA reform toward international standards alignment.</div>
+              </div>
+              <div style="padding:0.75rem;border-bottom:1px solid var(--border);">
+                <div style="font-size:12px;font-weight:600;color:var(--text-primary);">Industry-Academia Partnerships</div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:0.25rem;">Build 20 joint engineering labs with Reko Diq, Thar Coal Board, automotive manufacturers. Real problems require real engineering. The lab must face the factory.</div>
+              </div>
+              <div style="padding:0.75rem;border-bottom:1px solid var(--border);">
+                <div style="font-size:12px;font-weight:600;color:var(--text-primary);">Engineering Entrepreneurship</div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:0.25rem;">Pakistan needs engineering entrepreneurs — not just engineers. IEEE should build an incubator focused exclusively on hardware: agri-machinery, food processing equipment, industrial IoT, power electronics.</div>
+              </div>
+              <div style="padding:0.75rem;">
+                <div style="font-size:12px;font-weight:600;color:var(--text-primary);">Policy Technical Secretariat</div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:0.25rem;">IEEE Pakistan should establish a permanent technical secretariat for key ministries — Power, Industries, Food Security, Commerce — providing evidence-based engineering input into policy. The energy crisis was partly an engineering problem solved by lawyers. That must change.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 7: BCG 2050 SCENARIOS -->
+<div class="section" id="s7">
+  <div class="container">
+    <div class="section-label">08 · Global Context</div>
+    <div class="section-title">Pakistan Through the BCG 2050 Lens: Four Worlds, One Engineering Imperative</div>
+    <div class="section-intro">BCG's Henderson Institute — drawing on 100 megatrends, a century of historical data, and expert interviews — has mapped four distinct but equally plausible global futures for 2050. Each implies radically different conditions for trade, technology, energy, and growth. Pakistan's engineering strategy must be robust across all four — because the only unacceptable strategy, as BCG notes, is planning for just one future. Crucially, one insight cuts across every scenario: <strong>physical capital without engineering talent is inert, and engineering talent without a clear industrial mission is exported.</strong></div>
+
+    <!-- BCG SCENARIO SELECTOR -->
+    <div style="margin-bottom:2rem;">
+      <div style="display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.5rem;">
+        <button class="bcg-tab active" onclick="showScenario('ai')" style="flex:1;padding:0.9rem 0.5rem;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:#FFF8EE;border:none;border-right:1px solid var(--border);cursor:pointer;color:#92400E;transition:all 0.2s;">🟡 AI Abundance</button>
+        <button class="bcg-tab" onclick="showScenario('blocs')" style="flex:1;padding:0.9rem 0.5rem;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:#FAFAFA;border:none;border-right:1px solid var(--border);cursor:pointer;color:#666;transition:all 0.2s;">🟣 Battling Blocs</button>
+        <button class="bcg-tab" onclick="showScenario('climate')" style="flex:1;padding:0.9rem 0.5rem;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:#FAFAFA;border:none;border-right:1px solid var(--border);cursor:pointer;color:#666;transition:all 0.2s;">🟠 Climate Coalition</button>
+        <button class="bcg-tab" onclick="showScenario('darwin')" style="flex:1;padding:0.9rem 0.5rem;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;background:#FAFAFA;border:none;cursor:pointer;color:#666;transition:all 0.2s;">🔵 Digital Darwinism</button>
+      </div>
+
+      <!-- SCENARIO PANELS -->
+      <div id="bcg-ai" class="bcg-panel">
+        <div class="two-col">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">AI Abundance — Global GDP Growth: 5.0%/yr</div>
+            <div class="panel-h" style="margin-bottom:0.75rem;">A world of AI-driven productivity, cheap clean energy, and physical robotics — where engineering talent is the scarcest commodity</div>
+            <div class="narrative">
+              <p>In AI Abundance, AI and robotics have sparked an industrial revolution. Robot-led mining and processing eases the scarcity of critical minerals. AI-driven breakthroughs in solar-cell materials and long-term battery technology ensure plentiful, cheap renewable power. Global GDP triples from 2025 to 2050 — fuelled by 5.7% annual productivity gains, not population growth.</p>
+              <p><strong>Physical AI redefines industrial operations.</strong> Robots that perceive, reason, and act autonomously transform manufacturing — even for SMEs. Tasks once too variable to automate (force-sensitive component insertion, surface treatments) become routine. The engineering role shifts from operator to robot technician, fleet coordinator, and AI-aided inspector.</p>
+            </div>
+          </div>
+          <div>
+            <div class="insight-box" style="margin-bottom:0.75rem;border-top-color:#C8923A;">
+              <div class="insight-num" style="color:var(--success);">✅ Pakistan Opportunity</div>
+              <div class="insight-text">Reko Diq copper is in peak demand — AI-optimised mining and robot-led processing create a technology wedge Pakistan can exploit. Thar mine-mouth power at $0.06/kWh makes Pakistan's industrial zones globally competitive. Pakistan's young demographic (median age 21) avoids the aging workforce crisis hitting OECD nations — a structural talent advantage.</div>
+            </div>
+            <div class="insight-box red">
+              <div class="insight-num">⚠️ Pakistan Risk</div>
+              <div class="insight-text">AI-only firms will erode Pakistan's low-cost service export advantage. Engineering graduates who do not reskill into physical AI — robotics, automation, IIoT — will be displaced. Pakistan must move from engineering-as-labour to engineering-as-design before the wave arrives.</div>
+            </div>
+            <div class="narrative caution" style="margin-top:0.75rem;">
+              <p><strong>BCG Key Move for Pakistan:</strong> Deploy modular, AI-integrated factories — not legacy batch-process plants. Every new industrial zone built in 2025–2032 must be designed for physical AI adoption by 2035. Engineers must be trained as AI-system integrators from day one.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="bcg-blocs" class="bcg-panel" style="display:none;">
+        <div class="two-col">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7C3AED;margin-bottom:0.5rem;">Battling Blocs — Global GDP Growth: 1.8%/yr · Trade falls to 35% of GDP</div>
+            <div class="panel-h" style="margin-bottom:0.75rem;">Geopolitical fracturing creates bloc-based supply chains — and a once-in-a-generation opportunity for the non-aligned Global South</div>
+            <div class="narrative">
+              <p>In Battling Blocs, tariffs and export controls have decoupled the world's economies. Trade falls from 57% of global GDP to 35%. Traditional multinationals fragment into regional joint ventures. Defense spending soars to 7% of GDP globally. But — crucially for Pakistan — <strong>the Global South finds its moment.</strong></p>
+              <p>BCG's analysis identifies that non-aligned or multi-aligned nations with critical resources, young workforces, and growing consumer markets become the swing players of the new order. India is projected to be the world's third largest economy by 2029. Pakistan's copper, coal, and agricultural surpluses — combined with its geographic position between China, the Gulf, and Central Asia — give it rare strategic optionality.</p>
+            </div>
+          </div>
+          <div>
+            <div class="insight-box" style="margin-bottom:0.75rem;border-top-color:#7C3AED;">
+              <div class="insight-num" style="color:var(--success);">✅ Pakistan Opportunity</div>
+              <div class="insight-text">Bloc-based supply chain fracturing creates near-shoring demand. Pakistan can position as the manufacturing hub for the China-aligned bloc OR as a non-aligned supplier to both — as it did during the original Cold War. Copper demand from Reko Diq becomes even more critical as bloc-specific supply chains require regional mineral self-sufficiency. Pakistan's unique position — China CPEC ties + US relationship + Gulf investment — makes it structurally multi-aligned.</div>
+            </div>
+            <div class="insight-box red">
+              <div class="insight-num">⚠️ Pakistan Risk</div>
+              <div class="insight-text">GDP growth slows globally to 1.8%. Pakistan's own export growth stalls if it cannot sell across blocs. Extreme poverty rises globally from 8% to 10% — Pakistan's fiscal and social stability faces stress. The WTO dissolves in this scenario — Pakistan's MFN trade agreements become worthless without bloc membership.</div>
+            </div>
+            <div class="narrative caution" style="margin-top:0.75rem;">
+              <p><strong>BCG Key Move for Pakistan:</strong> Deliberately cultivate multi-bloc positioning — supply copper to China's EV manufacturers, food to the Gulf, and engineering services to Europe. Build dual-certification manufacturing (ISO + Chinese GB standards) so factories can switch export destinations as blocs shift.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="bcg-climate" class="bcg-panel" style="display:none;">
+        <div class="two-col">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#B45309;margin-bottom:0.5rem;">Climate Coalition — Global GDP Growth: 2.5%/yr · Carbon price: $300/tonne by 2050</div>
+            <div class="panel-h" style="margin-bottom:0.75rem;">Carbon border adjustment mechanisms reshape global trade — and Thar coal becomes a liability unless Pakistan engineers its transition</div>
+            <div class="narrative">
+              <p>In Climate Coalition, a series of extreme weather events drives a global "climate club" — initially among industrial nations, then joined by China and India by 2040. Carbon border adjustment mechanisms (CBAMs) — tariffs on imports from countries without carbon pricing — fundamentally reshape trade economics. By 2050, carbon costs $300/tonne. The share of fossil fuels in primary energy falls from 81% to 35%.</p>
+              <p>For Pakistan, this scenario creates a direct conflict: Thar coal — the backbone of the affordable-energy strategy — becomes a CBAM liability for any manufactured goods exported to CBAM-implementing nations. Pakistan must simultaneously use Thar coal to build industrial competitiveness <em>and</em> plan its transition to renewables before CBAM bites.</p>
+            </div>
+          </div>
+          <div>
+            <div class="insight-box" style="margin-bottom:0.75rem;border-top-color:#B45309;">
+              <div class="insight-num" style="color:var(--success);">✅ Pakistan Opportunity</div>
+              <div class="insight-text">Critical minerals for the energy transition — copper (Reko Diq), chromite, rare earths — are in massive demand. BCG notes that building wind turbines requires 18 critical materials, and global demand outstrips supply for 13 of them. Pakistan holds several. Pakistan's 50,000 MW solar potential and hydro capacity enable a green energy premium. Carbon credits from forest restoration and solar deployment can generate sovereign revenue.</div>
+            </div>
+            <div class="insight-box red">
+              <div class="insight-num">⚠️ Pakistan Risk</div>
+              <div class="insight-text">Thar coal-powered exports face CBAM tariffs from EU and US markets by 2035. Cement, steel, aluminium, and chemicals manufactured using coal power will carry a carbon surcharge. Pakistan must engineer Thar as a bridge fuel — use it to build industrial competitiveness 2025–2035, then transition to solar/wind for export-facing industries by 2040.</div>
+            </div>
+            <div class="narrative caution" style="margin-top:0.75rem;">
+              <p><strong>BCG Key Move for Pakistan:</strong> Enact a domestic carbon pricing framework now — not to raise costs but to make Pakistani exporters CBAM-credible by 2032. Build carbon accounting systems into every new export factory. Engineer the Thar-to-Solar transition sequenced with industrial zone development.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="bcg-darwin" class="bcg-panel" style="display:none;">
+        <div class="two-col">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#2563EB;margin-bottom:0.5rem;">Digital Darwinism — Global GDP Growth: 4.0%/yr · Inequality soars · Temps +2.5°C</div>
+            <div class="panel-h" style="margin-bottom:0.75rem;">Corporations dominate a low-regulation world — Pakistan faces 16–17% GDP loss from climate change and must engineer both growth and resilience</div>
+            <div class="narrative">
+              <p>In Digital Darwinism, ultralight regulation drives explosive tech growth but soaring inequality. The richest 1% hold nearly half of global wealth. Global trade stays high at 61% of GDP — driven by commercial interest — but governments weaken. Temperatures reach +2.5°C, causing an estimated 16–17% GDP loss in South Asia and the Middle East. Pakistan's climate-vulnerable geography makes this the most dangerous BCG scenario.</p>
+              <p>BCG's analysis shows that adaptation projects are directed toward wealthy enclaves while less fortunate regions face mounting losses. Conflicts driven by resource acquisition and climate-induced disruption of agricultural supply chains reverse poverty progress. Extreme poverty rises globally from 8% to 12%.</p>
+            </div>
+          </div>
+          <div>
+            <div class="insight-box" style="margin-bottom:0.75rem;border-top-color:#2563EB;">
+              <div class="insight-num" style="color:var(--success);">✅ Pakistan Opportunity</div>
+              <div class="insight-text">In a high-trade, corporate-driven world, Pakistan's mineral assets attract private investment without heavy state apparatus. Global supply chains remain open — Pakistan can insert into GVCs without bloc politics. Copper demand stays very high. Pakistan's engineering talent can serve global corporations' supply chains at competitive costs if energy is solved.</div>
+            </div>
+            <div class="insight-box red">
+              <div class="insight-num">⚠️ Pakistan Risk</div>
+              <div class="insight-text">+2.5°C warming hits Pakistan hardest — agricultural productivity collapses, heat stress reduces outdoor labour productivity by 20–30%, and the Indus glacier system faces critical stress. Pakistan's $8.5B/year heat productivity loss by 2030 (under moderate warming) becomes $15–20B under Digital Darwinism. Without indigenous cooling and climate-resilient engineering, growth gains are wiped out by climate losses.</div>
+            </div>
+            <div class="narrative caution" style="margin-top:0.75rem;">
+              <p><strong>BCG Key Move for Pakistan:</strong> Invest heavily in climate engineering — indigenous cooling technology, heat-resilient infrastructure, flood-proofed industrial zones, drought-resistant crop engineering. In Digital Darwinism, there is no multilateral safety net. Pakistan must engineer its own climate resilience — or pay an existential economic price.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BCG SCENARIO COMPARISON CHARTS -->
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">Pakistan GDP Per Capita Under Four BCG World Scenarios (2025–2050)</div>
+        <div class="chart-wrap tall"><canvas id="bcgGDPChart"></canvas></div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary);line-height:1.5;">BCG global growth rates modulated for Pakistan's domestic policy quality. Even in the worst scenario (Battling Blocs), Pakistan can reach upper-middle income — but only if domestic reforms proceed. In the best (AI Abundance), Pakistan can approach $8,000 per capita by 2050.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Pakistan's Cross-Scenario Strategic Asset Value (1–10, higher = more valuable)</div>
+        <div class="chart-wrap tall"><canvas id="bcgRadarChart"></canvas></div>
+        <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary);line-height:1.5;">Reko Diq copper and agricultural endowment are strategic assets in ALL four scenarios. Energy reform and engineering talent are the swing variables — high upside in AI Abundance and Digital Darwinism, existential in Climate Coalition.</div>
+      </div>
+    </div>
+
+    <!-- CROSS-SCENARIO TABLE -->
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Cross-Scenario Opportunity Matrix: What Pakistan Must Do Regardless of Which World Materialises</div>
+      <table class="est-table">
+        <tr>
+          <th>Strategic Action</th>
+          <th style="text-align:center;">AI Abundance</th>
+          <th style="text-align:center;">Battling Blocs</th>
+          <th style="text-align:center;">Climate Coalition</th>
+          <th style="text-align:center;">Digital Darwinism</th>
+          <th>Why It's Universal</th>
+        </tr>
+        <tr>
+          <td><strong>Develop Reko Diq copper refining capacity</strong></td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td class="td-green">Copper is in structural shortage in all scenarios — EV demand in AI/DD, bloc self-sufficiency in BB, energy transition in CC</td>
+        </tr>
+        <tr>
+          <td><strong>Reduce industrial electricity cost to &lt;$0.09/kWh</strong></td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td class="td-green">Manufacturing competitiveness requires affordable energy in every world. Solar+Thar bridge is scenario-robust.</td>
+        </tr>
+        <tr>
+          <td><strong>Build cold chain & food processing for agri exports</strong></td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td class="td-green">Food security stress in all scenarios raises premium for reliable agri exporters. Pakistan's halal market access is universal.</td>
+        </tr>
+        <tr>
+          <td><strong>Train 50,000+ manufacturing engineers by 2035</strong></td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td class="td-green">Physical AI needs robot engineers (AA), bloc self-sufficiency needs local talent (BB), green transition needs process engineers (CC), climate resilience needs civil/mechanical (DD)</td>
+        </tr>
+        <tr>
+          <td><strong>Invest in indigenous cooling technology</strong></td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td class="td-green">All scenarios project +1.8–2.5°C temperature rise. Heat stress is universal. Cooling technology is both defensive and exportable.</td>
+        </tr>
+        <tr>
+          <td><strong>Maintain non-aligned multi-bloc trade access</strong></td>
+          <td style="text-align:center;font-size:16px;">⚠️</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">⚠️</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td class="td-amber">Critical in fragmented worlds; less relevant in cooperative ones — but low-regret insurance in all cases</td>
+        </tr>
+        <tr>
+          <td><strong>Build CBAM-ready carbon accounting for exports</strong></td>
+          <td style="text-align:center;font-size:16px;">⚠️</td>
+          <td style="text-align:center;font-size:16px;">❌</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">⚠️</td>
+          <td class="td-amber">Essential in cooperative climate world; optional elsewhere — but builds export credibility at low cost</td>
+        </tr>
+        <tr>
+          <td><strong>Reskill engineers into physical AI / robotics integration</strong></td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td style="text-align:center;font-size:16px;">⚠️</td>
+          <td style="text-align:center;font-size:16px;">⚠️</td>
+          <td style="text-align:center;font-size:16px;">✅</td>
+          <td class="td-amber">High-payoff in tech-intensive worlds; useful in all worlds for productivity gains in manufacturing</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- BCG FIVE LOW-REGRET MOVES → PAKISTAN -->
+    <div style="border-top:1px solid var(--border);padding-top:2rem;margin-top:0.5rem;">
+      <div class="section-label">BCG's Five Low-Regret Moves — Pakistan Engineering Translation</div>
+      <div class="section-intro" style="margin-bottom:1.5rem;">BCG identifies five moves that make sense regardless of which 2050 scenario materialises. Applied to Pakistan — through the lens of engineering-led development — each becomes a specific, actionable engineering investment. These are not aspirations. They are the minimum viable programme for a Pakistan that intends to be prosperous in 2050, whatever world it finds itself in.</div>
+
+      <div class="three-col" style="margin-bottom:2rem;">
+        <div class="phase-box" style="border-top:3px solid var(--steel);">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--steel);margin-bottom:0.5rem;">BCG Move 1</div>
+          <div class="phase-title">Enhance Structural Resilience</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:0.75rem;font-style:italic;">"Diversify sourcing; secure access to critical minerals; identify climate risks to infrastructure"</div>
+          <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Pakistan Engineering Mandate:</div>
+          <ul class="phase-items">
+            <li>Build multi-route mineral logistics — rail from Reko Diq to Gwadar AND Karachi ports; eliminate single-point failure</li>
+            <li>Design all Thar industrial zones for modular solar transition — plug-and-play renewable switchover by 2038</li>
+            <li>Engineer flood-resilient industrial infrastructure in Sindh and Punjab — embankment systems, elevated plant platforms</li>
+            <li>Dual-source all industrial chemicals and raw materials across bloc-diverse suppliers</li>
+          </ul>
+        </div>
+        <div class="phase-box" style="border-top:3px solid var(--accent);">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">BCG Move 2</div>
+          <div class="phase-title">Reimagine Talent for AI & Demographics</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:0.75rem;font-style:italic;">"Build intergenerational work models; scale human-machine collaboration"</div>
+          <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Pakistan Engineering Mandate:</div>
+          <ul class="phase-items">
+            <li>Pakistan's youth dividend (64% under 30) is the mirror image of the OECD aging problem — deploy it in manufacturing, not services emigration</li>
+            <li>Embed physical AI training (robotics programming, IIoT, digital twins) into every engineering degree from 2026</li>
+            <li>Create "engineering apprenticeship" tracks at Thar, Reko Diq, and Chiniot industrial zones — learn while building</li>
+            <li>Diaspora repatriation: target 800,000 Pakistani engineers abroad with equity + tax incentives (Korea KIST model)</li>
+          </ul>
+        </div>
+        <div class="phase-box" style="border-top:3px solid var(--success);">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--success);margin-bottom:0.5rem;">BCG Move 3</div>
+          <div class="phase-title">Build Digital Flexibility & Trust</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:0.75rem;font-style:italic;">"Modular tech stacks; digital trust architecture; watermarking and provenance"</div>
+          <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Pakistan Engineering Mandate:</div>
+          <ul class="phase-items">
+            <li>Every new export factory must deploy ISO/TS quality management systems and digital traceability from commissioning — not retrofit after</li>
+            <li>Build a national industrial IoT data standard — so Pakistani factories can plug into any global supply chain's monitoring system</li>
+            <li>Establish PSQCA → ISO equivalency pathway: Pakistan Standards Authority must gain MRA (Mutual Recognition Agreement) status with EU and China standards bodies by 2030</li>
+            <li>IEEE Pakistan to lead: develop a national engineering standards roadmap for manufacturing, food safety, and electrical systems</li>
+          </ul>
+        </div>
+        <div class="phase-box" style="border-top:3px solid #7C3AED;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#7C3AED;margin-bottom:0.5rem;">BCG Move 4</div>
+          <div class="phase-title">Sharpen Sensing & Influencing Capabilities</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:0.75rem;font-style:italic;">"Build foresight advantage; secure seat at the policy table; shorter decision loops"</div>
+          <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Pakistan Engineering Mandate:</div>
+          <ul class="phase-items">
+            <li>IEEE Pakistan should establish a permanent technical policy secretariat — advisory to Power, Industries, Commerce, and Food Security ministries</li>
+            <li>Build a national engineering intelligence function: track global GVC shifts, technology inflection points, CBAM thresholds, and mineral demand cycles — Pakistan needs to anticipate, not react</li>
+            <li>Send Pakistan engineers to sit on IEC, ISO, and IEEE global standards committees — the countries that write global standards capture the compliance premium</li>
+            <li>Rapid industrial response capability: when a global supply chain fractures (e.g., Taiwanese semiconductor crisis, Chinese rare earth restriction), Pakistan should have pre-certified factories ready to absorb redirected orders within 18 months</li>
+          </ul>
+        </div>
+        <div class="phase-box" style="border-top:3px solid #2563EB;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#2563EB;margin-bottom:0.5rem;">BCG Move 5</div>
+          <div class="phase-title">Embrace a Broader Societal Role</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:0.75rem;font-style:italic;">"Companies shoulder more responsibility for worker well-being, local resilience, crisis management"</div>
+          <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Pakistan Engineering Mandate:</div>
+          <ul class="phase-items">
+            <li>Industrial zones must be self-contained, resilient communities — not just factory clusters. Engineer housing, clean water, healthcare, and schooling into SEZ designs from the start</li>
+            <li>Every engineer in Pakistan must be trained in climate-resilient design — flood modelling, heat-stress analysis, seismic design — as standard, not specialisation</li>
+            <li>Engineering firms and IEEE members to lead community infrastructure: rural electrification, local cold chains, water treatment — building the social licence for industrial development</li>
+            <li>Pakistani engineering institutions to establish a "National Engineering Corps" — a civilian technical service that deploys engineers to government infrastructure projects, building both capacity and prestige for the engineering profession</li>
+          </ul>
+        </div>
+        <div class="phase-box" style="border-top:3px solid var(--warning);">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--warning);margin-bottom:0.5rem;">BCG Warning — Synthesised</div>
+          <div class="phase-title">The One Unacceptable Strategy</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:0.75rem;font-style:italic;">"Planning for just one future" — BCG Henderson Institute, April 2026</div>
+          <div style="font-size:13px;font-weight:600;color:var(--accent);margin-bottom:0.5rem;">Pakistan's Specific Danger:</div>
+          <ul class="phase-items">
+            <li>Pakistan has historically planned for the IMF programme — a single-year fiscal horizon, not a 25-year industrial vision</li>
+            <li>Every engineering investment made in the next 5 years must be stress-tested against all four BCG scenarios — or it risks being a stranded asset by 2040</li>
+            <li>A Thar industrial zone designed only for coal-intensive, export-facing manufacturing fails in Climate Coalition. Design it to be carbon-transition-ready from construction</li>
+            <li>An engineering curriculum designed for today's jobs fails in AI Abundance. Design it for the engineers of 2040 who will run physical AI systems</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- BCG GLOBAL GDP CHART AND KEY METRICS -->
+      <div class="two-col" style="margin-bottom:2rem;">
+        <div class="panel">
+          <div class="panel-title">BCG 2050 Global GDP Growth Rates vs. Pakistan's Required Growth (Rolling 25-yr CAGR)</div>
+          <div class="chart-wrap"><canvas id="bcgGlobalGDPChart"></canvas></div>
+          <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary);line-height:1.5;">Pakistan's required 7.5% domestic growth rate sits above even the most optimistic BCG global scenario (AI Abundance at 5%). This is achievable — it mirrors Korea 1965–1990 — but requires structural transformation, not incremental reform. The engineering generation in this room is the instrument of that transformation.</div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">BCG's Key 2050 Scenario Metrics: What Each World Means for Pakistan</div>
+          <table class="est-table" style="font-size:11px;">
+            <tr>
+              <th>Metric</th>
+              <th>Today</th>
+              <th style="background:#FFF8EE;">AI Abund.</th>
+              <th style="background:#F5F0FF;">Battling</th>
+              <th style="background:#FFF5EB;">Climate</th>
+              <th style="background:#EFF6FF;">Digital</th>
+            </tr>
+            <tr>
+              <td>Global GDP growth</td>
+              <td>3.4%</td>
+              <td style="background:#FFF8EE;" class="td-green">5.0%</td>
+              <td style="background:#F5F0FF;" class="td-red">1.8%</td>
+              <td style="background:#FFF5EB;" class="td-amber">2.5%</td>
+              <td style="background:#EFF6FF;" class="td-green">4.0%</td>
+            </tr>
+            <tr>
+              <td>Global trade/GDP</td>
+              <td>57%</td>
+              <td style="background:#FFF8EE;" class="td-amber">55%</td>
+              <td style="background:#F5F0FF;" class="td-red">35%</td>
+              <td style="background:#FFF5EB;" class="td-amber">45%</td>
+              <td style="background:#EFF6FF;" class="td-green">61%</td>
+            </tr>
+            <tr>
+              <td>Extreme poverty</td>
+              <td>8.0%</td>
+              <td style="background:#FFF8EE;" class="td-green">6.0%</td>
+              <td style="background:#F5F0FF;" class="td-red">10.0%</td>
+              <td style="background:#FFF5EB;" class="td-green">4.0%</td>
+              <td style="background:#EFF6FF;" class="td-red">12.0%</td>
+            </tr>
+            <tr>
+              <td>Temperature rise</td>
+              <td>+1.3°C</td>
+              <td style="background:#FFF8EE;" class="td-red">+2.2°C</td>
+              <td style="background:#F5F0FF;" class="td-red">+2.1°C</td>
+              <td style="background:#FFF5EB;" class="td-green">+1.8°C</td>
+              <td style="background:#EFF6FF;" class="td-red">+2.5°C</td>
+            </tr>
+            <tr>
+              <td>Low-carbon electricity</td>
+              <td>41%</td>
+              <td style="background:#FFF8EE;" class="td-green">85%</td>
+              <td style="background:#F5F0FF;" class="td-amber">55%</td>
+              <td style="background:#FFF5EB;" class="td-green">92%</td>
+              <td style="background:#EFF6FF;" class="td-amber">60%</td>
+            </tr>
+            <tr>
+              <td>Fossil fuel share</td>
+              <td>81%</td>
+              <td style="background:#FFF8EE;" class="td-green">45%</td>
+              <td style="background:#F5F0FF;" class="td-red">75%</td>
+              <td style="background:#FFF5EB;" class="td-green">35%</td>
+              <td style="background:#EFF6FF;" class="td-amber">70%</td>
+            </tr>
+            <tr>
+              <td>Democracies (%)</td>
+              <td>49%</td>
+              <td style="background:#FFF8EE;" class="td-green">60%</td>
+              <td style="background:#F5F0FF;" class="td-red">25%</td>
+              <td style="background:#FFF5EB;" class="td-green">55%</td>
+              <td style="background:#EFF6FF;" class="td-red">30%</td>
+            </tr>
+            <tr class="highlight">
+              <td><strong>Pak GDP pc 2050 est.</strong></td>
+              <td><strong>$1,558</strong></td>
+              <td style="background:#FFF8EE;" class="td-green"><strong>$7,800</strong></td>
+              <td style="background:#F5F0FF;" class="td-red"><strong>$3,200</strong></td>
+              <td style="background:#FFF5EB;" class="td-amber"><strong>$4,800</strong></td>
+              <td style="background:#EFF6FF;" class="td-green"><strong>$6,200</strong></td>
+            </tr>
+          </table>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:0.5rem;">Pakistan GDP estimates: BCG global growth rates modulated by Pakistan reform scenario. Sources: BCG Henderson Institute "Beyond Tomorrow" April 2026; author analysis.</div>
+        </div>
+      </div>
+
+      <div class="callout" style="background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);border-left-color:var(--accent);">
+        <h3>The Engineering Generation's Mandate: Build for All Four Worlds</h3>
+        <p>BCG's research makes one thing crystal clear: the spread of outcomes across their four scenarios is staggering — from a world where global GDP triples to one where poverty rises and democracy retreats. Pakistan cannot control which world materialises. But it can — through deliberate, ambitious engineering — ensure that it is positioned to succeed in any of them.</p>
+        <p style="margin-top:0.75rem;">The Pakistani engineers in this room face a more demanding assignment than their predecessors. You are not being asked to build bridges and power plants in a stable world with a known future. You are being asked to build a nation's industrial foundation in a world of radical uncertainty — one where the rules of trade, technology, energy, and climate will all shift simultaneously over the next 25 years.</p>
+        <p style="margin-top:0.75rem;">That is not a burden. It is the definition of what great engineers have always done: <strong>impose order on complexity, create value from uncertainty, and build — with their own hands — the world they want to live in.</strong> Pakistan's 2050 is not written yet. The engineers in this room will write it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <div style="margin-bottom:0.5rem;"><strong>Ammar H. Khan</strong> &nbsp;·&nbsp; CEO, NCGCL &nbsp;·&nbsp; Advisor to Power Minister, Pakistan &nbsp;·&nbsp; Professor, IBA Karachi</div>
+    <div>Presented at IEEE Pakistan Annual General Meeting, May 2026 &nbsp;·&nbsp; Data sources: World Bank WDI, OECD-WTO GVC Database, NEPRA, PBS, Thar Coal & Energy Board, Barrick Gold Reko Diq disclosures</div>
+    <div style="margin-top:0.5rem;color:#334155;">All figures approximate; projections are analytical scenarios, not forecasts. &nbsp;·&nbsp; rogueonomist.github.io</div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// NAVIGATION
+// ============================================================
+function scrollToSection(id, btn) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Scroll spy
+const sections = ['s1','s2','s3','s4','s4b','s5','s6','s7'];
+const navBtns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', () => {
+  let current = 's1';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 100) current = id;
+  });
+  navBtns.forEach((btn, i) => {
+    btn.classList.toggle('active', sections[i] === current);
+  });
+}, { passive: true });
+
+// ============================================================
+// CHART DEFAULTS
+// ============================================================
+const font = "'Helvetica Neue', sans-serif";
+Chart.defaults.font.family = font;
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#666666';
+Chart.defaults.plugins.legend.labels.boxWidth = 10;
+Chart.defaults.plugins.legend.labels.padding = 12;
+Chart.defaults.plugins.tooltip.titleFont = { size: 12, weight: '600' };
+Chart.defaults.plugins.tooltip.bodyFont = { size: 11 };
+Chart.defaults.plugins.tooltip.backgroundColor = '#0F172A';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 4;
+
+const AMBER = '#C8923A';
+const GREEN = '#52B788';
+const RED = '#9B2335';
+const STEEL = '#334155';
+const BLUE = '#2563EB';
+const LIGHT = '#E5E5E5';
+
+// ============================================================
+// GDP COMPOSITION CHART
+// ============================================================
+new Chart(document.getElementById('gdpCompChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Consumption (C)', 'Investment (I)', 'Gov Spending (G)', 'Net Exports (NX)'],
+    datasets: [
+      {
+        label: 'Pakistan (2024)',
+        data: [82, 14, 11, -7],
+        backgroundColor: [RED, RED, AMBER, RED],
+        borderRadius: 3,
+      },
+      {
+        label: 'Upper-Middle Income (Median)',
+        data: [58, 28, 14, 0],
+        backgroundColor: [GREEN + 'BB', GREEN + 'BB', GREEN + 'BB', GREEN + 'BB'],
+        borderRadius: 3,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        title: { display: true, text: '% of GDP' },
+        grid: { color: '#F0F0F0' }
+      }
+    }
+  }
+});
+
+// ============================================================
+// EXPORT STRUCTURE CHART
+// ============================================================
+new Chart(document.getElementById('exportChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Pakistan', 'Bangladesh', 'Vietnam', 'Thailand'],
+    datasets: [
+      { label: 'Textiles & Apparel', data: [61, 84, 13, 5], backgroundColor: RED },
+      { label: 'Food & Agriculture', data: [15, 5, 22, 28], backgroundColor: AMBER },
+      { label: 'Engineering/Machinery', data: [4, 2, 35, 42], backgroundColor: GREEN },
+      { label: 'Chemicals/Materials', data: [6, 3, 8, 12], backgroundColor: STEEL },
+      { label: 'Other', data: [14, 6, 22, 13], backgroundColor: LIGHT },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, max: 100, title: { display: true, text: '% of exports' }, grid: { color: '#F0F0F0' } }
+    }
+  }
+});
+
+// ============================================================
+// GROWTH TRAJECTORY CHART
+// ============================================================
+let growthChart;
+function buildGrowthChart(gdpG, popG) {
+  const yrs = Array.from({length: 27}, (_, i) => 2024 + i);
+  const pc0 = 1558;
+  const slow = yrs.map(y => +(pc0 * Math.pow((1.035)/(1+popG/100), y-2024)).toFixed(0));
+  const target = yrs.map(y => +(pc0 * Math.pow((1+gdpG/100)/(1+popG/100), y-2024)).toFixed(0));
+  const fast = yrs.map(y => +(pc0 * Math.pow((1.09)/(1+popG/100), y-2024)).toFixed(0));
+  const umic = yrs.map(() => 4466);
+  const hic = yrs.map(() => 13845);
+
+  if (growthChart) growthChart.destroy();
+  growthChart = new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: {
+      labels: yrs,
+      datasets: [
+        { label: 'Slow Growth (3.5%)', data: slow, borderColor: RED, borderWidth: 1.5, borderDash: [4,3], pointRadius: 0, fill: false },
+        { label: `Your Scenario (${gdpG}%)`, data: target, borderColor: AMBER, borderWidth: 2.5, pointRadius: 0, fill: false },
+        { label: 'Fast Growth (9%)', data: fast, borderColor: GREEN, borderWidth: 1.5, borderDash: [4,3], pointRadius: 0, fill: false },
+        { label: 'Upper-Middle Threshold ($4,466)', data: umic, borderColor: STEEL, borderWidth: 1, borderDash: [6,3], pointRadius: 0, fill: false },
+        { label: 'High-Income Threshold ($13,845)', data: hic, borderColor: '#94A3B8', borderWidth: 1, borderDash: [6,3], pointRadius: 0, fill: false },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' } },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 7 } },
+        y: {
+          title: { display: true, text: 'GDP per capita (USD)' },
+          grid: { color: '#F0F0F0' },
+          ticks: { callback: v => '$' + v.toLocaleString() }
+        }
+      }
+    }
+  });
+}
+buildGrowthChart(7.5, 1.9);
+
+// ============================================================
+// GROWTH CALCULATOR
+// ============================================================
+function updateGrowthCalc() {
+  const gdpG = parseFloat(document.getElementById('gdpGrowthSlider').value);
+  const popG = parseFloat(document.getElementById('popGrowthSlider').value);
+  document.getElementById('gdpGrowthVal').textContent = gdpG + '%';
+  document.getElementById('popGrowthVal').textContent = popG + '%';
+
+  const pcG = gdpG - popG;
+  const pc0 = 1558;
+  const pop0 = 234; // millions
+  const umic = 4466;
+
+  const pc2035 = +(pc0 * Math.pow(1 + pcG/100, 11)).toFixed(0);
+  const pc2050 = +(pc0 * Math.pow(1 + pcG/100, 26)).toFixed(0);
+  const pop2050 = +(pop0 * Math.pow(1 + popG/100, 26)).toFixed(0);
+  const totalGDP = +((pc2050 * pop2050 / 1000)).toFixed(0);
+
+  // When does per capita hit $4,466?
+  let umicYear = 'Never';
+  for (let y = 0; y <= 40; y++) {
+    if (pc0 * Math.pow(1 + pcG/100, y) >= umic) {
+      umicYear = 2024 + y;
+      break;
+    }
+  }
+
+  document.getElementById('pc2035').textContent = '$' + pc2035.toLocaleString();
+  document.getElementById('pc2050').textContent = '$' + pc2050.toLocaleString();
+  document.getElementById('umicYear').textContent = umicYear;
+  document.getElementById('totalGDP').textContent = '$' + (totalGDP/1e6).toFixed(1) + 'T';
+
+  let verdict = '';
+  if (pcG < 3) {
+    verdict = '⚠️ At this pace, Pakistan remains stuck in the lower-middle income trap. Population growth outpaces real per capita gains.';
+  } else if (pcG < 5) {
+    verdict = '📊 Pakistan makes progress but reaches upper-middle income after 2050 — missing the generational window. Historical average performance.';
+  } else if (pcG < 6.5) {
+    verdict = '✓ Plausible trajectory — reaches upper-middle income but only if sustained. Requires doubling investment rate and export diversification.';
+  } else {
+    verdict = '🎯 Strong scenario — consistent with Korea (1965–95) and Vietnam (1990–2020). Requires structural transformation in energy, manufacturing, and exports. Achievable with engineering-led strategy.';
+  }
+  document.getElementById('scenarioVerdict').textContent = verdict;
+
+  buildGrowthChart(gdpG, popG);
+}
+updateGrowthCalc();
+
+// ============================================================
+// INVESTMENT CHART
+// ============================================================
+new Chart(document.getElementById('investmentChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Pakistan\n(today)', 'Pakistan\n(target 2035)', 'Bangladesh\n(2020)', 'India\n(2023)', 'Vietnam\n(peak)', 'China\n(2005)'],
+    datasets: [{
+      label: 'Investment / GDP (%)',
+      data: [14, 28, 32, 31, 33, 42],
+      backgroundColor: [RED, BLUE + 'CC', AMBER, AMBER, GREEN, STEEL],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        max: 50,
+        title: { display: true, text: '% of GDP' },
+        grid: { color: '#F0F0F0' }
+      }
+    }
+  }
+});
+
+// ============================================================
+// ENERGY COST CHART
+// ============================================================
+new Chart(document.getElementById('energyChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Pakistan', 'India', 'Bangladesh', 'Thailand', 'Vietnam', 'China', 'Target\n(Thar SEZ)'],
+    datasets: [{
+      label: 'Industrial electricity (USD/kWh)',
+      data: [0.19, 0.10, 0.09, 0.10, 0.07, 0.08, 0.06],
+      backgroundColor: [RED, AMBER, AMBER, AMBER, GREEN, GREEN, BLUE + 'CC'],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        title: { display: true, text: 'USD / kWh' },
+        grid: { color: '#F0F0F0' },
+        ticks: { callback: v => '$' + v.toFixed(2) }
+      }
+    }
+  }
+});
+
+// ============================================================
+// ENERGY VIABILITY CHART
+// ============================================================
+new Chart(document.getElementById('energyViabilityChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Aluminium\nSmelting', 'Copper\nRefining', 'Steel\n(EAF)', 'Ferro-\nSilicon', 'Textiles', 'Food\nProcessing'],
+    datasets: [
+      {
+        label: 'Energy cost @ $0.19/kWh (Pakistan)',
+        data: [57, 31, 25, 64, 21, 16],
+        backgroundColor: RED + 'CC',
+        borderRadius: 3,
+      },
+      {
+        label: 'Energy cost @ $0.07/kWh (target)',
+        data: [21, 11, 9, 24, 8, 6],
+        backgroundColor: GREEN + 'CC',
+        borderRadius: 3,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        title: { display: true, text: '% of total production cost' },
+        grid: { color: '#F0F0F0' },
+        max: 70,
+        ticks: { callback: v => v + '%' }
+      }
+    }
+  }
+});
+
+// ============================================================
+// GVC PARTICIPATION CHART
+// ============================================================
+new Chart(document.getElementById('gvcChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Pakistan', 'Bangladesh', 'India', 'Indonesia', 'Philippines', 'Thailand', 'Malaysia', 'Vietnam'],
+    datasets: [{
+      label: 'GVC Participation Index (%)',
+      data: [26, 31, 36, 42, 48, 58, 57, 65],
+      backgroundColor: [RED, AMBER, AMBER, AMBER, GREEN, GREEN, GREEN, GREEN + 'CC'],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        max: 80, grid: { color: '#F0F0F0' },
+        title: { display: true, text: 'GVC Participation (%)' },
+        ticks: { callback: v => v + '%' }
+      },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ============================================================
+// EXPORT MIX CHART
+// ============================================================
+new Chart(document.getElementById('exportMixChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Textiles & Apparel', 'Food & Agriculture', 'Engineering Goods', 'Chemicals & Materials', 'Minerals', 'Other'],
+    datasets: [
+      {
+        label: 'Current (2024)',
+        data: [61, 15, 4, 6, 2, 12],
+        backgroundColor: [RED, AMBER, GREEN, STEEL, BLUE, LIGHT],
+        hoverOffset: 6,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      legend: { position: 'right', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } },
+      title: { display: true, text: 'Current export mix (2024)', font: { size: 11 }, padding: { bottom: 6 } }
+    }
+  }
+});
+
+// ============================================================
+// YIELD GAP CHART
+// ============================================================
+new Chart(document.getElementById('yieldChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Wheat (MT/ha)', 'Rice (MT/ha)', 'Cotton (MT/ha)', 'Sugarcane (MT/ha)', 'Maize (MT/ha)'],
+    datasets: [
+      {
+        label: 'Pakistan (current)',
+        data: [3.0, 3.9, 0.8, 55, 5.0],
+        backgroundColor: RED,
+        borderRadius: 3,
+      },
+      {
+        label: 'Best Practice / Regional Peers',
+        data: [5.2, 6.8, 1.6, 85, 9.2],
+        backgroundColor: GREEN,
+        borderRadius: 3,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: '#F0F0F0' }, title: { display: true, text: 'Yield (normalised to crop)' } }
+    }
+  }
+});
+
+// ============================================================
+// AGRI EXPORT CHART
+// ============================================================
+new Chart(document.getElementById('agriExportChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Today\n(2024)', 'Phase 1\n(2030)', 'Phase 2\n(2037)', 'Phase 3\n(2045)', 'Target\n(2050)'],
+    datasets: [
+      {
+        label: 'Commodities (raw)',
+        data: [4.2, 5.5, 6.0, 6.5, 7.0],
+        backgroundColor: AMBER,
+        borderRadius: 2,
+      },
+      {
+        label: 'Processed / Value-added',
+        data: [0.8, 3.5, 8.0, 14.0, 20.0],
+        backgroundColor: GREEN,
+        borderRadius: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: {
+        stacked: true,
+        title: { display: true, text: 'Agricultural exports (USD Billion)' },
+        grid: { color: '#F0F0F0' },
+        ticks: { callback: v => '$' + v + 'B' }
+      }
+    }
+  }
+});
+
+// ============================================================
+// TRAJECTORY CHART
+// ============================================================
+new Chart(document.getElementById('trajectoryChart'), {
+  type: 'line',
+  data: {
+    labels: [2024, 2026, 2028, 2030, 2032, 2035, 2038, 2041, 2044, 2047, 2050],
+    datasets: [
+      {
+        label: 'Total Exports — Status Quo ($B)',
+        data: [27, 29, 31, 33, 35, 38, 41, 44, 47, 50, 53],
+        borderColor: RED, borderWidth: 2, borderDash: [5,3], pointRadius: 3, fill: false,
+      },
+      {
+        label: 'Total Exports — Engineered Scenario ($B)',
+        data: [27, 32, 40, 50, 62, 78, 95, 108, 115, 118, 122],
+        borderColor: GREEN, borderWidth: 2.5, pointRadius: 3, fill: {target: 'origin', above: 'rgba(82,183,136,0.08)'},
+      },
+      {
+        label: 'Agricultural Exports ($B)',
+        data: [5, 6.5, 8.5, 11, 14, 18, 22, 24, 25, 26, 27],
+        borderColor: AMBER, borderWidth: 1.5, borderDash: [3,2], pointRadius: 2, fill: false,
+      },
+      {
+        label: 'Minerals & Metals ($B)',
+        data: [0.5, 0.5, 1.5, 3, 5, 8, 12, 16, 20, 22, 24],
+        borderColor: STEEL, borderWidth: 1.5, borderDash: [3,2], pointRadius: 2, fill: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        title: { display: true, text: 'USD Billion' },
+        grid: { color: '#F0F0F0' },
+        ticks: { callback: v => '$' + v + 'B' }
+      }
+    }
+  }
+});
+
+// ============================================================
+// EXPORT COMPOSITION EVOLUTION CHART
+// ============================================================
+new Chart(document.getElementById('exportCompositionChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2024', '2028', '2032', '2035', '2040', '2045', '2050'],
+    datasets: [
+      { label: 'Textiles & Apparel',         data: [17, 18, 19, 22, 24, 25, 25], backgroundColor: '#9B2335CC', borderRadius: 2 },
+      { label: 'Food Processing & Agro',      data: [5,  7, 10, 14, 20, 24, 27], backgroundColor: '#C8923ACC', borderRadius: 2 },
+      { label: 'Minerals & Metals',           data: [0.5, 2, 5, 9, 14, 19, 24], backgroundColor: '#334155CC', borderRadius: 2 },
+      { label: 'Engineering & Auto',          data: [1,  2, 5,  9, 14, 17, 18], backgroundColor: '#52B788CC', borderRadius: 2 },
+      { label: 'Chemicals & Pharma',          data: [2,  3, 5,  8, 11, 13, 13], backgroundColor: '#2563EBCC', borderRadius: 2 },
+      { label: 'Technology & Electronics',    data: [0.5, 1, 2, 4,  7,  9,  8], backgroundColor: '#7C3AEDCC', borderRadius: 2 },
+      { label: 'Other',                       data: [1.7, 7, 10, 12, 5, 11, 7], backgroundColor: '#E5E5E5', borderRadius: 2 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } } },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, title: { display: true, text: 'USD Billion' }, grid: { color: '#F0F0F0' }, ticks: { callback: v => '$' + v + 'B' } }
+    }
+  }
+});
+
+// ============================================================
+// CAPEX PHASING CHART
+// ============================================================
+new Chart(document.getElementById('capexPhasingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034','2035','2036','2037','2038','2039','2040','2041','2042','2043','2044','2045','2046','2047','2048','2049','2050'],
+    datasets: [
+      {
+        label: 'Minerals & Metals Capex',
+        data: [0.5,0.8,1.0,1.5,1.8,2.0,2.2,2.5,2.8,3.0,3.2,3.4,3.5,3.4,3.2,3.0,2.8,2.5,2.2,2.0,1.8,1.6,1.4,1.2,1.0,0.8],
+        backgroundColor: '#334155CC', borderRadius: 2,
+      },
+      {
+        label: 'Food & Agro Processing Capex',
+        data: [0.2,0.3,0.4,0.5,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.1,1.0,1.0,0.9,0.9,0.8,0.7,0.7,0.7,0.6,0.5,0.5,0.4,0.4,0.3],
+        backgroundColor: '#C8923ACC', borderRadius: 2,
+      },
+      {
+        label: 'Chemicals Capex',
+        data: [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.1,1.0,1.0,0.9,0.8,0.8,0.7,0.6,0.5,0.5,0.4,0.4,0.3,0.3,0.2],
+        backgroundColor: '#2563EBCC', borderRadius: 2,
+      },
+      {
+        label: 'Engineering/Auto & Other',
+        data: [0.2,0.3,0.3,0.4,0.5,0.5,0.6,0.7,0.8,0.9,0.9,1.0,1.0,0.9,0.9,0.8,0.7,0.7,0.6,0.6,0.5,0.5,0.4,0.4,0.3,0.3],
+        backgroundColor: '#52B788CC', borderRadius: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { maxTicksLimit: 9, font: { size: 9 } } },
+      y: { stacked: true, title: { display: true, text: '$B / year' }, grid: { color: '#F0F0F0' }, ticks: { callback: v => '$' + v + 'B' } }
+    }
+  }
+});
+
+// ============================================================
+// ASSET TURNOVER BUBBLE CHART
+// ============================================================
+new Chart(document.getElementById('assetTurnoverChart'), {
+  type: 'bubble',
+  data: {
+    datasets: [
+      { label: 'Textiles',          data: [{ x: 1.35, y: 25,  r: 12 }], backgroundColor: '#9B233588' },
+      { label: 'Food Processing',   data: [{ x: 1.55, y: 27,  r: 15 }], backgroundColor: '#C8923A88' },
+      { label: 'Minerals & Metals', data: [{ x: 0.42, y: 24,  r: 28 }], backgroundColor: '#33415588' },
+      { label: 'Eng & Auto',        data: [{ x: 0.85, y: 18,  r: 18 }], backgroundColor: '#52B78888' },
+      { label: 'Chemicals',         data: [{ x: 0.52, y: 13,  r: 20 }], backgroundColor: '#2563EB88' },
+      { label: 'Technology',        data: [{ x: 2.10, y: 8,   r: 8  }], backgroundColor: '#7C3AED88' },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: Turnover ${ctx.raw.x}× · Export $${ctx.raw.y}B` } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'Asset Turnover Ratio (Revenue ÷ Fixed Assets)' }, min: 0, max: 2.8, grid: { color: '#F0F0F0' } },
+      y: { title: { display: true, text: '2050 Export Target ($B)' }, grid: { color: '#F0F0F0' }, ticks: { callback: v => '$' + v + 'B' } }
+    }
+  }
+});
+
+// ============================================================
+// CUMULATIVE CAPEX STACKED AREA CHART
+// ============================================================
+new Chart(document.getElementById('cumulativeCapexChart'), {
+  type: 'line',
+  data: {
+    labels: [2025, 2027, 2030, 2032, 2035, 2038, 2040, 2043, 2045, 2048, 2050],
+    datasets: [
+      { label: 'Minerals & Metals (cumulative)',   data: [0.5, 2.3, 8.1, 13.3, 23.0, 33.4, 39.8, 46.0, 49.6, 52.8, 54.0], fill: true, backgroundColor: '#33415522', borderColor: '#334155', borderWidth: 2, pointRadius: 2 },
+      { label: 'Chemicals (cumulative)',            data: [0.1, 0.6, 2.2, 4.2, 9.0, 14.7, 18.2, 22.1, 24.1, 26.1, 27.0], fill: true, backgroundColor: '#2563EB22', borderColor: '#2563EB', borderWidth: 2, pointRadius: 2 },
+      { label: 'Eng/Auto (cumulative)',             data: [0.2, 0.8, 2.7, 4.7, 9.5, 14.7, 17.7, 21.2, 23.0, 24.8, 25.0], fill: true, backgroundColor: '#52B78822', borderColor: '#52B788', borderWidth: 2, pointRadius: 2 },
+      { label: 'Food Processing (cumulative)',      data: [0.2, 0.9, 3.1, 5.3, 10.0, 15.0, 18.0, 20.5, 22.0, 23.5, 24.0], fill: true, backgroundColor: '#C8923A22', borderColor: '#C8923A', borderWidth: 2, pointRadius: 2 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 10, font: { size: 10 } } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { title: { display: true, text: 'Cumulative investment ($B)' }, grid: { color: '#F0F0F0' }, ticks: { callback: v => '$' + v + 'B' } }
+    }
+  }
+});
+
+// ============================================================
+// ENGINEERING TALENT DEMAND CHART
+// ============================================================
+new Chart(document.getElementById('engTalentChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Textiles', 'Food & Agro', 'Minerals\n& Metals', 'Eng & Auto\nComponents', 'Chemicals\n& Pharma', 'Technology\n& Electronics', 'Cold Chain\n& Logistics', 'Cross-sector\nQA/HSE/Auto'],
+    datasets: [
+      { label: 'Engineers needed by 2050', data: [4500, 7800, 10100, 14800, 8450, 8800, 3500, 20000], backgroundColor: [RED, AMBER, STEEL, GREEN, BLUE, '#7C3AED', GREEN, '#64748B'].map(c => c + 'CC'), borderRadius: 3 }
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'Engineers (direct employment)' }, grid: { color: '#F0F0F0' }, ticks: { callback: v => v.toLocaleString() } },
+      y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// ============================================================
+// ENGINEERING SUPPLY vs DEMAND CHART
+// ============================================================
+new Chart(document.getElementById('engSupplyChart'), {
+  type: 'line',
+  data: {
+    labels: [2025, 2028, 2030, 2033, 2035, 2038, 2040, 2043, 2045, 2048, 2050],
+    datasets: [
+      {
+        label: 'Mfg engineering demand (cumulative positions)',
+        data: [5000, 9000, 14000, 22000, 30000, 42000, 52000, 63000, 68000, 74000, 78000],
+        borderColor: RED, borderWidth: 2.5, pointRadius: 3, fill: false,
+      },
+      {
+        label: 'Supply: BAU (no policy change)',
+        data: [4000, 7000, 10000, 13500, 17000, 21000, 25000, 30000, 34000, 38000, 42000],
+        borderColor: AMBER, borderWidth: 2, borderDash: [5,3], pointRadius: 3, fill: false,
+      },
+      {
+        label: 'Supply: With curriculum reform + diaspora',
+        data: [4000, 8000, 13000, 21000, 29500, 41000, 51000, 62000, 68000, 74000, 78000],
+        borderColor: GREEN, borderWidth: 2, pointRadius: 3, fill: {target: 'origin', above: 'rgba(82,183,136,0.06)'},
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 10, font: { size: 10 } } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { title: { display: true, text: 'Cumulative engineering positions' }, grid: { color: '#F0F0F0' }, ticks: { callback: v => v.toLocaleString() } }
+    }
+  }
+});
+
+// ============================================================
+// BCG SCENARIO TAB SWITCHER
+// ============================================================
+function showScenario(key) {
+  ['ai','blocs','climate','darwin'].forEach(k => {
+    const panel = document.getElementById('bcg-' + k);
+    if (panel) panel.style.display = k === key ? 'block' : 'none';
+  });
+  document.querySelectorAll('.bcg-tab').forEach((btn, i) => {
+    const keys = ['ai','blocs','climate','darwin'];
+    const colors = ['#FFF8EE','#F5F0FF','#FFF5EB','#EFF6FF'];
+    const textColors = ['#92400E','#6D28D9','#B45309','#1D4ED8'];
+    if (keys[i] === key) {
+      btn.style.background = colors[i];
+      btn.style.color = textColors[i];
+    } else {
+      btn.style.background = '#FAFAFA';
+      btn.style.color = '#999';
+    }
+  });
+}
+
+// ============================================================
+// BCG PAKISTAN GDP TRAJECTORY CHART (4 SCENARIOS)
+// ============================================================
+new Chart(document.getElementById('bcgGDPChart'), {
+  type: 'line',
+  data: {
+    labels: [2025, 2028, 2030, 2033, 2035, 2038, 2040, 2043, 2045, 2048, 2050],
+    datasets: [
+      { label: 'AI Abundance world', data: [1600,2050,2500,3200,4000,5100,6000,7000,7500,7700,7800], borderColor: '#C8923A', borderWidth: 2.5, pointRadius: 3, fill: false },
+      { label: 'Digital Darwinism world', data: [1600,1950,2300,2850,3400,4200,4800,5500,5900,6100,6200], borderColor: '#2563EB', borderWidth: 2, borderDash: [5,2], pointRadius: 3, fill: false },
+      { label: 'Climate Coalition world', data: [1600,1850,2100,2600,3000,3600,4100,4500,4700,4800,4800], borderColor: '#B45309', borderWidth: 2, borderDash: [5,2], pointRadius: 3, fill: false },
+      { label: 'Battling Blocs world', data: [1600,1750,1900,2200,2450,2750,2950,3100,3150,3200,3200], borderColor: '#7C3AED', borderWidth: 1.5, borderDash: [4,3], pointRadius: 3, fill: false },
+      { label: 'Upper-Middle Threshold ($4,466)', data: Array(11).fill(4466), borderColor: STEEL, borderWidth: 1, borderDash: [6,4], pointRadius: 0, fill: false }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { title: { display: true, text: 'Pakistan GDP per capita (USD)' }, grid: { color: '#F0F0F0' }, ticks: { callback: v => '$' + v.toLocaleString() } }
+    }
+  }
+});
+
+// ============================================================
+// BCG SCENARIO RADAR: PAKISTAN STRATEGIC ASSET VALUE
+// ============================================================
+new Chart(document.getElementById('bcgRadarChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Copper\n(Reko Diq)', 'Agri\nEndowment', 'Youth\nWorkforce', 'Energy\nReform', 'Engineering\nTalent', 'Geographic\nPosition', 'Climate\nResilience', 'Institutional\nQuality'],
+    datasets: [
+      { label: 'AI Abundance', data: [9,7,9,8,7,7,4,6], borderColor: '#C8923A', backgroundColor: '#C8923A18', borderWidth: 2, pointRadius: 3 },
+      { label: 'Battling Blocs', data: [8,8,7,7,6,9,5,5], borderColor: '#7C3AED', backgroundColor: '#7C3AED18', borderWidth: 2, pointRadius: 3 },
+      { label: 'Climate Coalition', data: [9,7,6,9,8,6,6,7], borderColor: '#B45309', backgroundColor: '#B4530918', borderWidth: 2, pointRadius: 3 },
+      { label: 'Digital Darwinism', data: [8,6,8,7,7,8,3,4], borderColor: '#2563EB', backgroundColor: '#2563EB18', borderWidth: 2, pointRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } } },
+    scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, font: { size: 9 } }, grid: { color: '#F0F0F0' }, pointLabels: { font: { size: 9 } } } }
+  }
+});
+
+// ============================================================
+// BCG GLOBAL GDP COMPARISON CHART
+// ============================================================
+new Chart(document.getElementById('bcgGlobalGDPChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Historical\nPeak (1975)', 'Current\n(2024)', 'BCG: AI\nAbundance', 'BCG: Digital\nDarwinism', 'BCG: Climate\nCoalition', 'BCG: Battling\nBlocs', 'Pakistan\nRequired'],
+    datasets: [{ label: '25-year rolling GDP CAGR (%)',
+      data: [4.8, 3.4, 5.0, 4.0, 2.5, 1.8, 7.5],
+      backgroundColor: [STEEL+'CC', STEEL+'CC', '#C8923ACC', '#2563EBCC', '#B45309CC', '#7C3AEDCC', RED],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { title: { display: true, text: 'GDP growth rate (%)' }, grid: { color: '#F0F0F0' }, ticks: { callback: v => v + '%' }, max: 9 }
+    }
+  }
+});
+
+// ============================================================
+(function() {
+  // [Country, Energy kWh per capita, GDP per capita USD, label, color]
+  const countries = [
+    ['Pakistan',      500,    1558,  true,  RED],
+    ['Bangladesh',    500,    2688,  true,  AMBER],
+    ['India',        1200,    2612,  true,  AMBER],
+    ['Vietnam',      2500,    4316,  true,  GREEN],
+    ['Indonesia',    1100,    4788,  false, GREEN],
+    ['Philippines',   980,    3623,  false, GREEN],
+    ['Egypt',        1800,    3971,  false, AMBER],
+    ['Morocco',      1050,    3680,  false, AMBER],
+    ['Nigeria',       160,    2185,  false, RED],
+    ['Myanmar',       330,    1166,  false, RED],
+    ['Thailand',     2900,    7805,  true,  GREEN],
+    ['Malaysia',     5000,   12364,  true,  STEEL],
+    ['China',        5500,   13136,  true,  STEEL],
+    ['Brazil',       2700,    8917,  false, STEEL],
+    ['Mexico',       2200,   10948,  false, STEEL],
+    ['Turkey',       3500,   15028,  false, '#2563EB'],
+    ['S. Korea',    10600,   33590,  true,  '#2563EB'],
+    ['Germany',      6700,   51380,  true,  '#2563EB'],
+    ['USA',         13000,   80030,  true,  '#2563EB'],
+    ['Japan',        7700,   33821,  false, '#2563EB'],
+    ['UAE',         16500,   49000,  false, STEEL],
+    ['Pak Target\n2050', 3000, 6000, true,  '#52B788'],
+  ];
+
+  const scatterData = countries.map(c => ({ x: c[1], y: c[2], label: c[0], showLabel: c[3], color: c[4] }));
+
+  new Chart(document.getElementById('energyGDPScatter'), {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        label: 'Countries',
+        data: scatterData,
+        backgroundColor: scatterData.map(d => d.color + 'CC'),
+        borderColor: scatterData.map(d => d.color),
+        borderWidth: 1,
+        pointRadius: scatterData.map(d => d.label === 'Pakistan' ? 9 : d.label.includes('Target') ? 9 : 6),
+        pointHoverRadius: 9,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const d = ctx.raw;
+              return `${d.label}: ${d.x.toLocaleString()} kWh/capita · $${d.y.toLocaleString()} GDP/capita`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Electricity consumption per capita (kWh/year)' },
+          grid: { color: '#F5F5F5' },
+          ticks: { callback: v => v.toLocaleString() }
+        },
+        y: {
+          title: { display: true, text: 'GDP per capita (USD)' },
+          grid: { color: '#F5F5F5' },
+          ticks: { callback: v => '$' + v.toLocaleString() }
+        }
+      }
+    },
+    plugins: [{
+      id: 'countryLabels',
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        ctx.save();
+        chart.data.datasets[0].data.forEach((pt, i) => {
+          if (!pt.showLabel) return;
+          const meta = chart.getDatasetMeta(0);
+          const el = meta.data[i];
+          if (!el) return;
+          const { x, y } = el.getProps(['x','y'], true);
+          ctx.font = pt.label === 'Pakistan' || pt.label.includes('Target') ? 'bold 10px sans-serif' : '10px sans-serif';
+          ctx.fillStyle = pt.color;
+          ctx.textAlign = 'left';
+          ctx.fillText(pt.label, x + 8, y - 4);
+        });
+        ctx.restore();
+      }
+    }]
+  });
+})();
+
+// ============================================================
+// COOLING DEMAND CHART
+// ============================================================
+new Chart(document.getElementById('coolingDemandChart'), {
+  type: 'line',
+  data: {
+    labels: [2024, 2026, 2028, 2030, 2033, 2036, 2040, 2045, 2050],
+    datasets: [
+      {
+        label: 'Residential cooling (GWh/yr)',
+        data: [28000, 32000, 38000, 45000, 57000, 72000, 95000, 128000, 165000],
+        borderColor: RED, backgroundColor: RED + '22', fill: true, borderWidth: 2, pointRadius: 3,
+      },
+      {
+        label: 'Commercial & Industrial cooling (GWh/yr)',
+        data: [12000, 14500, 17000, 21000, 27000, 35000, 48000, 65000, 82000],
+        borderColor: AMBER, backgroundColor: AMBER + '22', fill: true, borderWidth: 2, pointRadius: 3,
+      },
+      {
+        label: 'Agricultural cold chain demand (GWh/yr)',
+        data: [1200, 2000, 3500, 6000, 10000, 16000, 25000, 36000, 45000],
+        borderColor: GREEN, borderWidth: 1.5, borderDash: [4,3], fill: false, pointRadius: 3,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        title: { display: true, text: 'GWh / year' },
+        grid: { color: '#F0F0F0' },
+        ticks: { callback: v => (v/1000).toFixed(0) + 'K' }
+      }
+    }
+  }
+});
+
+// ============================================================
+// HEAT DAYS CHART
+// ============================================================
+new Chart(document.getElementById('heatDaysChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Jacobabad', 'Sibi', 'Sukkur', 'Multan', 'Hyderabad', 'Lahore', 'Karachi'],
+    datasets: [
+      {
+        label: 'Days above 45°C (historical avg 2000–2020)',
+        data: [38, 29, 24, 18, 12, 8, 3],
+        backgroundColor: AMBER + 'CC', borderRadius: 3,
+      },
+      {
+        label: 'Projected days above 45°C (2040–2050, +2.7°C scenario)',
+        data: [72, 58, 48, 38, 28, 20, 12],
+        backgroundColor: RED + 'CC', borderRadius: 3,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' } },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        title: { display: true, text: 'Days per year' },
+        grid: { color: '#F0F0F0' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
