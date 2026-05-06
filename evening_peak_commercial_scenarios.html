@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evening Peak Demand — Commercial Closing Scenario Analysis · Pakistan Power Sector</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #FFFFFF;
+  --secondary: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --success: #52B788;
+  --warning: #9B2335;
+  --commercial: #C8923A;
+  --residential: #52B788;
+  --industrial: #4A7FB5;
+  --agriculture: #8BC34A;
+  --others: #9E9E9E;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: var(--primary);
+  color: #2D2D2D;
+  line-height: 1.6;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+/* Header */
+.page-header {
+  border-bottom: 1px solid var(--border);
+  padding: 2.5rem 0 2rem;
+  margin-bottom: 0;
+}
+.page-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.75rem;
+}
+.page-title {
+  font-family: Georgia, serif; font-size: 32px; font-weight: 400;
+  color: var(--text-primary); line-height: 1.2; margin-bottom: 0.75rem;
+}
+.page-sub {
+  font-size: 14px; color: var(--text-secondary); max-width: 780px; line-height: 1.6;
+}
+.meta-row {
+  display: flex; gap: 2rem; margin-top: 1.25rem; flex-wrap: wrap;
+}
+.meta-item { font-size: 12px; color: var(--text-tertiary); }
+.meta-item span { color: var(--text-secondary); font-weight: 500; }
+
+/* KPI row */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem;
+  padding: 2rem 0; border-bottom: 1px solid var(--border);
+}
+.kpi-card {
+  border: 1px solid var(--border); padding: 1.25rem 1rem;
+  transition: border-color 0.2s;
+}
+.kpi-card:hover { border-color: var(--accent); }
+.kpi-num {
+  font-family: Georgia, serif; font-size: 26px; font-weight: 400;
+  color: var(--text-primary); line-height: 1;
+}
+.kpi-unit { font-size: 13px; color: var(--text-secondary); margin-left: 2px; }
+.kpi-label {
+  font-size: 11px; color: var(--text-tertiary); margin-top: 0.5rem;
+  letter-spacing: 0.07em; text-transform: uppercase; line-height: 1.4;
+}
+.kpi-sub { font-size: 12px; color: var(--success); margin-top: 0.25rem; font-weight: 500; }
+.kpi-sub.warn { color: var(--warning); }
+.kpi-sub.amber { color: var(--accent); }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 0; border-bottom: 1px solid var(--border);
+  margin-top: 2.5rem; overflow-x: auto;
+}
+.tab-btn {
+  background: none; border: none; padding: 0.875rem 1.5rem;
+  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  white-space: nowrap; transition: all 0.2s; letter-spacing: 0.04em;
+}
+.tab-btn:hover { color: var(--text-primary); }
+.tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+
+.tab-content { display: none; padding: 2.5rem 0; }
+.tab-content.active { display: block; }
+
+/* Section headers */
+.section-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: Georgia, serif; font-size: 22px; font-weight: 400;
+  color: var(--text-primary); margin-bottom: 1.25rem; line-height: 1.2;
+}
+
+/* Layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+.panel {
+  background: var(--secondary); border: 1px solid var(--border);
+  padding: 1.5rem; margin-bottom: 1.5rem;
+}
+.panel-title {
+  font-size: 13px; font-weight: 600; color: var(--text-primary);
+  margin-bottom: 1rem; letter-spacing: 0.02em;
+}
+.chart-wrap { position: relative; }
+
+/* Insight boxes */
+.insights-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.insight-box {
+  background: var(--secondary); border: 1px solid var(--border);
+  border-top: 3px solid var(--success); padding: 1.25rem;
+}
+.insight-box.amber { border-top-color: var(--accent); }
+.insight-box.red { border-top-color: var(--warning); }
+.insight-box.blue { border-top-color: #4A7FB5; }
+.insight-num {
+  font-family: Georgia, serif; font-size: 26px; font-weight: 400;
+  color: var(--text-primary); line-height: 1;
+}
+.insight-text { font-size: 12px; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.5; }
+
+/* Tables */
+.est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.est-table th {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+  color: var(--text-primary); text-align: left; padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border); background: var(--primary);
+  text-transform: uppercase;
+}
+.est-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); color: #2D2D2D; }
+.est-table tr:hover td { background: var(--secondary); }
+.est-table .peak-row td { background: #FFF8F0; font-weight: 500; }
+.est-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 2px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+}
+.badge-green { background: rgba(82,183,136,0.15); color: #2a7a55; }
+.badge-amber { background: rgba(200,146,58,0.15); color: #8a5f10; }
+.badge-red   { background: rgba(155,35,53,0.12); color: var(--warning); }
+
+/* Verdicts and narrative */
+.narrative {
+  font-size: 14px; color: #3D3D3D; line-height: 1.7; margin: 1.5rem 0;
+}
+.narrative p + p { margin-top: 0.75rem; }
+.verdict {
+  background: var(--secondary); border: 1px solid var(--border);
+  border-left: 4px solid var(--accent); padding: 1.25rem 1.5rem; margin: 1.5rem 0;
+}
+.verdict-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.verdict-text { font-size: 13px; color: #2D2D2D; line-height: 1.7; }
+
+/* Scenario cards */
+.scenario-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+.scenario-card {
+  border: 1px solid var(--border); padding: 1.5rem;
+  cursor: pointer; transition: all 0.2s;
+}
+.scenario-card:hover { border-color: var(--accent); }
+.scenario-card.active { border-color: var(--accent); border-top: 3px solid var(--accent); }
+.sc-title { font-family: Georgia, serif; font-size: 18px; font-weight: 400; color: var(--text-primary); }
+.sc-sub { font-size: 12px; color: var(--text-secondary); margin-top: 0.25rem; margin-bottom: 1rem; }
+.sc-stat { margin-top: 0.75rem; }
+.sc-stat-val { font-size: 22px; font-family: Georgia, serif; color: var(--text-primary); }
+.sc-stat-lbl { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Legend */
+.legend { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 12px; color: var(--text-secondary); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Source footer */
+.source-bar {
+  border-top: 1px solid var(--border); padding: 1.5rem 0; margin-top: 3rem;
+  font-size: 11px; color: var(--text-tertiary); line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .two-col, .three-col, .scenario-cards, .insights-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .page-title { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ─── HEADER ─── -->
+<div class="page-header">
+  <div class="page-label">Pakistan Power Sector · Load Analytics</div>
+  <h1 class="page-title">Evening Peak Demand Decomposition<br>& Commercial Closing Scenarios</h1>
+  <p class="page-sub">Systematic attribution of evening demand growth (19:00–01:00) across consumer sectors — residential, commercial, industrial — and quantification of peak shaving potential under three commercial closing-time interventions. Based on ISMO hourly metered demand data (Jul 2024–Jun 2025) and NEPRA State of Industry Report 2024 sector consumption shares.</p>
+  <div class="meta-row">
+    <div class="meta-item">System: <span>NTDC Grid (Excl. KE)</span></div>
+    <div class="meta-item">Period: <span>FY 2024-25 Actual (8,760 hrs)</span></div>
+    <div class="meta-item">Sector Data: <span>NEPRA SoI 2024, FY2024 Actuals</span></div>
+    <div class="meta-item">Author: <span>Ammar H. Khan</span></div>
+    <div class="meta-item">Updated: <span>May 2026</span></div>
+  </div>
+</div>
+
+<!-- ─── KPI ROW ─── -->
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="kpi-num">15,591<span class="kpi-unit">MW</span></div>
+    <div class="kpi-label">Annual Avg System Peak (H20, Excl. KE)</div>
+    <div class="kpi-sub">+17,737 MW national (incl. KE)</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-num">8.3<span class="kpi-unit">%</span></div>
+    <div class="kpi-label">Commercial Share of National Consumption</div>
+    <div class="kpi-sub amber">9,195 GWh / FY2024</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-num">12.6<span class="kpi-unit">%</span></div>
+    <div class="kpi-label">Commercial Share at H19 Peak (annual avg)</div>
+    <div class="kpi-sub amber">Exceeds annual average by 4.3 pp</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-num">1,663<span class="kpi-unit">MW</span></div>
+    <div class="kpi-label">Peak Reduction: Close at 8pm (Annual Avg)</div>
+    <div class="kpi-sub">9.4% of national system demand</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-num">2,245<span class="kpi-unit">MW</span></div>
+    <div class="kpi-label">Summer Peak Reduction: Close at 8pm</div>
+    <div class="kpi-sub warn">10.3% of summer peak system</div>
+  </div>
+</div>
+
+<!-- ─── TABS ─── -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('overview',this)">System Overview</button>
+  <button class="tab-btn" onclick="switchTab('decomp',this)">Sector Decomposition</button>
+  <button class="tab-btn" onclick="switchTab('evening',this)">Evening Window</button>
+  <button class="tab-btn" onclick="switchTab('scenarios',this)">Closing Scenarios</button>
+  <button class="tab-btn" onclick="switchTab('seasonal',this)">Seasonal Analysis</button>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 1 — SYSTEM OVERVIEW                        -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-overview" class="tab-content active">
+  <div class="section-label">System Context</div>
+  <h2 class="section-title">Pakistan's Evening Peak: Structural Characteristics</h2>
+
+  <div class="narrative">
+    <p>Pakistan's power grid exhibits a persistent evening demand spike that is structurally distinct from most developed markets. The NTDC system (excluding Karachi/KE) carries an average annual peak of <strong>15,591 MW</strong> at H20 (20:00–21:00), against a midday trough of ~12,670 MW at H12 — a <strong>2,921 MW intra-day swing</strong> on annual average. This swing is driven by three overlapping demand surges: residential cooking and air-conditioning load building through H18–H22, commercial activity peaking in bazaars and restaurants between H19–H21, and deferred post-shedding rebound demand.</p>
+    <p>Critically, the evening peak hour <em>shifts with the season</em>. In winter (Dec–Feb), peak arrives early at H17–H18 (~12,367 MW). In summer (Jun–Sep), the peak migrates to H22–H23 (~20,081 MW) as residential AC load dominates well into the night. Commercial load peaks earlier than residential in all seasons, making commercial closing mandates a structurally targeted intervention for the H20–H22 window.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Annual Average System Demand Profile — All 24 Hours (MW, Excl. KE)</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartAnnual"></canvas></div>
+      <div class="legend" style="margin-top:1rem">
+        <div class="legend-item"><div class="legend-dot" style="background:#4A7FB5"></div>NTDC System (Excl. KE)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#E5E5E5"></div>Daytime Trough Band</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Seasonal Peak Hour Comparison (MW, Excl. KE)</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartSeasonal"></canvas></div>
+      <div class="legend" style="margin-top:1rem">
+        <div class="legend-item"><div class="legend-dot" style="background:#C8923A"></div>Summer</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#52B788"></div>Spring</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#4A7FB5"></div>Autumn</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#9B2335"></div>Winter</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Key Structural Finding</div>
+    <div class="verdict-text">The evening ramp from daytime trough to peak averages <strong>2,921 MW annually</strong>, rising to <strong>4,519 MW in spring</strong> (the most pronounced ramp season, when residential AC starts but industrial demand remains high). Across all seasons, the H18–H21 window is the primary ramp phase — the window in which commercial load is at maximum share of the system and during which commercial closing interventions would have maximum impact.</div>
+  </div>
+
+  <table class="est-table">
+    <thead>
+      <tr>
+        <th>Season</th>
+        <th>Peak Hour</th>
+        <th class="num">Peak MW (Excl. KE)</th>
+        <th class="num">Trough MW</th>
+        <th class="num">Evening Ramp</th>
+        <th class="num">Ramp %</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="peak-row">
+        <td>Summer (Jun–Sep)</td>
+        <td>H23 (11pm–12am)</td>
+        <td class="num">20,081</td>
+        <td class="num">16,448</td>
+        <td class="num">3,633</td>
+        <td class="num">+22.1%</td>
+      </tr>
+      <tr>
+        <td>Spring (Mar–May)</td>
+        <td>H20 (8pm–9pm)</td>
+        <td class="num">15,985</td>
+        <td class="num">11,466</td>
+        <td class="num">4,519</td>
+        <td class="num">+39.4%</td>
+      </tr>
+      <tr>
+        <td>Autumn (Oct–Nov)</td>
+        <td>H17 (5pm–6pm)</td>
+        <td class="num">13,540</td>
+        <td class="num">11,228</td>
+        <td class="num">2,245</td>
+        <td class="num">+20.0%</td>
+      </tr>
+      <tr>
+        <td>Winter (Dec–Feb)</td>
+        <td>H18 (6pm–7pm)</td>
+        <td class="num">12,367</td>
+        <td class="num">9,511</td>
+        <td class="num">2,856</td>
+        <td class="num">+30.0%</td>
+      </tr>
+      <tr class="peak-row">
+        <td><strong>Full Year Average</strong></td>
+        <td>H20 (8pm–9pm)</td>
+        <td class="num"><strong>15,591</strong></td>
+        <td class="num">12,670</td>
+        <td class="num">2,921</td>
+        <td class="num">+23.1%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="narrative" style="margin-top:1.5rem;">
+    <p><strong>Monthly evolution (Jul 2024–Jan 2026):</strong> System demand has grown materially year-on-year. July 2025 peak demand (H23 = 21,238 MW excl. KE) exceeded July 2024 (H23 = 21,386 MW) at similar levels, while January 2026 (H18 = 14,236 MW) significantly exceeds January 2025 (H18 = 12,816 MW), indicating structural demand recovery following the 2023–24 contraction driven by tariff shock.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 2 — SECTOR DECOMPOSITION                   -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-decomp" class="tab-content">
+  <div class="section-label">Demand Attribution Analysis</div>
+  <h2 class="section-title">24-Hour Demand Decomposition by Consumer Sector</h2>
+
+  <div class="insights-grid">
+    <div class="insight-box">
+      <div class="insight-num">49.4%</div>
+      <div class="insight-text"><strong>Residential</strong> — 54,911 GWh FY2024. Drives the evening peak; AC and cooking create sharp H19–H22 spike</div>
+    </div>
+    <div class="insight-box blue">
+      <div class="insight-num">25.0%</div>
+      <div class="insight-text"><strong>Industrial</strong> — 27,830 GWh FY2024. Relatively flat; some evening reduction as day-shifts end H17 onwards</div>
+    </div>
+    <div class="insight-box amber">
+      <div class="insight-num">8.3%</div>
+      <div class="insight-text"><strong>Commercial</strong> — 9,195 GWh FY2024. Concentrated 10am–11pm; peak share EXCEEDS annual average in H19–H20</div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-num">7.7%</div>
+      <div class="insight-text"><strong>Agriculture</strong> — 8,578 GWh FY2024. Pumping-driven; dual morning/evening pattern; minimal urban peak contribution</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Stacked Sector Demand — All 24 Hours (Annual Average MW, National)</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="chartStacked"></canvas></div>
+    <div class="legend" style="margin-top:1rem">
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(82,183,136,0.8)"></div>Residential</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(74,127,181,0.8)"></div>Industrial</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(200,146,58,0.8)"></div>Commercial</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(139,195,74,0.8)"></div>Agriculture</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(158,158,158,0.8)"></div>Others</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Core Attribution Insight</div>
+    <div class="verdict-text">The evening demand surge from H12 trough to H20 peak is dominated by <strong>residential load</strong>, which adds an estimated ~4,100 MW between noon and 8pm (cooking onset, AC demand, lighting). <strong>Commercial load</strong> contributes an additional ~750 MW of the evening ramp — a structurally significant but secondary contribution. <strong>Industrial load falls</strong> by ~375–525 MW from trough to peak as day-shift operations wind down, partially offsetting the residential and commercial increases. The net ramp is therefore a residential-commercial surge against an industrial retreat.</div>
+  </div>
+
+  <div class="section-label" style="margin-top:2rem">Detailed Attribution</div>
+  <table class="est-table">
+    <thead>
+      <tr>
+        <th>Hour</th>
+        <th class="num">Residential MW</th>
+        <th class="num">Commercial MW</th>
+        <th class="num">Industrial MW</th>
+        <th class="num">Agriculture MW</th>
+        <th class="num">Others MW</th>
+        <th class="num">Total MW</th>
+        <th class="num">Com% of Total</th>
+      </tr>
+    </thead>
+    <tbody id="decomp-table-body">
+    </tbody>
+  </table>
+  <p class="narrative" style="font-size:12px; color:var(--text-tertiary); margin-top:0.75rem;">† National totals (incl. KE). Load shapes applied to FY2024 NEPRA sector consumption data. Commercial load shape calibrated to Pakistan bazaar/restaurant/retail operating patterns (10am–11pm). Industrial shape reflects continuous process + day-shift mix.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 3 — EVENING WINDOW                         -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-evening" class="tab-content">
+  <div class="section-label">Peak Period Focus</div>
+  <h2 class="section-title">Evening Window (19:00–01:00): Sector Attribution at Each Hour</h2>
+
+  <div class="narrative">
+    <p>The critical insight for commercial closing policy is not the annual average commercial share — it is the <strong>within-peak-window share</strong>. Commercial consumption constitutes 8.3% of annual billed units nationally, but at H19–H20 its share of the system load rises to <strong>12.5–12.6%</strong> (national, annual average). In summer, with commercial air-conditioning adding ~35% to the commercial sector's demand, this share rises further to <strong>13.7–14.3%</strong> at those hours.</p>
+    <p>More importantly, commercial load's <em>hour-by-hour profile</em> is distinct: it peaks earlier in the evening than residential (bazaars/restaurants peak H19–H20) and decays faster after H21. Residential demand by contrast remains elevated through H22–H23 (AC compressors running all night in summer). This temporal separation makes targeted commercial closures a precise intervention: they affect peak commercial load without disturbing residential behaviour.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Sector Share of Demand — Evening Window H18–H01 (Annual Average)</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartEveShare"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Commercial MW vs Residential MW — H18 to H01</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartComRes"></canvas></div>
+    </div>
+  </div>
+
+  <div class="insights-grid">
+    <div class="insight-box amber">
+      <div class="insight-num">12.6%</div>
+      <div class="insight-text">Commercial share of national system at H19 (7–8pm) — vs. 8.3% annual average. Peaks 4.3 pp above average</div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-num">+756 MW</div>
+      <div class="insight-text">Commercial evening ramp (H12 trough → H19/H20 peak). Structural contribution to the evening demand surge</div>
+    </div>
+    <div class="insight-box blue">
+      <div class="insight-num">−525 MW</div>
+      <div class="insight-text">Industrial demand reduction H12→H20: day-shift wind-down partially offsets residential/commercial increases</div>
+    </div>
+    <div class="insight-box red">
+      <div class="insight-num">+4,100 MW</div>
+      <div class="insight-text">Residential evening ramp (H12→H20): dominant driver of the evening peak — cooking, AC, lighting, entertainment</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Hour-by-Hour Sector Attribution — Evening Window (National MW, Annual Average)</div>
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th class="num">Residential</th>
+          <th class="num">Commercial</th>
+          <th class="num">Industrial</th>
+          <th class="num">Agriculture</th>
+          <th class="num">Others</th>
+          <th class="num">Total</th>
+          <th>Com% Share</th>
+          <th>Res% Share</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>H18 (6–7pm)</td><td class="num">8,504</td><td class="num">1,965</td><td class="num">3,005</td><td class="num">1,199</td><td class="num">1,188</td><td class="num">15,860</td><td><span class="badge badge-amber">11.5%</span></td><td><span class="badge badge-green">53.6%</span></td></tr>
+        <tr class="peak-row"><td><strong>H19 (7–8pm) ← Com Peak</strong></td><td class="num">9,586</td><td class="num"><strong>2,217</strong></td><td class="num">2,855</td><td class="num">1,199</td><td class="num">1,108</td><td class="num">16,965</td><td><span class="badge badge-amber">12.6%</span></td><td><span class="badge badge-green">56.5%</span></td></tr>
+        <tr class="peak-row"><td><strong>H20 (8–9pm) ← System Peak</strong></td><td class="num">9,741</td><td class="num"><strong>2,217</strong></td><td class="num">2,855</td><td class="num">1,199</td><td class="num">1,108</td><td class="num">17,120</td><td><span class="badge badge-amber">12.5%</span></td><td><span class="badge badge-green">56.9%</span></td></tr>
+        <tr><td>H21 (9–10pm)</td><td class="num">9,277</td><td class="num">1,889</td><td class="num">2,779</td><td class="num">1,079</td><td class="num">1,108</td><td class="num">16,133</td><td><span class="badge badge-amber">10.7%</span></td><td>57.5%</td></tr>
+        <tr><td>H22 (10–11pm)</td><td class="num">8,195</td><td class="num">1,386</td><td class="num">2,704</td><td class="num">959</td><td class="num">1,267</td><td class="num">14,511</td><td>9.5%</td><td>56.5%</td></tr>
+        <tr><td>H23 (11pm–12am)</td><td class="num">7,422</td><td class="num">882</td><td class="num">2,855</td><td class="num">839</td><td class="num">1,372</td><td class="num">13,369</td><td>6.6%</td><td>55.5%</td></tr>
+        <tr><td>H00 (12–1am)</td><td class="num">6,494</td><td class="num">126</td><td class="num">3,230</td><td class="num">719</td><td class="num">1,452</td><td class="num">12,021</td><td>1.0%</td><td>54.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Intervention Window Diagnosis</div>
+    <div class="verdict-text">Commercial load is at its maximum (2,217 MW annual average) during H19–H20 and falls sharply after H21. By H23, it has retreated to 882 MW; by H00, to 126 MW. This means commercial closing mandates have their highest impact if enforced by H20 (8pm), and rapidly diminishing impact if extended to 10pm or later. The <strong>optimal enforcement window for maximum peak impact is H20 closure</strong>. Every hour of delay beyond H20 approximately halves the peak reduction benefit.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 4 — CLOSING SCENARIOS                      -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-scenarios" class="tab-content">
+  <div class="section-label">Policy Scenario Modelling</div>
+  <h2 class="section-title">Peak Demand Reduction Under Commercial Closing Mandates</h2>
+
+  <div class="narrative">
+    <p>Three scenarios are modelled: mandatory commercial closure at 8pm, 9pm, and 10pm. For each scenario, the reduction is computed as <strong>75% of commercial load at the affected hours</strong> — the "switchable" component (active lighting, HVAC, operational equipment). The residual 25% accounts for security lighting, refrigeration, and 24/7 establishments (petrol stations, pharmacies, hospitals) that cannot comply. The transition hour is modelled at 50% compliance to reflect wind-down effects.</p>
+    <p>Note: closure mandates eliminate commercial load from the enforcement hour forward. The system peak hour itself changes depending on when the mandate kicks in — under an 8pm mandate, the new peak becomes H19 (~2pm later the commercial ramp reversal begins).</p>
+  </div>
+
+  <div class="scenario-cards">
+    <div class="scenario-card active" id="sc-card-1" onclick="selectScenario(1)">
+      <div class="sc-title">Close at 8pm</div>
+      <div class="sc-sub">Commercial closes H20 (20:00)</div>
+      <div class="sc-stat">
+        <div class="sc-stat-val">1,663 MW</div>
+        <div class="sc-stat-lbl">Annual avg peak reduction</div>
+      </div>
+      <div class="sc-stat" style="margin-top:0.5rem">
+        <div class="sc-stat-val" style="font-size:16px; color:var(--warning)">2,245 MW</div>
+        <div class="sc-stat-lbl">Summer peak reduction</div>
+      </div>
+      <div class="sc-stat" style="margin-top:0.5rem">
+        <div class="sc-stat-val" style="font-size:16px; color:var(--accent)">9.4%</div>
+        <div class="sc-stat-lbl">% of national system demand</div>
+      </div>
+    </div>
+    <div class="scenario-card" id="sc-card-2" onclick="selectScenario(2)">
+      <div class="sc-title">Close at 9pm</div>
+      <div class="sc-sub">Commercial closes H21 (21:00)</div>
+      <div class="sc-stat">
+        <div class="sc-stat-val">1,417 MW</div>
+        <div class="sc-stat-lbl">Annual avg peak reduction</div>
+      </div>
+      <div class="sc-stat" style="margin-top:0.5rem">
+        <div class="sc-stat-val" style="font-size:16px; color:var(--warning)">1,913 MW</div>
+        <div class="sc-stat-lbl">Summer peak reduction</div>
+      </div>
+      <div class="sc-stat" style="margin-top:0.5rem">
+        <div class="sc-stat-val" style="font-size:16px; color:var(--accent)">8.0%</div>
+        <div class="sc-stat-lbl">% of national system demand</div>
+      </div>
+    </div>
+    <div class="scenario-card" id="sc-card-3" onclick="selectScenario(3)">
+      <div class="sc-title">Close at 10pm</div>
+      <div class="sc-sub">Commercial closes H22 (22:00)</div>
+      <div class="sc-stat">
+        <div class="sc-stat-val">1,039 MW</div>
+        <div class="sc-stat-lbl">Annual avg peak reduction</div>
+      </div>
+      <div class="sc-stat" style="margin-top:0.5rem">
+        <div class="sc-stat-val" style="font-size:16px; color:var(--warning)">1,403 MW</div>
+        <div class="sc-stat-lbl">Summer peak reduction</div>
+      </div>
+      <div class="sc-stat" style="margin-top:0.5rem">
+        <div class="sc-stat-val" style="font-size:16px; color:var(--accent)">6.1%</div>
+        <div class="sc-stat-lbl">% of national system demand</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:1.5rem">
+    <div class="panel-title">System Demand Profile with Commercial Closing Scenarios vs. Baseline (Annual Average, National MW)</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="chartScenario"></canvas></div>
+    <div class="legend" style="margin-top:1rem">
+      <div class="legend-item"><div class="legend-dot" style="background:#4A7FB5"></div>Baseline (no intervention)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#C8923A"></div>Close at 8pm</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#52B788"></div>Close at 9pm</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#9B2335"></div>Close at 10pm</div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:2rem">Full Scenario Comparison Matrix</div>
+  <table class="est-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Baseline (No Intervention)</th>
+        <th>Close at 8pm</th>
+        <th>Close at 9pm</th>
+        <th>Close at 10pm</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Annual avg peak MW (H20, national)</td>
+        <td class="num">17,737</td>
+        <td class="num"><strong>16,074</strong> <span class="badge badge-green">−1,663</span></td>
+        <td class="num">16,320 <span class="badge badge-green">−1,417</span></td>
+        <td class="num">16,698 <span class="badge badge-green">−1,039</span></td>
+      </tr>
+      <tr>
+        <td>Reduction as % of system (annual avg)</td>
+        <td class="num">—</td>
+        <td class="num">9.4%</td>
+        <td class="num">8.0%</td>
+        <td class="num">6.1%</td>
+      </tr>
+      <tr class="peak-row">
+        <td>Summer peak MW at H20 (national)</td>
+        <td class="num">21,885</td>
+        <td class="num"><strong>19,640</strong> <span class="badge badge-red">−2,245</span></td>
+        <td class="num">19,972 <span class="badge badge-red">−1,913</span></td>
+        <td class="num">20,482 <span class="badge badge-red">−1,403</span></td>
+      </tr>
+      <tr>
+        <td>Summer reduction as % of system</td>
+        <td class="num">—</td>
+        <td class="num">10.3%</td>
+        <td class="num">8.6%</td>
+        <td class="num">6.2%</td>
+      </tr>
+      <tr>
+        <td>Winter peak MW at H18 (national)</td>
+        <td class="num">14,080</td>
+        <td class="num">12,857 <span class="badge badge-green">−1,223</span></td>
+        <td class="num">13,130 <span class="badge badge-green">−950</span></td>
+        <td class="num">13,606 <span class="badge badge-green">−474</span></td>
+      </tr>
+      <tr>
+        <td>Daily energy shifted (MWh, H19 onwards)</td>
+        <td class="num">—</td>
+        <td class="num">5,611</td>
+        <td class="num">3,949</td>
+        <td class="num">2,409</td>
+      </tr>
+      <tr>
+        <td>Annual energy impact (GWh)</td>
+        <td class="num">—</td>
+        <td class="num">2,048</td>
+        <td class="num">1,441</td>
+        <td class="num">879</td>
+      </tr>
+      <tr>
+        <td>Estimated marginal cost saving (PKR/kWh ≈ 20–24)</td>
+        <td class="num">—</td>
+        <td class="num">~PKR 41–49 Bn</td>
+        <td class="num">~PKR 29–35 Bn</td>
+        <td class="num">~PKR 18–21 Bn</td>
+      </tr>
+      <tr>
+        <td>Peak MW equivalent in capacity savings</td>
+        <td class="num">—</td>
+        <td class="num">~1,663 MW displaced</td>
+        <td class="num">~1,417 MW</td>
+        <td class="num">~1,039 MW</td>
+      </tr>
+      <tr>
+        <td>Enforcement complexity</td>
+        <td class="num">—</td>
+        <td class="num"><span class="badge badge-red">HIGH — cuts evening trade</span></td>
+        <td class="num"><span class="badge badge-amber">MEDIUM</span></td>
+        <td class="num"><span class="badge badge-green">LOWER — post-dinner</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="verdict">
+    <div class="verdict-label">Policy Recommendation</div>
+    <div class="verdict-text"><strong>An 8pm commercial closing mandate delivers the highest peak reduction</strong> (1,663 MW annually; 2,245 MW in summer) and cuts ~9–10% of national system demand at the critical H20 hour. The tradeoff is significant economic disruption to evening trade. <strong>A 9pm closure</strong> captures 85% of the 8pm benefit (1,417 MW) with materially lower business impact, making it the analytically superior policy balance. The 10pm closure reduces only 1,039 MW — about 63% of the 8pm benefit — with the additional complication that in summer, the true system peak has by then shifted to H22–H23, meaning the intervention is largely after the hour of maximum commercial contribution to system stress.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 5 — SEASONAL ANALYSIS                      -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-seasonal" class="tab-content">
+  <div class="section-label">Seasonal Context</div>
+  <h2 class="section-title">Commercial Closing Impact Across Seasons</h2>
+
+  <div class="narrative">
+    <p>The commercial closing intervention interacts differently with each season because: (1) the system peak hour shifts seasonally — evening in spring/winter, late night in summer; (2) commercial air-conditioning load varies (highest in summer, lowest in winter); and (3) the marginal cost of the electricity displaced varies significantly by season and hour, with summer evening marginal costs reaching 22–28 PKR/kWh versus 4–12 PKR/kWh in off-peak hours.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Seasonal System Demand Profile — Evening Window H17–H01 (MW, Excl. KE)</div>
+    <div class="chart-wrap" style="height:300px"><canvas id="chartSeasonalEve"></canvas></div>
+    <div class="legend" style="margin-top:1rem">
+      <div class="legend-item"><div class="legend-dot" style="background:#C8923A"></div>Summer (Jun–Sep)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#52B788"></div>Spring (Mar–May)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4A7FB5"></div>Autumn (Oct–Nov)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#9B2335"></div>Winter (Dec–Feb)</div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:2rem">Commercial Peak Impact by Season</div>
+  <table class="est-table">
+    <thead>
+      <tr>
+        <th>Season</th>
+        <th>Commercial Scaling vs. Annual</th>
+        <th class="num">Com MW at H20</th>
+        <th class="num">System MW at H20</th>
+        <th class="num">Com% of System</th>
+        <th class="num">8pm Closure Saves (MW)</th>
+        <th class="num">9pm Closure Saves (MW)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="peak-row">
+        <td>Summer (Jun–Sep)</td>
+        <td>+35% (heavy AC)</td>
+        <td class="num">2,993</td>
+        <td class="num">21,885</td>
+        <td class="num">13.7%</td>
+        <td class="num"><strong>2,245</strong></td>
+        <td class="num">1,913</td>
+      </tr>
+      <tr>
+        <td>Spring (Mar–May)</td>
+        <td>+5% (moderate AC)</td>
+        <td class="num">2,328</td>
+        <td class="num">18,186</td>
+        <td class="num">12.8%</td>
+        <td class="num">1,746</td>
+        <td class="num">1,488</td>
+      </tr>
+      <tr>
+        <td>Autumn (Oct–Nov)</td>
+        <td>−5% (transitional)</td>
+        <td class="num">2,106</td>
+        <td class="num">15,221</td>
+        <td class="num">13.8%</td>
+        <td class="num">1,580</td>
+        <td class="num">1,347</td>
+      </tr>
+      <tr>
+        <td>Winter (Dec–Feb)</td>
+        <td>−15% (minimal AC)</td>
+        <td class="num">1,884</td>
+        <td class="num">13,383</td>
+        <td class="num">14.1%</td>
+        <td class="num">1,413</td>
+        <td class="num">1,204</td>
+      </tr>
+      <tr class="peak-row">
+        <td><strong>Annual Average</strong></td>
+        <td>Base (1.00×)</td>
+        <td class="num"><strong>2,217</strong></td>
+        <td class="num">17,737</td>
+        <td class="num">12.5%</td>
+        <td class="num"><strong>1,663</strong></td>
+        <td class="num">1,417</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="two-col" style="margin-top:1.5rem">
+    <div class="panel">
+      <div class="panel-title">Marginal Cost at Peak Hours — Key Months (PKR/kWh)</div>
+      <table class="est-table">
+        <thead>
+          <tr><th>Month</th><th class="num">H18</th><th class="num">H19</th><th class="num">H20</th><th class="num">H21</th><th class="num">H22</th><th class="num">H23</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Mar/Apr 2025</td><td class="num">23.90</td><td class="num">24.05</td><td class="num">23.38</td><td class="num">24.08</td><td class="num">21.50</td><td class="num">4.81</td></tr>
+          <tr class="peak-row"><td>Jul 2025</td><td class="num">14.56</td><td class="num">15.93</td><td class="num">20.68</td><td class="num">21.91</td><td class="num">22.48</td><td class="num">27.83</td></tr>
+          <tr><td>Sep 2023</td><td class="num">~28</td><td class="num">~28</td><td class="num">~28</td><td class="num">~28</td><td class="num">~27</td><td class="num">~28</td></tr>
+        </tbody>
+      </table>
+      <p class="narrative" style="font-size:12px;margin-top:0.5rem;color:var(--text-tertiary)">Summer marginal costs peak at H23 (midnight) rather than H20. This reflects thermal dispatch into extended AC load. A commercial closure at 8pm sheds load at H20 when MC = 20–24 PKR/kWh — the sweet spot for avoided cost savings.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Summer Peak Context: Why Commercial Closures Don't Solve the Full Problem</div>
+      <div class="narrative" style="font-size:13px; padding:0; margin:0">
+        <p>In summer, the system peak occurs at H22–H23 (11pm–1am), driven by <strong>residential AC</strong> that runs all night as buildings retain heat. Even a complete commercial closure at 8pm would reduce H20 demand by ~2,245 MW but the summer system peak (H23 = 20,081 MW excl. KE) remains driven by residential load which commercial policy cannot address.</p>
+        <p style="margin-top:0.75rem">The correct framing: commercial closing mandates are a <strong>peak flattening instrument</strong>, not a peak elimination strategy. They compress the H19–H21 demand surge, reduce the thermal dispatch quantity needed during those hours, and potentially defer activation of the most expensive marginal units — but they cannot substitute for structural solutions like time-of-use tariff reform, demand response programs, or battery storage.</p>
+        <p style="margin-top:0.75rem"><strong>Complementary interventions:</strong> A 9pm commercial closing mandate combined with a residential ToU tariff that prices H21–H23 at 1.5–2× daytime rates would address both the commercial peak (H19–H21) and the residential overnight AC load simultaneously.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SOURCE BAR ─── -->
+<div class="source-bar">
+  <strong>Data sources:</strong> ISMO Hourly System Demand Profile (Jul 2024–Jun 2025, 8,760 hrs, NTDC grid excluding K-Electric); ISMO Monthly Marginal Cost vs. Demand Files (May 2024–Jan 2026); NEPRA State of Industry Report 2024 — sector consumption breakdown (Household 54,911 GWh; Industrial 27,830 GWh; Commercial 9,195 GWh; Agriculture 8,578 GWh; Others 10,596 GWh; FY2024 total 111,110 GWh); ISMO DISCO-wise Hourly Demand (March–April 2025). Commercial load shape calibrated to Pakistan retail/restaurant operating patterns. Switchable commercial fraction: 75% (residual 25% = security, refrigeration, 24/7 establishments). KE adjustment: +13.8% to convert excl-KE figures to national totals.
+  <br><br>
+  <strong>Ammar H. Khan</strong> · Pakistan Power Sector Analytics · May 2026
+</div>
+
+</div><!-- /.container -->
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const hours = ['H00','H01','H02','H03','H04','H05','H06','H07','H08','H09','H10','H11','H12','H13','H14','H15','H16','H17','H18','H19','H20','H21','H22','H23'];
+const hoursEve = ['H17','H18','H19','H20','H21','H22','H23','H00'];
+
+// Annual avg demand excl KE (from ISMO data)
+const annualExclKE = [14655,14335,14096,13917,13735,13769,13478,13086,13013,13102,12887,12789,12670,12845,13582,14217,14632,15138,15052,15413,15591,15546,15084,14966];
+
+// Seasonal profiles (excl KE)
+const summer = [19959,19559,19161,18673,18142,17767,16843,16123,16131,16505,16448,16534,16525,16880,17605,18002,18053,18038,17666,18447,19237,19652,19737,20081];
+const spring = [14814,14585,14576,14916,15147,14713,13366,12536,12151,12212,11896,11591,11466,11650,12482,13370,14073,15364,15261,15765,15985,15939,15364,15175];
+const autumn = [12233,11956,11686,11389,11119,11464,11592,11296,11271,11421,11296,11310,11228,11496,12240,12880,13216,13540,13473,13471,13372,12986,12483,12343];
+const winter = [8944,8610,8374,8163,8091,8949,10312,10745,10849,10539,10152,9941,9653,9511,10164,10860,11527,12060,12367,12256,11752,11313,10250,9594];
+
+// Sector decomposition (MW, national, annual avg)
+const residential = [6494,5721,5102,4484,4175,4175,3865,4020,4638,5102,5412,5412,5721,5721,6185,6648,7112,7731,8504,9586,9741,9277,8195,7422];
+const commercial  = [126,101,101,101,101,126,202,252,504,1209,1310,1386,1461,1461,1386,1461,1587,1763,1965,2217,2217,1889,1386,882];
+const industrial  = [3230,3155,3080,3005,3005,3080,3155,3230,3456,3531,3531,3456,3380,3380,3456,3456,3380,3230,3005,2855,2855,2779,2704,2855];
+const agriculture = [719,600,480,480,719,1079,1319,1319,1319,1199,1079,959,839,839,839,959,1079,1199,1199,1199,1199,1079,959,839];
+const others      = [1452,1320,1188,1056,1003,1003,1056,1056,1188,1320,1320,1320,1267,1267,1267,1267,1267,1267,1188,1108,1108,1108,1267,1372];
+
+// KE factor: +13.8% 
+const ke = 1.138;
+const annualNational = annualExclKE.map(v => Math.round(v * ke));
+
+// Scenario demand (national, annual avg)
+// Baseline national = sum of sectors
+const baseline = hours.map((_,i) => residential[i]+commercial[i]+industrial[i]+agriculture[i]+others[i]);
+
+// 8pm closure: H20+ commercial reduced by 75%, H19 by 37.5%
+const sc8pm = baseline.map((v,i) => {
+  if(i===19) return v - commercial[i]*0.375;
+  if(i>=20) return v - commercial[i]*0.75;
+  return v;
+});
+const sc9pm = baseline.map((v,i) => {
+  if(i===20) return v - commercial[i]*0.375;
+  if(i>=21) return v - commercial[i]*0.75;
+  return v;
+});
+const sc10pm = baseline.map((v,i) => {
+  if(i===21) return v - commercial[i]*0.375;
+  if(i>=22) return v - commercial[i]*0.75;
+  return v;
+});
+
+// ─── CHART HELPERS ────────────────────────────────────────────────────────────
+const C = {
+  commercial: 'rgba(200,146,58,0.8)',
+  residential:'rgba(82,183,136,0.8)',
+  industrial: 'rgba(74,127,181,0.8)',
+  agriculture:'rgba(139,195,74,0.8)',
+  others:     'rgba(158,158,158,0.7)',
+  summer:     '#C8923A',
+  spring:     '#52B788',
+  autumn:     '#4A7FB5',
+  winter:     '#9B2335',
+  baseline:   '#4A7FB5',
+  sc8:        '#C8923A',
+  sc9:        '#52B788',
+  sc10:       '#9B2335',
+};
+const baseOpts = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+  scales: {
+    x: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, color: '#999' } },
+    y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, color: '#999' } }
+  }
+};
+
+// ─── CHART 1: ANNUAL PROFILE ──────────────────────────────────────────────────
+new Chart(document.getElementById('chartAnnual'), {
+  type: 'line',
+  data: {
+    labels: hours,
+    datasets: [{
+      label: 'Avg MW (Excl. KE)',
+      data: annualExclKE,
+      borderColor: '#4A7FB5', backgroundColor: 'rgba(74,127,181,0.08)',
+      borderWidth: 2.5, tension: 0.35, fill: true, pointRadius: 3, pointHoverRadius: 5
+    }]
+  },
+  options: { ...baseOpts,
+    plugins: { ...baseOpts.plugins },
+    scales: { ...baseOpts.scales,
+      y: { ...baseOpts.scales.y, min: 10000, ticks: { callback: v => (v/1000).toFixed(0)+'k', font:{size:11}, color:'#999' } }
+    },
+    interaction: { mode:'index', intersect:false }
+  }
+});
+
+// ─── CHART 2: SEASONAL ───────────────────────────────────────────────────────
+new Chart(document.getElementById('chartSeasonal'), {
+  type: 'line',
+  data: {
+    labels: hours,
+    datasets: [
+      { label:'Summer', data: summer, borderColor: C.summer, borderWidth:2, tension:0.35, pointRadius:0, fill:false },
+      { label:'Spring',  data: spring,  borderColor: C.spring,  borderWidth:2, tension:0.35, pointRadius:0, fill:false },
+      { label:'Autumn',  data: autumn,  borderColor: C.autumn,  borderWidth:2, tension:0.35, pointRadius:0, fill:false },
+      { label:'Winter',  data: winter,  borderColor: C.winter,  borderWidth:2, tension:0.35, pointRadius:0, fill:false },
+    ]
+  },
+  options: { ...baseOpts,
+    scales: { ...baseOpts.scales,
+      y: { ...baseOpts.scales.y, min: 7000, ticks: { callback: v => (v/1000).toFixed(0)+'k', font:{size:11}, color:'#999' } }
+    }
+  }
+});
+
+// ─── CHART 3: STACKED SECTORS ─────────────────────────────────────────────────
+new Chart(document.getElementById('chartStacked'), {
+  type: 'bar',
+  data: {
+    labels: hours,
+    datasets: [
+      { label:'Residential', data: residential, backgroundColor: C.residential, stack:'s' },
+      { label:'Industrial',  data: industrial,  backgroundColor: C.industrial,  stack:'s' },
+      { label:'Commercial',  data: commercial,  backgroundColor: C.commercial,  stack:'s' },
+      { label:'Agriculture', data: agriculture, backgroundColor: C.agriculture, stack:'s' },
+      { label:'Others',      data: others,      backgroundColor: C.others,      stack:'s' },
+    ]
+  },
+  options: { ...baseOpts,
+    scales: { ...baseOpts.scales,
+      x: { ...baseOpts.scales.x, stacked: true },
+      y: { ...baseOpts.scales.y, stacked: true, min: 0, ticks: { callback: v => (v/1000).toFixed(0)+'k', font:{size:11}, color:'#999' } }
+    }
+  }
+});
+
+// ─── DECOMP TABLE ─────────────────────────────────────────────────────────────
+const tbody = document.getElementById('decomp-table-body');
+const peakHours = [19,20,21];
+hours.forEach((h, i) => {
+  const tot = residential[i]+commercial[i]+industrial[i]+agriculture[i]+others[i];
+  const comPct = (commercial[i]/tot*100).toFixed(1);
+  const isPeak = peakHours.includes(i);
+  const row = `<tr${isPeak?' class="peak-row"':''}>
+    <td>${h}</td>
+    <td class="num">${residential[i].toLocaleString()}</td>
+    <td class="num"><strong>${commercial[i].toLocaleString()}</strong></td>
+    <td class="num">${industrial[i].toLocaleString()}</td>
+    <td class="num">${agriculture[i].toLocaleString()}</td>
+    <td class="num">${others[i].toLocaleString()}</td>
+    <td class="num">${tot.toLocaleString()}</td>
+    <td class="num">${comPct}%</td>
+  </tr>`;
+  tbody.innerHTML += row;
+});
+
+// ─── CHART 4: EVENING SECTOR SHARE ───────────────────────────────────────────
+const eveIdx = [17,18,19,20,21,22,23,0];
+const eveLbls = ['H17','H18','H19','H20','H21','H22','H23','H00'];
+const eveRes = eveIdx.map(i=>residential[i]);
+const eveCom = eveIdx.map(i=>commercial[i]);
+const eveInd = eveIdx.map(i=>industrial[i]);
+const eveAgr = eveIdx.map(i=>agriculture[i]);
+const eveOth = eveIdx.map(i=>others[i]);
+
+new Chart(document.getElementById('chartEveShare'), {
+  type: 'bar',
+  data: {
+    labels: eveLbls,
+    datasets: [
+      { label:'Residential', data: eveRes, backgroundColor: C.residential, stack:'s' },
+      { label:'Industrial',  data: eveInd, backgroundColor: C.industrial,  stack:'s' },
+      { label:'Commercial',  data: eveCom, backgroundColor: C.commercial,  stack:'s' },
+      { label:'Agriculture', data: eveAgr, backgroundColor: C.agriculture, stack:'s' },
+      { label:'Others',      data: eveOth, backgroundColor: C.others,      stack:'s' },
+    ]
+  },
+  options: { ...baseOpts,
+    scales: { ...baseOpts.scales,
+      x: { ...baseOpts.scales.x, stacked: true },
+      y: { ...baseOpts.scales.y, stacked: true, ticks: { callback: v => (v/1000).toFixed(0)+'k', font:{size:11}, color:'#999' } }
+    }
+  }
+});
+
+// ─── CHART 5: COM vs RES ─────────────────────────────────────────────────────
+new Chart(document.getElementById('chartComRes'), {
+  type: 'line',
+  data: {
+    labels: eveLbls,
+    datasets: [
+      { label:'Residential', data:eveRes, borderColor:C.residential, borderWidth:2.5, tension:0.35, pointRadius:4, fill:false },
+      { label:'Commercial × 4 (scaled for viz)', data:eveCom.map(v=>v*4), borderColor:C.commercial, borderWidth:2.5, tension:0.35, pointRadius:4, fill:false, borderDash:[5,3] },
+    ]
+  },
+  options: { ...baseOpts,
+    plugins: { ...baseOpts.plugins, tooltip: { callbacks: {
+      label: ctx => ctx.datasetIndex===1 ? 'Commercial (×4): '+(ctx.raw/4).toLocaleString()+' MW actual' : 'Residential: '+ctx.raw.toLocaleString()+' MW'
+    }}}
+  }
+});
+
+// ─── CHART 6: SCENARIO ───────────────────────────────────────────────────────
+let scenarioChart = new Chart(document.getElementById('chartScenario'), {
+  type: 'line',
+  data: {
+    labels: hours,
+    datasets: [
+      { label:'Baseline',    data: baseline, borderColor: C.baseline, borderWidth:2, tension:0.35, pointRadius:0, fill:false },
+      { label:'Close 8pm',   data: sc8pm,   borderColor: C.sc8, borderWidth:2.5, tension:0.35, pointRadius:0, fill:false },
+      { label:'Close 9pm',   data: sc9pm,   borderColor: C.sc9, borderWidth:2, tension:0.35, pointRadius:0, fill:false, borderDash:[6,3] },
+      { label:'Close 10pm',  data: sc10pm,  borderColor: C.sc10, borderWidth:2, tension:0.35, pointRadius:0, fill:false, borderDash:[3,3] },
+    ]
+  },
+  options: { ...baseOpts,
+    scales: { ...baseOpts.scales,
+      y: { ...baseOpts.scales.y, min: 9000, ticks: { callback: v => (v/1000).toFixed(0)+'k', font:{size:11}, color:'#999' } }
+    }
+  }
+});
+
+// ─── CHART 7: SEASONAL EVENING ────────────────────────────────────────────────
+const seveIdx = [17,18,19,20,21,22,23,0];
+const seveLbls = ['17:00','18:00','19:00','20:00','21:00','22:00','23:00','00:00'];
+const sumEve  = seveIdx.map(i=>summer[i]);
+const sprEve  = seveIdx.map(i=>spring[i]);
+const autEve  = seveIdx.map(i=>autumn[i]);
+const winEve  = seveIdx.map(i=>winter[i]);
+new Chart(document.getElementById('chartSeasonalEve'), {
+  type: 'line',
+  data: {
+    labels: seveLbls,
+    datasets: [
+      { label:'Summer', data:sumEve, borderColor:C.summer, borderWidth:2.5, tension:0.3, pointRadius:5, fill:false },
+      { label:'Spring',  data:sprEve, borderColor:C.spring,  borderWidth:2.5, tension:0.3, pointRadius:5, fill:false },
+      { label:'Autumn',  data:autEve, borderColor:C.autumn,  borderWidth:2.5, tension:0.3, pointRadius:5, fill:false },
+      { label:'Winter',  data:winEve, borderColor:C.winter,  borderWidth:2.5, tension:0.3, pointRadius:5, fill:false },
+    ]
+  },
+  options: { ...baseOpts,
+    scales: { ...baseOpts.scales,
+      y: { ...baseOpts.scales.y, min: 7000, ticks: { callback: v => (v/1000).toFixed(0)+'k', font:{size:11}, color:'#999' } }
+    }
+  }
+});
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── SCENARIO SELECTOR ────────────────────────────────────────────────────────
+function selectScenario(n) {
+  document.querySelectorAll('.scenario-card').forEach(el => el.classList.remove('active'));
+  document.getElementById('sc-card-'+n).classList.add('active');
+}
+</script>
+</body>
+</html>
