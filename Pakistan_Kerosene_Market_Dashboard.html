@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Kerosene Market — EYB 2024-25 | Ammar H. Khan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white:    #FFFFFF;
+  --bg:       #FAFAFA;
+  --border:   #E5E5E5;
+  --teal:     #036B7A;
+  --teal-lt:  rgba(3,107,122,0.08);
+  --amber:    #C8923A;
+  --amber-lt: rgba(200,146,58,0.08);
+  --green:    #52B788;
+  --green-lt: rgba(82,183,136,0.08);
+  --red:      #9B2335;
+  --red-lt:   rgba(155,35,53,0.08);
+  --grey:     #888780;
+  --t1:       #1A1A1A;
+  --t2:       #555555;
+  --t3:       #999999;
+  --grid:     rgba(0,0,0,0.06);
+  --shadow:   0 2px 12px rgba(0,0,0,0.06);
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--t1);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.page { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+
+.header-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 0 1.75rem;
+  margin-bottom: 2rem;
+}
+
+.header-inner { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+.eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--t3);
+  margin-bottom: 0.5rem;
+}
+
+h1.page-title {
+  font-family: Georgia, serif;
+  font-size: 34px;
+  font-weight: 400;
+  color: var(--t1);
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+
+.page-sub {
+  font-size: 14px;
+  color: var(--t2);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   KPI GRID
+   ============================================================ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.kpi {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--teal);
+  border-radius: 10px;
+  padding: 1.1rem 1rem;
+  transition: box-shadow 0.2s;
+}
+.kpi:hover { box-shadow: var(--shadow); }
+.kpi.am  { border-top-color: var(--amber); }
+.kpi.gr  { border-top-color: var(--green); }
+.kpi.rd  { border-top-color: var(--red);   }
+
+.kpi-n {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--t1);
+  line-height: 1.1;
+}
+
+.kpi-l {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--t3);
+  margin-top: 0.4rem;
+}
+
+.kpi-d {
+  font-size: 11px;
+  margin-top: 0.2rem;
+  color: var(--t2);
+}
+.kpi-d.pos { color: #2D8A5F; }
+.kpi-d.neg { color: var(--red); }
+
+/* ============================================================
+   TAB NAVIGATION
+   ============================================================ */
+.tab-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+  background: var(--white);
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 1rem 1.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  margin-bottom: -1px;
+  letter-spacing: 0.02em;
+}
+.tab-btn:hover { color: var(--t1); background: var(--bg); }
+.tab-btn.on {
+  color: var(--teal);
+  border-bottom-color: var(--teal);
+  background: var(--white);
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.sec { display: none; }
+.sec.on { display: block; }
+
+.sec-ey {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--t3);
+  margin-bottom: 0.4rem;
+}
+
+.sec-ti {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--t1);
+  line-height: 1.3;
+  margin-bottom: 0.8rem;
+}
+
+.sec-bd {
+  font-size: 14px;
+  color: var(--t2);
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+  max-width: 820px;
+}
+
+/* ============================================================
+   CHART CONTAINERS
+   ============================================================ */
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.chart-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--t2);
+  margin-bottom: 1rem;
+}
+
+.cw { position: relative; width: 100%; }
+
+/* ============================================================
+   LEGEND
+   ============================================================ */
+.leg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 0.75rem;
+  font-size: 12px;
+  color: var(--t2);
+}
+
+.li { display: flex; align-items: center; gap: 6px; }
+
+.ld {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   TWO / THREE COLUMN GRIDS
+   ============================================================ */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ============================================================
+   PANELS
+   ============================================================ */
+.panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.pt {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--t2);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.dt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.dt th {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--t2);
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  background: var(--bg);
+}
+
+.dt td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--t1);
+}
+
+.dt tr:last-child td { border-bottom: none; }
+.dt tbody tr:hover td { background: #F4FAFB; }
+.nr { text-align: right; font-variant-numeric: tabular-nums; }
+
+.hl  { color: var(--teal);  font-weight: 600; }
+.am2 { color: #9A6B10;      font-weight: 600; }
+.gn  { color: #2D8A5F;      font-weight: 600; }
+.rd2 { color: var(--red);   font-weight: 600; }
+
+.scrl { max-height: 340px; overflow-y: auto; border-radius: 0 0 8px 8px; }
+.scrl::-webkit-scrollbar { width: 5px; }
+.scrl::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ============================================================
+   CALLOUT / INSIGHT BOXES
+   ============================================================ */
+.box {
+  background: #FFFBF3;
+  border: 1px solid #EDD9A3;
+  border-left: 4px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+}
+.box p { font-size: 13.5px; color: #4A3A1A; line-height: 1.65; }
+.box strong { color: #2A1E05; }
+
+.box.tl {
+  background: #F0FAF8;
+  border-color: #9ED5CC;
+  border-left-color: var(--teal);
+}
+.box.tl p { color: #0D3D44; }
+.box.tl strong { color: #052A30; }
+
+.box.rd {
+  background: #FDF0F2;
+  border-color: #E8B4BC;
+  border-left-color: var(--red);
+}
+.box.rd p { color: #4A1020; }
+
+/* ============================================================
+   COMPARE ROWS
+   ============================================================ */
+.cr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.cr:last-child { border-bottom: none; }
+.cl { color: var(--t2); }
+.cv { font-weight: 500; color: var(--t1); text-align: right; }
+
+/* ============================================================
+   TAGS / PILLS
+   ============================================================ */
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.tag.tl { background: #E0F5F2; color: #036B7A; }
+.tag.am { background: #FDF0DC; color: #9A6B10; }
+.tag.rd { background: #FCEEF0; color: #9B2335; }
+.tag.gn { background: #E4F4EC; color: #2D8A5F; }
+.tag.gy { background: #F0EFED; color: #5C5B57; }
+
+/* ============================================================
+   FORCE / OUTLOOK ROWS
+   ============================================================ */
+.force-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  font-size: 13px;
+  color: var(--t2);
+  line-height: 1.55;
+}
+
+/* ============================================================
+   MECHANISM STEPS
+   ============================================================ */
+.msteps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 1rem;
+}
+.ms {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem;
+  text-align: center;
+  position: relative;
+}
+.ms::after {
+  content: '→';
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--t3);
+  font-size: 14px;
+  z-index: 1;
+}
+.ms:last-child::after { display: none; }
+.ms-n { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--t3); }
+.ms-t { font-size: 12px; font-weight: 600; color: var(--t1); margin-top: 0.25rem; line-height: 1.3; }
+.ms-d { font-size: 11px; color: var(--t2); margin-top: 0.2rem; }
+
+/* ============================================================
+   HIGHLIGHT ROW (policy shift)
+   ============================================================ */
+.row-am td { background: rgba(200,146,58,0.06) !important; }
+.row-rd td { background: rgba(155,35,53,0.05) !important; }
+
+/* ============================================================
+   BAR INDICATOR (inline progress)
+   ============================================================ */
+.bar-track {
+  background: var(--border);
+  border-radius: 4px;
+  height: 5px;
+  width: 100%;
+  margin-top: 4px;
+}
+.bar-fill {
+  background: var(--teal);
+  border-radius: 4px;
+  height: 5px;
+}
+.bar-fill.am { background: var(--amber); }
+
+/* ============================================================
+   SOURCE NOTE
+   ============================================================ */
+.src {
+  font-size: 11px;
+  color: var(--t3);
+  margin-top: 0.75rem;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.page-footer {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+  padding: 1.5rem 0;
+}
+
+.page-footer .inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  font-size: 11px;
+  color: var(--t3);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .msteps { grid-template-columns: 1fr 1fr; }
+  .ms::after { display: none; }
+}
+
+@media (max-width: 680px) {
+  h1.page-title { font-size: 26px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .tab-btn { padding: 0.85rem 0.9rem; font-size: 12px; }
+}
+
+@media print {
+  .tab-nav { display: none; }
+  .sec { display: block !important; page-break-inside: avoid; }
+  body { background: white; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE HEADER
+     ============================================================ -->
+<div class="header-bar">
+  <div class="header-inner">
+    <div class="eyebrow">Pakistan Energy Yearbook 2024-25 &nbsp;·&nbsp; Ammar H. Khan &nbsp;·&nbsp; May 2026</div>
+    <h1 class="page-title">Pakistan Kerosene Market</h1>
+    <div class="page-sub">Consumption &nbsp;·&nbsp; Supply &nbsp;·&nbsp; Pricing Mechanism &nbsp;·&nbsp; Fiscal Policy &nbsp;·&nbsp; FY2019-20 to FY2024-25 &nbsp;|&nbsp; Source: HDIP / DG(Oil) / OCAC</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ============================================================
+       KPI ROW
+       ============================================================ -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-n">65,964 T</div>
+      <div class="kpi-l">FY2024-25 Consumption</div>
+      <div class="kpi-d pos">+15.85% YoY rebound</div>
+    </div>
+    <div class="kpi am">
+      <div class="kpi-n">0.41%</div>
+      <div class="kpi-l">Share of Total POL</div>
+      <div class="kpi-d">Smallest energy product</div>
+    </div>
+    <div class="kpi rd">
+      <div class="kpi-n">−5.8%</div>
+      <div class="kpi-l">5-Year ACGR (FY20–25)</div>
+      <div class="kpi-d neg">Structural demand decline</div>
+    </div>
+    <div class="kpi gr">
+      <div class="kpi-n">~Rs 167/L</div>
+      <div class="kpi-l">FY2024-25 Avg. Price</div>
+      <div class="kpi-d neg">−Rs 28/L vs FY2023-24</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-n">Rs 1.58/L</div>
+      <div class="kpi-l">Petroleum Dev. Levy</div>
+      <div class="kpi-d">vs Rs 60–78/L on petrol</div>
+    </div>
+    <div class="kpi am">
+      <div class="kpi-n">Rs 18.95/L</div>
+      <div class="kpi-l">Customs Duty (Apr 2025)</div>
+      <div class="kpi-d neg">Up from Rs 0.05 pre-Mar 2025</div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TAB NAVIGATION
+       ============================================================ -->
+  <div class="tab-nav">
+    <button class="tab-btn on" data-tab="ov">Overview &amp; Demand</button>
+    <button class="tab-btn" data-tab="pt">Price Trends</button>
+    <button class="tab-btn" data-tab="pm">Pricing Mechanism</button>
+    <button class="tab-btn" data-tab="sc">Supply Chain</button>
+    <button class="tab-btn" data-tab="mc">Market Context &amp; Outlook</button>
+  </div>
+
+  <!-- ============================================================
+       SECTION 1: OVERVIEW
+       ============================================================ -->
+  <div class="sec on" id="s-ov">
+
+    <div class="sec-ey">Section 1 · Demand</div>
+    <div class="sec-ti">Structural decline with an FY2024-25 price-driven rebound</div>
+    <div class="sec-bd">Pakistan's kerosene market consumed 65,964 tonnes in FY2024-25 — a +15.85% rebound after three consecutive years of contraction. Yet the five-year ACGR remains −5.8%, confirming a structural displacement by rural electrification and LPG. The rebound is primarily price-driven: average sale prices fell ~Rs 28/L YoY as global crude softened, pulling demand back from substitute fuels at the margin. At typical demand elasticities of −0.3 to −0.5, that price compression predicts a 12–18% volume response — closely matching the observed +15.85%.</div>
+
+    <div class="chart-card">
+      <div class="chart-title">Kerosene Consumption Trend — FY2019-20 to FY2024-25</div>
+      <div class="leg">
+        <span class="li"><span class="ld" style="background:#036B7A"></span>Historical volumes</span>
+        <span class="li"><span class="ld" style="background:#C8923A"></span>FY2024-25 rebound year</span>
+      </div>
+      <div class="cw" style="height:280px">
+        <canvas id="ch-cons" role="img" aria-label="Bar chart of Pakistan kerosene consumption FY2019-20 to FY2024-25. Peak 88,939 T in FY2019-20 declining to a trough of 55,869 T in FY2022-23 before rebounding to 65,964 T in FY2024-25.">Consumption: 88,939 (FY20), 70,211 (FY21), 65,691 (FY22), 55,869 (FY23), 56,942 (FY24), 65,964 (FY25).</canvas>
+      </div>
+      <div class="src">Source: EYB 2024-25, Table 2.6 — Petroleum Energy Products Consumption by Fuel (OCAC data). TOE conversion factor: 1.0316 T/T (same as JP-1, per EYB Gross Calorific Values).</div>
+    </div>
+
+    <div class="box">
+      <p><strong>Why did consumption rebound?</strong> The proximate mechanism is a price effect. Ex-refinery prices tracked Brent crude downward throughout FY2024-25, compressing the average fixed sale price from approximately Rs 195/L (FY2023-24) to approximately Rs 167/L — a Rs 28/L decline. At demand elasticities of −0.3 to −0.5 (typical for basic energy fuels), this predicts a 12–18% volume response, closely matching the observed +15.85%. The Mar–Apr 2025 Customs Duty escalation partially offset further gains, stabilising consumer prices near Rs 165–170/L despite continued ex-refinery softening.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="pt">Annual consumption history</div>
+        <table class="dt">
+          <thead>
+            <tr><th>Year</th><th class="nr">Tonnes</th><th class="nr">TOE</th><th class="nr">YoY Change</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>FY2019-20</td><td class="nr">88,939</td><td class="nr">91,749</td><td class="nr">—</td></tr>
+            <tr><td>FY2020-21</td><td class="nr">70,211</td><td class="nr">72,430</td><td class="nr rd2">−21.1%</td></tr>
+            <tr><td>FY2021-22</td><td class="nr">65,691</td><td class="nr">67,767</td><td class="nr rd2">−6.4%</td></tr>
+            <tr><td>FY2022-23</td><td class="nr">55,869</td><td class="nr">57,634</td><td class="nr rd2">−14.9%</td></tr>
+            <tr><td>FY2023-24</td><td class="nr">56,942</td><td class="nr">58,741</td><td class="nr gn">+1.9%</td></tr>
+            <tr><td><strong>FY2024-25</strong></td><td class="nr hl"><strong>65,964</strong></td><td class="nr hl"><strong>68,049</strong></td><td class="nr gn"><strong>+15.85%</strong></td></tr>
+            <tr><td colspan="3" style="font-size:11px;color:var(--t3);padding-top:.5rem">5-Year ACGR (FY2020→FY2025)</td><td class="nr rd2">−5.8% p.a.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="pt">Market fundamentals</div>
+        <div class="cr"><span class="cl">Primary use case</span><span class="cv">Off-grid lighting &amp; cooking</span></div>
+        <div class="cr"><span class="cl">Main substitutes</span><span class="cv">LPG cylinders, grid electricity</span></div>
+        <div class="cr"><span class="cl">Calorific value</span><span class="cv">43.218 MBtu/T</span></div>
+        <div class="cr"><span class="cl">TOE conversion</span><span class="cv">1.0316 TOE/T (= JP-1)</span></div>
+        <div class="cr"><span class="cl">Import dependency</span><span class="cv"><span class="tag gn">Zero — fully domestic</span></span></div>
+        <div class="cr"><span class="cl">GST status</span><span class="cv"><span class="tag tl">Exempt — Rs 0.00/L</span></span></div>
+        <div class="cr"><span class="cl">Dealer commission</span><span class="cv"><span class="tag tl">Rs 0.00 (vs Rs 8.64 petrol)</span></span></div>
+        <div class="cr"><span class="cl">Inland freight margin</span><span class="cv"><span class="tag tl">Rs 0.00 (included in OMC)</span></span></div>
+        <div class="cr"><span class="cl">Structural outlook (est.)</span><span class="cv"><span class="tag rd">ACGR −6 to −8% p.a.</span></span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       SECTION 2: PRICE TRENDS
+       ============================================================ -->
+  <div class="sec" id="s-pt">
+
+    <div class="sec-ey">Section 2 · Pricing</div>
+    <div class="sec-ti">Fortnightly price notifications — FY2023-24 versus FY2024-25, full series</div>
+    <div class="sec-bd">Kerosene prices are notified fortnightly by DG(Oil), tracking ex-refinery prices (which follow Brent crude) plus a thin, largely fixed margin structure. FY2023-24 saw a dramatic spike to Rs 244.81/L in September 2023 before a sustained retreat. FY2024-25 opened 6% lower than the previous year's opening and fell further to a trough of Rs 154.90/L in October 2024 — before a Q4 Customs Duty escalation stabilised consumer prices in the Rs 165–170/L range despite continued ex-refinery softening.</div>
+
+    <div class="chart-card">
+      <div class="chart-title">Fixed Sale Price — Fortnightly Notifications (Rs/L)</div>
+      <div class="leg">
+        <span class="li"><span class="ld" style="background:#036B7A"></span>FY2024-25 (all 24 notifications)</span>
+        <span class="li"><span class="ld" style="background:#C8923A;"></span>FY2023-24 (all 24 notifications)</span>
+        <span class="li"><span class="ld" style="background:#9B2335;border-radius:50%"></span>C&amp;E Duty escalation (Mar 2025)</span>
+      </div>
+      <div class="cw" style="height:320px">
+        <canvas id="ch-pr" role="img" aria-label="Line chart comparing kerosene fortnightly sale prices in FY2023-24 and FY2024-25. FY2023-24 peaked at Rs 244.81/L in September 2023. FY2024-25 troughed at Rs 154.90/L in October 2024 then stabilised near Rs 165-170/L.">FY2023-24 range: Rs 171 to Rs 245/L. FY2024-25 range: Rs 155 to Rs 184/L.</canvas>
+      </div>
+      <div class="src">Source: EYB 2024-25, Table 2.15.2 — Kerosene Sale Price (DG Oil). All fortnightly pricing notifications shown at each effective date. Vertical dashed line at 16 Mar 2025 marks first Customs/Excise Duty escalation (Rs 0.05 → Rs 10.96/L).</div>
+    </div>
+
+    <div class="box">
+      <p><strong>Q4 FY2024-25 fiscal inflection:</strong> Customs/Excise Duty on kerosene was raised from Rs 0.05/L to Rs 10.96/L on 16 March 2025 (a 219× increase) and further to Rs 18.95/L on 16 April 2025. This absorbed approximately Rs 19/L of ex-refinery price relief that would otherwise have passed through to consumers, effectively pegging retail prices near Rs 168–170/L while global crude traded below US$70/bbl. The move represents the first meaningful fiscal tightening on kerosene — a product previously treated as an untouchable social fuel — in several years.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="pt">FY2024-25 — Full Fortnightly Price Register</div>
+        <div class="scrl">
+          <table class="dt" style="font-size:12px">
+            <thead>
+              <tr><th>Effective Date</th><th class="nr">Ex-Ref (Rs/L)</th><th class="nr">Levies+OMC (Rs/L)</th><th class="nr">Sale Price (Rs/L)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>01 Jul 2024</td><td class="nr">172.26</td><td class="nr">9.60</td><td class="nr">181.86</td></tr>
+              <tr><td>16 Jul 2024</td><td class="nr">174.02</td><td class="nr">9.69</td><td class="nr">183.71</td></tr>
+              <tr><td>01 Aug 2024</td><td class="nr">167.64</td><td class="nr">9.75</td><td class="nr">177.39</td></tr>
+              <tr><td>18 Aug 2024</td><td class="nr">162.12</td><td class="nr">9.65</td><td class="nr">171.77</td></tr>
+              <tr><td>01 Sep 2024</td><td class="nr">159.97</td><td class="nr">9.65</td><td class="nr">169.62</td></tr>
+              <tr><td>16 Sep 2024</td><td class="nr">148.86</td><td class="nr">9.61</td><td class="nr">158.47</td></tr>
+              <tr><td>01 Oct 2024</td><td class="nr">145.42</td><td class="nr">9.48</td><td class="nr hl"><strong>154.90 — trough</strong></td></tr>
+              <tr><td>16 Oct 2024</td><td class="nr">153.58</td><td class="nr">9.44</td><td class="nr">163.02</td></tr>
+              <tr><td>01 Nov 2024</td><td class="nr">152.05</td><td class="nr">9.49</td><td class="nr">161.54</td></tr>
+              <tr><td>16 Nov 2024</td><td class="nr">156.07</td><td class="nr">9.53</td><td class="nr">165.60</td></tr>
+              <tr><td>01 Dec 2024</td><td class="nr">155.45</td><td class="nr">9.53</td><td class="nr">164.98</td></tr>
+              <tr><td>16 Dec 2024</td><td class="nr">152.11</td><td class="nr">9.55</td><td class="nr">161.66</td></tr>
+              <tr><td>01 Jan 2025</td><td class="nr">152.55</td><td class="nr">10.40</td><td class="nr">162.95</td></tr>
+              <tr><td>16 Jan 2025</td><td class="nr">158.83</td><td class="nr">10.42</td><td class="nr">169.25</td></tr>
+              <tr><td>01 Feb 2025</td><td class="nr">164.42</td><td class="nr">10.43</td><td class="nr">174.85</td></tr>
+              <tr><td>16 Feb 2025</td><td class="nr">161.19</td><td class="nr">10.46</td><td class="nr">171.65</td></tr>
+              <tr><td>01 Mar 2025</td><td class="nr">158.56</td><td class="nr">9.56</td><td class="nr">168.12</td></tr>
+              <tr class="row-am"><td><strong>16 Mar 2025 ▲ C&amp;E raised</strong></td><td class="nr">147.70</td><td class="nr am2"><strong>20.42</strong></td><td class="nr">168.12</td></tr>
+              <tr class="row-am"><td>29 Mar 2025</td><td class="nr">148.96</td><td class="nr am2">20.42</td><td class="nr">169.38</td></tr>
+              <tr class="row-rd"><td><strong>16 Apr 2025 ▲▲ C&amp;E raised again</strong></td><td class="nr">140.97</td><td class="nr rd2"><strong>28.41</strong></td><td class="nr">169.38</td></tr>
+              <tr class="row-rd"><td>01 May 2025</td><td class="nr">141.68</td><td class="nr rd2">28.01</td><td class="nr">169.69</td></tr>
+              <tr class="row-rd"><td>16 May 2025</td><td class="nr">136.65</td><td class="nr rd2">28.00</td><td class="nr">164.65</td></tr>
+              <tr class="row-rd"><td>01 Jun 2025</td><td class="nr">137.06</td><td class="nr rd2">27.98</td><td class="nr">165.04</td></tr>
+              <tr class="row-rd"><td>16 Jun 2025</td><td class="nr">141.22</td><td class="nr rd2">27.98</td><td class="nr">169.20</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="src">Levies+OMC = Customs/Excise Duty + PDL (Rs 1.58) + OMC Distribution Margin. GST = Rs 0.00 and Dealer Commission = Rs 0.00 throughout. Amber rows = first duty hike; red rows = second duty hike period.</div>
+      </div>
+
+      <div class="panel">
+        <div class="pt">FY2023-24 — Full Register (1st Notification Each Month)</div>
+        <table class="dt" style="font-size:12px">
+          <thead>
+            <tr><th>Month</th><th class="nr">Ex-Ref (Rs/L)</th><th class="nr">PDL+C&amp;E (Rs/L)</th><th class="nr">Sale Price (Rs/L)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Jul 2023</td><td class="nr">162.43</td><td class="nr">1.63</td><td class="nr">171.05</td></tr>
+            <tr><td>Aug 2023</td><td class="nr">185.07</td><td class="nr">1.63</td><td class="nr">192.38</td></tr>
+            <tr><td>Sep 2023</td><td class="nr">223.17</td><td class="nr">1.63</td><td class="nr rd2"><strong>233.52</strong></td></tr>
+            <tr><td>Oct 2023</td><td class="nr rd2"><strong>226.93</strong></td><td class="nr">1.63</td><td class="nr rd2"><strong>237.28 — peak</strong></td></tr>
+            <tr><td>Nov 2023</td><td class="nr">200.52</td><td class="nr">1.63</td><td class="nr">211.03</td></tr>
+            <tr><td>Dec 2023</td><td class="nr">192.34</td><td class="nr">1.63</td><td class="nr">201.16</td></tr>
+            <tr><td>Jan 2024</td><td class="nr">180.17</td><td class="nr">1.63</td><td class="nr">188.83</td></tr>
+            <tr><td>Feb 2024</td><td class="nr">176.23</td><td class="nr">1.63</td><td class="nr">186.62</td></tr>
+            <tr><td>Mar 2024</td><td class="nr">179.49</td><td class="nr">1.63</td><td class="nr">190.01</td></tr>
+            <tr><td>Apr 2024</td><td class="nr">176.77</td><td class="nr">1.63</td><td class="nr">186.39</td></tr>
+            <tr><td>May 2024</td><td class="nr">174.83</td><td class="nr">1.63</td><td class="nr">183.34</td></tr>
+            <tr><td>Jun 2024</td><td class="nr">163.23</td><td class="nr">1.63</td><td class="nr">171.61</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:1.1rem">
+          <div class="cr"><span class="cl">FY2023-24 simple avg.</span><span class="cv am2">~Rs 195/L</span></div>
+          <div class="cr"><span class="cl">FY2024-25 simple avg.</span><span class="cv hl">~Rs 167/L</span></div>
+          <div class="cr"><span class="cl">Year-on-year price decline</span><span class="cv gn">−Rs 28/L (−14.4%)</span></div>
+          <div class="cr"><span class="cl">FY2024-25 trough</span><span class="cv">Rs 154.90/L (01 Oct 2024)</span></div>
+          <div class="cr"><span class="cl">FY2024-25 peak</span><span class="cv rd2">Rs 183.71/L (16 Jul 2024)</span></div>
+          <div class="cr"><span class="cl">FY2023-24 peak</span><span class="cv rd2">Rs 244.81/L (16 Sep 2023)</span></div>
+          <div class="cr"><span class="cl">FY2023-24 trough</span><span class="cv">Rs 171.05/L (01 Jul 2023)</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       SECTION 3: PRICING MECHANISM
+       ============================================================ -->
+  <div class="sec" id="s-pm">
+
+    <div class="sec-ey">Section 3 · Mechanism</div>
+    <div class="sec-ti">How the kerosene price is built — five components and a deliberate tax concession</div>
+    <div class="sec-bd">The fixed sale price of kerosene is constructed from five components: (1) ex-refinery price, tracking Brent crude and representing 83–95% of the total; (2) Customs/Excise Duty, nominal until Mar 2025, then escalated sharply; (3) Petroleum Development Levy — fixed at Rs 1.58/L throughout (versus Rs 60–78/L for petrol); (4) OMC Distribution Margin, covering storage, transport, and handling at Rs 7–9/L; and (5) Dealer's Commission — waived at Rs 0.00 for kerosene. GST is fully exempt. The combined tax and margin burden for kerosene was Rs 27.98/L in June 2025 versus Rs 116.45/L for petrol — a Rs 88.47/L gap worth approximately PKR 7 billion per year in foregone revenue.</div>
+
+    <div class="chart-card">
+      <div class="chart-title">Price Component Breakdown — Selected Dates, Jul 2024 to Jun 2025 (Rs/L, stacked)</div>
+      <div class="leg">
+        <span class="li"><span class="ld" style="background:#036B7A"></span>Ex-Refinery price</span>
+        <span class="li"><span class="ld" style="background:#52B788"></span>PDL (Rs 1.58/L, fixed)</span>
+        <span class="li"><span class="ld" style="background:#888780"></span>OMC Distribution Margin</span>
+        <span class="li"><span class="ld" style="background:#C8923A"></span>Customs/Excise Duty (escalated)</span>
+      </div>
+      <div class="cw" style="height:300px">
+        <canvas id="ch-stk" role="img" aria-label="Stacked bar chart showing kerosene price component breakdown at six dates from July 2024 to June 2025. Ex-refinery dominates at Rs 141-172/L. Customs/Excise duty jumps from Rs 0.05 to Rs 18.95 per litre from April 2025.">Price stacks showing ex-refinery ~Rs 140-172, PDL Rs 1.58, OMC margin Rs 7-9, Customs/Excise rising from Rs 0.05 to Rs 18.95 per litre.</canvas>
+      </div>
+      <div class="src">Source: EYB 2024-25, Table 2.15.2. Dates: 01 Jul 2024, 01 Oct 2024, 01 Jan 2025, 16 Mar 2025 (first duty hike to Rs 10.96), 16 Apr 2025 (second hike to Rs 18.95), 16 Jun 2025. GST = Rs 0.00 and Dealer Commission = Rs 0.00 throughout.</div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="pt">Component Breakdown — Selected Dates (Rs/L)</div>
+        <table class="dt" style="font-size:12px">
+          <thead>
+            <tr><th>Date</th><th class="nr">Ex-Ref</th><th class="nr">C&amp;E Duty</th><th class="nr">PDL</th><th class="nr">OMC</th><th class="nr">GST</th><th class="nr">Total</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>01 Jul 2024</td><td class="nr">172.26</td><td class="nr">0.05</td><td class="nr">1.58</td><td class="nr">7.97</td><td class="nr">0.00</td><td class="nr hl">181.86</td></tr>
+            <tr><td>01 Oct 2024</td><td class="nr">145.42</td><td class="nr">0.05</td><td class="nr">1.58</td><td class="nr">7.85</td><td class="nr">0.00</td><td class="nr">154.90</td></tr>
+            <tr><td>01 Jan 2025</td><td class="nr">152.55</td><td class="nr">0.05</td><td class="nr">1.58</td><td class="nr">8.77</td><td class="nr">0.00</td><td class="nr">162.95</td></tr>
+            <tr class="row-am"><td>16 Mar 2025 ▲</td><td class="nr">147.70</td><td class="nr am2"><strong>10.96</strong></td><td class="nr">1.58</td><td class="nr">7.88</td><td class="nr">0.00</td><td class="nr">168.12</td></tr>
+            <tr class="row-rd"><td>16 Apr 2025 ▲▲</td><td class="nr">140.97</td><td class="nr rd2"><strong>18.95</strong></td><td class="nr">1.58</td><td class="nr">7.88</td><td class="nr">0.00</td><td class="nr">169.38</td></tr>
+            <tr class="row-rd"><td>16 Jun 2025</td><td class="nr">141.22</td><td class="nr rd2">18.95</td><td class="nr">1.58</td><td class="nr">7.45</td><td class="nr">0.00</td><td class="nr">169.20</td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:1.25rem">
+          <div class="pt">Price Formation — Causal Chain</div>
+          <div class="msteps">
+            <div class="ms"><div class="ms-n">Step 1</div><div class="ms-t">Brent crude</div><div class="ms-d">Primary driver</div></div>
+            <div class="ms" style="border-top:2px solid var(--teal)"><div class="ms-n">Step 2</div><div class="ms-t">Ex-refinery</div><div class="ms-d">Set fortnightly by DG(Oil)</div></div>
+            <div class="ms" style="border-top:2px solid var(--amber)"><div class="ms-n">Step 3</div><div class="ms-t">Levies applied</div><div class="ms-d">PDL + Customs/Excise</div></div>
+            <div class="ms" style="border-top:2px solid var(--green)"><div class="ms-n">Step 4</div><div class="ms-t">OMC margin</div><div class="ms-d">Incl. inland freight</div></div>
+            <div class="ms" style="border-top:2px solid var(--teal)"><div class="ms-n">Step 5</div><div class="ms-t">Fixed sale price</div><div class="ms-d">Notified; no GST or dealer fee</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="pt">Kerosene vs Petrol (MS) — Tax Burden Comparison (16 Jun 2025, Rs/L)</div>
+        <table class="dt" style="font-size:12px">
+          <thead>
+            <tr><th>Component</th><th class="nr">Kerosene</th><th class="nr">Petrol (MS)</th><th class="nr">Gap</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Petroleum Dev. Levy</td><td class="nr">1.58</td><td class="nr">78.02</td><td class="nr rd2">−76.44</td></tr>
+            <tr><td>Customs/Excise Duty</td><td class="nr">18.95</td><td class="nr">13.69</td><td class="nr gn">+5.26</td></tr>
+            <tr><td>OMC Distribution Margin</td><td class="nr">7.45</td><td class="nr">7.87</td><td class="nr">−0.42</td></tr>
+            <tr><td>Dealer Commission</td><td class="nr gn">0.00</td><td class="nr">8.64</td><td class="nr gn">−8.64</td></tr>
+            <tr><td>Inland Freight Margin</td><td class="nr gn">0.00</td><td class="nr">8.23</td><td class="nr gn">−8.23</td></tr>
+            <tr><td>General Sales Tax</td><td class="nr gn">0.00</td><td class="nr">0.00</td><td class="nr">—</td></tr>
+            <tr><td><strong>Total levy + margin</strong></td><td class="nr"><strong>27.98</strong></td><td class="nr"><strong>116.45</strong></td><td class="nr rd2"><strong>−88.47</strong></td></tr>
+            <tr><td>Ex-refinery price</td><td class="nr">141.22</td><td class="nr">141.98</td><td class="nr">−0.76</td></tr>
+            <tr><td><strong>Fixed sale price</strong></td><td class="nr hl"><strong>169.20</strong></td><td class="nr"><strong>258.43</strong></td><td class="nr rd2"><strong>−89.23</strong></td></tr>
+          </tbody>
+        </table>
+        <div class="box" style="margin-top:1rem">
+          <p><strong>Fiscal cost of the kerosene concession:</strong> At Rs 88.47/L lower tax burden than petrol, and approximately 80 million litres consumed annually (65,964 T ÷ ~0.82 kg/L density), revenue foregone relative to petrol's fiscal treatment is approximately <strong>PKR 7 billion per year</strong>. The April 2025 Customs Duty hike (Rs 0.05 → Rs 18.95/L, an increase of Rs 18.90/L) recovers approximately PKR 1.5 billion of this annually — the first meaningful fiscal normalisation of kerosene pricing in years.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       SECTION 4: SUPPLY CHAIN
+       ============================================================ -->
+  <div class="sec" id="s-sc">
+
+    <div class="sec-ey">Section 4 · Supply</div>
+    <div class="sec-ti">Fully domestically supplied — five active refineries, zero imports on record</div>
+    <div class="sec-bd">All of Pakistan's kerosene consumption (~65,964 T in FY2024-25) is produced by domestic refineries. Kerosene is not recorded in EYB 2024-25 Table 2.12 (Import of Petroleum Products). It is an involuntary by-product of crude oil distillation — refineries cannot meaningfully suppress kerosene cuts without reducing overall throughput. ENAR's residue-upgrading facility has grown output approximately 3× over FY2019-24, making it now the likely largest single producer. Attock Refinery produces zero kerosene. EYB notes explicitly that ENAR's output "surpasses the volume of crude oil processed due to residue-upgradation facility" — a unique characteristic.</div>
+
+    <div class="two-col">
+      <div class="chart-card" style="margin-bottom:0">
+        <div class="chart-title">Estimated Kerosene Output by Refinery — FY2024-25 (Tonnes)</div>
+        <div class="leg">
+          <span class="li"><span class="ld" style="background:#036B7A"></span>Estimated FY2024-25 output</span>
+        </div>
+        <div class="cw" style="height:300px">
+          <canvas id="ch-ref" role="img" aria-label="Horizontal bar chart of estimated kerosene production by refinery in FY2024-25. ENAR EPRF leads at approximately 30,000 tonnes, followed by PARCO at 22,000, PRL at 9,000, Cnergyico at 4,000, and NRL under 1,000.">Estimated outputs: ENAR ~30,000T, PARCO ~22,000T, PRL ~9,000T, Cnergyico ~4,000T, NRL ~964T.</canvas>
+        </div>
+        <div class="src">Estimates derived from EYB Tables 2.5.1–2.5.6 trend extrapolation; anchored to Table 2.6 national total of 65,964 T. FY2024-25 refinery-level data partially unpublished. ENAR has grown from 9,737 T (FY2019-20) at ~3× pace.</div>
+      </div>
+
+      <div class="panel">
+        <div class="pt">Refinery Profile — Kerosene Production</div>
+        <table class="dt" style="font-size:12px">
+          <thead>
+            <tr><th>Refinery</th><th class="nr">FY2019-20 (T)</th><th class="nr">Est. FY2024-25 (T)</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>ENAR EPRF</strong></td><td class="nr">9,737</td><td class="nr hl"><strong>~30,000</strong></td><td><span class="tag tl">Largest; ~3× growth</span></td></tr>
+            <tr><td><strong>PARCO</strong></td><td class="nr">24,185</td><td class="nr">~22,000</td><td><span class="tag tl">Major producer</span></td></tr>
+            <tr><td><strong>PRL</strong></td><td class="nr">8,048</td><td class="nr">~9,000</td><td><span class="tag gy">Mid-size</span></td></tr>
+            <tr><td><strong>Cnergyico</strong></td><td class="nr">2,153</td><td class="nr">~4,000</td><td><span class="tag gy">Small</span></td></tr>
+            <tr><td><strong>NRL</strong></td><td class="nr">301</td><td class="nr">~964</td><td><span class="tag gy">Negligible</span></td></tr>
+            <tr><td><strong>Attock (ARL)</strong></td><td class="nr">0</td><td class="nr">0</td><td><span class="tag rd">None produced</span></td></tr>
+            <tr><td><strong>System total</strong></td><td class="nr">~44,424</td><td class="nr hl"><strong>~65,964</strong></td><td><span class="tag gn">Fully self-sufficient</span></td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:1.1rem">
+          <div class="cr"><span class="cl">Total crude processed system-wide</span><span class="cv">Imported + local blend</span></div>
+          <div class="cr"><span class="cl">Kerosene yield on crude run</span><span class="cv">~0.57% of system throughput</span></div>
+          <div class="cr"><span class="cl">ENAR growth mechanism</span><span class="cv">Residue-upgrading facility</span></div>
+          <div class="cr"><span class="cl">Import recorded (Table 2.12)</span><span class="cv gn"><strong>Zero</strong></span></div>
+          <div class="cr"><span class="cl">Import bill impact</span><span class="cv gn">None — no FX exposure</span></div>
+        </div>
+
+        <div class="box tl" style="margin-top:1rem">
+          <p><strong>Structural surplus risk:</strong> As the market continues its ACGR decline of −5.8%, refineries will accumulate surplus kerosene cuts — a by-product they cannot easily suppress. This creates mild downward pressure on ex-refinery prices, which paradoxically provides a self-stabilising floor for consumer demand in off-grid areas even without explicit government subsidy.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       SECTION 5: MARKET CONTEXT & OUTLOOK
+       ============================================================ -->
+  <div class="sec" id="s-mc">
+
+    <div class="sec-ey">Section 5 · Market Context &amp; Outlook</div>
+    <div class="sec-ti">Smallest product in the basket — politically sticky as a social fuel, fiscally unsustainable at scale</div>
+    <div class="sec-bd">At 0.41% of Pakistan's total petroleum consumption, kerosene is the smallest energy product in the POL basket — yet it carries outsized political salience as the primary liquid fuel for off-grid rural households who cannot afford LPG or access the grid. Petrol (47%) and HSD (42.3%) together account for 89.3% of the basket. Kerosene is a rounding error by volume but a politically sensitive instrument by policy, with the government historically treating it as an untouchable social fuel subject to minimal taxation.</div>
+
+    <div class="two-col">
+      <div class="chart-card" style="margin-bottom:0">
+        <div class="chart-title">Pakistan POL Basket — FY2024-25 (Share of 16.2 Million Tonnes Total)</div>
+        <div class="leg">
+          <span class="li"><span class="ld" style="background:#036B7A"></span>Motor Spirit 47.0%</span>
+          <span class="li"><span class="ld" style="background:#C8923A"></span>HSD 42.3%</span>
+          <span class="li"><span class="ld" style="background:#9B2335"></span>Furnace Oil 5.3%</span>
+          <span class="li"><span class="ld" style="background:#52B788"></span>Aviation 3.1%</span>
+          <span class="li"><span class="ld" style="background:#888780"></span>HOBC 1.8%</span>
+          <span class="li"><span class="ld" style="background:#1D9E75"></span>Kerosene 0.41%</span>
+        </div>
+        <div class="cw" style="height:300px">
+          <canvas id="ch-bsk" role="img" aria-label="Donut chart of Pakistan petroleum product consumption shares FY2024-25. Motor Spirit 47%, HSD 42.3%, Furnace Oil 5.3%, Aviation 3.1%, HOBC 1.8%, Kerosene 0.41%, LDO 0.1%.">Shares: Motor Spirit 47%, HSD 42.3%, Furnace Oil 5.3%, Aviation 3.1%, HOBC 1.8%, Kerosene 0.41%, LDO 0.1%.</canvas>
+        </div>
+        <div class="src">Source: EYB 2024-25, Table 2.6. Total petroleum energy consumption: 16,236,437 tonnes. Kerosene segment (0.41%) is too small to label directly on chart; shown in legend.</div>
+      </div>
+
+      <div class="panel">
+        <div class="pt">POL Basket — All Products (FY2024-25)</div>
+        <table class="dt" style="font-size:12px">
+          <thead>
+            <tr><th>Product</th><th class="nr">Volume (T)</th><th class="nr">Share</th><th class="nr">YoY</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Motor Spirit</td><td class="nr">7,625,877</td><td class="nr">47.0%</td><td class="nr gn">+6.7%</td></tr>
+            <tr><td>HSD</td><td class="nr">6,874,875</td><td class="nr">42.3%</td><td class="nr gn">+10.3%</td></tr>
+            <tr><td>Furnace Oil</td><td class="nr">867,148</td><td class="nr">5.3%</td><td class="nr rd2">−28.2%</td></tr>
+            <tr><td>Aviation Fuels</td><td class="nr">496,998</td><td class="nr">3.1%</td><td class="nr gn">+1.6%</td></tr>
+            <tr><td>HOBC</td><td class="nr">290,078</td><td class="nr">1.8%</td><td class="nr gn">+171.2%</td></tr>
+            <tr><td><strong>Kerosene</strong></td><td class="nr hl"><strong>65,964</strong></td><td class="nr am2"><strong>0.41%</strong></td><td class="nr gn"><strong>+15.85%</strong></td></tr>
+            <tr><td>LDO</td><td class="nr">15,497</td><td class="nr">0.1%</td><td class="nr rd2">−4.6%</td></tr>
+            <tr><td><strong>Grand Total</strong></td><td class="nr"><strong>16,236,437</strong></td><td class="nr"><strong>100%</strong></td><td class="nr gn"><strong>+6.34%</strong></td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:1.1rem">
+          <div class="cr"><span class="cl">Kerosene share FY2019-20</span><span class="cv">0.52%</span></div>
+          <div class="cr"><span class="cl">Kerosene share FY2024-25</span><span class="cv am2">0.41%</span></div>
+          <div class="cr"><span class="cl">Share trend</span><span class="cv rd2">Declining as a proportion</span></div>
+          <div class="cr"><span class="cl">Annual revenue foregone (est.)</span><span class="cv am2">~PKR 7 billion</span></div>
+          <div class="cr"><span class="cl">Recovery from Apr 2025 hike</span><span class="cv">~PKR 1.5 billion p.a.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1.25rem"></div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="pt">Structural Forces Shaping the Demand Outlook</div>
+        <div class="force-row"><span class="tag rd" style="flex-shrink:0;margin-top:1px">Negative</span><span>Rural electrification expanding grid access to previously off-grid kerosene users; BTM solar (26.8 GW installed base as of 2025) reducing household electricity cost further and accelerating grid-equivalent access.</span></div>
+        <div class="force-row"><span class="tag rd" style="flex-shrink:0;margin-top:1px">Negative</span><span>Government LPG cylinder distribution subsidies directly substituting kerosene in cooking and heating — a policy deliberately targeting the same household segment.</span></div>
+        <div class="force-row"><span class="tag rd" style="flex-shrink:0;margin-top:1px">Negative</span><span>Demographic shift: younger rural households more likely to adopt modern fuels; kerosene use concentrated in older, remoter, more conservative communities.</span></div>
+        <div class="force-row"><span class="tag am" style="flex-shrink:0;margin-top:1px">Risk</span><span>Mar–Apr 2025 Customs Duty escalation (Rs 0.05 → Rs 18.95/L) partially offsets ex-refinery price relief; further PDL or GST hikes could choke the 2024-25 price-led demand recovery and return market to accelerated contraction.</span></div>
+        <div class="force-row"><span class="tag tl" style="flex-shrink:0;margin-top:1px">Support</span><span>Brent crude softness expected to persist through CY2025–26, keeping ex-refinery prices in the Rs 135–155/L range and consumer prices near Rs 165–175/L even with higher duties.</span></div>
+        <div class="force-row"><span class="tag tl" style="flex-shrink:0;margin-top:1px">Support</span><span>LPG price spikes in winter months push marginal rural households back to kerosene — a recurring seasonal support pattern that creates a floor for demand.</span></div>
+        <div class="force-row"><span class="tag tl" style="flex-shrink:0;margin-top:1px">Support</span><span>Refinery surplus dynamics: as kerosene market volume declines, ex-refinery prices face downward pressure from by-product oversupply — a self-stabilising mechanism that keeps consumer prices soft.</span></div>
+      </div>
+
+      <div class="panel">
+        <div class="pt">Indicative Consumption Scenarios — FY2027-28 Projection</div>
+        <table class="dt" style="font-size:12px">
+          <thead>
+            <tr><th>Scenario</th><th>Key Assumption</th><th class="nr">Est. FY2027-28</th><th class="nr">ACGR</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag rd">Bear</span></td>
+              <td style="font-size:11px;line-height:1.4">PDL hikes, C&amp;E stays elevated, grid expands rapidly</td>
+              <td class="nr rd2">~42,000 T</td>
+              <td class="nr rd2">−9% p.a.</td>
+            </tr>
+            <tr>
+              <td><span class="tag am">Base</span></td>
+              <td style="font-size:11px;line-height:1.4">Current trajectory resumes; no major policy change</td>
+              <td class="nr am2">~53,000 T</td>
+              <td class="nr am2">−6% p.a.</td>
+            </tr>
+            <tr>
+              <td><span class="tag gn">Bull</span></td>
+              <td style="font-size:11px;line-height:1.4">Brent soft, duty stable, LPG disruption supports demand</td>
+              <td class="nr gn">~62,000 T</td>
+              <td class="nr gn">−2% p.a.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="box" style="margin-top:1rem">
+          <p><strong>Policy prescription:</strong> Even in the bull scenario, kerosene consumption declines further — making this market a managed exit, not a growth story. The appropriate posture is an orderly fiscal normalisation: gradually raising PDL and applying a reduced GST rate over a 3–5 year schedule, while transitioning social protection for low-income households to targeted LPG or electricity vouchers. Blanket kerosene price concessions are an increasingly blunt and leaky instrument as the user base shrinks and the middle class — for whom kerosene has long been substituted — represents an ever-smaller share of remaining demand.</p>
+        </div>
+
+        <div class="cr" style="margin-top:.75rem"><span class="cl">EYB 2024-25 baseline (anchor)</span><span class="cv hl">65,964 T</span></div>
+        <div class="cr"><span class="cl">Annual revenue foregone vs petrol treatment</span><span class="cv am2">~PKR 7 bn/yr</span></div>
+        <div class="cr"><span class="cl">Recovered via Apr 2025 C&amp;E hike</span><span class="cv">~PKR 1.5 bn/yr</span></div>
+        <div class="cr"><span class="cl">Remaining implicit subsidy (est.)</span><span class="cv rd2">~PKR 5.5 bn/yr</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /page -->
+
+<!-- ============================================================
+     PAGE FOOTER
+     ============================================================ -->
+<div class="page-footer">
+  <div class="inner">
+    <strong>Sources:</strong> Pakistan Energy Yearbook 2024-25, Hydrocarbon Development Institute of Pakistan (HDIP), Ministry of Energy (Petroleum Division). Consumption data: OCAC (Oil Companies Advisory Council), Table 2.6. Pricing data: DG(Oil), Table 2.15.2. Refinery production: Tables 2.5.1–2.5.6. Import data: Table 2.12. Gross Calorific Values (TOE conversion): EYB Annex. Refinery FY2024-25 output estimates are computed from trend analysis anchored to Table 2.6 national total — exact refinery-level FY2024-25 breakdowns not fully published in EYB. Consumption scenarios and fiscal cost estimates are indicative and not official projections. Analytical commentary and framework: <strong>Ammar H. Khan</strong>, May 2026.
+  </div>
+</div>
+
+<!-- ============================================================
+     CHARTS + TAB LOGIC
+     ============================================================ -->
+<script>
+(function() {
+
+  /* ---------- PALETTE ---------- */
+  const TEAL  = '#036B7A';
+  const AMB   = '#C8923A';
+  const GRN   = '#52B788';
+  const GRY   = '#888780';
+  const RED   = '#9B2335';
+  const GRID  = 'rgba(0,0,0,0.07)';
+  const TICK  = '#888';
+  const TF    = { size: 11.5, family: 'system-ui' };
+
+  /* ---------- CHART 1: CONSUMPTION ---------- */
+  new Chart(document.getElementById('ch-cons'), {
+    type: 'bar',
+    data: {
+      labels: ['FY2019-20', 'FY2020-21', 'FY2021-22', 'FY2022-23', 'FY2023-24', 'FY2024-25'],
+      datasets: [{
+        label: 'Consumption (Tonnes)',
+        data: [88939, 70211, 65691, 55869, 56942, 65964],
+        backgroundColor: [TEAL, TEAL, TEAL, TEAL, TEAL, AMB],
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ' ' + c.parsed.y.toLocaleString() + ' tonnes' } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: TF, color: TICK } },
+        y: {
+          grid: { color: GRID },
+          ticks: { font: TF, color: TICK, callback: v => (v / 1000).toFixed(0) + 'k' },
+          min: 0, max: 105000
+        }
+      }
+    }
+  });
+
+  /* ---------- CHART 2: PRICE TREND ---------- */
+  const LABELS_24 = ['Jul(1)','Jul(16)','Aug(1)','Aug(18)','Sep(1)','Sep(16)','Oct(1)','Oct(16)','Nov(1)','Nov(16)','Dec(1)','Dec(16)','Jan(1)','Jan(16)','Feb(1)','Feb(16)','Mar(1)','Mar(16)','Mar(29)','Apr(16)','May(1)','May(16)','Jun(1)','Jun(16)'];
+  const PRICE_24  = [181.86,183.71,177.39,171.77,169.62,158.47,154.90,163.02,161.54,165.60,164.98,161.66,162.95,169.25,174.85,171.65,168.12,168.12,169.38,169.38,169.69,164.65,165.04,169.20];
+  const PRICE_23  = [171.05,172.39,192.38,217.15,233.52,244.81,237.28,214.85,211.03,204.98,201.16,191.02,188.83,186.86,186.62,188.57,190.01,188.66,186.39,193.08,183.34,173.48,171.61,171.81];
+
+  new Chart(document.getElementById('ch-pr'), {
+    type: 'line',
+    data: {
+      labels: LABELS_24,
+      datasets: [
+        {
+          label: 'FY2024-25',
+          data: PRICE_24,
+          borderColor: TEAL,
+          backgroundColor: 'rgba(3,107,122,0.07)',
+          fill: true,
+          tension: 0.35,
+          pointRadius: 3,
+          pointHoverRadius: 6,
+          borderWidth: 2.5
+        },
+        {
+          label: 'FY2023-24',
+          data: PRICE_23,
+          borderColor: AMB,
+          backgroundColor: 'rgba(200,146,58,0.04)',
+          fill: false,
+          tension: 0.35,
+          borderDash: [6, 4],
+          pointRadius: 2,
+          pointHoverRadius: 5,
+          borderWidth: 1.8
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: c => c.dataset.label + ': Rs ' + c.parsed.y.toFixed(2) + '/L'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10.5, family: 'system-ui' }, color: TICK, maxRotation: 45, autoSkip: false }
+        },
+        y: {
+          grid: { color: GRID },
+          ticks: { font: TF, color: TICK, callback: v => 'Rs ' + v },
+          min: 140, max: 260
+        }
+      }
+    }
+  });
+
+  /* ---------- CHART 3: STACKED COMPONENTS ---------- */
+  new Chart(document.getElementById('ch-stk'), {
+    type: 'bar',
+    data: {
+      labels: ['Jul 2024', 'Oct 2024', 'Jan 2025', 'Mar 2025 ▲', 'Apr 2025 ▲▲', 'Jun 2025'],
+      datasets: [
+        { label: 'Ex-Refinery',    data: [172.26, 145.42, 152.55, 147.70, 140.97, 141.22], backgroundColor: TEAL, stack: 'p', borderRadius: 0 },
+        { label: 'PDL',            data: [1.58,   1.58,   1.58,   1.58,   1.58,   1.58],   backgroundColor: GRN,  stack: 'p' },
+        { label: 'OMC Margin',     data: [7.97,   7.85,   8.77,   7.88,   7.88,   7.45],   backgroundColor: GRY,  stack: 'p' },
+        { label: 'Customs/Excise', data: [0.05,   0.05,   0.05,   10.96,  18.95,  18.95],  backgroundColor: AMB,  stack: 'p' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { mode: 'index', callbacks: { label: c => c.dataset.label + ': Rs ' + c.parsed.y.toFixed(2) + '/L' } }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: TF, color: TICK } },
+        y: { stacked: true, grid: { color: GRID }, ticks: { font: TF, color: TICK, callback: v => 'Rs ' + v }, min: 0, max: 215 }
+      }
+    }
+  });
+
+  /* ---------- CHART 4: REFINERY (HORIZONTAL BAR) ---------- */
+  new Chart(document.getElementById('ch-ref'), {
+    type: 'bar',
+    data: {
+      labels: ['ENAR EPRF', 'PARCO', 'PRL', 'Cnergyico', 'NRL'],
+      datasets: [{
+        label: 'Est. FY2024-25 output (T)',
+        data: [30000, 22000, 9000, 4000, 964],
+        backgroundColor: [
+          '#036B7A',
+          'rgba(3,107,122,0.75)',
+          'rgba(3,107,122,0.55)',
+          'rgba(3,107,122,0.38)',
+          'rgba(3,107,122,0.22)'
+        ],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ' ' + c.parsed.x.toLocaleString() + ' T (est.)' } }
+      },
+      scales: {
+        x: { grid: { color: GRID }, ticks: { font: TF, color: TICK, callback: v => (v / 1000).toFixed(0) + 'k T' } },
+        y: { grid: { display: false }, ticks: { font: { size: 12.5, family: 'system-ui' }, color: '#444' } }
+      }
+    }
+  });
+
+  /* ---------- CHART 5: POL BASKET (DONUT) ---------- */
+  new Chart(document.getElementById('ch-bsk'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Motor Spirit', 'HSD', 'Furnace Oil', 'Aviation Fuels', 'HOBC', 'Kerosene', 'LDO'],
+      datasets: [{
+        data: [7625877, 6874875, 867148, 496998, 290078, 65964, 15497],
+        backgroundColor: [TEAL, AMB, RED, GRN, GRY, '#1D9E75', '#C4B49A'],
+        borderWidth: 2,
+        borderColor: '#FFFFFF'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: c => c.label + ': ' + (c.parsed / 16236437 * 100).toFixed(2) + '%  (' + c.parsed.toLocaleString() + ' T)'
+          }
+        }
+      }
+    }
+  });
+
+  /* ---------- TAB LOGIC ---------- */
+  const btns = document.querySelectorAll('.tab-btn');
+  const secs = {
+    'ov': document.getElementById('s-ov'),
+    'pt': document.getElementById('s-pt'),
+    'pm': document.getElementById('s-pm'),
+    'sc': document.getElementById('s-sc'),
+    'mc': document.getElementById('s-mc')
+  };
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      Object.values(secs).forEach(s => s.classList.remove('on'));
+      const target = secs[btn.dataset.tab];
+      if (target) target.classList.add('on');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
