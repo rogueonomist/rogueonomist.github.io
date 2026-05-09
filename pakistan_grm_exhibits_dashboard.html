@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Refinery GRM Analytics — Senior Decision Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bg2: #FAFAFA;
+  --bg3: #F7F4EF;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --accent2: #A97924;
+  --green: #52B788;
+  --green2: #1a6b3c;
+  --red: #9B2335;
+  --blue: #6EA8C4;
+  --navy: #0B3558;
+  --slate: #667085;
+  --text: #1A1A1A;
+  --text2: #666666;
+  --text3: #999999;
+  --shadow: rgba(26,26,26,0.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--bg);color:#2D2D2D;line-height:1.6;font-size:14px}
+.container{max-width:1180px;margin:0 auto;padding:0 1.5rem 4rem}
+.nav-strip{position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(10px);z-index:10;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0.75rem 1.5rem;display:flex;gap:1.2rem;flex-wrap:wrap;font-size:12px;color:var(--text3)}
+.nav-inner a{text-decoration:none;color:var(--text2)}
+.nav-inner a:hover{color:var(--accent)}
+.doc-header{border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;margin-bottom:2.5rem;position:relative}
+.doc-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.75rem}
+.doc-title{font-family:Georgia,serif;font-size:40px;font-weight:400;color:var(--text);line-height:1.16;margin-bottom:0.75rem;max-width:1050px}
+.doc-sub{font-size:15px;color:var(--text2);margin-bottom:1.25rem;max-width:1040px}
+.doc-meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:12px;color:var(--text3);padding-top:1rem;border-top:1px solid var(--border)}
+.doc-meta span strong{color:var(--text);font-weight:600}
+.section{margin:3rem 0 2rem}.section-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.5rem}.section-title{font-family:Georgia,serif;font-size:25px;font-weight:400;color:var(--text);margin-bottom:0.5rem}.section-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;max-width:980px}.exhibit-tag{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.4rem}hr.divider{border:none;border-top:1px solid var(--border);margin:2.75rem 0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:0.85rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.6rem}.kpi-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.35rem;border-top:3px solid var(--border);transition:border-color 0.2s;box-shadow:0 6px 20px var(--shadow)}.kpi-box.amber{border-top-color:var(--accent)}.kpi-box.green{border-top-color:var(--green)}.kpi-box.red{border-top-color:var(--red)}.kpi-box.slate{border-top-color:#888}.kpi-box.blue{border-top-color:var(--blue)}.kpi-num{font-family:Georgia,serif;font-size:30px;font-weight:400;color:var(--text);line-height:1}.kpi-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.55rem}.kpi-note{font-size:12px;color:var(--accent);margin-top:0.45rem;font-weight:500;line-height:1.4}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.45rem;box-shadow:0 6px 20px var(--shadow)}.panel.white{background:var(--bg)}.panel-title{font-family:Georgia,serif;font-size:16px;font-weight:400;color:var(--text);margin-bottom:0.25rem}.panel-sub{font-size:12px;color:var(--text3);margin-bottom:1rem}.callout{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:var(--bg2);border-radius:0 4px 4px 0;margin:1.2rem 0;font-size:13px;color:var(--text2)}.callout strong{color:var(--text);font-weight:600}
+.ch-wrap{position:relative;width:100%}.ch-220{height:220px}.ch-260{height:260px}.ch-300{height:300px}.ch-340{height:340px}.ch-380{height:380px}.ch-420{height:420px}
+.est-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--bg)}.est-table th{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);padding:0.62rem 0.75rem;border-bottom:2px solid var(--border);background:var(--bg);text-align:left;white-space:nowrap}.est-table td{padding:0.68rem 0.75rem;border-bottom:1px solid var(--border);color:#2D2D2D;vertical-align:top}.est-table tr:last-child td{border-bottom:none}.est-table tr:hover td{background:#FAFAFA}.est-table .val{font-family:Georgia,serif;font-size:13px;font-weight:400;text-align:right;white-space:nowrap;color:var(--text)}.est-table .small{font-size:11px;color:var(--text2);line-height:1.45}.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;letter-spacing:0.04em;white-space:nowrap}.b-scale{background:#FDF3E6;color:#8B5E1A}.b-opt{background:#EAF5EF;color:#1a6b3c}.b-reg{background:#EBF3FB;color:#1a4f7a}.b-risk{background:#FFF3F3;color:#7a1a2a}.b-dev{background:#F5F5F5;color:#555}
+.story-list{display:grid;gap:0.75rem}.story{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1rem}.story h4{font-family:Georgia,serif;font-size:15px;color:var(--text);margin-bottom:0.35rem}.story p{font-size:12px;color:var(--text2)}
+.matrix{display:grid;grid-template-columns:1.1fr 1fr;gap:1rem}.formula{font-family:'SFMono-Regular',Consolas,monospace;background:#fff;border:1px solid var(--border);border-radius:4px;padding:0.7rem;font-size:11px;color:var(--text2);overflow:auto}
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem}.road-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.15rem;border-top:3px solid var(--border)}.road-card.amber{border-top-color:var(--accent)}.road-card.green{border-top-color:var(--green)}.road-card.blue{border-top-color:var(--blue)}.road-card.red{border-top-color:var(--red)}.road-title{font-family:Georgia,serif;font-size:15px;color:var(--text);margin-bottom:0.25rem}.road-meta{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.6rem}.road-card ul{padding-left:1rem;color:var(--text2);font-size:12px;line-height:1.55}.note{font-size:11px;color:var(--text3);line-height:1.5;margin-top:0.8rem}
+.doc-footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:12px;color:var(--text3)}.doc-footer strong{color:var(--text)}
+@media(max-width:980px){.kpi-grid{grid-template-columns:1fr 1fr}.g4,.g3,.roadmap,.matrix{grid-template-columns:1fr 1fr}.g2,.g5{grid-template-columns:1fr}}
+@media(max-width:720px){.g2,.g3,.g4,.g5,.kpi-grid,.roadmap,.matrix{grid-template-columns:1fr}.doc-title{font-size:31px}.container{padding:0 1rem 3rem}.nav-inner{padding:0.75rem 1rem}.ch-340,.ch-380,.ch-420{height:300px}}
+@media print{.nav-strip{display:none}.panel,.kpi-box,.road-card{box-shadow:none}.container{max-width:100%;padding:0 0.4in}.doc-title{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="nav-strip"><div class="nav-inner">
+  <a href="#snapshot">Snapshot</a><a href="#sector">Sector Margin Cycle</a><a href="#companies">Company Comparison</a><a href="#profit">Profit Pass-Through</a><a href="#drivers">GRM Drivers</a><a href="#playbook">Implications</a><a href="#annex">Data Annex</a>
+</div></div>
+<div class="container">
+  <div class="doc-header">
+    <div class="doc-eyebrow">Pakistan Downstream Petroleum · Gross Refinery Margin Analytics · 2019–2026</div>
+    <h1 class="doc-title">Gross Refinery Margins Over the Years:<br>What the Numbers Say, Why They Moved, and What It Means</h1>
+    <p class="doc-sub">A senior-decision-maker exhibit pack built in the same dashboard aesthetic as the uploaded template. It converts refinery financial statements, sector margins, regional product-crack signals and latest quarterly results into a structured GRM story.</p>
+    <div class="doc-meta">
+      <span><strong>Perspective</strong> · Managing Director, oil trading firm</span>
+      <span><strong>Scope</strong> · Listed refineries + sector-level margins</span>
+      <span><strong>Time horizon</strong> · FY21–FY26 YTD with 2019–2020 context</span>
+      <span><strong>Key lens</strong> · GRM → Gross Profit → Operating Profit → PAT</span>
+    </div>
+  </div>
+
+  <section id="snapshot" class="section">
+    <div class="section-eyebrow">Section A</div>
+    <h2 class="section-title">Executive Snapshot</h2>
+    <p class="section-sub">The refinery sector’s gross margin cycle peaked in FY22, compressed into a five-year low in FY25, and then rebounded sharply in 1QFY26/Q3FY26 as product cracks and ex-refinery economics improved. The key insight is that refinery earnings are driven by margin, not revenue.</p>
+    <div class="kpi-grid">
+      <div class="kpi-box red"><div class="kpi-num">2.2%</div><div class="kpi-label">FY25 Sector Gross Margin</div><div class="kpi-note">Five-year low in PACRA series</div></div>
+      <div class="kpi-box amber"><div class="kpi-num">$5.78</div><div class="kpi-label">FY25 Local GRM</div><div class="kpi-note">USD/bbl; down from $8.27 in FY24</div></div>
+      <div class="kpi-box green"><div class="kpi-num">9.0%</div><div class="kpi-label">1QFY26 Gross Margin</div><div class="kpi-note">Sector rebound as spreads widened</div></div>
+      <div class="kpi-box blue"><div class="kpi-num">20.07%</div><div class="kpi-label">Highest Q3FY26 Company Margin</div><div class="kpi-note">ATRL accounting gross margin</div></div>
+      <div class="kpi-box slate"><div class="kpi-num">84.2%</div><div class="kpi-label">FY25 Net Profit Decline</div><div class="kpi-note">Sector PAT collapse vs FY24</div></div>
+    </div>
+
+    <div class="g2">
+      <div class="panel white">
+        <div class="exhibit-tag">Exhibit A-1</div>
+        <div class="panel-title">GRM is the refinery sector’s profit engine</div>
+        <div class="panel-sub">Accounting gross margins provide the public-data proxy; true GRM requires product yield and crude-slate data.</div>
+        <div class="callout"><strong>Core finding:</strong> when gross margins narrowed in FY25, sector gross profit fell by roughly two-thirds, operating profit fell by roughly four-fifths, and net profit also collapsed. When spreads widened again in FY26, the listed names swung sharply back into profitability.</div>
+        <table class="est-table">
+          <tbody>
+            <tr><td><span class="badge b-scale">Margin cycle</span></td><td>FY22 was the peak year in the PACRA gross-margin series; FY25 was the trough.</td></tr>
+            <tr><td><span class="badge b-risk">Volatility</span></td><td>Inventory timing, crude procurement and product mix can overwhelm revenue growth.</td></tr>
+            <tr><td><span class="badge b-opt">Best beta</span></td><td>PRL and Cnergyico show strongest earnings torque to margin recovery; NRL is high beta; ATRL is more defensive.</td></tr>
+            <tr><td><span class="badge b-dev">Policy angle</span></td><td>Upgrading yield toward MS/HSD and away from furnace oil is the long-term route to more stable margins.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit A-2</div>
+        <div class="panel-title">Sector profit-margin cycle</div>
+        <div class="panel-sub">Gross margin, operating margin and net margin across the sector</div>
+        <div class="ch-wrap ch-300"><canvas id="sectorMargins"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="sector" class="section">
+    <div class="section-eyebrow">Section B</div>
+    <h2 class="section-title">Sector Margin Cycle: From FY22 Peak to FY25 Trough to FY26 Recovery</h2>
+    <p class="section-sub">The sector chart below separates the margin rate story from the absolute profit pool. FY25 was not just a lower-margin year; it converted into a dramatic fall in gross profit, operating profit and net profit.</p>
+
+    <div class="g2" style="margin-bottom:1.25rem">
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit B-1</div>
+        <div class="panel-title">Local GRM in USD/bbl</div>
+        <div class="panel-sub">PACRA disclosed sector local GRM for FY24 and FY25</div>
+        <div class="ch-wrap ch-260"><canvas id="localGRM"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit B-2</div>
+        <div class="panel-title">Sector profit pool compression</div>
+        <div class="panel-sub">PKR bn · FY24 vs FY25</div>
+        <div class="ch-wrap ch-260"><canvas id="profitPool"></canvas></div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit B-3</div>
+        <div class="panel-title">Narrative timeline</div>
+        <div class="panel-sub">How the GRM regime evolved</div>
+        <div class="roadmap" style="grid-template-columns:repeat(4,1fr);gap:0.8rem">
+          <div class="road-card slate"><div class="road-title">2019–2020</div><div class="road-meta">Normal → COVID</div><ul><li>Demand shock reduced throughput.</li><li>Inventory and price volatility compressed margins.</li><li>FO drag remained structural.</li></ul></div>
+          <div class="road-card green"><div class="road-title">FY21–FY22</div><div class="road-meta">Recovery + diesel crack surge</div><ul><li>Gross margin rose to 12.3% in FY22.</li><li>Diesel/product cracks strengthened.</li><li>Earnings recovered sharply.</li></ul></div>
+          <div class="road-card amber"><div class="road-title">FY23–FY24</div><div class="road-meta">Normalization</div><ul><li>Margins remained positive but eased.</li><li>Gross margin moved from 8.1% to 5.9%.</li><li>Product spreads normalized.</li></ul></div>
+          <div class="road-card red"><div class="road-title">FY25 → FY26</div><div class="road-meta">Compression → rebound</div><ul><li>FY25 gross margin fell to 2.2%.</li><li>1QFY26 rebounded to 9.0%.</li><li>Q3FY26 listed results were exceptional.</li></ul></div>
+        </div>
+      </div>
+      <div class="panel white">
+        <div class="exhibit-tag">Exhibit B-4</div>
+        <div class="panel-title">Why FY25 was so painful</div>
+        <div class="panel-sub">The problem was not only lower revenue; it was lower spread captured per barrel/tonne.</div>
+        <table class="est-table">
+          <thead><tr><th>Metric</th><th>FY24</th><th>FY25</th><th>Change</th><th>Interpretation</th></tr></thead>
+          <tbody>
+            <tr><td>Sector revenue</td><td class="val">PKR 2,381.3bn</td><td class="val">PKR 2,182.2bn</td><td class="val">-8.4%</td><td class="small">Lower global prices and smuggling-related volume pressure reduced topline.</td></tr>
+            <tr><td>Gross profit</td><td class="val">PKR 141.2bn</td><td class="val">PKR 47.6bn</td><td class="val">-66.3%</td><td class="small">Gross margin compression destroyed the margin pool.</td></tr>
+            <tr><td>Operating profit</td><td class="val">PKR 119.4bn</td><td class="val">PKR 25.9bn</td><td class="val">-78.3%</td><td class="small">Lower gross profit flowed through to operating profitability.</td></tr>
+            <tr><td>Net profit</td><td class="val">PKR 68.7bn</td><td class="val">PKR 10.8bn</td><td class="val">-84.2%</td><td class="small">Fixed costs, finance cost and tax structure amplified the hit.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="companies" class="section">
+    <div class="section-eyebrow">Section C</div>
+    <h2 class="section-title">Company-Level GRM Proxies: Latest Listed Refinery Comparison</h2>
+    <p class="section-sub">Because true trading-desk GRM requires yield and throughput data, company-level accounting gross margin is used as the consistent proxy. Q3FY26 shows a very strong rebound across listed names, with ATRL and PRL at the top of the accounting margin ranking.</p>
+
+    <div class="g2" style="margin-bottom:1.25rem">
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit C-1</div>
+        <div class="panel-title">Q3FY26 accounting gross margin comparison</div>
+        <div class="panel-sub">Gross profit / net revenue</div>
+        <div class="ch-wrap ch-300"><canvas id="q3Margins"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit C-2</div>
+        <div class="panel-title">9MFY26 gross margin vs PAT margin</div>
+        <div class="panel-sub">Shows how gross margin converts into shareholder earnings</div>
+        <div class="ch-wrap ch-300"><canvas id="nineMonthMargins"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel white">
+      <div class="exhibit-tag">Exhibit C-3 · Company Margin Snapshot</div>
+      <div class="panel-title">Latest 9MFY26 financial read-through</div>
+      <div style="overflow-x:auto">
+        <table class="est-table">
+          <thead><tr><th>Company</th><th>Net revenue</th><th>Gross profit</th><th>Gross margin</th><th>PAT</th><th>PAT margin</th><th>Interpretation</th></tr></thead>
+          <tbody>
+            <tr><td><strong>PRL</strong></td><td class="val">PKR 234.4bn</td><td class="val">PKR 25.49bn</td><td class="val">10.88%</td><td class="val">PKR 12.08bn</td><td class="val">5.15%</td><td class="small">Best pure-play GRM beta; sharp swing from weak FY25 to strong FY26.</td></tr>
+            <tr><td><strong>NRL</strong></td><td class="val">PKR 291.6bn</td><td class="val">PKR 23.50bn</td><td class="val">8.06%</td><td class="val">PKR 9.07bn</td><td class="val">3.11%</td><td class="small">High-beta recovery; more volatile because of product mix, lube exposure and finance sensitivity.</td></tr>
+            <tr><td><strong>ATRL</strong></td><td class="val">PKR 224.8bn</td><td class="val">PKR 22.58bn</td><td class="val">10.05%</td><td class="val">PKR 16.36bn</td><td class="val">7.28%</td><td class="small">Defensive, resilient, strong Q3; lower structural yield upside but strong financial quality.</td></tr>
+            <tr><td><strong>Cnergyico</strong></td><td class="val">PKR 261.9bn</td><td class="val">PKR 27.28bn</td><td class="val">10.42%</td><td class="val">PKR 17.12bn</td><td class="val">6.54%</td><td class="small">Highest operating leverage, but refining and marketing need segment separation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Note: Cnergyico values use consolidated 9MFY26 data from public-market reporting; earlier conversation used a standalone/unconsolidated snapshot, but this exhibit uses the latest consolidated public figure for consistency with the source.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="profit" class="section">
+    <div class="section-eyebrow">Section D</div>
+    <h2 class="section-title">GRM → Gross Profit → PAT: The Pass-Through Mechanics</h2>
+    <p class="section-sub">The sector behaves like an operating-leverage machine. Small movements in gross margin can create large changes in PAT because salaries, utilities, finance cost, depreciation, tax and working-capital burdens do not fall proportionately when cracks compress.</p>
+
+    <div class="g2" style="margin-bottom:1.25rem">
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit D-1</div>
+        <div class="panel-title">Sector margin ladder</div>
+        <div class="panel-sub">Gross, operating and net margins from peak to trough to rebound</div>
+        <div class="ch-wrap ch-340"><canvas id="marginLadder"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit D-2</div>
+        <div class="panel-title">Sensitivity: 1 percentage point gross-margin change</div>
+        <div class="panel-sub">Approximate PKR bn impact on gross profit using 9MFY26 net revenue</div>
+        <div class="ch-wrap ch-340"><canvas id="onePercentSensitivity"></canvas></div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="panel white">
+        <div class="exhibit-tag">Exhibit D-3</div>
+        <div class="panel-title">Why revenue can mislead</div>
+        <div class="story-list">
+          <div class="story"><h4>PRL: almost same 9M revenue, opposite earnings outcome</h4><p>PRL’s 9MFY25 and 9MFY26 net revenue were broadly similar, but gross profit moved from negligible to more than PKR 25bn as margins recovered.</p></div>
+          <div class="story"><h4>Cnergyico: operating leverage is the story</h4><p>Higher revenue helped, but the real turnaround came because cost of sales grew far more slowly than revenue, allowing gross profit to surge.</p></div>
+          <div class="story"><h4>NRL: high beta means high volatility</h4><p>NRL moved from large losses to profit as gross margin returned, but it remains exposed to inventory timing, crude mix and finance costs.</p></div>
+        </div>
+      </div>
+      <div class="panel white">
+        <div class="exhibit-tag">Exhibit D-4</div>
+        <div class="panel-title">Practical trading desk interpretation</div>
+        <table class="est-table">
+          <tbody>
+            <tr><td><span class="badge b-opt">Buy / positive setup</span></td><td>Regional HSD/MS cracks widening, ex-refinery prices firm, crude/product prices stable to rising, local throughput improving.</td></tr>
+            <tr><td><span class="badge b-risk">Avoid / reduce setup</span></td><td>Cracks compressing, falling product prices after inventory build, FO surplus widening, finance costs rising.</td></tr>
+            <tr><td><span class="badge b-scale">Policy setup</span></td><td>Upgrade incentives should be tied to yield improvement: more MS/HSD, less FO, lower imported product dependence.</td></tr>
+            <tr><td><span class="badge b-reg">Pump price setup</span></td><td>GRM is only one component of pump price; taxes, PDL, IFEM and import premiums can dominate consumer prices.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="drivers" class="section">
+    <div class="section-eyebrow">Section E</div>
+    <h2 class="section-title">What Actually Drives GRM in Pakistan?</h2>
+    <p class="section-sub">A refinery’s margin is determined by product cracks, yield structure, crude cost, logistics, inventory timing and policy treatment. Pakistani refineries remain constrained by low-complexity configurations and furnace-oil drag.</p>
+
+    <div class="g2" style="margin-bottom:1.25rem">
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit E-1</div>
+        <div class="panel-title">HSD and petrol supply structure</div>
+        <div class="panel-sub">Illustrative recent local/import shares</div>
+        <div class="ch-wrap ch-260"><canvas id="productShares"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="exhibit-tag">Exhibit E-2</div>
+        <div class="panel-title">Product-wise supply context</div>
+        <div class="panel-sub">FY25 production/import indicators from sector data</div>
+        <div class="ch-wrap ch-260"><canvas id="supplyBars"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel white">
+      <div class="exhibit-tag">Exhibit E-3 · Margin Driver Map</div>
+      <div class="panel-title">GRM is not one number; it is the output of the barrel</div>
+      <div style="overflow-x:auto">
+        <table class="est-table">
+          <thead><tr><th>Driver</th><th>How it affects GRM</th><th>Pakistan-specific issue</th><th>Policy / trading implication</th></tr></thead>
+          <tbody>
+            <tr><td><strong>HSD crack</strong></td><td>Higher diesel spreads lift blended product value.</td><td>HSD is large in domestic consumption and freight/agriculture inflation.</td><td>Track Singapore/Arab Gulf gasoil cracks as the primary earnings signal.</td></tr>
+            <tr><td><strong>Mogas crack</strong></td><td>Higher petrol spreads benefit MS-yielding refineries.</td><td>Pakistan remains structurally petrol-import dependent.</td><td>Term petrol supply and local MS-yield upgrades matter for prices.</td></tr>
+            <tr><td><strong>Furnace oil yield</strong></td><td>High FO output lowers blended value when FO trades below crude.</td><td>Hydro-skimming configurations create FO drag.</td><td>Brownfield upgrades must reduce FO and increase Euro-V MS/HSD.</td></tr>
+            <tr><td><strong>Crude slate</strong></td><td>Lighter/sweeter crude can improve yield but may cost more.</td><td>Local refineries have limited flexibility; import logistics and FX matter.</td><td>Use crude procurement as a yield-management tool.</td></tr>
+            <tr><td><strong>Inventory timing</strong></td><td>Falling prices after inventory build can create large losses.</td><td>Quarterly accounts may reflect inventory gain/loss, not only processing margin.</td><td>Adjust reported margins for inventory effects where data allows.</td></tr>
+            <tr><td><strong>Utilization</strong></td><td>Higher throughput dilutes fixed O&M and overheads.</td><td>Demand, smuggling, refinery outages and FO disposal affect runs.</td><td>Margin models must include throughput, not only price cracks.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="playbook" class="section">
+    <div class="section-eyebrow">Section F</div>
+    <h2 class="section-title">Implications for Senior Policymakers</h2>
+    <p class="section-sub">The GRM evidence supports a sequenced policy playbook: protect refinery viability, but do not embed inefficient import-cost assumptions in local barrels; accelerate upgrades; and use storage/procurement reform to reduce price spikes.</p>
+    <div class="roadmap">
+      <div class="road-card amber"><div class="road-title">1. Price Formula</div><div class="road-meta">Cost attribution</div><ul><li>Separate local-refined and imported barrels.</li><li>Remove non-incurred import incidentals from local product.</li><li>Keep refineries viable; avoid forced below-cost pricing.</li></ul></div>
+      <div class="road-card green"><div class="road-title">2. Refinery Upgrade</div><div class="road-meta">Yield transformation</div><ul><li>More MS/HSD, less FO.</li><li>Release deemed-duty support against milestones.</li><li>Ring-fence escrowed upgrade funds.</li></ul></div>
+      <div class="road-card blue"><div class="road-title">3. Procurement</div><div class="road-meta">Premium discipline</div><ul><li>Term supply, premium caps and deferred payment.</li><li>Monitor product cracks daily.</li><li>Use crude/product optionality.</li></ul></div>
+      <div class="road-card red"><div class="road-title">4. Storage & PDL</div><div class="road-meta">Shock absorption</div><ul><li>Bonded and sovereign product stocks.</li><li>Countercyclical PDL.</li><li>Do not use PDL as lazy tax substitute.</li></ul></div>
+    </div>
+
+    <div class="panel white" style="margin-top:1.25rem">
+      <div class="exhibit-tag">Exhibit F-1</div>
+      <div class="panel-title">Bottom-line explanation</div>
+      <div class="callout"><strong>The sector’s story is simple:</strong> Pakistani refineries earn when regional product cracks are high and when their product slate lets them capture those cracks. They suffer when FO drag rises, crude/product prices fall through inventory, or product premiums narrow. The pump-price story is different: GRM affects ex-refinery economics, but the consumer price can still be dominated by import parity assumptions, IFEM, PDL, taxes and margins.</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="annex" class="section">
+    <div class="section-eyebrow">Annex</div>
+    <h2 class="section-title">Data Annex and Methodology</h2>
+    <div class="g2">
+      <div class="panel white">
+        <div class="exhibit-tag">Annex A</div>
+        <div class="panel-title">Definitions used in the dashboard</div>
+        <div class="formula">True GRM = Σ(Product price × Product yield) − Landed crude cost − Freight / procurement cost</div>
+        <br>
+        <div class="formula">Accounting gross margin = Gross profit / Net revenue</div>
+        <p class="note">True GRM is a trading/economic measure; accounting gross margin is a public-financial-statement proxy. The dashboard separates these explicitly.</p>
+      </div>
+      <div class="panel white">
+        <div class="exhibit-tag">Annex B</div>
+        <div class="panel-title">Source hierarchy and limitations</div>
+        <table class="est-table">
+          <tbody>
+            <tr><td><span class="badge b-reg">Sector</span></td><td>PACRA sector study for sector margin, GRM and profit-pool indicators.</td></tr>
+            <tr><td><span class="badge b-scale">Companies</span></td><td>Company quarterly/annual reports and public market summaries for latest PRL, NRL, ATRL and Cnergyico data.</td></tr>
+            <tr><td><span class="badge b-risk">Limitation</span></td><td>Annual and quarterly reported gross margin includes inventory and accounting effects; it is not a pure yield-adjusted refining spread.</td></tr>
+            <tr><td><span class="badge b-opt">Use</span></td><td>The charts are designed for decision support, not as a substitute for refinery-by-refinery crude-yield modeling.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="doc-footer">
+    <div><strong>Pakistan Refinery GRM Analytics</strong> · Sector cycle, listed-refinery comparison and policy interpretation</div>
+    <div>Designed in the uploaded dashboard aesthetic · Interactive Chart.js artifact</div>
+    <div style="color:var(--text3)">Data compiled from sector studies, financial statements, public market filings and policy analysis</div>
+  </div>
+</div>
+<script>
+const acc = '#C8923A', grn = '#52B788', red = '#9B2335', gry = '#999999', blue = '#6EA8C4', navy = '#0B3558', slate = '#667085';
+const defTooltip = { backgroundColor:'rgba(26,26,26,0.92)', titleFont:{size:11}, bodyFont:{size:11}, padding:10 };
+const grid = { color:'#F0F0F0' }; const tick = { font:{size:10} };
+Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif"; Chart.defaults.color = '#666666';
+function makeChart(id, config){ return new Chart(document.getElementById(id), config); }
+const labelsSector = ['FY21','FY22','FY23','FY24','FY25','1QFY25','1QFY26'];
+const gross = [3.4,12.3,8.1,5.9,2.2,3.0,9.0];
+const operating = [2.4,11.3,8.4,5.0,1.2,-0.2,6.1];
+const netm = [1.5,6.2,3.8,2.9,0.5,0.3,3.6];
+makeChart('sectorMargins',{type:'line',data:{labels:labelsSector,datasets:[{label:'Gross margin',data:gross,borderColor:navy,backgroundColor:'rgba(11,53,88,0.08)',fill:true,tension:0.25,pointRadius:4},{label:'Operating margin',data:operating,borderColor:acc,backgroundColor:'rgba(200,146,58,0.08)',tension:0.25,pointRadius:3},{label:'Net profit margin',data:netm,borderColor:grn,backgroundColor:'rgba(82,183,136,0.08)',tension:0.25,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(1)}%`}}},scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:{...tick,callback:v=>v+'%'},title:{display:true,text:'Margin %',font:{size:10}}}}}});
+makeChart('localGRM',{type:'bar',data:{labels:['FY24','FY25'],datasets:[{label:'Local GRM USD/bbl',data:[8.27,5.78],backgroundColor:[grn,red],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` USD ${c.raw.toFixed(2)}/bbl`}}},scales:{x:{grid:{display:false},ticks:tick},y:{beginAtZero:true,grid,ticks:{...tick,callback:v=>'$'+v},title:{display:true,text:'USD/bbl',font:{size:10}}}}}});
+makeChart('profitPool',{type:'bar',data:{labels:['Gross profit','Operating profit','Net profit'],datasets:[{label:'FY24',data:[141.2,119.4,68.7],backgroundColor:blue,borderRadius:4,borderSkipped:false},{label:'FY25',data:[47.6,25.9,10.8],backgroundColor:red,borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: PKR ${c.raw.toFixed(1)}bn`}}},scales:{x:{grid:{display:false},ticks:tick},y:{beginAtZero:true,grid,ticks:{...tick,callback:v=>'PKR '+v+'bn'}}}}});
+makeChart('q3Margins',{type:'bar',data:{labels:['ATRL','PRL','Cnergyico','NRL'],datasets:[{label:'Q3FY26 gross margin',data:[20.07,19.39,17.77,12.95],backgroundColor:[navy,grn,blue,red],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>`${c.raw.toFixed(2)}% accounting gross margin`}}},scales:{x:{grid:{display:false},ticks:tick},y:{beginAtZero:true,max:25,grid,ticks:{...tick,callback:v=>v+'%'}}}}});
+makeChart('nineMonthMargins',{type:'bar',data:{labels:['PRL','NRL','ATRL','Cnergyico'],datasets:[{label:'Gross margin',data:[10.88,8.06,10.05,10.42],backgroundColor:navy,borderRadius:3,borderSkipped:false},{label:'PAT margin',data:[5.15,3.11,7.28,6.54],backgroundColor:acc,borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(2)}%`}}},scales:{x:{grid:{display:false},ticks:tick},y:{beginAtZero:true,grid,ticks:{...tick,callback:v=>v+'%'}}}}});
+makeChart('marginLadder',{type:'line',data:{labels:['FY21','FY22 peak','FY23','FY24','FY25 trough','1QFY26 rebound'],datasets:[{label:'Gross margin',data:[3.4,12.3,8.1,5.9,2.2,9.0],borderColor:navy,backgroundColor:'rgba(11,53,88,0.08)',fill:true,tension:0.3,pointRadius:4},{label:'Operating margin',data:[2.4,11.3,8.4,5.0,1.2,6.1],borderColor:acc,tension:0.3,pointRadius:3},{label:'Net margin',data:[1.5,6.2,3.8,2.9,0.5,3.6],borderColor:grn,tension:0.3,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: ${c.raw.toFixed(1)}%`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid,ticks:{...tick,callback:v=>v+'%'}}}}});
+makeChart('onePercentSensitivity',{type:'bar',data:{labels:['PRL','NRL','ATRL','Cnergyico'],datasets:[{label:'PKR bn gross profit impact',data:[2.344,2.916,2.248,2.619],backgroundColor:[grn,red,blue,acc],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` 1pp margin swing ≈ PKR ${c.raw.toFixed(2)}bn gross profit`}}},scales:{x:{grid:{display:false},ticks:tick},y:{beginAtZero:true,grid,ticks:{...tick,callback:v=>'PKR '+v+'bn'}}}}});
+makeChart('productShares',{type:'bar',data:{labels:['Petrol / MS','HSD / Diesel'],datasets:[{label:'Local refined share',data:[34,80],backgroundColor:grn,borderRadius:3,borderSkipped:false},{label:'Imported share',data:[66,20],backgroundColor:blue,borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: ${c.raw}%`}}},scales:{x:{stacked:true,grid:{display:false},ticks:tick},y:{stacked:true,max:100,grid,ticks:{...tick,callback:v=>v+'%'}}}}});
+makeChart('supplyBars',{type:'bar',data:{labels:['HSD production','HSD imports','MOGAS production','MOGAS imports','Total POL production','Total POL imports'],datasets:[{label:'FY25 mln MT',data:[5.0,2.0,2.5,5.5,10.4,7.8],backgroundColor:[grn,blue,grn,blue,acc,red],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.raw.toFixed(1)} mln MT`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:45,minRotation:25}},y:{beginAtZero:true,grid,ticks:{...tick,callback:v=>v+'m'}}}}});
+</script>
+</body>
+</html>
