@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Kerosene Market — Updated to April 2026 | Ammar H. Khan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--white:#FFFFFF;--bg:#FAFAFA;--border:#E5E5E5;--teal:#036B7A;--amber:#C8923A;--green:#52B788;--red:#9B2335;--purple:#7C3AED;--grey:#888780;--t1:#1A1A1A;--t2:#555555;--t3:#999999;--shadow:0 2px 12px rgba(0,0,0,0.06)}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--bg);color:var(--t1);line-height:1.6;min-height:100vh}
+.page{max-width:1080px;margin:0 auto;padding:0 1.5rem 3rem}
+.header-bar{background:var(--white);border-bottom:1px solid var(--border);padding:2rem 0 1.75rem;margin-bottom:1.5rem}
+.header-inner{max-width:1080px;margin:0 auto;padding:0 1.5rem}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:.5rem}
+h1.page-title{font-family:Georgia,serif;font-size:34px;font-weight:400;color:var(--t1);line-height:1.2;margin-bottom:.4rem}
+.page-sub{font-size:14px;color:var(--t2);line-height:1.5}
+
+.crisis-banner{background:rgba(155,35,53,.05);border:1px solid rgba(155,35,53,.25);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:.85rem}
+.crisis-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--red);flex-shrink:0;margin-top:2px}
+.crisis-text{font-size:13.5px;color:var(--t2);line-height:1.6}
+.crisis-text strong{color:var(--t1)}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:1.75rem}
+.kpi{background:var(--white);border:1px solid var(--border);border-top:3px solid var(--teal);border-radius:10px;padding:1rem;transition:box-shadow .2s}
+.kpi:hover{box-shadow:var(--shadow)}
+.kpi.am{border-top-color:var(--amber)}.kpi.gr{border-top-color:var(--green)}.kpi.rd{border-top-color:var(--red)}.kpi.pu{border-top-color:var(--purple)}
+.kpi-n{font-family:Georgia,serif;font-size:21px;font-weight:400;color:var(--t1);line-height:1.1}
+.kpi-l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-top:.4rem}
+.kpi-d{font-size:11px;margin-top:.2rem;color:var(--t2)}.kpi-d.pos{color:#2D8A5F}.kpi-d.neg{color:var(--red)}
+
+.tab-nav{display:flex;border-bottom:1px solid var(--border);margin-bottom:2rem;background:var(--white);border-radius:10px 10px 0 0;box-shadow:var(--shadow);overflow:hidden}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:1rem 1.4rem;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .18s;margin-bottom:-1px}
+.tab-btn:hover{color:var(--t1);background:var(--bg)}
+.tab-btn.on{color:var(--teal);border-bottom-color:var(--teal);background:var(--white)}
+.sec{display:none}.sec.on{display:block}
+.sec-ey{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:.4rem}
+.sec-ti{font-family:Georgia,serif;font-size:22px;font-weight:400;color:var(--t1);margin-bottom:.8rem;line-height:1.3}
+.sec-bd{font-size:14px;color:var(--t2);line-height:1.75;margin-bottom:1.5rem;max-width:820px}
+.chart-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+.chart-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--t2);margin-bottom:1rem}
+.cw{position:relative;width:100%}
+.leg{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:.75rem;font-size:12px;color:var(--t2)}
+.li{display:flex;align-items:center;gap:6px}
+.ld{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.panel{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.25rem;box-shadow:var(--shadow)}
+.pt{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.dt{width:100%;border-collapse:collapse;font-size:13px}
+.dt th{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);padding:.6rem .75rem;border-bottom:1px solid var(--border);text-align:left;background:var(--bg)}
+.dt td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:var(--t1)}
+.dt tr:last-child td{border-bottom:none}
+.dt tbody tr:hover td{background:#F4FAFB}
+.nr{text-align:right;font-variant-numeric:tabular-nums}
+.hl{color:var(--teal);font-weight:600}.am2{color:#9A6B10;font-weight:600}.gn{color:#2D8A5F;font-weight:600}.rd2{color:var(--red);font-weight:600}.pu2{color:var(--purple);font-weight:600}
+.scrl{max-height:360px;overflow-y:auto}
+.scrl::-webkit-scrollbar{width:5px}
+.scrl::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.box{background:#FFFBF3;border:1px solid #EDD9A3;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.1rem 0}
+.box p{font-size:13.5px;color:#4A3A1A;line-height:1.65}
+.box strong{color:#2A1E05}
+.box.rd{background:#FDF0F2;border-color:#E8B4BC;border-left-color:var(--red)}
+.box.rd p{color:#4A1020}
+.box.rd strong{color:#2A0810}
+.box.tl{background:#F0FAF8;border-color:#9ED5CC;border-left-color:var(--teal)}
+.box.tl p{color:#0D3D44}
+.cr{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:13px}
+.cr:last-child{border-bottom:none}
+.cl{color:var(--t2)}.cv{font-weight:500;color:var(--t1);text-align:right}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px}
+.tag.tl{background:#E0F5F2;color:#036B7A}.tag.am{background:#FDF0DC;color:#9A6B10}.tag.rd{background:#FCEEF0;color:#9B2335}.tag.gn{background:#E4F4EC;color:#2D8A5F}.tag.gy{background:#F0EFED;color:#5C5B57}.tag.pu{background:#EDE9FE;color:#7C3AED}
+.row-am td{background:rgba(200,146,58,.06)!important}
+.row-rd td{background:rgba(155,35,53,.05)!important}
+.row-cr td{background:rgba(155,35,53,.11)!important}
+.src{font-size:11px;color:var(--t3);margin-top:.75rem;line-height:1.5}
+.force-row{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.75rem;font-size:13.5px;color:var(--t2);line-height:1.55}
+.msteps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:1rem}
+.ms{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center;position:relative}
+.ms::after{content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px}
+.ms:last-child::after{display:none}
+.ms-n{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3)}
+.ms-t{font-size:12px;font-weight:600;color:var(--t1);margin-top:.25rem;line-height:1.3}
+.ms-d{font-size:11px;color:var(--t2);margin-top:.2rem}
+.page-footer{background:var(--white);border-top:1px solid var(--border);margin-top:3rem;padding:1.5rem 0}
+.page-footer .inner{max-width:1080px;margin:0 auto;padding:0 1.5rem;font-size:11px;color:var(--t3);line-height:1.6}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.msteps{grid-template-columns:1fr 1fr}.ms::after{display:none}}
+@media(max-width:680px){h1.page-title{font-size:26px}.kpi-grid{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr}.tab-btn{padding:.85rem .8rem;font-size:12px}}
+@media print{.tab-nav{display:none}.sec{display:block!important;page-break-inside:avoid}body{background:white}}
+</style>
+</head>
+<body>
+
+<div class="header-bar">
+  <div class="header-inner">
+    <div class="eyebrow">Pakistan Energy Yearbook 2024-25 + OGRA Live Data &nbsp;·&nbsp; Ammar H. Khan &nbsp;·&nbsp; Updated May 2026</div>
+    <h1 class="page-title">Pakistan Kerosene Market</h1>
+    <div class="page-sub">Consumption &nbsp;·&nbsp; Supply &nbsp;·&nbsp; Pricing Mechanism &nbsp;·&nbsp; Fiscal Policy &nbsp;|&nbsp; FY2019-20 to April 2026 &nbsp;|&nbsp; Source: HDIP / DG(Oil) / OGRA / OCAC</div>
+  </div>
+</div>
+
+<div class="page">
+
+<div class="crisis-banner">
+  <span class="crisis-label">&#9888; Crisis Update</span>
+  <span class="crisis-text"><strong>Hormuz Shock (Mar–Apr 2026):</strong> Feb 28, 2026 military strikes on Iran triggered Strait of Hormuz disruption, pushing Brent past $130/bbl. OGRA switched to weekly reviews. Kerosene surged from Rs&nbsp;176.81/L (Mar&nbsp;1) to an all-time high of Rs&nbsp;467.48/L (Apr&nbsp;3) — a +165% spike in 33 days. Pakistan-brokered peace talks and PM intervention on Apr&nbsp;11 cut it to Rs&nbsp;450.15/L, where it has held since. For the first time in recorded history, <strong>kerosene is now more expensive than petrol</strong>.</span>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi rd"><div class="kpi-n">Rs 450.15</div><div class="kpi-l">Current price (Apr 2026)</div><div class="kpi-d neg">vs Rs 169.20 Jun 2025</div></div>
+  <div class="kpi pu"><div class="kpi-n">Rs 467.48</div><div class="kpi-l">All-time high (Apr 3, 2026)</div><div class="kpi-d neg">+165% in 33 days</div></div>
+  <div class="kpi rd"><div class="kpi-n">+166%</div><div class="kpi-l">YoY price (Apr 26 vs Apr 25)</div><div class="kpi-d neg">Rs 169.38 &rarr; Rs 450.15</div></div>
+  <div class="kpi am"><div class="kpi-n">65,964 T</div><div class="kpi-l">FY2024-25 consumption</div><div class="kpi-d pos">+15.85% YoY (EYB)</div></div>
+  <div class="kpi"><div class="kpi-n">&minus;5.8%</div><div class="kpi-l">5-yr ACGR (FY20&ndash;25)</div><div class="kpi-d neg">Structural decline</div></div>
+  <div class="kpi gr"><div class="kpi-n">Zero</div><div class="kpi-l">Kerosene imports</div><div class="kpi-d">Fully domestic supply</div></div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn on" data-tab="ov">Overview &amp; Demand</button>
+  <button class="tab-btn" data-tab="pt">Price Trends</button>
+  <button class="tab-btn" data-tab="pm">Pricing Mechanism</button>
+  <button class="tab-btn" data-tab="sc">Supply Chain</button>
+  <button class="tab-btn" data-tab="mc">Market Context &amp; Outlook</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="sec on" id="s-ov">
+  <div class="sec-ey">Section 1 &middot; Demand</div>
+  <div class="sec-ti">Structural decline with FY2024-25 rebound — now overshadowed by the Apr 2026 price shock</div>
+  <div class="sec-bd">Pakistan's kerosene market consumed 65,964 tonnes in FY2024-25 (+15.85% YoY rebound), driven by a Rs&nbsp;28/L YoY price decline. The five-year ACGR of −5.8% confirms structural displacement by rural electrification and LPG. FY2025-26 consumption data is not yet published, but the extraordinary Apr 2026 price shock — kerosene reaching Rs&nbsp;467.48/L at its peak — will almost certainly cause severe demand destruction in Q4 FY2025-26 and into FY2026-27 as rural households accelerate substitution to LPG, firewood, and solar lanterns.</div>
+
+  <div class="chart-card">
+    <div class="chart-title">Kerosene Consumption Trend — FY2019-20 to FY2024-25 (FY2025-26 Estimate)</div>
+    <div class="leg">
+      <span class="li"><span class="ld" style="background:#036B7A"></span>Historical volumes</span>
+      <span class="li"><span class="ld" style="background:#C8923A"></span>FY2024-25 rebound year</span>
+      <span class="li"><span class="ld" style="background:rgba(155,35,53,0.35)"></span>FY2025-26 demand destruction estimate</span>
+    </div>
+    <div class="cw" style="height:290px">
+      <canvas id="ch-cons" role="img" aria-label="Bar chart of kerosene consumption. Peaked 88,939 T in FY2019-20, troughed 55,869 T in FY2022-23, rebounded 65,964 T in FY2024-25. FY2025-26 demand destruction expected.">88,939 (FY20), 70,211 (FY21), 65,691 (FY22), 55,869 (FY23), 56,942 (FY24), 65,964 (FY25). FY2025-26 TBD.</canvas>
+    </div>
+    <div class="src">Source: EYB 2024-25, Table 2.6 (OCAC). TOE conversion: 1.0316 T/T (same as JP-1). FY2025-26 bar is indicative range (est. 35,000–58,000 T) under demand-destruction scenario from Apr 2026 price shock.</div>
+  </div>
+
+  <div class="box rd">
+    <p><strong>Structural break, not a cycle:</strong> At Rs&nbsp;450/L, kerosene is no longer the cheap rural fuel. It now trades at a <strong>Rs 57/L premium over petrol</strong> (Apr 25, 2026: petrol Rs&nbsp;393.35 vs kerosene Rs&nbsp;450.15). Rural households who chose kerosene over LPG on price grounds now face the opposite calculus. This shock may permanently accelerate substitution — collapsing the market to a 30,000–40,000 T structural floor over 2–3 years even if Brent retreats.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="pt">Annual consumption history</div>
+      <table class="dt">
+        <thead><tr><th>Year</th><th class="nr">Tonnes</th><th class="nr">TOE</th><th class="nr">YoY</th></tr></thead>
+        <tbody>
+          <tr><td>FY2019-20</td><td class="nr">88,939</td><td class="nr">91,749</td><td class="nr">—</td></tr>
+          <tr><td>FY2020-21</td><td class="nr">70,211</td><td class="nr">72,430</td><td class="nr rd2">−21.1%</td></tr>
+          <tr><td>FY2021-22</td><td class="nr">65,691</td><td class="nr">67,767</td><td class="nr rd2">−6.4%</td></tr>
+          <tr><td>FY2022-23</td><td class="nr">55,869</td><td class="nr">57,634</td><td class="nr rd2">−14.9%</td></tr>
+          <tr><td>FY2023-24</td><td class="nr">56,942</td><td class="nr">58,741</td><td class="nr gn">+1.9%</td></tr>
+          <tr><td><strong>FY2024-25</strong></td><td class="nr hl"><strong>65,964</strong></td><td class="nr hl"><strong>68,049</strong></td><td class="nr gn"><strong>+15.85%</strong></td></tr>
+          <tr><td style="font-style:italic">FY2025-26 (est.)</td><td class="nr rd2" style="font-style:italic">~35–58k</td><td class="nr" style="color:var(--t3)">—</td><td class="nr rd2">−12 to −47%?</td></tr>
+          <tr><td colspan="3" style="font-size:10px;color:var(--t3)">5-yr ACGR (FY2020–FY2025)</td><td class="nr rd2">−5.8% p.a.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="pt">FY2025-26 demand shock context</div>
+      <div class="cr"><span class="cl">Jun 2025 kerosene price</span><span class="cv">Rs 169.20/L</span></div>
+      <div class="cr"><span class="cl">Apr 2026 kerosene (current)</span><span class="cv rd2">Rs 450.15/L (+166%)</span></div>
+      <div class="cr"><span class="cl">All-time peak (Apr 3, 2026)</span><span class="cv rd2">Rs 467.48/L (+176%)</span></div>
+      <div class="cr"><span class="cl">Kerosene vs petrol (Apr 25)</span><span class="cv rd2">Rs 450 vs Rs 393 — kerosene costlier!</span></div>
+      <div class="cr"><span class="cl">Implied demand elasticity (−0.4)</span><span class="cv rd2">~−65% volume response at peak</span></div>
+      <div class="cr"><span class="cl">Primary substitutes (Apr 2026)</span><span class="cv am2">LPG, firewood, solar lanterns</span></div>
+      <div class="cr"><span class="cl">Rural fuel poverty risk</span><span class="cv rd2">Severe — policy intervention needed</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICE TRENDS -->
+<div class="sec" id="s-pt">
+  <div class="sec-ey">Section 2 &middot; Pricing</div>
+  <div class="sec-ti">Three price regimes: FY2023-24 spike, FY2024-25 normalisation, FY2025-26 Hormuz shock</div>
+  <div class="sec-bd">FY2023-24 saw kerosene peak at Rs&nbsp;244.81/L (Sep&nbsp;2023) before a long retreat. FY2024-25 corrected to an average of ~Rs&nbsp;167/L — enabling the demand rebound. FY2025-26 began benignly near Rs&nbsp;169/L and drifted to ~Rs&nbsp;205/L by December 2025, then fell back to Rs&nbsp;176.81/L in early March 2026. The Feb&nbsp;28 Iran strikes then triggered a once-in-a-generation shock: kerosene surged to Rs&nbsp;467.48/L in 33 days. PM intervention on Apr&nbsp;11 brought it to Rs&nbsp;450.15/L, where it has held.</div>
+
+  <div class="chart-card">
+    <div class="chart-title">Kerosene Fixed Sale Price — All Notifications, FY2023-24 Through Apr 2026 (Rs/L)</div>
+    <div class="leg">
+      <span class="li"><span class="ld" style="background:#9B2335"></span>FY2025-26 (confirmed + est.)</span>
+      <span class="li"><span class="ld" style="background:#036B7A"></span>FY2024-25 (all confirmed)</span>
+      <span class="li"><span class="ld" style="background:#C8923A"></span>FY2023-24 (reference)</span>
+      <span class="li"><span class="ld" style="background:#7C3AED;border-radius:50%"></span>Hormuz crisis period</span>
+    </div>
+    <div class="cw" style="height:340px">
+      <canvas id="ch-pr" role="img" aria-label="Line chart: FY2023-24 peaked Rs 244/L, FY2024-25 averaged Rs 167/L, FY2025-26 started near Rs 169/L then surged to all-time high Rs 467.48/L in April 2026.">Three-year price: FY23-24 max Rs 245/L; FY24-25 avg Rs 167/L; FY25-26 peak Rs 467/L (Apr 2026).</canvas>
+    </div>
+    <div class="src">FY2024-25: EYB 2024-25, Table 2.15.2 — all 24 fortnightly DG(Oil) notifications, fully confirmed. FY2025-26: OGRA notifications + multiple verified news sources (full citation in footer). Confirmed data points marked (✓) in table. Crisis period (Mar 7–Apr 11) used weekly reviews; intermediate estimates consistent with GlobalPetrolPrices.com data (Mar 30 = Rs 433.40/L confirmed). FY2023-24: EYB 2024-25.</div>
+  </div>
+
+  <div class="box">
+    <p><strong>The Hormuz Shock in numbers:</strong> Kerosene went from Rs&nbsp;176.81/L (Mar&nbsp;1, 2026) to Rs&nbsp;467.48/L (Apr&nbsp;3) — a Rs&nbsp;290.67 surge (+164%) in 33 days. For a rural household consuming ~20 litres/month, monthly kerosene spending jumped from ~Rs&nbsp;3,536 to ~Rs&nbsp;9,350. The current price (Rs&nbsp;450.15/L) is still +166% year-on-year versus April 2025's Rs&nbsp;169.38/L — and Rs&nbsp;57/L above petrol (Rs&nbsp;393.35). This is the most severe kerosene price shock in Pakistan's recorded history.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="pt">FY2025-26 Price Register — Jul 2025 to Apr 2026</div>
+      <div class="scrl">
+        <table class="dt" style="font-size:11.5px">
+          <thead><tr><th>Effective Date</th><th class="nr">Sale Price (Rs/L)</th><th class="nr">Change</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>16 Jun 2025 (base)</td><td class="nr">169.20</td><td class="nr">—</td><td><span class="tag tl">EYB ✓</span></td></tr>
+            <tr><td>01 Jul 2025</td><td class="nr" style="color:var(--t3)">~172</td><td class="nr gn">+2.8</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>16 Jul 2025</td><td class="nr" style="color:var(--t3)">~175</td><td class="nr gn">+3.0</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>01 Aug 2025</td><td class="nr" style="color:var(--t3)">~176</td><td class="nr gn">+1.0</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>16 Aug 2025</td><td class="nr">178.27</td><td class="nr gn">+2.3</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr><td>01 Sep 2025</td><td class="nr">176.70</td><td class="nr rd2">−1.57</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr><td>16 Sep 2025</td><td class="nr" style="color:var(--t3)">~178</td><td class="nr gn">+1.3</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>01 Oct 2025</td><td class="nr" style="color:var(--t3)">~181</td><td class="nr gn">+3.0</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>16 Oct 2025</td><td class="nr">181.71</td><td class="nr gn">+0.7</td><td><span class="tag tl">Implied ✓</span></td></tr>
+            <tr><td>01 Nov 2025</td><td class="nr">185.05</td><td class="nr gn">+3.34</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr><td>16 Nov 2025</td><td class="nr">194.34</td><td class="nr gn">+9.29</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr><td>01 Dec 2025</td><td class="nr" style="color:var(--t3)">~205</td><td class="nr gn">+10.7</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>16 Dec 2025</td><td class="nr" style="color:var(--t3)">~201</td><td class="nr rd2">−4.0</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>01 Jan 2026</td><td class="nr" style="color:var(--t3)">~195</td><td class="nr rd2">−6.0</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>16 Jan 2026</td><td class="nr" style="color:var(--t3)">~190</td><td class="nr rd2">−5.0</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>01 Feb 2026</td><td class="nr" style="color:var(--t3)">~184</td><td class="nr rd2">−6.0</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>16 Feb 2026</td><td class="nr" style="color:var(--t3)">~180</td><td class="nr rd2">−4.0</td><td><span class="tag gy">Estimate</span></td></tr>
+            <tr><td>01 Mar 2026</td><td class="nr">176.81</td><td class="nr rd2">−3.2</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr class="row-cr"><td><strong>07 Mar 2026 &#9888; Crisis begins</strong></td><td class="nr rd2">~236</td><td class="nr rd2">+59 est.</td><td><span class="tag rd">Weekly reviews</span></td></tr>
+            <tr class="row-cr"><td>16 Mar 2026 &#9888;</td><td class="nr rd2">~325</td><td class="nr rd2">+89 est.</td><td><span class="tag rd">Weekly</span></td></tr>
+            <tr class="row-cr"><td>23 Mar 2026 &#9888;</td><td class="nr rd2">~390</td><td class="nr rd2">+65 est.</td><td><span class="tag rd">Weekly</span></td></tr>
+            <tr class="row-cr"><td>30 Mar 2026 &#9888;</td><td class="nr rd2"><strong>433.40</strong></td><td class="nr rd2">+43.4</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr class="row-cr"><td><strong>03 Apr 2026 &#9888; ALL-TIME HIGH</strong></td><td class="nr rd2"><strong>467.48 &uarr;</strong></td><td class="nr rd2">+34.1</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr class="row-am"><td><strong>11 Apr 2026 — PM cuts price</strong></td><td class="nr am2"><strong>450.15</strong></td><td class="nr gn">−17.33</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr class="row-am"><td>18 Apr 2026</td><td class="nr am2">450.15</td><td class="nr">unchanged</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+            <tr class="row-am"><td>25 Apr 2026</td><td class="nr am2">450.15</td><td class="nr">unchanged</td><td><span class="tag tl">Confirmed ✓</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="src">Red = Hormuz crisis (weekly reviews). Amber = post-PM intervention. ✓ = confirmed from OGRA/news. Estimate = directional estimates consistent with known anchor points. ATH = all-time high.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.25rem">
+      <div class="panel">
+        <div class="pt">Three-year price summary</div>
+        <div class="cr"><span class="cl">FY2023-24 average</span><span class="cv am2">~Rs 195/L</span></div>
+        <div class="cr"><span class="cl">FY2023-24 peak (Sep 2023)</span><span class="cv rd2">Rs 244.81/L</span></div>
+        <div class="cr"><span class="cl">FY2024-25 average</span><span class="cv hl">~Rs 167/L</span></div>
+        <div class="cr"><span class="cl">FY2024-25 range</span><span class="cv">Rs 154.90 – Rs 183.71</span></div>
+        <div class="cr"><span class="cl">FY2025-26 pre-crisis avg. (Jul–Feb)</span><span class="cv am2">~Rs 185/L</span></div>
+        <div class="cr"><span class="cl">FY2025-26 all-time high</span><span class="cv rd2">Rs 467.48/L (Apr 3, 2026)</span></div>
+        <div class="cr"><span class="cl">Current (Apr 25, 2026)</span><span class="cv rd2">Rs 450.15/L</span></div>
+        <div class="cr"><span class="cl">YoY change (Apr 26 vs Apr 25)</span><span class="cv rd2">+165.7%</span></div>
+      </div>
+      <div class="panel">
+        <div class="pt">Hormuz crisis timeline</div>
+        <div class="cr"><span class="cl" style="font-size:11px">28 Feb 2026</span><span class="cv rd2" style="font-size:11px">US-Israel strikes on Iran; Hormuz disrupted</span></div>
+        <div class="cr"><span class="cl" style="font-size:11px">07 Mar 2026</span><span class="cv" style="font-size:11px">OGRA weekly reviews; petrol/diesel +Rs 55 emergency</span></div>
+        <div class="cr"><span class="cl" style="font-size:11px">30 Mar 2026</span><span class="cv rd2" style="font-size:11px">Kerosene Rs 433.40/L (GlobalPetrolPrices ✓)</span></div>
+        <div class="cr"><span class="cl" style="font-size:11px">03 Apr 2026</span><span class="cv rd2" style="font-size:11px">All-time high: Rs 467.48/L (PakWheels ✓)</span></div>
+        <div class="cr"><span class="cl" style="font-size:11px">11 Apr 2026</span><span class="cv am2" style="font-size:11px">PM intervention: cut to Rs 450.15/L (−Rs 17.33)</span></div>
+        <div class="cr"><span class="cl" style="font-size:11px">25 Apr 2026</span><span class="cv" style="font-size:11px">Kerosene stable; petrol/diesel raised Rs 26.77</span></div>
+        <div class="cr"><span class="cl" style="font-size:11px">Brent peak (Apr 3)</span><span class="cv rd2" style="font-size:11px">&gt;$130/bbl; PKR ~Rs 280/$</span></div>
+        <div class="cr"><span class="cl" style="font-size:11px">Pakistan's diplomatic role</span><span class="cv gn" style="font-size:11px">Brokered Iran ceasefire talks → partial relief</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING MECHANISM -->
+<div class="sec" id="s-pm">
+  <div class="sec-ey">Section 3 &middot; Mechanism</div>
+  <div class="sec-ti">Price construction: ex-refinery dominates — levies held flat during the crisis</div>
+  <div class="sec-bd">The fixed sale price of kerosene is: ex-refinery price + Customs/Excise Duty + PDL + OMC margin. Kerosene carries zero GST, zero dealer commission, and a PDL of only Rs&nbsp;1.58/L. Customs Duty was raised to Rs&nbsp;18.95/L in April 2025. During the Mar–Apr 2026 crisis, the government held levies flat — meaning nearly 100% of the shock was ex-refinery pass-through. At Rs&nbsp;450.15/L, approximately Rs&nbsp;420/L is ex-refinery component alone.</div>
+
+  <div class="chart-card">
+    <div class="chart-title">Price Component Breakdown — Selected Dates, Jul 2024 to Apr 2026 (Rs/L, stacked)</div>
+    <div class="leg">
+      <span class="li"><span class="ld" style="background:#036B7A"></span>Ex-Refinery (pre-crisis)</span>
+      <span class="li"><span class="ld" style="background:#9B2335"></span>Ex-Refinery (crisis period)</span>
+      <span class="li"><span class="ld" style="background:#52B788"></span>PDL (Rs 1.58, fixed)</span>
+      <span class="li"><span class="ld" style="background:#888780"></span>OMC margin</span>
+      <span class="li"><span class="ld" style="background:#C8923A"></span>Customs/Excise</span>
+    </div>
+    <div class="cw" style="height:320px">
+      <canvas id="ch-stk" role="img" aria-label="Stacked bar showing kerosene price components. Ex-refinery spikes dramatically from Rs 148 in Mar 2026 to Rs 438 in Apr 2026 all-time high. Levies (PDL, Customs, OMC) remained stable through the crisis.">Components: ex-refinery Rs 140-438, PDL Rs 1.58, OMC Rs 7-9, Customs Rs 18.95.</canvas>
+    </div>
+    <div class="src">Jul 2024–Jun 2025: EYB 2024-25, Table 2.15.2 (all components confirmed). Mar 2026 and Apr 2026: levy components estimated by holding at known Jun 2025 values; ex-refinery is residual from sale price. No GST or dealer commission on kerosene throughout.</div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="pt">Component Breakdown — Key Dates (Rs/L)</div>
+      <table class="dt" style="font-size:11.5px">
+        <thead><tr><th>Date</th><th class="nr">Ex-Ref</th><th class="nr">C&amp;E</th><th class="nr">PDL</th><th class="nr">OMC</th><th class="nr">Total</th></tr></thead>
+        <tbody>
+          <tr><td>01 Jul 2024</td><td class="nr">172.26</td><td class="nr">0.05</td><td class="nr">1.58</td><td class="nr">7.97</td><td class="nr hl">181.86</td></tr>
+          <tr><td>01 Oct 2024</td><td class="nr">145.42</td><td class="nr">0.05</td><td class="nr">1.58</td><td class="nr">7.85</td><td class="nr">154.90</td></tr>
+          <tr class="row-am"><td>16 Apr 2025 ▲</td><td class="nr">140.97</td><td class="nr am2"><strong>18.95</strong></td><td class="nr">1.58</td><td class="nr">7.88</td><td class="nr">169.38</td></tr>
+          <tr><td>16 Jun 2025</td><td class="nr">141.22</td><td class="nr">18.95</td><td class="nr">1.58</td><td class="nr">7.45</td><td class="nr">169.20</td></tr>
+          <tr><td>01 Mar 2026</td><td class="nr">148.28</td><td class="nr">18.95</td><td class="nr">1.58</td><td class="nr">8.00</td><td class="nr">176.81</td></tr>
+          <tr class="row-cr"><td>03 Apr 2026 &#9888; ATH</td><td class="nr rd2"><strong>~438*</strong></td><td class="nr">18.95*</td><td class="nr">1.58*</td><td class="nr">~9*</td><td class="nr rd2"><strong>467.48</strong></td></tr>
+          <tr class="row-am"><td>11 Apr 2026 (current)</td><td class="nr am2"><strong>~421*</strong></td><td class="nr">18.95*</td><td class="nr">1.58*</td><td class="nr">~9*</td><td class="nr am2"><strong>450.15</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="src">* Apr 2026 levy components estimated; ex-refinery is residual. Government held levies stable during crisis. No GST or dealer commission.</div>
+
+      <div style="margin-top:1rem">
+        <div class="pt">Price formation — causal chain</div>
+        <div class="msteps">
+          <div class="ms"><div class="ms-n">Step 1</div><div class="ms-t">Brent crude</div><div class="ms-d">$130+ in Apr 2026 crisis</div></div>
+          <div class="ms" style="border-top:2px solid #036B7A"><div class="ms-n">Step 2</div><div class="ms-t">Ex-refinery</div><div class="ms-d">Weekly by DG(Oil) during crisis</div></div>
+          <div class="ms" style="border-top:2px solid #C8923A"><div class="ms-n">Step 3</div><div class="ms-t">Levies</div><div class="ms-d">PDL Rs 1.58 + C&E Rs 18.95 (held flat)</div></div>
+          <div class="ms" style="border-top:2px solid #52B788"><div class="ms-n">Step 4</div><div class="ms-t">OMC margin</div><div class="ms-d">Rs 7–9/L, no dealer fee</div></div>
+          <div class="ms" style="border-top:2px solid #036B7A"><div class="ms-n">Step 5</div><div class="ms-t">Price notified</div><div class="ms-d">Zero GST, zero dealer commission</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="pt">Kerosene vs petrol — tax burden comparison (16 Jun 2025, pre-crisis baseline, Rs/L)</div>
+      <table class="dt" style="font-size:11.5px">
+        <thead><tr><th>Component</th><th class="nr">Kerosene</th><th class="nr">Petrol (MS)</th><th class="nr">Gap</th></tr></thead>
+        <tbody>
+          <tr><td>PDL</td><td class="nr">1.58</td><td class="nr">78.02</td><td class="nr rd2">−76.44</td></tr>
+          <tr><td>Customs/Excise</td><td class="nr">18.95</td><td class="nr">13.69</td><td class="nr gn">+5.26</td></tr>
+          <tr><td>OMC margin</td><td class="nr">7.45</td><td class="nr">7.87</td><td class="nr">−0.42</td></tr>
+          <tr><td>Dealer commission</td><td class="nr gn">0.00</td><td class="nr">8.64</td><td class="nr gn">−8.64</td></tr>
+          <tr><td>Inland freight</td><td class="nr gn">0.00</td><td class="nr">8.23</td><td class="nr gn">−8.23</td></tr>
+          <tr><td>GST</td><td class="nr gn">0.00</td><td class="nr">0.00</td><td class="nr">—</td></tr>
+          <tr><td><strong>Total levy + margin</strong></td><td class="nr"><strong>27.98</strong></td><td class="nr"><strong>116.45</strong></td><td class="nr rd2"><strong>−88.47</strong></td></tr>
+          <tr><td><strong>Sale price (Jun 2025)</strong></td><td class="nr hl"><strong>169.20</strong></td><td class="nr"><strong>258.43</strong></td><td class="nr rd2"><strong>−89.23</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="box rd" style="margin-top:1rem">
+        <p><strong>Price inversion (Apr 2026):</strong> In pre-crisis terms, kerosene carried an Rs&nbsp;88.47/L levy advantage over petrol (worth ~PKR&nbsp;7 billion/year in foregone revenue). In April 2026, ex-refinery prices drove kerosene to Rs&nbsp;450.15/L while petrol sat at Rs&nbsp;393.35/L — kerosene is now Rs&nbsp;57/L <em>more</em> expensive than petrol. The social concession has been fully eroded by market forces alone, without any further government levy action.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUPPLY -->
+<div class="sec" id="s-sc">
+  <div class="sec-ey">Section 4 &middot; Supply</div>
+  <div class="sec-ti">Domestic supply remains intact — Hormuz crisis hit prices, not physical availability</div>
+  <div class="sec-bd">All of Pakistan's kerosene consumption is domestically produced. The Hormuz Strait crisis of Feb–Apr 2026 threatened oil supply chains but Pakistan held adequate stocks (reported at 27 days of petrol reserves in March 2026). Kerosene, being a domestic refinery by-product of crude already onshore, faced no physical shortage — the price spike was purely a crude-cost pass-through. As demand collapses at Rs&nbsp;450+/L, refineries will accumulate surplus kerosene cuts — a mild structural oversupply problem.</div>
+
+  <div class="two-col">
+    <div class="chart-card" style="margin-bottom:0">
+      <div class="chart-title">Estimated Kerosene Output by Refinery — FY2024-25 (Tonnes)</div>
+      <div class="leg"><span class="li"><span class="ld" style="background:#036B7A"></span>Estimated FY2024-25 output</span></div>
+      <div class="cw" style="height:300px">
+        <canvas id="ch-ref" role="img" aria-label="Horizontal bar chart of refinery kerosene output. ENAR ~30,000T, PARCO ~22,000T, PRL ~9,000T, Cnergyico ~4,000T, NRL ~964T.">ENAR 30,000T, PARCO 22,000T, PRL 9,000T, Cnergyico 4,000T, NRL 964T.</canvas>
+      </div>
+      <div class="src">EYB Tables 2.5.1–2.5.6 trend extrapolation, anchored to Table 2.6 national total of 65,964 T. FY2025-26 refinery-level data not yet published. ENAR has grown from 9,737 T (FY2019-20) at approximately 3× pace via residue-upgrading facility.</div>
+    </div>
+    <div class="panel">
+      <div class="pt">Refinery profile — kerosene production</div>
+      <table class="dt" style="font-size:11.5px">
+        <thead><tr><th>Refinery</th><th class="nr">FY19-20 (T)</th><th class="nr">Est. FY24-25 (T)</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ENAR EPRF</strong></td><td class="nr">9,737</td><td class="nr hl"><strong>~30,000</strong></td><td><span class="tag tl">Largest; 3× growth</span></td></tr>
+          <tr><td><strong>PARCO</strong></td><td class="nr">24,185</td><td class="nr">~22,000</td><td><span class="tag tl">Major</span></td></tr>
+          <tr><td><strong>PRL</strong></td><td class="nr">8,048</td><td class="nr">~9,000</td><td><span class="tag gy">Mid-size</span></td></tr>
+          <tr><td><strong>Cnergyico</strong></td><td class="nr">2,153</td><td class="nr">~4,000</td><td><span class="tag gy">Small</span></td></tr>
+          <tr><td><strong>NRL</strong></td><td class="nr">301</td><td class="nr">~964</td><td><span class="tag gy">Negligible</span></td></tr>
+          <tr><td><strong>Attock (ARL)</strong></td><td class="nr">0</td><td class="nr">0</td><td><span class="tag rd">None</span></td></tr>
+          <tr><td><strong>System total</strong></td><td class="nr">~44,424</td><td class="nr hl"><strong>~65,964</strong></td><td><span class="tag gn">Self-sufficient</span></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem">
+        <div class="cr"><span class="cl">Import recorded (EYB Table 2.12)</span><span class="cv gn"><strong>Zero</strong></span></div>
+        <div class="cr"><span class="cl">Hormuz crisis supply disruption</span><span class="cv gn">None — stock onshore pre-crisis</span></div>
+        <div class="cr"><span class="cl">Mar 2026 reported stock position</span><span class="cv">27 days petrol reserves</span></div>
+        <div class="cr"><span class="cl">Post-crisis surplus risk</span><span class="cv am2">Demand collapse → refinery overproduction</span></div>
+      </div>
+      <div class="box tl" style="margin-top:1rem">
+        <p><strong>Surplus dynamic:</strong> As demand collapses under Rs&nbsp;450+/L prices, refineries producing kerosene as a by-product face a disposal problem. Surplus will push ex-refinery prices lower even before Brent retreats — creating a partial self-correcting mechanism. This is why kerosene prices may normalise faster than petrol once the crisis recedes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MARKET CONTEXT -->
+<div class="sec" id="s-mc">
+  <div class="sec-ey">Section 5 &middot; Market Context &amp; Outlook</div>
+  <div class="sec-ti">From social fuel to unaffordable premium — the crisis inverts kerosene's market position</div>
+  <div class="sec-bd">Before the Hormuz crisis, kerosene was Pakistan's most concessionally priced fuel — Rs&nbsp;89/L cheaper than petrol in June 2025. By April 2026, that relationship had inverted: kerosene at Rs&nbsp;450.15/L is Rs&nbsp;57 more expensive than petrol (Rs&nbsp;393.35/L). This eliminates the fundamental economic rationale for kerosene use. FY2024-25 remains the last confirmed consumption year at 65,964 T — the crisis will have drastically altered this picture when FY2025-26 data is published.</div>
+
+  <div class="two-col">
+    <div class="chart-card" style="margin-bottom:0">
+      <div class="chart-title">Pakistan POL Basket — FY2024-25 (Last Confirmed Year)</div>
+      <div class="leg">
+        <span class="li"><span class="ld" style="background:#036B7A"></span>Motor Spirit 47%</span>
+        <span class="li"><span class="ld" style="background:#C8923A"></span>HSD 42.3%</span>
+        <span class="li"><span class="ld" style="background:#9B2335"></span>Furnace Oil 5.3%</span>
+        <span class="li"><span class="ld" style="background:#1D9E75"></span>Kerosene 0.41%</span>
+      </div>
+      <div class="cw" style="height:280px">
+        <canvas id="ch-bsk" role="img" aria-label="Donut chart of POL basket FY2024-25. MS 47%, HSD 42.3%, FO 5.3%, Aviation 3.1%, HOBC 1.8%, Kerosene 0.41%, LDO 0.1%.">MS 47%, HSD 42.3%, FO 5.3%, Aviation 3.1%, HOBC 1.8%, Kerosene 0.41%, LDO 0.1%.</canvas>
+      </div>
+      <div class="src">EYB 2024-25, Table 2.6. Total: 16,236,437 T. Crisis-era demand destruction will shrink kerosene share below 0.3% when FY2025-26 data is published.</div>
+    </div>
+    <div class="panel">
+      <div class="pt">Price inversion — kerosene vs petrol (Rs/L)</div>
+      <table class="dt" style="font-size:11.5px">
+        <thead><tr><th>Date</th><th class="nr">Kerosene</th><th class="nr">Petrol (MS)</th><th class="nr">Premium/(Discount)</th></tr></thead>
+        <tbody>
+          <tr><td>Jun 2025</td><td class="nr">169.20</td><td class="nr">258.43</td><td class="nr hl">−Rs 89 (cheaper)</td></tr>
+          <tr><td>Nov 2025</td><td class="nr">194.34</td><td class="nr">~265</td><td class="nr hl">−Rs 71 (cheaper)</td></tr>
+          <tr><td>01 Mar 2026</td><td class="nr">176.81</td><td class="nr">~266</td><td class="nr hl">−Rs 89 (cheaper)</td></tr>
+          <tr class="row-cr"><td>03 Apr 2026 — Peak</td><td class="nr rd2"><strong>467.48</strong></td><td class="nr">~458</td><td class="nr rd2"><strong>+Rs 9 (costlier!)</strong></td></tr>
+          <tr class="row-am"><td>25 Apr 2026 — Current</td><td class="nr am2"><strong>450.15</strong></td><td class="nr">393.35</td><td class="nr rd2"><strong>+Rs 57 (costlier!)</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="two-col" style="margin-top:1.1rem;gap:.75rem">
+        <div>
+          <div class="cr"><span class="cl">FY2024-25 baseline</span><span class="cv hl">65,964 T</span></div>
+          <div class="cr"><span class="cl">Bear scenario FY25-26</span><span class="cv rd2">~35,000 T</span></div>
+          <div class="cr"><span class="cl">Base scenario FY25-26</span><span class="cv am2">~48,000 T</span></div>
+          <div class="cr"><span class="cl">Bull scenario FY25-26</span><span class="cv gn">~58,000 T</span></div>
+        </div>
+        <div>
+          <div class="cr"><span class="cl">Ann. revenue (pre-crisis price)</span><span class="cv">~PKR 16 bn</span></div>
+          <div class="cr"><span class="cl">Ann. revenue (Apr 2026 price)</span><span class="cv am2">~PKR 43 bn</span></div>
+          <div class="cr"><span class="cl">Social cost — fuel poverty</span><span class="cv rd2">Severe</span></div>
+          <div class="cr"><span class="cl">Subsidy vs petrol (Apr 2026)</span><span class="cv rd2">Eliminated — inverted</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:1.25rem">
+    <div class="panel">
+      <div class="pt">Structural forces — updated post-crisis</div>
+      <div class="force-row"><span class="tag rd" style="flex-shrink:0">Demand destruction</span><span>Rs&nbsp;450/L price makes kerosene uncompetitive vs every alternative; rural households forced permanently to LPG, firewood, solar</span></div>
+      <div class="force-row"><span class="tag rd" style="flex-shrink:0">Structural break</span><span>Price inversion vs petrol destroys the last economic rationale for kerosene; households who switch now unlikely to return even if prices normalise</span></div>
+      <div class="force-row"><span class="tag rd" style="flex-shrink:0">Electrification</span><span>Rural grid expansion and 26.8 GW BTM solar (installed base, 2025) continue reducing the kerosene-addressable household count independently</span></div>
+      <div class="force-row"><span class="tag am" style="flex-shrink:0">Levy risk</span><span>Government could use crisis as political cover to formally raise PDL / introduce GST on kerosene — making the fiscal normalisation permanent even after Brent retreats</span></div>
+      <div class="force-row"><span class="tag tl" style="flex-shrink:0">Price floor</span><span>Refinery surplus dynamics will depress ex-refinery prices below Brent-implied levels as demand collapses; self-correcting partial floor mechanism</span></div>
+      <div class="force-row"><span class="tag tl" style="flex-shrink:0">Brent reversal</span><span>If Brent retreats to $65–70 range (e.g. Iran deal formalised), kerosene could return to Rs&nbsp;200–220/L — still elevated but demand-supportive</span></div>
+    </div>
+    <div class="panel">
+      <div class="pt">Consumption scenarios — post-crisis projections</div>
+      <table class="dt" style="font-size:11.5px">
+        <thead><tr><th>Scenario</th><th>Key assumption</th><th class="nr">FY25-26 est.</th><th class="nr">FY27-28 proj.</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag rd">Bear</span></td><td style="font-size:11px">Rs 400+ sustained; permanent substitution accelerates</td><td class="nr rd2">~35,000 T</td><td class="nr rd2">~22,000 T</td></tr>
+          <tr><td><span class="tag am">Base</span></td><td style="font-size:11px">Brent retreats to $80; partial recovery to Rs 220/L</td><td class="nr am2">~48,000 T</td><td class="nr am2">~38,000 T</td></tr>
+          <tr><td><span class="tag gn">Bull</span></td><td style="font-size:11px">Brent rapid normalisation to $65; price back to Rs 200</td><td class="nr gn">~58,000 T</td><td class="nr gn">~50,000 T</td></tr>
+        </tbody>
+      </table>
+      <div class="box rd" style="margin-top:1rem">
+        <p><strong>Policy prescription (updated):</strong> The Hormuz shock has done what years of subsidy reform could not — made kerosene unaffordable relative to substitutes. The government should use this window to formally restructure kerosene pricing: introduce a modest GST (5%), raise PDL progressively to Rs&nbsp;15–20/L, and redirect savings to targeted LPG subsidies or solar lantern programmes for off-grid households. Returning to pre-crisis concessional pricing would be fiscally wasteful and structurally counterproductive.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<div class="page-footer">
+  <div class="inner">
+    <strong>EYB data (FY2024-25):</strong> Pakistan Energy Yearbook 2024-25, HDIP / Ministry of Energy (Petroleum Division). Consumption: OCAC, Table 2.6. Pricing: DG(Oil), Table 2.15.2 (all 24 FY2024-25 fortnightly notifications confirmed). Refinery production: Tables 2.5.1–2.5.6. Import data: Table 2.12 (zero kerosene imports). GCV conversion: EYB Annex.
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <strong>FY2025-26 price data (confirmed points):</strong> Aug 2025: paklivings.pk (Rs 178.27). Sep 2025: SUCH TV (Rs 176.70, confirmed −Rs 1.57 cut). Oct 16, 2025: Implied from ARY News/Express Tribune Nov 1 article (Rs 181.71 as previous). Nov 1, 2025: ARY News / Express Tribune (Rs 185.05, +Rs 3.34). Nov 16, 2025: ARY News (Rs 194.34, +Rs 9.29). Dec 2025: PricesIn.pk (~Rs 201). Mar 1, 2026: petrolpriceinpakistan.com.pk (Rs 176.81). Mar 30, 2026: GlobalPetrolPrices.com (Rs 433.40). Apr 3, 2026: PakWheels (Rs 467.48 ATH). Apr 11–25, 2026: governmentschemes.pk / pakistanpetrolprices.com / PakistanPetrolPrices.com (Rs 450.15). Intermediate estimates consistent with directional context; directional accuracy reasonable.
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <strong>Analytical commentary &amp; framework:</strong> Ammar H. Khan, May 2026.
+  </div>
+</div>
+
+<script>
+(function(){
+const TEAL='#036B7A',AMB='#C8923A',GRN='#52B788',GRY='#888780',RED='#9B2335',PU='#7C3AED';
+const GRID='rgba(0,0,0,0.07)',TICK='#888',TF={size:11.5,family:'system-ui'};
+
+new Chart(document.getElementById('ch-cons'),{
+  type:'bar',
+  data:{
+    labels:['FY2019-20','FY2020-21','FY2021-22','FY2022-23','FY2023-24','FY2024-25','FY2025-26\n(est.)'],
+    datasets:[
+      {label:'Consumption (T)',data:[88939,70211,65691,55869,56942,65964,null],backgroundColor:[TEAL,TEAL,TEAL,TEAL,TEAL,AMB,null],borderRadius:4,borderSkipped:false},
+      {label:'Est. range',data:[null,null,null,null,null,null,48000],backgroundColor:'rgba(155,35,53,0.28)',borderColor:'rgba(155,35,53,0.65)',borderWidth:2,borderRadius:4,borderSkipped:false}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.parsed.y.toLocaleString()+' T'+(c.datasetIndex===1?' (base est.)':'')}}},
+    scales:{x:{grid:{display:false},ticks:{font:TF,color:TICK}},y:{grid:{color:GRID},ticks:{font:TF,color:TICK,callback:v=>(v/1000).toFixed(0)+'k'},min:0,max:105000}}}
+});
+
+const L26=['Jun-25(16)','Jul-25(1)','Jul-25(16)','Aug-25(1)','Aug-25(16)','Sep-25(1)','Sep-25(16)','Oct-25(1)','Oct-25(16)','Nov-25(1)','Nov-25(16)','Dec-25(1)','Dec-25(16)','Jan-26(1)','Jan-26(16)','Feb-26(1)','Feb-26(16)','Mar-26(1)','Mar-26 ⚠','Mar-26(16) ⚠','Mar-26(30) ⚠','Apr-26(3) ATH','Apr-26(11)','Apr-26(18)','Apr-26(25)'];
+const P26=[169.20,172,175,176,178.27,176.70,178,181,181.71,185.05,194.34,205,201,195,190,184,180,176.81,236,325,433.40,467.48,450.15,450.15,450.15];
+const P24=[null,null,null,181.86,177.39,169.62,163.02,154.90,161.54,164.98,162.95,174.85,168.12,169.38,169.69,165.04,169.20,null,null,null,null,null,null,null,null];
+const P23=[null,null,null,192.38,217.15,233.52,214.85,211.03,204.98,201.16,188.83,186.62,191.02,188.83,186.86,186.62,188.57,190.01,null,null,null,null,null,null,null];
+
+new Chart(document.getElementById('ch-pr'),{
+  type:'line',
+  data:{
+    labels:L26,
+    datasets:[
+      {label:'FY2025-26',data:P26,borderColor:RED,backgroundColor:'rgba(155,35,53,0.06)',fill:true,tension:.32,pointRadius:P26.map((v,i)=>[0,4,8,9,10,12,17,19,20,21,22,23,24].includes(i)?4:2),pointBackgroundColor:P26.map((v,i)=>i>=18&&i<=21?PU:RED),borderWidth:2.5,pointHoverRadius:6},
+      {label:'FY2024-25',data:P24,borderColor:TEAL,fill:false,tension:.35,borderDash:[5,3],pointRadius:1.5,borderWidth:1.8,pointHoverRadius:4},
+      {label:'FY2023-24',data:P23,borderColor:AMB,fill:false,tension:.35,borderDash:[3,4],pointRadius:1,borderWidth:1.5,pointHoverRadius:3}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{mode:'index',callbacks:{label:c=>{if(c.parsed.y===null)return null;return c.dataset.label+': Rs '+c.parsed.y.toFixed(2)+'/L';}}}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:9,family:'system-ui'},color:TICK,maxRotation:50,autoSkip:true,maxTicksLimit:13}},
+      y:{grid:{color:GRID},ticks:{font:TF,color:TICK,callback:v=>'Rs '+v},min:100,max:520}
+    }}
+});
+
+new Chart(document.getElementById('ch-stk'),{
+  type:'bar',
+  data:{
+    labels:['Jul 2024','Oct 2024','Jan 2025','Apr 2025▲','Jun 2025','Mar 2026','Apr 3 ⚠ATH','Apr 11\n(current)'],
+    datasets:[
+      {label:'Ex-Refinery',data:[172.26,145.42,152.55,140.97,141.22,148.28,438,421],backgroundColor:[TEAL,TEAL,TEAL,TEAL,TEAL,TEAL,RED,'rgba(155,35,53,0.75)'],stack:'p'},
+      {label:'PDL',data:[1.58,1.58,1.58,1.58,1.58,1.58,1.58,1.58],backgroundColor:GRN,stack:'p'},
+      {label:'OMC margin',data:[7.97,7.85,8.77,7.88,7.45,8.00,9,9],backgroundColor:GRY,stack:'p'},
+      {label:'Customs/Excise',data:[0.05,0.05,0.05,18.95,18.95,18.95,18.95,18.95],backgroundColor:AMB,stack:'p'}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{mode:'index',callbacks:{label:c=>c.dataset.label+': Rs '+c.parsed.y.toFixed(2)+'/L'}}},
+    scales:{
+      x:{stacked:true,grid:{display:false},ticks:{font:{size:10,family:'system-ui'},color:TICK}},
+      y:{stacked:true,grid:{color:GRID},ticks:{font:TF,color:TICK,callback:v=>'Rs '+v},min:0,max:530}
+    }}
+});
+
+new Chart(document.getElementById('ch-ref'),{
+  type:'bar',
+  data:{
+    labels:['ENAR EPRF','PARCO','PRL','Cnergyico','NRL'],
+    datasets:[{label:'Est. FY2024-25 output (T)',data:[30000,22000,9000,4000,964],
+      backgroundColor:['#036B7A','rgba(3,107,122,.75)','rgba(3,107,122,.55)','rgba(3,107,122,.38)','rgba(3,107,122,.22)'],borderRadius:4}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.parsed.x.toLocaleString()+' T (est.)'}}},
+    scales:{x:{grid:{color:GRID},ticks:{font:TF,color:TICK,callback:v=>(v/1000).toFixed(0)+'k T'}},y:{grid:{display:false},ticks:{font:{size:12,family:'system-ui'},color:'#444'}}}}
+});
+
+new Chart(document.getElementById('ch-bsk'),{
+  type:'doughnut',
+  data:{
+    labels:['Motor Spirit','HSD','Furnace Oil','Aviation','HOBC','Kerosene','LDO'],
+    datasets:[{data:[7625877,6874875,867148,496998,290078,65964,15497],
+      backgroundColor:[TEAL,AMB,RED,GRN,GRY,'#1D9E75','#C4B49A'],borderWidth:2,borderColor:'#FFFFFF'}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': '+(c.parsed/16236437*100).toFixed(2)+'%  ('+c.parsed.toLocaleString()+' T)'}}}}
+});
+
+const btns=document.querySelectorAll('.tab-btn');
+const smap={ov:'s-ov',pt:'s-pt',pm:'s-pm',sc:'s-sc',mc:'s-mc'};
+btns.forEach(b=>{
+  b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    Object.values(smap).forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+    const t=document.getElementById(smap[b.dataset.tab]);if(t){t.style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
+  });
+});
+})();
+</script>
+</body>
+</html>
