@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSRL Block-I — Tariff Evolution, Regulatory Discipline & Scale Optimisation Roadmap</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#FFFFFF;--bg2:#FAFAFA;--bg3:#F7F4EF;--border:#E5E5E5;
+  --accent:#C8923A;--accent2:#A97924;--green:#52B788;--green2:#1a6b3c;
+  --red:#9B2335;--blue:#6EA8C4;--slate:#667085;
+  --text:#1A1A1A;--text2:#666666;--text3:#999999;--shadow:rgba(26,26,26,0.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--bg);color:#2D2D2D;line-height:1.6;font-size:14px}
+.container{max-width:1180px;margin:0 auto;padding:0 1.5rem 4rem}
+.doc-header{border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;margin-bottom:2.5rem}
+.doc-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.75rem}
+.doc-title{font-family:Georgia,serif;font-size:40px;font-weight:400;color:var(--text);line-height:1.16;margin-bottom:0.75rem;max-width:980px}
+.doc-sub{font-size:15px;color:var(--text2);margin-bottom:1.25rem;max-width:940px}
+.doc-meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:12px;color:var(--text3);padding-top:1rem;border-top:1px solid var(--border)}
+.doc-meta span strong{color:var(--text);font-weight:600}
+.nav-strip{position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(10px);z-index:10;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0.75rem 1.5rem;display:flex;gap:1.2rem;flex-wrap:wrap;font-size:12px;color:var(--text3)}
+.nav-inner a{text-decoration:none;color:var(--text2)}.nav-inner a:hover{color:var(--accent)}
+.section{margin:3rem 0 2rem}
+.section-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.5rem}
+.section-title{font-family:Georgia,serif;font-size:25px;font-weight:400;color:var(--text);margin-bottom:0.5rem}
+.section-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;max-width:920px}
+.exhibit-tag{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.4rem}
+hr.divider{border:none;border-top:1px solid var(--border);margin:2.75rem 0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:0.85rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.6rem}
+.kpi-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.35rem;border-top:3px solid var(--border);box-shadow:0 6px 20px var(--shadow)}
+.kpi-box.amber{border-top-color:var(--accent)}.kpi-box.green{border-top-color:var(--green)}.kpi-box.red{border-top-color:var(--red)}.kpi-box.slate{border-top-color:#888}.kpi-box.blue{border-top-color:var(--blue)}
+.kpi-num{font-family:Georgia,serif;font-size:30px;font-weight:400;color:var(--text);line-height:1}
+.kpi-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.55rem}
+.kpi-note{font-size:12px;color:var(--accent);margin-top:0.45rem;font-weight:500;line-height:1.4}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.45rem;box-shadow:0 6px 20px var(--shadow)}
+.panel.white{background:var(--bg)}
+.panel-title{font-family:Georgia,serif;font-size:16px;font-weight:400;color:var(--text);margin-bottom:0.25rem}
+.panel-sub{font-size:12px;color:var(--text3);margin-bottom:1rem}
+.callout{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:var(--bg2);border-radius:0 4px 4px 0;margin:1.2rem 0;font-size:13px;color:var(--text2)}
+.callout strong{color:var(--text);font-weight:600}
+.ch-wrap{position:relative;width:100%}
+.ch-220{height:220px}.ch-240{height:240px}.ch-260{height:260px}.ch-300{height:300px}.ch-340{height:340px}.ch-380{height:380px}
+.est-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--bg)}
+.est-table th{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);padding:0.62rem 0.75rem;border-bottom:2px solid var(--border);background:var(--bg);text-align:left;white-space:nowrap}
+.est-table td{padding:0.68rem 0.75rem;border-bottom:1px solid var(--border);color:#2D2D2D;vertical-align:top}
+.est-table tr:last-child td{border-bottom:none}
+.est-table tr:hover td{background:#FAFAFA}
+.est-table .val{font-family:Georgia,serif;font-size:13px;font-weight:400;text-align:right;white-space:nowrap;color:var(--text)}
+.est-table .small{font-size:11px;color:var(--text2);line-height:1.45}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+.b-scale{background:#FDF3E6;color:#8B5E1A}.b-opt{background:#EAF5EF;color:#1a6b3c}.b-reg{background:#EBF3FB;color:#1a4f7a}.b-risk{background:#FFF3F3;color:#7a1a2a}.b-dev{background:#F5F5F5;color:#555}
+.model-shell{display:grid;grid-template-columns:360px 1fr;gap:1.25rem;align-items:start}
+.control-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.1rem;margin-bottom:0.9rem}
+.control-head{display:flex;justify-content:space-between;align-items:baseline;gap:0.75rem;margin-bottom:0.55rem}
+.control-label{font-size:12px;font-weight:600;color:var(--text);letter-spacing:0.02em}
+.control-value{font-family:Georgia,serif;font-size:18px;color:var(--accent)}
+.control-help{font-size:11px;color:var(--text3);line-height:1.4;margin-bottom:0.65rem}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.scenario-buttons{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem}
+.scenario-buttons button{border:1px solid var(--border);background:var(--bg);border-radius:6px;padding:0.65rem 0.5rem;font-size:11px;color:var(--text2);cursor:pointer;transition:0.15s}
+.scenario-buttons button:hover{border-color:var(--accent);color:var(--text)}
+.scenario-buttons button.primary{background:var(--accent);color:white;border-color:var(--accent)}
+.output-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem;margin-bottom:1rem}
+.out-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.9rem;border-left:3px solid var(--border)}
+.out-card.amber{border-left-color:var(--accent)}.out-card.green{border-left-color:var(--green)}.out-card.blue{border-left-color:var(--blue)}.out-card.red{border-left-color:var(--red)}
+.out-val{font-family:Georgia,serif;font-size:24px;color:var(--text);line-height:1}
+.out-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:0.45rem}
+.out-note{font-size:11px;color:var(--text2);margin-top:0.4rem;line-height:1.35}
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem}
+.road-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.15rem;border-top:3px solid var(--border)}
+.road-card.amber{border-top-color:var(--accent)}.road-card.green{border-top-color:var(--green)}.road-card.blue{border-top-color:var(--blue)}.road-card.red{border-top-color:var(--red)}
+.road-title{font-family:Georgia,serif;font-size:15px;color:var(--text);margin-bottom:0.25rem}
+.road-meta{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.6rem}
+.road-card ul{padding-left:1rem;color:var(--text2);font-size:12px;line-height:1.55}
+.heat-table{width:100%;border-collapse:separate;border-spacing:5px;font-size:11px}
+.heat-table th{color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;padding:0.4rem;text-align:center}
+.heat-table td{padding:0.55rem;border-radius:4px;text-align:center;font-family:Georgia,serif;border:1px solid rgba(255,255,255,0.6)}
+.heat-good{background:#EAF5EF;color:#1a6b3c}.heat-mid{background:#FDF3E6;color:#8B5E1A}.heat-high{background:#FFF3F3;color:#7a1a2a}.heat-neutral{background:#F5F5F5;color:#555}
+.timeline{display:flex;gap:0;margin:1.5rem 0;overflow-x:auto;padding-bottom:0.5rem}
+.tl-item{flex:1;min-width:130px;padding:0.85rem 1rem;border-left:3px solid var(--border);position:relative}
+.tl-item.active{border-left-color:var(--accent);background:var(--bg2);border-radius:0 6px 6px 0}
+.tl-item.green{border-left-color:var(--green)}
+.tl-item.red{border-left-color:var(--red)}
+.tl-year{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase}
+.tl-stage{font-size:13px;font-weight:600;color:var(--text);margin:0.2rem 0}
+.tl-tariff{font-family:Georgia,serif;font-size:20px;color:var(--text)}
+.tl-sub{font-size:11px;color:var(--text3)}
+.formula{font-family:'SFMono-Regular',Consolas,monospace;background:#fff;border:1px solid var(--border);border-radius:4px;padding:0.6rem;font-size:11px;color:var(--text2);overflow:auto}
+.note{font-size:11px;color:var(--text3);line-height:1.5;margin-top:0.8rem}
+.doc-footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:12px;color:var(--text3)}
+.doc-footer strong{color:var(--text)}
+@media(max-width:980px){.model-shell{grid-template-columns:1fr}.kpi-grid,.g4,.roadmap,.output-strip{grid-template-columns:1fr 1fr}.g3,.g5{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.g2,.g3,.g4,.g5,.kpi-grid,.roadmap,.output-strip{grid-template-columns:1fr}.doc-title{font-size:31px}.container{padding:0 1rem 3rem}.ch-340,.ch-380{height:300px}}
+@media print{.nav-strip,.scenario-buttons,input[type=range]{display:none}.container{max-width:100%}}
+</style>
+</head>
+<body>
+
+<div class="nav-strip">
+  <div class="nav-inner">
+    <a href="#snapshot">Snapshot</a>
+    <a href="#tariff">Tariff Evolution</a>
+    <a href="#regulatory">Regulatory Discipline</a>
+    <a href="#components">Component Decomposition</a>
+    <a href="#model">Dynamic Model</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#annex">Annex</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-eyebrow">SSRL · Thar Block-I · Tariff Evolution, Regulatory Discipline & Scale Optimisation</div>
+  <h1 class="doc-title">From Pioneer Cost to Regulated Efficiency:<br>SSRL Block-I Tariff Evolution Dashboard</h1>
+  <p class="doc-sub">A board-level analytical artifact tracing how TCEB regulatory discipline has compressed SSRL's tariff from inflated first-of-kind petitions to an optimised COD-stage tariff of $40.31/ton — and modelling how scale-up, electrification and operational efficiency can drive the next reduction cycle across a 7.8 → 18 MTPA expansion path.</p>
+  <div class="doc-meta">
+    <span><strong>Mine</strong> · Sino Sindh Resources (Pvt.) Limited · Block-I</span>
+    <span><strong>Current Capacity</strong> · 7.8 MTPA</span>
+    <span><strong>Current COD Tariff</strong> · USD 40.31/tonne (July 2025)</span>
+    <span><strong>Historical Scope</strong> · Feasibility Stage 2016 → COD Stage 2025</span>
+    <span><strong>Forward Model</strong> · 7.8 → 18 MTPA</span>
+    <span><strong>Currency</strong> · USD / tonne</span>
+  </div>
+</div>
+
+<!-- ===================== SECTION A — SNAPSHOT ===================== -->
+<section id="snapshot" class="section">
+  <div class="section-eyebrow">Section A</div>
+  <h2 class="section-title">Executive Snapshot</h2>
+  <p class="section-sub">SSRL's tariff history is, at its core, a regulatory discipline story. Unlike SECMC which extracted savings through multi-phase scale-up, SSRL has operated at a single capacity of 7.8 MTPA since inception. The most powerful tariff lever deployed so far has been TCEB's consistent rejection of inflated petitions. Scale-up remains the primary untapped lever: every MTPA added to Block-I will dilute the fixed capacity burden and bend the cost curve downward in ways that regulatory discipline alone cannot achieve.</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-box amber">
+      <div class="kpi-num">40.31</div>
+      <div class="kpi-label">COD Stage Tariff</div>
+      <div class="kpi-note">USD/t · July 2025 · 7.8 MTPA</div>
+    </div>
+    <div class="kpi-box red">
+      <div class="kpi-num">56.75</div>
+      <div class="kpi-label">FC Stage Petition</div>
+      <div class="kpi-note">USD/t · SSRL's highest petition · Jun 2023</div>
+    </div>
+    <div class="kpi-box green">
+      <div class="kpi-num">$16.44</div>
+      <div class="kpi-label">Regulatory Saving</div>
+      <div class="kpi-note">USD/t · FC petition vs FC determination ($37.36)</div>
+    </div>
+    <div class="kpi-box blue">
+      <div class="kpi-num">~46%</div>
+      <div class="kpi-label">Capacity Payment Compression</div>
+      <div class="kpi-note">FS Review $29.81 → COD $24.40 (levelized)</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit A-1</div>
+      <div class="panel-title">The SSRL Tariff Story</div>
+      <div class="panel-sub">Why this mine's tariff history is structurally different from SECMC</div>
+      <div class="callout"><strong>SSRL has not yet scaled.</strong> The entire tariff record — all seven regulatory milestones from 2016 to 2025 — covers the same 7.8 MTPA mine. This means Block-I has not yet unlocked the most powerful tariff lever available to it: fixed cost dilution through expanded production volume. Every reduction achieved so far has come from regulatory discipline, cost audit and component rationalisation, not scale.</div>
+      <table class="est-table">
+        <tbody>
+          <tr><td><span class="badge b-reg">Regulatory Discipline</span></td><td>TCEB/TCTDC consistently cut inflated capex, ROEDC, financing charges, and non-EPC costs. The FC petition of $56.75/ton was determined at $37.36/ton — a 34% reduction.</td></tr>
+          <tr><td><span class="badge b-scale">Untapped Scale</span></td><td>Block-I sits on the same geological platform as SECMC's multi-MTPA expansion. A scale-up to 12–18 MTPA would dilute fixed costs, ROE/ROEDC, insurance and O&M per tonne by 25–45%.</td></tr>
+          <tr><td><span class="badge b-risk">Fuel/Diesel Frontier</span></td><td>Fuel cost now represents ~35–40% of the production payment. At current diesel prices, this is the single largest avoidable variable cost and is not addressed by scale alone.</td></tr>
+          <tr><td><span class="badge b-opt">Electrification Opportunity</span></td><td>The FC Review (Aug 2023) explicitly directed SSRL to transition to electric vehicles and mine-mouth power. This is now an embedded regulatory expectation, not a voluntary option.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit A-2</div>
+      <div class="panel-title">Tariff at Every Regulatory Milestone</div>
+      <div class="panel-sub">Determined levelized tariff USD/t across all TCEB orders</div>
+      <div class="ch-wrap ch-300"><canvas id="tariffLine"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Timeline strip -->
+  <div class="timeline">
+    <div class="tl-item red">
+      <div class="tl-year">Dec 2016</div>
+      <div class="tl-stage">Feasibility Stage</div>
+      <div class="tl-tariff">$40.62</div>
+      <div class="tl-sub">First determination · 7.8 MTPA</div>
+    </div>
+    <div class="tl-item red">
+      <div class="tl-year">Mar 2017</div>
+      <div class="tl-stage">FS Review</div>
+      <div class="tl-tariff">$44.36</div>
+      <div class="tl-sub">SSRL petitioned $47.27</div>
+    </div>
+    <div class="tl-item green">
+      <div class="tl-year">Dec 2019</div>
+      <div class="tl-stage">Contract Stage</div>
+      <div class="tl-tariff">$35.84</div>
+      <div class="tl-sub">Largest single reduction</div>
+    </div>
+    <div class="tl-item green">
+      <div class="tl-year">Oct 2020</div>
+      <div class="tl-stage">CS Review</div>
+      <div class="tl-tariff">~$35.84</div>
+      <div class="tl-sub">SSRL petitioned $43.41</div>
+    </div>
+    <div class="tl-item green">
+      <div class="tl-year">Jun 2023</div>
+      <div class="tl-stage">Financial Close</div>
+      <div class="tl-tariff">$37.36</div>
+      <div class="tl-sub">SSRL petitioned $56.75</div>
+    </div>
+    <div class="tl-item red">
+      <div class="tl-year">Aug 2023</div>
+      <div class="tl-stage">FC Review</div>
+      <div class="tl-tariff">$40.55</div>
+      <div class="tl-sub">Upward revision post-review</div>
+    </div>
+    <div class="tl-item active">
+      <div class="tl-year">Jul 2025</div>
+      <div class="tl-stage">COD Stage</div>
+      <div class="tl-tariff">$40.31</div>
+      <div class="tl-sub">Current operative tariff</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===================== SECTION B — TARIFF EVOLUTION ===================== -->
+<section id="tariff" class="section">
+  <div class="section-eyebrow">Section B</div>
+  <h2 class="section-title">Tariff Evolution: What Moved and Why</h2>
+  <p class="section-sub">The headline pattern is not simple decline. SSRL's tariff moved up and down across milestones — rising at FS Review, dropping sharply at CS, rising again at FC/FC Review, and stabilising at COD. The underlying mechanics are more instructive than the headline numbers: capacity payment compression came from regulatory discipline, while production payment has drifted upward with real-world diesel, fleet and operational costs.</p>
+
+  <div class="g2" style="margin-bottom:1.25rem">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit B-1</div>
+      <div class="panel-title">Capacity vs Production Payment</div>
+      <div class="panel-sub">USD/t levelized · Capacity payment under regulatory pressure; production payment rising</div>
+      <div class="ch-wrap ch-300"><canvas id="stackTariff"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit B-2</div>
+      <div class="panel-title">Petitioned vs Determined Tariff</div>
+      <div class="panel-sub">Regulatory discipline — the gap between what SSRL asked and what TCEB allowed</div>
+      <div class="ch-wrap ch-300"><canvas id="requestedDetermined"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel white">
+    <div class="exhibit-tag">Exhibit B-3 · Full Regulatory History — Contract Stage to COD</div>
+    <div class="panel-title">SSRL Tariff Determination Record (All Milestones)</div>
+    <div class="panel-sub">Seven determinations over nine years covering the same 7.8 MTPA mine — each stage crystallising actual vs assumed costs.</div>
+    <div style="overflow-x:auto">
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th>Stage</th><th>Date</th><th>Case No.</th>
+            <th>Petitioned<br>USD/t</th><th>Determined<br>USD/t</th>
+            <th>Production Pmt<br>USD/t</th><th>Capacity Pmt<br>USD/t</th>
+            <th>Key Driver</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Feasibility Stage</strong></td><td>Dec 2016</td><td>TCEB/Registrar/2-2/2015</td>
+            <td class="val">~45.0</td><td class="val" style="color:var(--accent);font-weight:600">40.62</td>
+            <td class="val">15.04</td><td class="val">25.58</td>
+            <td class="small">First-of-kind determination. Truck &amp; shovel @ 7 m³/60-ton. $1,058M project cost. PKR 104/USD assumption.</td>
+          </tr>
+          <tr>
+            <td><strong>FS Review</strong></td><td>Mar 2017</td><td>TCEB/Registrar/2-2/2015</td>
+            <td class="val" style="color:var(--red)">47.27</td><td class="val" style="color:var(--red)">44.36</td>
+            <td class="val">14.55</td><td class="val">29.81</td>
+            <td class="small">SSRL sought $47.27 — TCEB allowed $44.36. Construction period, geology, overburden volumes disputed. Tariff went UP vs FS.</td>
+          </tr>
+          <tr>
+            <td><strong>Contract Stage</strong></td><td>Dec 2019</td><td>TCEB/Registrar/2-2/2015</td>
+            <td class="val">~43.0</td><td class="val" style="color:var(--green);font-weight:600">35.84</td>
+            <td class="val">~14.5</td><td class="val">~21.3</td>
+            <td class="small">Largest single-stage reduction. TCTDC slashed capex from $1,177M to $749M. Sinosure fee capped at 5.5%. ROEDC, ROE and financing spreads disciplined.</td>
+          </tr>
+          <tr>
+            <td><strong>CS Review</strong></td><td>Oct 2020</td><td>TCEB/Registrar/2-2/2015/CS-Review</td>
+            <td class="val" style="color:var(--red)">43.41</td><td class="val">~35.84</td>
+            <td class="val">~14.5</td><td class="val">~21.3</td>
+            <td class="small">SSRL attempted to restore CS petition cost. TCEB maintained discipline — EPC reduced from $781M to $646M, OB cost revised, mining cost rebased on review geology model.</td>
+          </tr>
+          <tr>
+            <td><strong>Financial Close</strong></td><td>Jun 2023</td><td>TCEB/Registrar/2-2/2015/FC Stage</td>
+            <td class="val" style="color:var(--red)">56.75</td><td class="val" style="color:var(--green);font-weight:600">37.36</td>
+            <td class="val">13.83</td><td class="val">23.54</td>
+            <td class="small">SSRL's most aggressive petition. TCEB cut tariff by 34%. Project cost: SSRL $1,145M vs TCEB $921M. Equipment efficiency challenged; electric vehicle transition formally recommended.</td>
+          </tr>
+          <tr>
+            <td><strong>FC Review</strong></td><td>Aug 2023</td><td>TCEB/Registrar/2-2/2015/FC-Stage/Review</td>
+            <td class="val">—</td><td class="val" style="color:var(--red)">40.55</td>
+            <td class="val">~14.5</td><td class="val">~26.1</td>
+            <td class="small">Upward revision on review. Machinery requirements recalibrated (excavators: 79→86 units; dump trucks: 1,372→1,399). Localization plan and EV transition plan mandated for COD.</td>
+          </tr>
+          <tr style="background:#FAFAFA">
+            <td><strong>COD Stage</strong></td><td>Jul 2025</td><td>TCEB/Registrar/2-2/2015/COD-Stage</td>
+            <td class="val">—</td><td class="val" style="color:var(--accent);font-weight:700;font-size:15px">40.31</td>
+            <td class="val">~15.9</td><td class="val">~24.4</td>
+            <td class="small">Current operative tariff. COD verified at 7.8 MTPA with 14.43 MT coal extracted. Overburden confirmed at 168.5 MBCM. Dewatering, EDS, terminal reservoir, crush-stone road all included.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Production and capacity payments are indicative levelized splits based on annexure tables from determination orders. FS = Feasibility Stage · CS = Contract Stage · FC = Financial Close · COD = Commercial Operations Date.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===================== SECTION C — REGULATORY DISCIPLINE ===================== -->
+<section id="regulatory" class="section">
+  <div class="section-eyebrow">Section C</div>
+  <h2 class="section-title">Regulatory Discipline: The Dominant Tariff Lever (So Far)</h2>
+  <p class="section-sub">In the absence of scale-up, TCEB's regulatory scrutiny has been the primary cost-compression mechanism for SSRL. Every major petition was cut materially — total regulatory savings across all petitions exceed USD 25/tonne. The most aggressive example: SSRL's 2023 FC petition of $56.75/ton was reduced to $37.36/ton, a 34% cut driven by capex audit, machinery assessment, financing discipline and operational benchmarking.</p>
+
+  <div class="g2" style="margin-bottom:1.25rem">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit C-1</div>
+      <div class="panel-title">Petition vs Determination Gap by Stage</div>
+      <div class="panel-sub">USD/t — The recurring pattern of over-petition and regulatory correction</div>
+      <div class="ch-wrap ch-300"><canvas id="gapBar"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit C-2</div>
+      <div class="panel-title">Where TCEB Cut Costs at CS Stage</div>
+      <div class="panel-sub">Capital cost comparison: SSRL petition vs TCEB review (USD million)</div>
+      <div class="ch-wrap ch-300"><canvas id="capexBar"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel white">
+    <div class="exhibit-tag">Exhibit C-3 · Capital Cost Discipline — Contract Stage to Financial Close</div>
+    <div class="panel-title">What TCEB Cut and Why</div>
+    <div style="overflow-x:auto">
+      <table class="est-table">
+        <thead><tr><th>Cost Item</th><th>CS — SSRL (USD M)</th><th>CS — TCEB (USD M)</th><th>FC — SSRL (USD M)</th><th>FC — TCEB (USD M)</th><th>Regulatory Logic</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Total Project Cost</strong></td><td class="val">1,177.6</td><td class="val">749.3</td><td class="val">1,145.8</td><td class="val">~921.0</td><td class="small">Consistent 20–36% disallowance across stages. TCTDC benchmarks against comparable projects.</td></tr>
+          <tr><td>EPC Cost</td><td class="val">781.8</td><td class="val">461.1</td><td class="val">920.6</td><td class="val">~630.0</td><td class="small">Equipment costs, OB removal unit rates, civil works and conveyor systems independently benchmarked.</td></tr>
+          <tr><td>Overburden Removal</td><td class="val">320.7</td><td class="val">120.3</td><td class="val">—</td><td class="val">—</td><td class="small">OB volumes and stripping ratios revised downward; mining cost per BCM benchmarked.</td></tr>
+          <tr><td>Interest During Construction</td><td class="val">94.4</td><td class="val">49.9</td><td class="val">36.8</td><td class="val">~25.0</td><td class="small">Construction timeline enforced; excess IDC beyond SCOD not allowable.</td></tr>
+          <tr><td>Sinosure Fee</td><td class="val">53.8</td><td class="val">33.7</td><td class="val">—</td><td class="val">—</td><td class="small">Capped at 5.5% of outstanding Chinese debt, not as an upfront lump sum.</td></tr>
+          <tr><td>Land &amp; Rehabilitation</td><td class="val">67.0</td><td class="val">49.0</td><td class="val">—</td><td class="val">—</td><td class="small">Reduced but expanded at CS Review with new items (terminal reservoir, EDS, drainage channel).</td></tr>
+          <tr><td>SSRL Operating Expenses (pre-COD)</td><td class="val">34.4</td><td class="val">29.0</td><td class="val">—</td><td class="val">—</td><td class="small">Benchmarked against actual audited costs; project development costs capped at USD 9M.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===================== SECTION D — COMPONENT DECOMPOSITION ===================== -->
+<section id="components" class="section">
+  <div class="section-eyebrow">Section D</div>
+  <h2 class="section-title">Component Decomposition: What's Moving and What Isn't</h2>
+  <p class="section-sub">Breaking the COD tariff into its constituent parts reveals the next efficiency frontier. Fuel/diesel dominates the production payment; fixed capacity recovery (ROE, fixed O&M, debt service) dominates the capacity payment. Scale-up addresses capacity components; electrification and fuel benchmarking address production components.</p>
+
+  <div class="g2" style="margin-bottom:1.25rem">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit D-1</div>
+      <div class="panel-title">COD Tariff Component Breakdown</div>
+      <div class="panel-sub">USD/t levelized — indicative split based on COD Stage Annexure-I</div>
+      <div class="ch-wrap ch-340"><canvas id="componentDonut"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit D-2</div>
+      <div class="panel-title">Production vs Capacity Payment Evolution</div>
+      <div class="panel-sub">How each payment block has moved across milestones (USD/t levelized)</div>
+      <div class="ch-wrap ch-340"><canvas id="componentEvol"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel white">
+    <div class="exhibit-tag">Exhibit D-3 · COD Stage Component Detail</div>
+    <div class="panel-title">Frontier Analysis: What Scale and Electrification Can Target</div>
+    <div style="overflow-x:auto">
+      <table class="est-table">
+        <thead><tr><th>Component</th><th>COD Year 1 (USD/t)</th><th>COD Levelized (USD/t)</th><th>Direction</th><th>Primary Lever</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Fuel Cost (Diesel)</strong></td><td class="val">6.55</td><td class="val">~5.60</td><td><span class="badge b-risk">↑ Critical</span></td><td class="small">EV fleet, trolley assist, IPCC/conveyors, telemetry-based dispatch. Fuel is now ~35% of production payment — the single largest variable cost.</td></tr>
+          <tr><td><strong>Variable O&amp;M (Services/Spares)</strong></td><td class="val">4.75</td><td class="val">~4.10</td><td><span class="badge b-risk">↑</span></td><td class="small">Localization of spares, consumables and maintenance services. Import-dependent supply chain drives cost up. Localization plan mandated by FC Review order.</td></tr>
+          <tr><td><strong>Asset Replacement Reserve</strong></td><td class="val">3.95</td><td class="val">~1.90</td><td><span class="badge b-opt">↓ (declines)</span></td><td class="small">Front-loaded in operating years; falls to zero by Year 30. Electric fleet reduces replacement frequency vs diesel fleet.</td></tr>
+          <tr><td><strong>Royalty</strong></td><td class="val">3.32</td><td class="val">~2.80</td><td><span class="badge b-dev">Policy</span></td><td class="small">Minimum 7.5% of production payment (excluding royalty) or GoS notification. Moves with tariff; not directly optimisable.</td></tr>
+          <tr><td><strong>Fixed O&amp;M (Foreign)</strong></td><td class="val">5.13</td><td class="val">~4.50</td><td><span class="badge b-opt">↓ with scale</span></td><td class="small">Mine service facilities (MSF) and dewatering operations. Per-tonne burden falls as production volume increases with scale-up.</td></tr>
+          <tr><td><strong>Fixed O&amp;M (Local)</strong></td><td class="val">2.80</td><td class="val">~2.55</td><td><span class="badge b-opt">↓ with scale</span></td><td class="small">Local O&amp;M workforce and services. Scale dilutes per-tonne cost; contractor-to-miner transition enhances control.</td></tr>
+          <tr><td><strong>Power Cost</strong></td><td class="val">0.96</td><td class="val">~0.96</td><td><span class="badge b-opt">↓ large potential</span></td><td class="small">Grid/HESCO power for static loads. Major upside: mine-mouth power, solar BOOT, and VFD motors can reduce this by 50–70%.</td></tr>
+          <tr><td><strong>Working Capital</strong></td><td class="val">1.70</td><td class="val">~1.25</td><td><span class="badge b-opt">↓</span></td><td class="small">Funded at KIBOR + 2.0%. Mature operating cycle and TCPBA reconciliation discipline reduce per-tonne burden over time.</td></tr>
+          <tr><td><strong>Debt Service (P+I)</strong></td><td class="val">11.08</td><td class="val">~7.85</td><td><span class="badge b-opt">↓ (retires)</span></td><td class="small">Foreign debt: LIBOR-linked; local: KIBOR + 2.0%. Debt fully retires by Year 10 — largest capacity payment item in early years, zero after repayment.</td></tr>
+          <tr><td><strong>ROE + ROEDC</strong></td><td class="val">6.75</td><td class="val">~6.75</td><td><span class="badge b-dev">Regulatory</span></td><td class="small">TCEB-determined equity returns. Per-tonne burden falls if equity base is spread over larger production. Scale-up is the primary lever.</td></tr>
+          <tr><td><strong>Insurance</strong></td><td class="val">0.63</td><td class="val">~0.63</td><td><span class="badge b-opt">↓ slightly</span></td><td class="small">Dilutes modestly with scale-up. Track record reduces underwriter risk premium over time.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===================== SECTION E — DYNAMIC MODEL ===================== -->
+<section id="model" class="section">
+  <div class="section-eyebrow">Section E</div>
+  <h2 class="section-title">Dynamic Tariff Optimisation Model</h2>
+  <p class="section-sub">Use the controls below to test how SSRL's future tariff could evolve as Block-I scales up and optimization levers are applied. The base is the July 2025 COD tariff of USD 40.31/tonne at 7.8 MTPA. This is an indicative planning simulator, not a regulatory determination.</p>
+
+  <div class="model-shell">
+    <div class="panel white">
+      <div class="exhibit-tag">Model Controls</div>
+      <div class="panel-title">Scenario Builder</div>
+      <div class="panel-sub">Select a preset or adjust the sliders below.</div>
+      <div class="scenario-buttons">
+        <button onclick="setScenario('base')">Status Quo</button>
+        <button onclick="setScenario('scale')">Scale Only</button>
+        <button onclick="setScenario('discipline')">Scale + Discipline</button>
+        <button class="primary" onclick="setScenario('electrified')">Electrified Mine</button>
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Mine Capacity</div><div id="capVal" class="control-value">7.8 MTPA</div></div>
+        <div class="control-help">Expanding Block-I from 7.8 MTPA spreads fixed infrastructure costs — dewatering, roads, MSF, CHS, ROE/ROEDC — over more tonnes, directly compressing the capacity payment.</div>
+        <input id="capacity" type="range" min="7.8" max="20" value="7.8" step="0.1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Mobile Fleet Electrification</div><div id="evVal" class="control-value">0%</div></div>
+        <div class="control-help">Share of diesel haulage work (dump trucks, service vehicles, auxiliary equipment) replaced by electric traction, trolley assist, or battery-electric vehicles.</div>
+        <input id="evShare" type="range" min="0" max="85" value="0" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">IPCC / Conveyor Adoption</div><div id="ipccVal" class="control-value">0%</div></div>
+        <div class="control-help">Share of haulage burden shifted from diesel truck cycle to continuous grid-powered IPCC or conveyor systems — directly reducing fuel and asset replacement cost.</div>
+        <input id="ipccShare" type="range" min="0" max="80" value="0" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Fuel Efficiency / Telemetry Gain</div><div id="fuelVal" class="control-value">0%</div></div>
+        <div class="control-help">Improvement from litres/BCM benchmarking, haul-road discipline, idle-time reduction, payload monitoring and dispatch optimisation (GPS, telematics).</div>
+        <input id="fuelEff" type="range" min="0" max="30" value="0" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Grid / Mine-Mouth / Solar Power</div><div id="gridVal" class="control-value">20%</div></div>
+        <div class="control-help">Share of static power loads (dewatering, CHS, workshops, MSF) optimised through grid, mine-mouth power or solar BOOT — reducing power cost component.</div>
+        <input id="gridOpt" type="range" min="0" max="100" value="20" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Localization of O&amp;M</div><div id="localVal" class="control-value">10%</div></div>
+        <div class="control-help">Reduction in foreign O&amp;M dependency through local spare parts, consumables supply chain, indigenised maintenance and contractor-to-miner transition.</div>
+        <input id="localOpt" type="range" min="0" max="50" value="10" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Financing / TCPBA Discipline</div><div id="finVal" class="control-value">0%</div></div>
+        <div class="control-help">Reduction in debt service, working capital and financing leakage through tighter spreads, TCPBA clawbacks, sub-account discipline and annual reconciliation.</div>
+        <input id="finOpt" type="range" min="0" max="20" value="0" step="1" oninput="updateModel()">
+      </div>
+
+      <div class="control-card">
+        <div class="control-head"><div class="control-label">Scale Elasticity</div><div id="elasVal" class="control-value">0.55</div></div>
+        <div class="control-help">How strongly fixed/capacity payment declines with scale. Higher value = stronger fixed-cost dilution. 0.55 is consistent with open-cast mining benchmarks.</div>
+        <input id="elasticity" type="range" min="0.30" max="0.80" value="0.55" step="0.01" oninput="updateModel()">
+      </div>
+    </div>
+
+    <div>
+      <div class="output-strip">
+        <div class="out-card amber"><div id="predTariff" class="out-val">—</div><div class="out-lbl">Predicted Tariff</div><div class="out-note">USD/t under current scenario</div></div>
+        <div class="out-card green"><div id="totalSaving" class="out-val">—</div><div class="out-lbl">Saving vs COD Baseline</div><div class="out-note">Reduction from $40.31 USD/t</div></div>
+        <div class="out-card blue"><div id="capPayOut" class="out-val">—</div><div class="out-lbl">Capacity Payment</div><div class="out-note">Scale &amp; financing adjusted</div></div>
+        <div class="out-card red"><div id="prodPayOut" class="out-val">—</div><div class="out-lbl">Production Payment</div><div class="out-note">Efficiency &amp; electrification adjusted</div></div>
+      </div>
+
+      <div class="g2" style="margin-bottom:1.25rem">
+        <div class="panel">
+          <div class="exhibit-tag">Exhibit E-1</div>
+          <div class="panel-title">Projected Tariff Curve</div>
+          <div class="panel-sub">Modelled USD/t as Block-I capacity scales under selected efficiency assumptions</div>
+          <div class="ch-wrap ch-300"><canvas id="projectionLine"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="exhibit-tag">Exhibit E-2</div>
+          <div class="panel-title">Scenario Decomposition</div>
+          <div class="panel-sub">Capacity vs production payment under selected scenario</div>
+          <div class="ch-wrap ch-300"><canvas id="modelStack"></canvas></div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="panel">
+          <div class="exhibit-tag">Exhibit E-3</div>
+          <div class="panel-title">Lever Contribution Waterfall</div>
+          <div class="panel-sub">Indicative tariff after each optimisation layer</div>
+          <div class="ch-wrap ch-260"><canvas id="waterfall"></canvas></div>
+        </div>
+        <div class="panel white">
+          <div class="exhibit-tag">Exhibit E-4</div>
+          <div class="panel-title">Model Formula</div>
+          <div class="panel-sub">Transparent mechanics used in this dashboard</div>
+          <div class="formula">
+Base (COD 2025): $40.31 = $24.40 capacity + $15.91 production<br><br>
+Capacity Payment = 24.40 × (7.8 / MTPA)<sup>elasticity</sup> × (1 − fin × 0.35)<br><br>
+Fuel = 5.60 × (1 − fuelEff) × (1 − 0.55×EV) × (1 − 0.45×IPCC)<br>
+Variable O&amp;M = 4.10 × (1 − 0.15×local) × (1 − 0.08×EV)<br>
+Asset Replacement = 1.90 × (1 − 0.06×EV)<br>
+Power = 0.96 × (1 − 0.25×grid)<br>
+Other = 3.35 (royalty + insurance; policy-driven)<br><br>
+Production Payment = max(9.0, sum of above components)<br>
+Predicted Tariff = Capacity Payment + Production Payment
+          </div>
+          <p class="note">The model credits electrification and IPCC partially — these levers require verified capex, infrastructure and life-cycle cost confirmation before full regulatory recognition.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel white" style="margin-top:1.25rem">
+    <div class="exhibit-tag">Exhibit E-5 · Tariff Sensitivity Matrix</div>
+    <div class="panel-title">Future Tariff: Capacity vs Mobile Fleet Electrification</div>
+    <div class="panel-sub">USD/t · Rows vary Block-I production capacity; columns vary EV electrification level. Current slider assumptions applied for other levers.</div>
+    <div style="overflow-x:auto">
+      <table id="heatTable" class="heat-table"></table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===================== SECTION F — ROADMAP ===================== -->
+<section id="roadmap" class="section">
+  <div class="section-eyebrow">Section F</div>
+  <h2 class="section-title">Scale-Up &amp; Electrification Roadmap</h2>
+  <p class="section-sub">SSRL's next tariff frontier requires a two-track programme: (1) Mine scale-up from 7.8 MTPA toward 12–18 MTPA to dilute fixed capital costs — the lever SECMC has already proven works; and (2) Production cost discipline through fuel benchmarking, electrification, mine-mouth power and localization. Scale without operational discipline delivers only partial savings; operational discipline without scale leaves capacity costs unaddressed.</p>
+
+  <div class="roadmap">
+    <div class="road-card amber">
+      <div class="road-title">1. Block-I Scale-Up</div>
+      <div class="road-meta">Capacity payment reduction</div>
+      <ul>
+        <li>7.8 → 10 → 14 → 18 MTPA expansion path, leveraging existing pit, roads, dewatering and CHS.</li>
+        <li>Benchmark incremental capex per MTPA — target &lt;USD 50M/MTPA.</li>
+        <li>Require declining tariff glidepath as condition of expansion approval.</li>
+        <li>Sub-account discipline to ring-fence scale benefits for consumers.</li>
+      </ul>
+    </div>
+    <div class="road-card green">
+      <div class="road-title">2. Fuel Benchmarking</div>
+      <div class="road-meta">Production payment control</div>
+      <ul>
+        <li>Adopt formal litres/BCM target — converging toward ≤0.85 L/BCM within 3 years.</li>
+        <li>Mandate GPS, engine telematics, payload monitoring and haul-road condition reporting.</li>
+        <li>Benchmarking as a COD true-up condition — quarterly fuel intensity reporting.</li>
+        <li>Idle-time reduction programme and driver behaviour monitoring.</li>
+      </ul>
+    </div>
+    <div class="road-card blue">
+      <div class="road-title">3. Power &amp; Static Load Electrification</div>
+      <div class="road-meta">Near-term diesel displacement</div>
+      <ul>
+        <li>Grid / mine-mouth power for dewatering, CHS, workshops and MSF (mandated in FC Review).</li>
+        <li>Solar BOOT for critical daytime loads — 5–20 MW phased installation.</li>
+        <li>VFD motors for dewatering pumps and conveyor systems.</li>
+        <li>Certified kWh cost audited quarterly; power savings passed to TCPBA.</li>
+      </ul>
+    </div>
+    <div class="road-card red">
+      <div class="road-title">4. Mobile Fleet EV Transition</div>
+      <div class="road-meta">Structural OPEX reduction</div>
+      <ul>
+        <li>EV dump truck and trolley-assist pilots endorsed in FC Review Aug 2023 order.</li>
+        <li>IPCC/semi-mobile crusher feasibility as Block-I deepens (haul distance increases).</li>
+        <li>Localization plan for EV components, charging infrastructure and battery maintenance.</li>
+        <li>Tariff recognition only after life-cycle cost verification and COD audit.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-top:1.25rem">
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit F-1</div>
+      <div class="panel-title">Optimisation Lever Map</div>
+      <div class="panel-sub">Which tariff component each intervention targets at SSRL</div>
+      <div style="overflow-x:auto">
+        <table class="est-table">
+          <thead><tr><th>Lever</th><th>Target Component</th><th>Tariff Logic</th><th>TCEB / Regulatory Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Block-I scale-up (10–18 MTPA)</strong></td><td>Capacity payment</td><td>Dilutes ROE, ROEDC, Fixed O&amp;M, insurance, and debt service per tonne. Each MTPA added is cheaper than the previous.</td><td><span class="badge b-scale">Requires petition</span></td></tr>
+            <tr><td><strong>Fuel benchmarking / telemetry</strong></td><td>Fuel, variable O&amp;M</td><td>Reduces litres/BCM and idle time. Fuel is ~35% of production payment — the most impactful single production lever.</td><td><span class="badge b-reg">Mandated (FC Review)</span></td></tr>
+            <tr><td><strong>Mine-mouth / grid / solar power</strong></td><td>Power cost, diesel generation</td><td>Replaces on-site diesel generation and grid power with cheaper mine-mouth or solar electricity.</td><td><span class="badge b-reg">Mandated (FC Review)</span></td></tr>
+            <tr><td><strong>EV dump trucks / trolley assist</strong></td><td>Fuel, variable O&amp;M</td><td>Replaces diesel consumption in the largest fuel sink with on-site electricity. Lowers maintenance per BCM.</td><td><span class="badge b-opt">Encouraged (FC Review)</span></td></tr>
+            <tr><td><strong>IPCC / conveyor system</strong></td><td>Haulage, fuel, asset replacement</td><td>Shifts batch diesel truck haulage to continuous electric belt conveying — structural fuel and fleet cost reduction.</td><td><span class="badge b-dev">Feasibility required</span></td></tr>
+            <tr><td><strong>O&amp;M localization</strong></td><td>Variable O&amp;M, spares</td><td>Reduces import dependency on Chinese spares and foreign consumables. Localization plan required per FC Review.</td><td><span class="badge b-reg">Plan submitted / monitored</span></td></tr>
+            <tr><td><strong>TCPBA / financing discipline</strong></td><td>Working capital, financing</td><td>Annual reconciliation returns over-recoveries. Tighter debt spreads reduce debt service burden over time.</td><td><span class="badge b-reg">Active (TCPBA framework)</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="exhibit-tag">Exhibit F-2</div>
+      <div class="panel-title">Illustrative Scale-Up Tariff Path</div>
+      <div class="panel-sub">USD/t under combined scale + electrification scenario at each expansion phase</div>
+      <div class="ch-wrap ch-340"><canvas id="scalePath"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel white" style="margin-top:1.25rem">
+    <div class="exhibit-tag">Exhibit F-3 · Performance Metrics for COD True-Up and MYT Monitoring</div>
+    <div class="panel-title">Operational KPIs That Should Be Embedded in the Next Regulatory Cycle</div>
+    <div style="overflow-x:auto">
+      <table class="est-table">
+        <thead><tr><th>Metric</th><th>Rationale</th><th>Target Benchmark</th><th>Reporting Frequency</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Fuel Intensity (litres/BCM)</strong></td><td>Diesel is the dominant production cost. Benchmark forces transparency and enables clawback of inefficiency.</td><td>≤ 0.85 L/BCM (converging to ≤0.75)</td><td>Monthly</td></tr>
+          <tr><td><strong>USD/BCM Total Mining Cost</strong></td><td>Headline efficiency metric combining fuel, labour, maintenance and overheads into a single trackable number.</td><td>Declining at &lt;2% p.a. in real terms</td><td>Quarterly</td></tr>
+          <tr><td><strong>Equipment Availability (%)</strong></td><td>Low availability inflates fleet size requirements, which inflates capex and asset replacement reserve.</td><td>≥ 85% for primary fleet</td><td>Monthly</td></tr>
+          <tr><td><strong>Idle Time Ratio (%)</strong></td><td>Idle hours are pure wasted diesel. A 5% idle reduction can save 0.04 L/BCM and ~$0.15/ton in fuel cost.</td><td>≤ 12% of operating hours</td><td>Monthly</td></tr>
+          <tr><td><strong>kWh Cost from Grid/Solar (PKR/kWh)</strong></td><td>Validates that alternative power is actually cheaper than diesel-equivalent generation for each load.</td><td>Below grid industrial rate benchmark</td><td>Quarterly</td></tr>
+          <tr><td><strong>Localization Ratio (%)</strong></td><td>Share of O&amp;M spares and consumables sourced locally vs imported. Tracks FC Review localization mandate compliance.</td><td>≥ 30% by Year 3; ≥ 50% by Year 7</td><td>Annual</td></tr>
+          <tr><td><strong>TCPBA Balance / True-Up</strong></td><td>Carries-forward over- and under-recoveries. Timely annual reconciliation protects both consumers and SSRL.</td><td>Reconciled within 120 days of FY close</td><td>Annual</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===================== ANNEX ===================== -->
+<section id="annex" class="section">
+  <div class="section-eyebrow">Annex</div>
+  <h2 class="section-title">Supporting Data &amp; Model Assumptions</h2>
+
+  <div class="g2">
+    <div class="panel white">
+      <div class="exhibit-tag">Annex A — COD Stage Tariff Table (Year 1 and Levelized)</div>
+      <div class="panel-title">SSRL Block-I COD Stage Reference Data</div>
+      <table class="est-table">
+        <thead><tr><th>Component</th><th>Year 1 (USD/t)</th><th>Levelized (USD/t)</th></tr></thead>
+        <tbody>
+          <tr><td><em>Production Payment</em></td><td></td><td></td></tr>
+          <tr><td style="padding-left:1.5rem">Fuel Cost</td><td class="val">6.55</td><td class="val">~5.60</td></tr>
+          <tr><td style="padding-left:1.5rem">Variable O&amp;M / Spares</td><td class="val">4.75</td><td class="val">~4.10</td></tr>
+          <tr><td style="padding-left:1.5rem">Asset Replacement Reserve</td><td class="val">3.95</td><td class="val">~1.90</td></tr>
+          <tr><td style="padding-left:1.5rem">Royalty (7.5%)</td><td class="val">3.32</td><td class="val">~2.80</td></tr>
+          <tr><td><strong>Total Production Payment</strong></td><td class="val"><strong>18.57</strong></td><td class="val"><strong>~14.40</strong></td></tr>
+          <tr><td><em>Capacity Payment</em></td><td></td><td></td></tr>
+          <tr><td style="padding-left:1.5rem">Fixed O&amp;M — Foreign</td><td class="val">5.13</td><td class="val">~4.50</td></tr>
+          <tr><td style="padding-left:1.5rem">Fixed O&amp;M — Local</td><td class="val">2.80</td><td class="val">~2.55</td></tr>
+          <tr><td style="padding-left:1.5rem">Insurance</td><td class="val">0.63</td><td class="val">~0.63</td></tr>
+          <tr><td style="padding-left:1.5rem">Power Cost</td><td class="val">0.96</td><td class="val">~0.96</td></tr>
+          <tr><td style="padding-left:1.5rem">Working Capital</td><td class="val">1.70</td><td class="val">~1.25</td></tr>
+          <tr><td style="padding-left:1.5rem">Debt Principal Repayments</td><td class="val">5.38</td><td class="val">~2.50</td></tr>
+          <tr><td style="padding-left:1.5rem">Debt Interest Payments</td><td class="val">5.70</td><td class="val">~2.50</td></tr>
+          <tr><td style="padding-left:1.5rem">Return on Equity (ROE)</td><td class="val">5.14</td><td class="val">~5.14</td></tr>
+          <tr><td style="padding-left:1.5rem">ROEDC</td><td class="val">1.61</td><td class="val">~1.61</td></tr>
+          <tr><td><strong>Total Capacity Payment</strong></td><td class="val"><strong>29.05</strong></td><td class="val"><strong>~21.64</strong></td></tr>
+          <tr style="background:#FAFAFA"><td><strong>TOTAL TARIFF</strong></td><td class="val" style="font-size:14px"><strong>47.63</strong></td><td class="val" style="font-size:14px;color:var(--accent)"><strong>40.31</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="note">Levelized figures are approximate PV-weighted estimates from the 30-year Annexure-I profile. COD Stage determination dated July 2, 2025 (Case No. TCEB/Registrar/2-2/2015/COD-Stage).</p>
+    </div>
+
+    <div class="panel white">
+      <div class="exhibit-tag">Annex B — Important Model Cautions</div>
+      <div class="panel-title">Scope and Limitations</div>
+      <table class="est-table">
+        <tbody>
+          <tr><td><span class="badge b-risk">Not a Determination</span></td><td>The dynamic model is an indicative planning tool. It does not replace TCEB tariff determination, COD true-up, MYT reconciliation, or any formal regulatory process.</td></tr>
+          <tr><td><span class="badge b-dev">Stage Differences</span></td><td>The seven milestones use different FX, diesel price, CPI, KIBOR/LIBOR and mine-plan assumptions. They should be read as directional evidence, not a constant-assumption time series.</td></tr>
+          <tr><td><span class="badge b-scale">Production Payment Rise</span></td><td>Unlike SECMC, SSRL's production payment has drifted UP between stages (real diesel, fleet and OpEx inflation). Scale alone does not solve this — operational efficiency is a separate programme.</td></tr>
+          <tr><td><span class="badge b-opt">Electrification Credit</span></td><td>EV/IPCC benefits are partially credited. Full credit requires capex verification, charging infrastructure, battery replacement schedules, availability guarantees, and life-cycle cost validation.</td></tr>
+          <tr><td><span class="badge b-reg">Regulatory Context</span></td><td>Scale-up tariffs will be independently determined by TCEB at each stage. The model benchmarks against demonstrated patterns — actual outcomes depend on project execution, financing structure and regulatory process.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="exhibit-tag" style="margin-top:1.2rem">Annex C — Document Register</div>
+      <table class="est-table" style="margin-top:0.5rem">
+        <thead><tr><th>Document</th><th>Date</th><th>Key Figure</th></tr></thead>
+        <tbody>
+          <tr><td>Feasibility Stage Tariff Determination</td><td>Dec 2016</td><td class="val">$40.62/t</td></tr>
+          <tr><td>FS Review Decision (Motion for Leave)</td><td>Mar 2017</td><td class="val">$44.36/t</td></tr>
+          <tr><td>Contract Stage Tariff Determination (7.8 MTPA)</td><td>Dec 2019</td><td class="val">$35.84/t</td></tr>
+          <tr><td>CS Review Decision (Motion for Leave)</td><td>Oct 2020</td><td class="val">~$35.84/t</td></tr>
+          <tr><td>FC Stage Tariff Petition (SSRL)</td><td>Sep 2022</td><td class="val">$56.75/t petitioned</td></tr>
+          <tr><td>FC Stage Tariff Determination</td><td>Jun 2023</td><td class="val">$37.36/t</td></tr>
+          <tr><td>FC Stage Review Decision (Motion for Leave)</td><td>Aug 2023</td><td class="val">$40.55/t</td></tr>
+          <tr><td>Revised COD Stage Tariff Petition (SSRL)</td><td>2024–25</td><td class="val">Under determination</td></tr>
+          <tr><td>COD Stage Tariff Determination</td><td>Jul 2025</td><td class="val">$40.31/t</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="doc-footer">
+  <div><strong>SSRL / Thar Block-I</strong> · Tariff Evolution, Regulatory Discipline &amp; Scale Optimisation Roadmap</div>
+  <div>Interactive planning dashboard · Conservative orientation · All figures USD/tonne</div>
+  <div>Derived from TCEB determination orders · Not a regulatory filing</div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+const acc='#C8923A',grn='#52B788',red='#9B2335',gry='#999999',blue='#6EA8C4',slate='#667085';
+const defTooltip={backgroundColor:'rgba(26,26,26,0.92)',titleFont:{size:11},bodyFont:{size:11},padding:10};
+const gridOpts={color:'#F0F0F0'};
+const tick={font:{size:10}};
+const usdTick=v=>'$'+Number(v).toFixed(0);
+
+Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif";
+Chart.defaults.color='#666666';
+function makeChart(id,config){return new Chart(document.getElementById(id),config);}
+
+// ---- DATA ----
+const milestones=['FS (Dec 2016)','FS Review (Mar 2017)','CS (Dec 2019)','CS Review (Oct 2020)','FC (Jun 2023)','FC Review (Aug 2023)','COD (Jul 2025)'];
+const determined=[40.62,44.36,35.84,35.84,37.36,40.55,40.31];
+const petitioned=[45.0,47.27,43.0,43.41,56.75,null,null];
+const capPay=[25.58,29.81,21.34,21.34,23.54,26.10,24.40];
+const prodPay=[15.04,14.55,14.50,14.50,13.82,14.45,15.91];
+
+// A2 — Tariff line
+makeChart('tariffLine',{
+  type:'line',
+  data:{labels:milestones,datasets:[
+    {label:'Determined tariff',data:determined,borderColor:acc,backgroundColor:'rgba(200,146,58,0.10)',fill:true,tension:0.28,pointRadius:5,pointBackgroundColor:acc,borderWidth:2},
+    {label:'Capacity payment',data:capPay,borderColor:blue,fill:false,tension:0.28,pointRadius:3,borderDash:[4,3]},
+    {label:'Production payment',data:prodPay,borderColor:grn,fill:false,tension:0.28,pointRadius:3,borderDash:[4,3]}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw?c.raw.toFixed(2):'—'}/t`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:gridOpts,ticks:{...tick,callback:usdTick},title:{display:true,text:'USD/t',font:{size:10}},min:10}}}
+});
+
+// B1 — Stack tariff
+makeChart('stackTariff',{
+  type:'bar',
+  data:{labels:milestones,datasets:[
+    {label:'Capacity payment',data:capPay,backgroundColor:blue,borderRadius:3,borderSkipped:false},
+    {label:'Production payment',data:prodPay,backgroundColor:grn,borderRadius:3,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:9}}},y:{stacked:true,grid:gridOpts,ticks:{...tick,callback:usdTick}}}}
+});
+
+// B2 — Requested vs Determined
+const petLabels=['FS (2016)','FS Review (2017)','CS (2019)','CS Review (2020)','FC (2023)'];
+makeChart('requestedDetermined',{
+  type:'bar',
+  data:{labels:petLabels,datasets:[
+    {label:'Petitioned',data:[45.0,47.27,43.0,43.41,56.75],backgroundColor:'#DDDDDD',borderRadius:3,borderSkipped:false},
+    {label:'Determined',data:[40.62,44.36,35.84,35.84,37.36],backgroundColor:acc,borderRadius:3,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{beginAtZero:false,min:25,grid:gridOpts,ticks:{...tick,callback:usdTick}}}}
+});
+
+// C1 — Gap bar (petition minus determination)
+const gaps=[45.0-40.62,47.27-44.36,43.0-35.84,43.41-35.84,56.75-37.36];
+makeChart('gapBar',{
+  type:'bar',
+  data:{labels:petLabels,datasets:[{label:'Regulatory saving (USD/t)',data:gaps,backgroundColor:[blue,gry,grn,grn,red],borderRadius:4,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` Regulatory saving: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:gridOpts,ticks:{...tick,callback:v=>'$'+v.toFixed(1)},title:{display:true,text:'USD/t saving',font:{size:10}}}}}
+});
+
+// C2 — Capex bar (SSRL vs TCEB at CS)
+makeChart('capexBar',{
+  type:'bar',
+  data:{labels:['EPC Cost','OB Removal','Civil Works','Interest During Const.','Sinosure Fee','Land & Rehab','Other Non-EPC'],datasets:[
+    {label:'SSRL Petition (CS)',data:[781.8,320.7,177.4,94.4,53.8,67.0,218.0],backgroundColor:'#DDDDDD',borderRadius:3,borderSkipped:false},
+    {label:'TCEB Determined (CS)',data:[461.1,120.3,137.5,49.9,33.7,49.0,208.1],backgroundColor:acc,borderRadius:3,borderSkipped:false}
+  ]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(1)}M`}}},scales:{x:{grid:gridOpts,ticks:{...tick,callback:v=>'$'+v+'M'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}
+});
+
+// D1 — Component donut (COD levelized)
+makeChart('componentDonut',{
+  type:'doughnut',
+  data:{labels:['Fuel/Diesel','Variable O&M','Asset Replacement','Royalty','Fixed O&M (For.)','Fixed O&M (Loc.)','Insurance','Power Cost','Working Capital','Debt Service','ROE + ROEDC'],
+        datasets:[{data:[5.60,4.10,1.90,2.80,4.50,2.55,0.63,0.96,1.25,5.00,6.75],backgroundColor:[red,'#D4876B','#E8B08A','#888',blue,'#A0C4D8','#7B9E8F',grn,gry,slate,acc],borderWidth:1,borderColor:'#fff'}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.label}: USD ${c.raw.toFixed(2)}/t`}}},cutout:'52%'}
+});
+
+// D2 — Component evolution (production vs capacity at each stage)
+makeChart('componentEvol',{
+  type:'bar',
+  data:{labels:milestones,datasets:[
+    {label:'Capacity Payment',data:capPay,backgroundColor:blue,borderRadius:3,borderSkipped:false,stack:'s'},
+    {label:'Production Payment',data:prodPay,backgroundColor:grn,borderRadius:3,borderSkipped:false,stack:'s'},
+    {label:'Petitioned Total',data:petitioned,backgroundColor:'rgba(180,180,180,0.5)',borderColor:'#bbb',borderWidth:1,borderRadius:3,borderSkipped:false,type:'bar',stack:'p'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw?c.raw.toFixed(2):'—'}/t`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:gridOpts,ticks:{...tick,callback:usdTick},min:0}}}
+});
+
+// F2 — Scale path illustrative
+makeChart('scalePath',{
+  type:'bar',
+  data:{labels:['7.8 MTPA\nCurrent COD','10 MTPA\nScale Only','10 MTPA\n+Efficiency','14 MTPA\n+Discipline','16 MTPA\n+Electrified'],
+        datasets:[
+          {label:'Capacity Payment',data:[24.40,20.10,20.10,15.80,13.90],backgroundColor:blue,borderRadius:3,borderSkipped:false,stack:'s'},
+          {label:'Production Payment',data:[15.91,14.20,11.80,10.90,10.00],backgroundColor:grn,borderRadius:3,borderSkipped:false,stack:'s'}
+        ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:9}}},y:{stacked:true,grid:gridOpts,ticks:{...tick,callback:usdTick}}}}
+});
+
+// ---- DYNAMIC MODEL ----
+let projectionChart,modelStackChart,waterfallChart;
+function val(id){return parseFloat(document.getElementById(id).value);}
+function fmt(x,d=2){return Number(x).toFixed(d);}
+
+function calcTariff(capacity,ev,ipcc,fuelEff,gridOpt,localOpt,finOpt,elasticity){
+  const baseCap=7.8;
+  const baseCapPmt=24.40;
+  const baseProdPmt=15.91;
+
+  // Capacity payment: scale + financing
+  const scaleFactor=Math.pow(baseCap/capacity,elasticity);
+  const financeFactor=1-(finOpt/100)*0.35;
+  const capPmt=baseCapPmt*scaleFactor*financeFactor;
+
+  // Production payment components
+  const baseFuel=5.60;
+  const baseVarOM=4.10;
+  const baseAsset=1.90;
+  const baseRoyalty=2.80;
+  const basePower=0.96;
+  const baseOther=0.55; // insurance portion in production
+
+  const fuel=baseFuel*(1-fuelEff/100)*(1-0.55*ev/100)*(1-0.45*ipcc/100);
+  const varOM=baseVarOM*(1-0.15*localOpt/100)*(1-0.08*ev/100);
+  const asset=baseAsset*(1-0.06*ev/100)*(1-0.04*ipcc/100);
+  const royalty=baseRoyalty; // royalty is % of tariff — simplified as near-constant
+  const power=basePower*(1-0.25*gridOpt/100);
+  const other=baseOther*(1-0.04*Math.max(0,capacity-baseCap)/(20-baseCap));
+
+  const prodPmt=Math.max(9.0,fuel+varOM+asset+royalty+power+other);
+  const tariff=capPmt+prodPmt;
+  return{tariff,capPmt,prodPmt,fuel,varOM,asset,royalty,power};
+}
+
+function getInputs(){
+  return{capacity:val('capacity'),ev:val('evShare'),ipcc:val('ipccShare'),
+         fuelEff:val('fuelEff'),gridOpt:val('gridOpt'),localOpt:val('localOpt'),
+         finOpt:val('finOpt'),elasticity:val('elasticity')};
+}
+
+function updateLabels(i){
+  document.getElementById('capVal').innerText=fmt(i.capacity,1)+' MTPA';
+  document.getElementById('evVal').innerText=fmt(i.ev,0)+'%';
+  document.getElementById('ipccVal').innerText=fmt(i.ipcc,0)+'%';
+  document.getElementById('fuelVal').innerText=fmt(i.fuelEff,0)+'%';
+  document.getElementById('gridVal').innerText=fmt(i.gridOpt,0)+'%';
+  document.getElementById('localVal').innerText=fmt(i.localOpt,0)+'%';
+  document.getElementById('finVal').innerText=fmt(i.finOpt,0)+'%';
+  document.getElementById('elasVal').innerText=fmt(i.elasticity,2);
+}
+
+function updateModel(){
+  const i=getInputs();updateLabels(i);
+  const r=calcTariff(i.capacity,i.ev,i.ipcc,i.fuelEff,i.gridOpt,i.localOpt,i.finOpt,i.elasticity);
+  document.getElementById('predTariff').innerText='$'+fmt(r.tariff,2);
+  document.getElementById('totalSaving').innerText='$'+fmt(40.31-r.tariff,2);
+  document.getElementById('capPayOut').innerText='$'+fmt(r.capPmt,2);
+  document.getElementById('prodPayOut').innerText='$'+fmt(r.prodPmt,2);
+
+  // Projection line
+  const xs=[],ys=[];
+  for(let c=7.8;c<=20.01;c+=0.5){
+    xs.push(c.toFixed(1));
+    ys.push(calcTariff(c,i.ev,i.ipcc,i.fuelEff,i.gridOpt,i.localOpt,i.finOpt,i.elasticity).tariff);
+  }
+  projectionChart.data.labels=xs;
+  projectionChart.data.datasets[0].data=ys;
+  projectionChart.data.datasets[1].data=xs.map(_=>40.31);
+  projectionChart.update();
+
+  modelStackChart.data.datasets[0].data=[24.40,r.capPmt];
+  modelStackChart.data.datasets[1].data=[15.91,r.prodPmt];
+  modelStackChart.update();
+
+  const noOpt=calcTariff(7.8,0,0,0,20,10,0,i.elasticity);
+  const scaleOnly=calcTariff(i.capacity,0,0,0,20,10,0,i.elasticity);
+  const fuelEff=calcTariff(i.capacity,i.ev,i.ipcc,i.fuelEff,20,10,0,i.elasticity);
+  const gridOnly=calcTariff(i.capacity,i.ev,i.ipcc,i.fuelEff,i.gridOpt,i.localOpt,0,i.elasticity);
+  const final=r;
+  waterfallChart.data.datasets[0].data=[40.31,scaleOnly.tariff,fuelEff.tariff,gridOnly.tariff,final.tariff];
+  waterfallChart.update();
+
+  buildHeat(i);
+}
+
+function setScenario(name){
+  const map={
+    base:{capacity:7.8,ev:0,ipcc:0,fuelEff:0,gridOpt:20,localOpt:10,finOpt:0,elasticity:0.55},
+    scale:{capacity:12,ev:0,ipcc:0,fuelEff:5,gridOpt:30,localOpt:15,finOpt:3,elasticity:0.55},
+    discipline:{capacity:14,ev:15,ipcc:10,fuelEff:15,gridOpt:60,localOpt:30,finOpt:8,elasticity:0.60},
+    electrified:{capacity:16,ev:45,ipcc:35,fuelEff:20,gridOpt:75,localOpt:40,finOpt:10,elasticity:0.55}
+  }[name];
+  Object.keys(map).forEach(k=>{const el=document.getElementById(k);if(el)el.value=map[k];});
+  updateModel();
+}
+
+function buildHeat(i){
+  const caps=[7.8,10,12,14,16,18,20];
+  const evs=[0,15,30,50,70,85];
+  let html='<thead><tr><th>Cap / EV%</th>'+evs.map(e=>`<th>${e}% EV</th>`).join('')+'</tr></thead><tbody>';
+  caps.forEach(c=>{
+    html+=`<tr><th>${c} MTPA</th>`;
+    evs.forEach(e=>{
+      const t=calcTariff(c,e,i.ipcc,i.fuelEff,i.gridOpt,i.localOpt,i.finOpt,i.elasticity).tariff;
+      let cls=t<30?'heat-good':(t<37?'heat-mid':'heat-high');
+      if(c===7.8&&e===0)cls='heat-neutral';
+      html+=`<td class="${cls}">$${t.toFixed(1)}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('heatTable').innerHTML=html;
+}
+
+projectionChart=makeChart('projectionLine',{
+  type:'line',
+  data:{labels:[],datasets:[
+    {label:'Projected tariff',data:[],borderColor:acc,backgroundColor:'rgba(200,146,58,0.12)',fill:true,tension:0.30,pointRadius:2},
+    {label:'COD stage baseline ($40.31)',data:[],borderColor:'#D0D0D0',borderDash:[5,5],fill:false,pointRadius:0}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid:{display:false},ticks:tick,title:{display:true,text:'Capacity (MTPA)',font:{size:10}}},y:{grid:gridOpts,ticks:{...tick,callback:usdTick},title:{display:true,text:'USD/t',font:{size:10}}}}}
+});
+
+modelStackChart=makeChart('modelStack',{
+  type:'bar',
+  data:{labels:['COD Baseline (7.8 MTPA)','Selected Scenario'],datasets:[
+    {label:'Capacity payment',data:[24.40,0],backgroundColor:blue,borderRadius:3,borderSkipped:false},
+    {label:'Production payment',data:[15.91,0],backgroundColor:grn,borderRadius:3,borderSkipped:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{stacked:true,grid:{display:false},ticks:tick},y:{stacked:true,grid:gridOpts,ticks:{...tick,callback:usdTick}}}}
+});
+
+waterfallChart=makeChart('waterfall',{
+  type:'bar',
+  data:{labels:['COD Baseline','After Scale','After Fuel/EV/IPCC','After Grid/Solar+Local','After Finance Opt.'],
+        datasets:[{label:'Tariff after lever',data:[],backgroundColor:[red,acc,blue,grn,'#888'],borderRadius:3,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` USD ${c.raw.toFixed(2)}/t`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:gridOpts,ticks:{...tick,callback:usdTick}}}}
+});
+
+updateModel();
+</script>
+</body>
+</html>
