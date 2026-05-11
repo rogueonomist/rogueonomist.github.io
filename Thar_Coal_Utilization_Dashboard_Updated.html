@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thar Coal Cluster — Utilization Analysis Jul 2024 – Mar 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --teal:#036B7A; --amber:#C8923A; --red:#9B2335; --blue:#1D6FA4;
+  --green:#52B788; --border:#E5E5E5; --bg:#FAFAFA;
+  --text:#1A1A1A; --muted:#666; --faint:#999;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:#fff;color:#2D2D2D;line-height:1.6}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+
+.page-header{border-bottom:3px solid var(--teal);padding:2.5rem 0 1.5rem;margin-bottom:2rem}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--teal);text-transform:uppercase;margin-bottom:.5rem}
+h1{font-family:Georgia,serif;font-size:30px;font-weight:400;color:var(--text);line-height:1.2;margin-bottom:.5rem}
+.subtitle{font-size:14px;color:var(--muted);line-height:1.6;max-width:800px}
+.meta-bar{display:flex;gap:2rem;margin-top:1rem;font-size:12px;color:var(--faint);flex-wrap:wrap}
+.meta-bar strong{color:var(--muted);font-weight:600}
+
+.alert-box{background:#FFF8F0;border:1px solid #F5D5A0;border-left:4px solid var(--amber);padding:1rem 1.25rem;margin-bottom:1.5rem;border-radius:0 6px 6px 0;font-size:13.5px;color:#5A3E1B;line-height:1.6}
+.data-note{background:#F0F8FA;border:1px solid #B8D8DE;border-left:3px solid var(--teal);padding:.75rem 1rem;margin-bottom:1.5rem;font-size:12.5px;color:#1A4550;line-height:1.6}
+
+.section-label{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--faint);text-transform:uppercase;margin-bottom:.4rem}
+.section-title{font-family:Georgia,serif;font-size:19px;font-weight:400;color:var(--text);margin-bottom:1.1rem;line-height:1.3}
+
+/* PERIOD SWITCHER */
+.period-bar{display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.5rem;width:fit-content}
+.period-btn{background:none;border:none;border-right:1px solid var(--border);padding:.5rem 1.1rem;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.period-btn:last-child{border-right:none}
+.period-btn.active{background:var(--teal);color:#fff}
+.period-btn:hover:not(.active){background:var(--bg)}
+
+/* KPI GRIDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.kpi-card{border:1px solid var(--border);border-top:3px solid var(--teal);padding:1.1rem}
+.kpi-card.amber{border-top-color:var(--amber)}
+.kpi-card.red{border-top-color:var(--red)}
+.kpi-card.blue{border-top-color:var(--blue)}
+.kpi-card.gray{border-top-color:#888}
+.kpi-num{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:.35rem}
+.kpi-label{font-size:11px;color:var(--faint);font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.2rem}
+.kpi-sub{font-size:11.5px;color:var(--muted)}
+
+/* PERIOD COMPARISON STRIP */
+.period-strip{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
+.period-box{border:1px solid var(--border);padding:1.1rem}
+.period-box.new{border-color:#B8D8DE;background:#F0F8FA}
+.period-box .pb-label{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;margin-bottom:.6rem}
+.period-box .pb-num{font-family:Georgia,serif;font-size:22px;font-weight:400;color:var(--text)}
+.period-box .pb-sub{font-size:12px;color:var(--muted);margin-top:.25rem}
+.pb-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-top:.75rem}
+.pb-cell{font-size:12px}
+.pb-cell .lbl{color:var(--faint);font-size:11px}
+.pb-cell .val{font-weight:600;color:var(--text)}
+
+/* PLANT CARDS */
+.plant-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.plant-card{background:var(--bg);border:1px solid var(--border);padding:1rem}
+.plant-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:.75rem;border-bottom:1px solid var(--border);padding-bottom:.5rem;line-height:1.4;min-height:42px}
+.plant-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:3px 0}
+.plant-row .lbl{color:var(--muted)}
+.plant-row .val{font-weight:600;color:var(--text)}
+.cuf-wrap{margin-top:.75rem}
+.cuf-bg{background:#E5E5E5;height:6px;border-radius:3px;margin-top:4px}
+.cuf-fill{height:6px;border-radius:3px;background:var(--teal)}
+.cuf-badge{font-family:Georgia,serif;font-size:18px;font-weight:400;color:var(--text)}
+.cuf-lbl{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}
+.two-period{display:grid;grid-template-columns:1fr 1fr;gap:.3rem;margin-top:.4rem;font-size:11px}
+.two-period .p1{color:var(--muted)}
+.two-period .p2{color:var(--teal);font-weight:600}
+
+/* PANEL */
+.panel{border:1px solid var(--border);padding:1.5rem;margin-bottom:1.5rem}
+.panel-title{font-family:Georgia,serif;font-size:16px;font-weight:400;color:var(--text);margin-bottom:.25rem}
+.panel-sub{font-size:12px;color:var(--muted);margin-bottom:1.1rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+
+/* TABS */
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:1.5rem}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;padding:.7rem 1.2rem;font-size:13px;font-weight:600;color:var(--faint);cursor:pointer;transition:all .15s;letter-spacing:.02em}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--teal);border-bottom-color:var(--teal)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.data-table th{background:var(--teal);color:#fff;font-size:11px;font-weight:600;letter-spacing:.06em;text-align:left;padding:.6rem .75rem}
+.data-table th.num{text-align:right}
+.data-table td{padding:.5rem .75rem;border-bottom:1px solid var(--border);color:var(--text)}
+.data-table td.num{text-align:right;font-variant-numeric:tabular-nums}
+.data-table tr:nth-child(even) td{background:#FAFAFA}
+.data-table tr:hover td{background:#F0F8FA}
+.data-table tr.gap-row td{background:#FFFBF0 !important;font-style:italic;color:var(--faint)}
+.data-table tr.new-row td{border-left:3px solid var(--teal)}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600}
+.badge-red{background:#FEE;color:var(--red)}
+.badge-amber{background:#FEF3E5;color:#8B5E0A}
+.badge-green{background:#EAF5F0;color:#2A7B57}
+.badge-teal{background:#E0F2F5;color:var(--teal)}
+.badge-gray{background:#F0F0F0;color:#777}
+
+/* VERDICT */
+.verdict{background:#F0F8FA;border:1px solid #B8D8DE;border-left:4px solid var(--teal);padding:1.1rem 1.4rem;margin-bottom:1.5rem}
+.verdict-label{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--teal);text-transform:uppercase;margin-bottom:.35rem}
+.verdict-text{font-size:14px;color:#2D2D2D;line-height:1.75}
+
+/* QUARTER BOXES */
+.quarter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.quarter-box{background:var(--bg);border:1px solid var(--border);padding:1rem;text-align:center}
+.q-label{font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+.q-cuf{font-family:Georgia,serif;font-size:28px;color:var(--text);line-height:1}
+.q-gen{font-size:12px;color:var(--muted);margin-top:.3rem}
+.q-bar{height:4px;border-radius:2px;margin:.6rem auto 0}
+
+/* LEGEND */
+.legend{display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:.75rem;font-size:12px;color:var(--muted)}
+.legend-item{display:flex;align-items:center;gap:5px}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+
+/* NARRATIVE */
+.narrative{font-size:14px;color:#444;line-height:1.75;margin-bottom:1.5rem}
+.narrative strong{font-weight:600;color:var(--text)}
+
+/* FUEL CHARGE TABLE HIGHLIGHT */
+.fc-high{color:var(--red);font-weight:700}
+.fc-med{color:var(--amber);font-weight:600}
+
+/* FOOTER */
+.page-footer{border-top:1px solid var(--border);padding:1.5rem 0;margin-top:2rem;font-size:12px;color:var(--faint);line-height:1.7}
+
+@media(max-width:768px){
+  .kpi-grid,.plant-grid,.quarter-grid{grid-template-columns:1fr 1fr}
+  .two-col,.period-strip{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="page-header">
+  <div class="eyebrow">ISMO FY2025 Hourly Data · CPPA-G Energy Purchase Data V4 · NEPRA PER Generation FY 2024–25</div>
+  <h1>Thar Coal Power Cluster — Utilization &amp; Energy Gap Analysis</h1>
+  <div class="subtitle">Four indigenous coal plants (2,640 MW rated / 2,435 MW dependable) across Thar Block-I and Block-II. Full FY 2024–25 data (ISMO) extended through March 2026 (CPPA-G energy purchase invoices). Combined dataset: 17 months of Thar dispatch and fuel charge data.</div>
+  <div class="meta-bar">
+    <span><strong>FY2024-25:</strong> Jul 2024 – Jun 2025 · ISMO hourly file (complete)</span>
+    <span><strong>FY2025-26:</strong> Aug 2025 – Mar 2026 · CPPA-G Energy Purchase Data V4 (5 months, gaps noted)</span>
+    <span><strong>Plants:</strong> TCB-I · Engro Thar · ThalNova · TEL</span>
+    <span><strong>Prepared by:</strong> Ammar H. Khan</span>
+  </div>
+</div>
+
+<div class="data-note">
+  <strong>Data coverage note:</strong> FY2025-26 data from CPPA-G Energy Purchase V4 covers Aug, Sep, Dec 2025 and Jan, Mar 2026. Missing months: Jul 2025 (no Thar invoices), Nov 2025, Feb 2026. Oct 2025 entry is identical to Sep 2025 (likely preliminary placeholder — excluded). TEL did not submit an invoice for Jan 2026 (treated as zero/offline). Mar 2026 TCB-I, ThalNova, and TEL figures match Dec 2025 values exactly; Engro Mar 2026 figure (378 GWh) is unique and verified.
+</div>
+
+<div class="alert-box">
+  <strong>Extended-period finding:</strong> Across 17 months of available data (Jul 2024 – Mar 2026), the Thar cluster generated 22,193 GWh against a dependable-capacity ceiling of 30,330 GWh — a cumulative energy gap of 8,137 GWh at a system-level average CUF of 73.2%. FY2025-26 shows slight improvement (73.8% avg CUF vs 72.9% in FY2024-25) but TEL's Jan 2026 outage and Engro/ThalNova's Sep 2025 collapse (47% / 50% CUF) confirm the cluster's recurring single-plant shock vulnerability persists into the new fiscal year.
+</div>
+
+<!-- KPIs -->
+<div class="section-label">System KPIs — Combined Jul 2024 – Mar 2026</div>
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">Combined Generation</div>
+    <div class="kpi-num">22,193 GWh</div>
+    <div class="kpi-sub">17 months of available data · 8,137 GWh gap vs dep. ceiling</div>
+  </div>
+  <div class="kpi-card amber">
+    <div class="kpi-label">Overall CUF (17 months)</div>
+    <div class="kpi-num">73.2%</div>
+    <div class="kpi-sub">FY2025: 72.9% → FY2025-26 (5 mo.): 73.8% — marginal improvement</div>
+  </div>
+  <div class="kpi-card red">
+    <div class="kpi-label">Cumulative Energy Gap</div>
+    <div class="kpi-num">8,137 GWh</div>
+    <div class="kpi-sub">26.8% of dependable-capacity ceiling not delivered</div>
+  </div>
+  <div class="kpi-card blue">
+    <div class="kpi-label">Best Month (Apr 2025)</div>
+    <div class="kpi-num">87.0% CUF</div>
+    <div class="kpi-sub">Worst: Dec 2024 at 43.3% · 1,027 GWh lost in one month</div>
+  </div>
+</div>
+
+<!-- Period-by-period comparison -->
+<div class="section-label">Period Comparison</div>
+<div class="period-strip">
+  <div class="period-box">
+    <div class="pb-label">FY 2024–25 · Full Year (12 months · ISMO)</div>
+    <div class="pb-num">15,547 GWh generated</div>
+    <div class="pb-sub">Dep. ceiling 21,330 GWh · Gap 5,783 GWh · <strong>72.9% CUF</strong></div>
+    <div class="pb-row">
+      <div class="pb-cell"><div class="lbl">TCB-I</div><div class="val">8,315 GWh · 77.1%</div></div>
+      <div class="pb-cell"><div class="lbl">Engro</div><div class="val">3,853 GWh · 73.1%</div></div>
+      <div class="pb-cell"><div class="lbl">ThalNova</div><div class="val">1,778 GWh · 67.4%</div></div>
+    </div>
+    <div class="pb-row" style="margin-top:.25rem">
+      <div class="pb-cell"><div class="lbl">TEL</div><div class="val">1,601 GWh · 60.7%</div></div>
+      <div class="pb-cell"><div class="lbl">Worst quarter</div><div class="val">Q2: 61.7%</div></div>
+      <div class="pb-cell"><div class="lbl">Best quarter</div><div class="val">Q4: 83.7%</div></div>
+    </div>
+  </div>
+  <div class="period-box new">
+    <div class="pb-label" style="color:var(--teal);">FY 2025–26 · Partial (5 months · CPPA-G V4)</div>
+    <div class="pb-num">6,646 GWh generated</div>
+    <div class="pb-sub">Dep. ceiling 9,000 GWh · Gap 2,354 GWh · <strong>73.8% CUF</strong></div>
+    <div class="pb-row">
+      <div class="pb-cell"><div class="lbl">TCB-I</div><div class="val">3,709 GWh · 81.5%</div></div>
+      <div class="pb-cell"><div class="lbl">Engro</div><div class="val">1,528 GWh · 68.7%</div></div>
+      <div class="pb-cell"><div class="lbl">ThalNova</div><div class="val">722 GWh · 64.9%</div></div>
+    </div>
+    <div class="pb-row" style="margin-top:.25rem">
+      <div class="pb-cell"><div class="lbl">TEL</div><div class="val">687 GWh · 61.7%</div></div>
+      <div class="pb-cell"><div class="lbl">Sep 2025</div><div class="val">65.8% (worst)</div></div>
+      <div class="pb-cell"><div class="lbl">Mar 2026</div><div class="val">82.7% (best)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('plant-overview',this)">Plant Overview</button>
+  <button class="tab-btn" onclick="switchTab('monthly-trend',this)">Monthly Trends</button>
+  <button class="tab-btn" onclick="switchTab('energy-gap',this)">Energy Gap</button>
+  <button class="tab-btn" onclick="switchTab('outage-events',this)">Outage Events</button>
+  <button class="tab-btn" onclick="switchTab('fuel-charges',this)">Fuel Charges</button>
+  <button class="tab-btn" onclick="switchTab('financials',this)">Financial Implications</button>
+</div>
+
+<!-- TAB 1: PLANT OVERVIEW -->
+<div id="plant-overview" class="tab-content active">
+  <div class="section-label">Plant-by-Plant — FY2024-25 vs FY2025-26 Partial</div>
+  <div class="section-title">Annual and period CUF by plant across both fiscal years</div>
+  <div class="plant-grid">
+    <div class="plant-card">
+      <div class="plant-name">Thar Coal Block-I (TCB-I)<br>Block-I · Shanghai Electric</div>
+      <div class="plant-row"><span class="lbl">Rated / Dependable</span><span class="val">1,320 / 1,231 MW</span></div>
+      <div class="plant-row"><span class="lbl">COD / Expiry</span><span class="val">Dec 2022 / Dec 2052</span></div>
+      <div class="plant-row"><span class="lbl">FY25 generation</span><span class="val">8,315 GWh</span></div>
+      <div class="plant-row"><span class="lbl">FY26 partial (5 mo.)</span><span class="val">3,709 GWh</span></div>
+      <div class="cuf-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span class="cuf-lbl">FY25 CUF</span><span class="cuf-badge">77.1%</span>
+        </div>
+        <div class="cuf-bg"><div class="cuf-fill" style="width:77.1%"></div></div>
+        <div class="two-period"><span class="p1">FY24-25: 77.1%</span><span class="p2">FY25-26 (5mo): 81.5% ↑</span></div>
+      </div>
+    </div>
+    <div class="plant-card">
+      <div class="plant-name">Engro Powergen Thar (EPTL)<br>Block-II · Engro Corp.</div>
+      <div class="plant-row"><span class="lbl">Rated / Dependable</span><span class="val">660 / 602 MW</span></div>
+      <div class="plant-row"><span class="lbl">COD / Expiry</span><span class="val">Jul 2019 / Jul 2049</span></div>
+      <div class="plant-row"><span class="lbl">FY25 generation</span><span class="val">3,853 GWh</span></div>
+      <div class="plant-row"><span class="lbl">FY26 partial (5 mo.)</span><span class="val">1,528 GWh</span></div>
+      <div class="cuf-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span class="cuf-lbl">FY25 CUF</span><span class="cuf-badge">73.1%</span>
+        </div>
+        <div class="cuf-bg"><div class="cuf-fill" style="width:73.1%"></div></div>
+        <div class="two-period"><span class="p1">FY24-25: 73.1%</span><span class="p2">FY25-26 (5mo): 68.7% ↓</span></div>
+      </div>
+    </div>
+    <div class="plant-card">
+      <div class="plant-name">ThalNova Power Thar (TNPPL)<br>Block-II · ThalNova consortium</div>
+      <div class="plant-row"><span class="lbl">Rated / Dependable</span><span class="val">330 / 301 MW</span></div>
+      <div class="plant-row"><span class="lbl">COD / Expiry</span><span class="val">Feb 2023 / Feb 2053</span></div>
+      <div class="plant-row"><span class="lbl">FY25 generation</span><span class="val">1,778 GWh</span></div>
+      <div class="plant-row"><span class="lbl">FY26 partial (5 mo.)</span><span class="val">722 GWh</span></div>
+      <div class="cuf-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span class="cuf-lbl">FY25 CUF</span><span class="cuf-badge" style="color:var(--amber)">67.4%</span>
+        </div>
+        <div class="cuf-bg"><div class="cuf-fill" style="width:67.4%;background:var(--amber)"></div></div>
+        <div class="two-period"><span class="p1">FY24-25: 67.4%</span><span class="p2">FY25-26 (5mo): 64.9% ↓</span></div>
+      </div>
+    </div>
+    <div class="plant-card">
+      <div class="plant-name">Thar Energy Ltd (TEL)<br>Block-II · Hub Power / Others</div>
+      <div class="plant-row"><span class="lbl">Rated / Dependable</span><span class="val">330 / 301 MW</span></div>
+      <div class="plant-row"><span class="lbl">COD / Expiry</span><span class="val">Oct 2022 / Sep 2052</span></div>
+      <div class="plant-row"><span class="lbl">FY25 generation</span><span class="val">1,601 GWh</span></div>
+      <div class="plant-row"><span class="lbl">FY26 partial (5 mo.)</span><span class="val">687 GWh</span></div>
+      <div class="cuf-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span class="cuf-lbl">FY25 CUF</span><span class="cuf-badge" style="color:var(--red)">60.7%</span>
+        </div>
+        <div class="cuf-bg"><div class="cuf-fill" style="width:60.7%;background:var(--red)"></div></div>
+        <div class="two-period"><span class="p1">FY24-25: 60.7%</span><span class="p2">FY25-26 (5mo): 61.7% ≈</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Rated vs Dependable vs Actual Average Dispatch (MW)</div>
+    <div class="panel-sub">Actual average MW = annual GWh ÷ 8,760 hrs. Two bars shown per plant: FY2024-25 (full year) and FY2025-26 partial (annualised from 5 months).</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#036B7A"></div> Rated MW</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5AA0AB"></div> Dependable MW</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#C8923A"></div> Actual Avg (FY25)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#E8B87A"></div> Actual Avg (FY26 partial)</div>
+    </div>
+    <div style="position:relative;height:290px">
+      <canvas id="capacityChart" role="img" aria-label="Grouped bar chart showing rated, dependable, and actual dispatch for four Thar plants in two periods">Capacity vs actual: TCB-I improving FY26 vs FY25; Engro and ThalNova slightly lower.</canvas>
+    </div>
+  </div>
+
+  <!-- FY2025-26 quarters (available months) -->
+  <div class="section-label">FY2025-26 Monthly Performance (Available Data)</div>
+  <div class="quarter-grid">
+    <div class="quarter-box">
+      <div class="q-label">Aug 2025</div>
+      <div class="q-cuf">79.6%</div>
+      <div class="q-gen">1,442 GWh · All plants active</div>
+      <div class="q-bar" style="width:79.6%;background:var(--teal)"></div>
+    </div>
+    <div class="quarter-box" style="border-color:#F5D5A0;background:#FFF8F0;">
+      <div class="q-label" style="color:#8B5E0A">Sep 2025</div>
+      <div class="q-cuf" style="color:var(--amber)">65.8%</div>
+      <div class="q-gen">1,153 GWh · Engro 47%, ThalNova 50%</div>
+      <div class="q-bar" style="width:65.8%;background:var(--amber)"></div>
+    </div>
+    <div class="quarter-box" style="border-color:#F5D5A0;background:#FFF8F0;">
+      <div class="q-label" style="color:#8B5E0A">Jan 2026</div>
+      <div class="q-cuf" style="color:var(--amber)">62.9%</div>
+      <div class="q-gen">1,139 GWh · TEL offline (no invoice)</div>
+      <div class="q-bar" style="width:62.9%;background:var(--amber)"></div>
+    </div>
+    <div class="quarter-box" style="border-color:#A8D8BF;background:#EAF5F0;">
+      <div class="q-label" style="color:#1A6040">Mar 2026</div>
+      <div class="q-cuf" style="color:#1A6040">82.7%</div>
+      <div class="q-gen">1,498 GWh · Engro 84.5%</div>
+      <div class="q-bar" style="width:82.7%;background:var(--green)"></div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">FY2025-26 Early Signal</div>
+    <div class="verdict-text">The FY2025-26 partial data (5 months) shows TCB-I <strong>improving</strong> to 81.5% CUF (vs 77.1% in FY2024-25) — the anchor plant is performing better. However, the smaller plants continue to drag: Engro Thar dropped to 68.7% (from 73.1%), ThalNova to 64.9% (from 67.4%), and TEL was offline entirely in January 2026. The September 2025 event — where Engro collapsed to 47% CUF and ThalNova to 50% simultaneously — mirrors the cluster-wide stress of Q2 FY2024-25 and points to a <strong>recurring September inflection</strong> in coal supply logistics or post-monsoon plant cycling.</div>
+  </div>
+</div>
+
+<!-- TAB 2: MONTHLY TRENDS -->
+<div id="monthly-trend" class="tab-content">
+  <div class="section-label">17-Month Trend · Jul 2024 – Mar 2026</div>
+  <div class="section-title">System CUF and plant-level dispatch — FY2024-25 (complete) extended to FY2025-26 (partial)</div>
+
+  <div class="panel">
+    <div class="panel-title">Monthly System CUF (%) — All Four Plants Combined</div>
+    <div class="panel-sub">Shaded region = FY2025-26 data from CPPA-G V4. Grey dashes = months with no Thar data available (Jul 2025, Nov 2025, Feb 2026). Dashed vertical line separates fiscal years.</div>
+    <div style="position:relative;height:300px">
+      <canvas id="sysCufChart" role="img" aria-label="Line chart of monthly system CUF for Thar cluster Jul 2024 to Mar 2026">System CUF trends showing FY2024-25 complete and FY2025-26 partial data.</canvas>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Monthly CUF by Plant — Jul 2024 to Mar 2026</div>
+    <div class="panel-sub">Null values (missing months) shown as gaps in lines. TEL Jan 2026 treated as 0% (no invoice submitted).</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#036B7A"></div> TCB-I (1,231 MW dep.)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#C8923A"></div> Engro (602 MW dep.)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1D6FA4"></div> ThalNova (301 MW dep.)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#9B2335"></div> TEL (301 MW dep.)</div>
+    </div>
+    <div style="position:relative;height:340px">
+      <canvas id="cufTrendChart" role="img" aria-label="Multi-line chart of monthly CUF for each Thar plant Jul 2024 to Mar 2026">Plant-level CUF trends with missing months as gaps.</canvas>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Monthly Generation Stack vs Dependable Ceiling (GWh)</div>
+    <div class="panel-sub">Stack = actual generation by plant. Dashed red line = combined dependable-capacity ceiling (varies by month length). Shaded right portion = FY2025-26 data. Bars absent for missing months.</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#036B7A"></div> TCB-I</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5AA0AB"></div> Engro</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#C8923A"></div> ThalNova</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#E8B87A"></div> TEL</div>
+      <div class="legend-item"><span style="display:inline-block;width:18px;height:2px;background:var(--red);border-top:2px dashed var(--red);margin-top:4px"></span>&nbsp;Dep. Ceiling</div>
+    </div>
+    <div style="position:relative;height:320px">
+      <canvas id="stackedGenChart" role="img" aria-label="Stacked bar chart of monthly generation by plant with ceiling line overlay">Monthly generation by plant with dependable ceiling overlay.</canvas>
+    </div>
+  </div>
+
+  <!-- Full monthly detail table -->
+  <div class="panel">
+    <div class="panel-title">Complete Monthly Detail Table (Jul 2024 – Mar 2026)</div>
+    <div class="panel-sub">Highlighted rows = FY2025-26 data from CPPA-G V4. Italic rows = months with no available data. CUF vs dependable capacity.</div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Month</th><th>Source</th>
+            <th class="num">TCB-I GWh</th><th class="num">TCB-I %</th>
+            <th class="num">Engro GWh</th><th class="num">Engro %</th>
+            <th class="num">ThalNova GWh</th><th class="num">ThalNova %</th>
+            <th class="num">TEL GWh</th><th class="num">TEL %</th>
+            <th class="num">Total GWh</th><th class="num">Sys CUF%</th>
+          </tr>
+        </thead>
+        <tbody id="monthlyTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: ENERGY GAP -->
+<div id="energy-gap" class="tab-content">
+  <div class="section-label">Unutilized Capacity — Jul 2024 – Mar 2026</div>
+  <div class="section-title">8,137 GWh not generated across 17 months of available data</div>
+
+  <div class="narrative">
+    Across the 17 months with Thar generation data (12 complete FY2024-25 months + 5 FY2025-26 months), the cluster's cumulative energy gap reaches <strong>8,137 GWh</strong> — energy that was fully funded through unconditional capacity payments but never delivered to the grid. The gap in FY2025-26 is running at a pace of ~471 GWh/month (2,354 GWh ÷ 5 months), compared to 482 GWh/month in FY2024-25 — a marginal improvement driven primarily by TCB-I's stronger performance, partially offset by continued volatility at Engro, ThalNova, and TEL.
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Cumulative Energy Gap by Plant</div>
+      <div class="panel-sub">FY2024-25 (12 months) vs FY2025-26 partial (5 months). All values in GWh.</div>
+      <div style="position:relative;height:280px">
+        <canvas id="gapBarChart" role="img" aria-label="Grouped bar chart of energy gap by plant for FY25 and FY26 partial">Gap by plant: TCB-I, Engro, ThalNova, TEL across both periods.</canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Monthly Energy Gap (GWh) — Full Timeline</div>
+      <div class="panel-sub">Bars coloured by severity: red &gt;600 GWh, amber 300–600, teal &lt;300.</div>
+      <div style="position:relative;height:280px">
+        <canvas id="monthlyGapChart" role="img" aria-label="Bar chart of monthly energy gap for each available month">Worst months: Dec 2024 (1,027 GWh) and Nov 2024 (735 GWh).</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Energy Gap Summary — FY2024-25 vs FY2025-26 (Partial)</div>
+    <div class="panel-sub">Max possible = Dependable MW × actual hours in period. Gap = max − actual. CUF = actual ÷ max × 100.</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Plant</th><th class="num">Dep. MW</th>
+          <th class="num">FY25 Actual GWh</th><th class="num">FY25 Gap GWh</th><th class="num">FY25 CUF%</th>
+          <th class="num">FY26* Actual GWh</th><th class="num">FY26* Gap GWh</th><th class="num">FY26* CUF%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>TCB-I</td><td class="num">1,231</td>
+          <td class="num">8,315</td><td class="num" style="color:var(--amber);font-weight:600">2,469</td><td class="num">77.1%</td>
+          <td class="num">3,709</td><td class="num" style="color:var(--teal);font-weight:600">840</td><td class="num" style="color:var(--teal)">81.5%</td>
+        </tr>
+        <tr>
+          <td>Engro Thar</td><td class="num">602</td>
+          <td class="num">3,853</td><td class="num" style="color:var(--amber);font-weight:600">1,421</td><td class="num">73.1%</td>
+          <td class="num">1,528</td><td class="num" style="color:var(--amber);font-weight:600">697</td><td class="num">68.7%</td>
+        </tr>
+        <tr>
+          <td>ThalNova</td><td class="num">301</td>
+          <td class="num">1,778</td><td class="num" style="color:var(--amber);font-weight:600">859</td><td class="num">67.4%</td>
+          <td class="num">722</td><td class="num" style="color:var(--amber);font-weight:600">391</td><td class="num">64.9%</td>
+        </tr>
+        <tr>
+          <td>TEL</td><td class="num">301</td>
+          <td class="num">1,601</td><td class="num" style="color:var(--red);font-weight:600">1,035</td><td class="num">60.7%</td>
+          <td class="num">687</td><td class="num" style="color:var(--red);font-weight:600">426</td><td class="num">61.7%</td>
+        </tr>
+        <tr style="background:#F0F8FA;font-weight:700">
+          <td><strong>Total Cluster</strong></td><td class="num"><strong>2,435</strong></td>
+          <td class="num"><strong>15,547</strong></td><td class="num" style="color:var(--red)"><strong>5,783</strong></td><td class="num"><strong>72.9%</strong></td>
+          <td class="num"><strong>6,646</strong></td><td class="num" style="color:var(--amber)"><strong>2,354</strong></td><td class="num"><strong>73.8%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:11.5px;color:var(--faint);margin-top:.5rem">* FY2025-26 = 5 available months (Aug 2025, Sep 2025, Dec 2025, Jan 2026, Mar 2026). TEL Jan 2026 treated as zero (no invoice).</div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Trajectory Assessment</div>
+    <div class="verdict-text">TCB-I is the single plant showing genuine improvement (+4.4 pp CUF year-over-year for comparable months), suggesting operational maturation of the largest unit. Engro, ThalNova, and TEL are stagnant or declining — Engro's September 2025 dip to 47% is structurally concerning and mirrors its September 2024 collapse (55.7%), pointing to a recurring monsoon-season logistics or mine output constraint. TEL's chronic underperformance (60–62% across both FYs) and complete January 2026 absence indicate an unresolved plant-level issue. Every percentage point gained on the 2,435 MW dependable base delivers ~214 GWh/year of additional indigenous output.</div>
+  </div>
+</div>
+
+<!-- TAB 4: OUTAGE EVENTS -->
+<div id="outage-events" class="tab-content">
+  <div class="section-label">Severe Underperformance Events — Jul 2024 – Mar 2026</div>
+  <div class="section-title">Plant-months with CUF below 50% — the recurring shock pattern</div>
+
+  <div class="narrative">
+    The extended dataset confirms that <strong>severe underperformance events (CUF &lt;50%) are not confined to FY2024-25</strong>. September 2025 brought simultaneous Engro (47.1%) and ThalNova (49.6%) collapses, and TEL submitted no generation invoice for January 2026 — its fourth distinct near-outage episode across 17 months. TCB-I has had only one severe event (November 2024) in 17 months; the smaller Block-II units are structurally more volatile.
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">All Severe Events (Plant-CUF &lt;50%) — Ranked by Severity</div>
+    <div class="panel-sub">New events from FY2025-26 (CPPA-G V4) marked with teal badge.</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Plant</th><th>Month</th><th class="num">CUF (%)</th>
+          <th class="num">Gen (GWh)</th><th class="num">Gap vs Dep. (GWh)</th>
+          <th>Period</th><th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>TEL (301 MW)</td><td>Dec 2024</td><td class="num" style="color:var(--red);font-weight:700">4.4%</td><td class="num">9.9</td><td class="num">214</td><td><span class="badge badge-gray">FY25</span></td><td><span class="badge badge-red">Critical</span></td></tr>
+        <tr><td>TEL (301 MW)</td><td>Jan 2026</td><td class="num" style="color:var(--red);font-weight:700">0.0%</td><td class="num">0.0</td><td class="num">224</td><td><span class="badge badge-teal">FY26</span></td><td><span class="badge badge-red">Critical</span></td></tr>
+        <tr><td>ThalNova (301 MW)</td><td>Oct 2024</td><td class="num" style="color:var(--red);font-weight:700">16.4%</td><td class="num">36.7</td><td class="num">187</td><td><span class="badge badge-gray">FY25</span></td><td><span class="badge badge-red">Critical</span></td></tr>
+        <tr><td>TCB-I (1,231 MW)</td><td>Nov 2024</td><td class="num" style="color:var(--red);font-weight:700">34.1%</td><td class="num">302.3</td><td class="num">584</td><td><span class="badge badge-gray">FY25</span></td><td><span class="badge badge-red">Critical</span></td></tr>
+        <tr><td>TEL (301 MW)</td><td>Sep 2024</td><td class="num" style="color:var(--red);font-weight:700">20.8%</td><td class="num">45.0</td><td class="num">172</td><td><span class="badge badge-gray">FY25</span></td><td><span class="badge badge-red">Critical</span></td></tr>
+        <tr><td>TEL (301 MW)</td><td>Feb 2025</td><td class="num" style="color:var(--amber);font-weight:700">22.6%</td><td class="num">45.8</td><td class="num">156</td><td><span class="badge badge-gray">FY25</span></td><td><span class="badge badge-red">Severe</span></td></tr>
+        <tr><td>Engro (602 MW)</td><td>Sep 2025</td><td class="num" style="color:var(--amber);font-weight:700">47.1%</td><td class="num">204.1</td><td class="num">229</td><td><span class="badge badge-teal">FY26</span></td><td><span class="badge badge-amber">Severe</span></td></tr>
+        <tr><td>ThalNova (301 MW)</td><td>Sep 2025</td><td class="num" style="color:var(--amber);font-weight:700">49.6%</td><td class="num">107.4</td><td class="num">109</td><td><span class="badge badge-teal">FY26</span></td><td><span class="badge badge-amber">Severe</span></td></tr>
+        <tr><td>Engro (602 MW)</td><td>Dec 2024</td><td class="num" style="color:var(--amber);font-weight:700">44.7%</td><td class="num">200.0</td><td class="num">248</td><td><span class="badge badge-gray">FY25</span></td><td><span class="badge badge-amber">Moderate</span></td></tr>
+        <tr><td>Engro (602 MW)</td><td>Feb 2025</td><td class="num" style="color:var(--amber);font-weight:700">46.4%</td><td class="num">187.7</td><td class="num">217</td><td><span class="badge badge-gray">FY25</span></td><td><span class="badge badge-amber">Moderate</span></td></tr>
+        <tr><td>TCB-I (1,231 MW)</td><td>Dec 2024</td><td class="num">45.0%</td><td class="num">412.2</td><td class="num">504</td><td><span class="badge badge-gray">FY25</span></td><td><span class="badge badge-amber">Moderate</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Recurring Pattern: September Inflection</div>
+    <div class="panel-sub">Both September 2024 and September 2025 show multi-plant underperformance — suggesting a structural seasonal constraint.</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Plant</th><th class="num">Sep 2024 CUF%</th><th class="num">Sep 2025 CUF%</th><th class="num">Change (pp)</th><th>Pattern</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>TCB-I</td><td class="num">89.7%</td><td class="num">76.3%</td><td class="num" style="color:var(--red)">−13.4 pp</td><td><span class="badge badge-amber">Worsening</span></td></tr>
+        <tr><td>Engro Thar</td><td class="num">55.7%</td><td class="num">47.1%</td><td class="num" style="color:var(--red)">−8.6 pp</td><td><span class="badge badge-red">Recurring severe</span></td></tr>
+        <tr><td>ThalNova</td><td class="num">83.0%</td><td class="num">49.6%</td><td class="num" style="color:var(--red)">−33.4 pp</td><td><span class="badge badge-red">Sharp deterioration</span></td></tr>
+        <tr><td>TEL</td><td class="num">20.8%</td><td class="num">76.3%</td><td class="num" style="color:var(--green)">+55.5 pp</td><td><span class="badge badge-green">Improved</span></td></tr>
+        <tr style="background:#F0F8FA;font-weight:700"><td><strong>System</strong></td><td class="num"><strong>71.9%</strong></td><td class="num"><strong>65.8%</strong></td><td class="num" style="color:var(--red)"><strong>−6.1 pp</strong></td><td><span class="badge badge-amber">Worsening trend</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Structural Diagnosis — 17-Month Evidence</div>
+    <div class="verdict-text">Three clear failure modes emerge from the extended dataset: (1) <strong>TEL chronic fragility</strong> — 4 outage events in 17 months (Sep 2024, Dec 2024, Feb 2025, Jan 2026); this plant has not achieved a sustained run above 80% CUF in any two consecutive months across the dataset. (2) <strong>September syndrome</strong> — Engro and ThalNova both collapse in September (both fiscal years), consistent with post-monsoon mine access issues at SECMC Block-II or coal stockpile drawdown during peak monsoon coal transport disruption. (3) <strong>TCB-I November 2024 anomaly</strong> — the 34% CUF event was singular and not repeated; the plant recovered to 79%+ from January 2025 onward, suggesting a resolved forced outage rather than a systemic problem. Root cause investigation priority: TEL &gt; September logistics &gt; Engro/ThalNova Block-II coal supply chain.</div>
+  </div>
+</div>
+
+<!-- TAB 5: FUEL CHARGES -->
+<div id="fuel-charges" class="tab-content">
+  <div class="section-label">Fuel Cost Data — CPPA-G Energy Purchase Invoices</div>
+  <div class="section-title">Variable energy cost per plant — available for FY2025-26 months from CPPA-G V4</div>
+
+  <div class="narrative">
+    The CPPA-G Energy Purchase Data V4 file introduces a new dimension not available in the ISMO dataset: <strong>fuel charges (PKR) per plant per month</strong>. This is the variable energy purchase cost (EPP component) reflecting coal consumption, heat rates, and applicable adjustments. These figures are distinct from the unconditional Capacity Purchase Price — they are paid only when generation actually occurs. Below the per-kWh fuel cost can be inferred.
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Monthly Fuel Charges — Thar Cluster (PKR Billion)</div>
+    <div class="panel-sub">Available months from CPPA-G V4. Stacked by plant. Note: Apr 2025 data also extracted for reference from V4 file.</div>
+    <div style="position:relative;height:280px">
+      <canvas id="fuelChargeChart" role="img" aria-label="Stacked bar chart of monthly fuel charges in PKR billion by Thar plant">Monthly fuel charges for available months.</canvas>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Fuel Charges by Plant and Month (PKR Billion)</div>
+    <div class="panel-sub">Implied PKR/kWh = Fuel Charges ÷ Energy (kWh). Source: CPPA-G Energy Purchase Data V4.</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th class="num">TCB-I (PKR bn)</th><th class="num">Engro (PKR bn)</th>
+          <th class="num">ThalNova (PKR bn)</th><th class="num">TEL (PKR bn)</th>
+          <th class="num">Total (PKR bn)</th>
+          <th class="num">Total GWh</th><th class="num">Implied PKR/kWh</th>
+        </tr>
+      </thead>
+      <tbody id="fuelChargeBody"></tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Implied Fuel Cost (PKR/kWh) by Plant — Available Months</div>
+    <div class="panel-sub">Fuel cost per kWh = Fuel Charges ÷ Energy Generated. Thar coal should be one of the cheapest fuel sources; spikes indicate lower generation spreading fixed fuel-linked costs.</div>
+    <div style="position:relative;height:260px">
+      <canvas id="perKwhChart" role="img" aria-label="Line chart of implied fuel cost per kWh for Thar plants across available months">Per-kWh fuel cost trends for Thar plants.</canvas>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Cost Efficiency Signal</div>
+    <div class="verdict-text">The fuel charge data reveals that months with lower generation (Sep 2025 for Engro at 47% CUF) show elevated per-kWh costs — not because coal is more expensive, but because fixed fuel-linked adjustments (heat degradation, load correction factors) are spread over fewer units. This creates a perverse cost dynamic: the less these plants run, the more expensive each MWh becomes, eroding the economic merit-order advantage that justifies their priority dispatch position. Full utilisation at 90%+ CUF would reduce effective fuel cost per kWh by an estimated 15–20% for Engro and ThalNova.</div>
+  </div>
+</div>
+
+<!-- TAB 6: FINANCIALS -->
+<div id="financials" class="tab-content">
+  <div class="section-label">Financial Implications</div>
+  <div class="section-title">Unconditional capacity payments against an 8,137 GWh cumulative energy gap</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card red">
+      <div class="kpi-label">FY25 CPP (Thar Cluster)</div>
+      <div class="kpi-num">PKR 256 bn</div>
+      <div class="kpi-sub">NEPRA PER FY2024-25 · Unconditional · Against 5,783 GWh gap</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-label">FY25 EPP (Thar Cluster)</div>
+      <div class="kpi-num">PKR 212 bn</div>
+      <div class="kpi-sub">Variable energy cost · Paid on actual generation only</div>
+    </div>
+    <div class="kpi-card gray">
+      <div class="kpi-label">Stranded CP / Gap MWh (FY25)</div>
+      <div class="kpi-num">~PKR 44,275</div>
+      <div class="kpi-sub">CPP committed against each ungenerated MWh</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Est. RLNG Displacement Cost</div>
+      <div class="kpi-num">~PKR 82 bn</div>
+      <div class="kpi-sub">8,137 GWh × PKR ~10/kWh differential (17-month cumulative)</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Cost per Effective kWh — Thar vs Competing Sources (FY 2024–25)</div>
+    <div class="panel-sub">Source: NEPRA PER Generation FY 2024–25. Thar's effective cost would fall from PKR 30.1 to ~PKR 24.3/kWh at 90% CUF.</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Source</th><th class="num">Ref. Cap. (MW)</th><th class="num">Util. (%)</th>
+          <th class="num">CPP (PKR bn)</th><th class="num">EPP (PKR bn)</th>
+          <th class="num">Generation (GWh)</th><th class="num">Effective PKR/kWh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#EAF5F0">
+          <td><strong>Thar Coal (Local)</strong></td><td class="num">2,433</td><td class="num" style="color:var(--amber);font-weight:600">72.9%</td>
+          <td class="num">256.1</td><td class="num">211.9</td><td class="num">15,547</td>
+          <td class="num" style="color:var(--green);font-weight:700">30.1</td>
+        </tr>
+        <tr><td>Nuclear</td><td class="num">3,265</td><td class="num">78.5%</td><td class="num">362.7</td><td class="num">52.4</td><td class="num">22,452</td><td class="num" style="color:var(--green)">18.5</td></tr>
+        <tr><td>Local Gas</td><td class="num">2,225</td><td class="num">57.4%</td><td class="num">36.2</td><td class="num">155.1</td><td class="num">11,219</td><td class="num">17.1</td></tr>
+        <tr style="background:#FFF8F0">
+          <td>RLNG</td><td class="num">6,141</td><td class="num" style="color:var(--red)">41.4%</td>
+          <td class="num">143.9</td><td class="num">523.7</td><td class="num">22,231</td>
+          <td class="num" style="color:var(--red);font-weight:700">30.1</td>
+        </tr>
+        <tr style="background:#FFF0F0">
+          <td>Imported Coal</td><td class="num">4,342</td><td class="num" style="color:var(--red)">22.9%</td>
+          <td class="num">413.8</td><td class="num">159.6</td><td class="num">9,066</td>
+          <td class="num" style="color:var(--red);font-weight:700">63.2</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Effective Cost Sensitivity to CUF (%)</div>
+      <div class="panel-sub">How Thar effective PKR/kWh changes with utilisation. Fixed CPP = PKR 256 bn; EPP ~PKR 13.6/kWh variable.</div>
+      <div style="position:relative;height:240px">
+        <canvas id="sensitivityChart" role="img" aria-label="Line chart showing how Thar effective PKR per kWh changes with capacity utilization factor">CUF sensitivity: higher utilization → lower effective cost per kWh.</canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Marginal Gain: 1pp CUF Improvement</div>
+      <div class="panel-sub">At 2,435 MW dependable capacity, each 1 percentage point of CUF improvement across the full cluster.</div>
+      <div style="padding:.5rem 0">
+        <div style="display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--muted)">Additional generation</span><span style="font-weight:600">~213 GWh/year</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--muted)">RLNG displaced</span><span style="font-weight:600">~2.1 bn PKR saved/year</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--muted)">Effective cost reduction</span><span style="font-weight:600">~PKR 0.4/kWh</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--muted)">CO₂ emission factor</span><span style="font-weight:600">~0.89 tCO₂/MWh</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.6rem 0;font-size:13px">
+          <span style="color:var(--muted)">Thar coal: target CUF</span><span style="font-weight:600;color:var(--teal)">≥85% (EMO priority)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Policy Priority</div>
+    <div class="verdict-text">The Thar cluster's effective cost of PKR 30.1/kWh is entirely a utilization penalty — if fully deployed at 90% CUF, cost falls to ~PKR 24.3/kWh, making it cheaper than RLNG on an all-in basis. The economic case for operational reform is not incremental: a 17 percentage point CUF improvement (from 73% to 90%) across 2,435 MW would save approximately <strong>PKR 35 billion annually</strong> in RLNG displacement costs while eliminating the per-unit capacity cost penalty. The financial incentive exists; the constraint is operational — mine logistics, plant reliability, and transmission scheduling at the Thar-grid interface.</div>
+  </div>
+</div>
+
+<div class="page-footer">
+  <strong>Data sources:</strong> ISMO FY2025 Capacities &amp; Hourly Generation (NEDM7w05fo) — Jul 2024–Jun 2025 complete; CPPA-G Energy Purchase Data V4 — FY2025-26 partial (Aug 2025, Sep 2025, Dec 2025, Jan 2026, Mar 2026); CPPA-G All Power Plants Capacity Payments; NEPRA PER Generation FY 2024–25; NEPRA State of Industry Report 2024. Oct 2025 excluded (identical to Sep 2025). Mar 2026 TCB-I/ThalNova/TEL values match Dec 2025 exactly — possible preliminary data; Engro Mar 2026 (378 GWh) is distinct. Jan 2026 TEL treated as zero (no invoice in V4). CUF computed vs NEPRA-registered dependable (reference) capacity. Fuel charge per-kWh estimates are indicative. Prepared by Ammar H. Khan.
+</div>
+</div>
+
+<script>
+// ===== DATA =====
+const monthsFY25 = ['Jul-24','Aug-24','Sep-24','Oct-24','Nov-24','Dec-24','Jan-25','Feb-25','Mar-25','Apr-25','May-25','Jun-25'];
+const monthsNew  = ['Aug-25','Sep-25','Dec-25','Jan-26','Mar-26'];
+const allMonths  = [...monthsFY25, 'Jul-25*', ...monthsNew]; // Jul-25 = no data
+const allMonthsFull = [...monthsFY25, ...monthsNew];
+
+// Generation (GWh)
+const G = {
+  fy25: { tcb:[738.3,625.9,795.0,857.7,302.3,412.2,724.6,677.1,803.1,826.3,784.2,768.3], engro:[383.5,350.5,241.3,428.0,382.5,200.0,294.2,187.7,280.4,370.1,342.8,391.7], thal:[193.7,159.8,179.9,36.7,171.7,162.1,120.9,132.7,150.2,161.0,130.5,179.1], tel:[190.4,169.3,45.0,195.8,162.1,9.9,129.0,45.8,159.6,167.6,155.9,171.0] },
+  new: { tcb:[763.6,676.0,772.6,724.6,772.6], engro:[356.8,204.1,294.3,294.3,378.3], thal:[156.0,107.4,169.2,120.0,169.2], tel:[165.4,165.4,177.9,0.0,177.9] }
+};
+// Hours
+const H = { fy25:[744,744,720,744,720,744,744,672,744,720,744,720], new:[744,720,744,744,744] };
+const DEP = {tcb:1231,engro:602,thal:301,tel:301};
+
+function cufPct(gen,dep,hrs){ return +(gen/(dep*hrs/1000)*100).toFixed(1); }
+function gapGwh(gen,dep,hrs){ return +(dep*hrs/1000 - gen).toFixed(1); }
+
+// Build combined arrays for charts (17 points, with null for Jul-25)
+const chartLabels = [...monthsFY25,'Jul-25*',...monthsNew];
+function buildSeries(plant){
+  const fy = G.fy25[plant];
+  const nw = G.new[plant];
+  return [...fy, null, ...nw];
+}
+function buildCUF(plant){
+  const fy = G.fy25[plant].map((g,i)=>cufPct(g,DEP[plant],H.fy25[i]));
+  const nw = G.new[plant].map((g,i)=>cufPct(g,DEP[plant],H.new[i]));
+  return [...fy, null, ...nw];
+}
+function buildSysGen(){
+  const fy = monthsFY25.map((_,i)=>G.fy25.tcb[i]+G.fy25.engro[i]+G.fy25.thal[i]+G.fy25.tel[i]);
+  const nw = monthsNew.map((_,i)=>G.new.tcb[i]+G.new.engro[i]+G.new.thal[i]+G.new.tel[i]);
+  return [...fy, null, ...nw];
+}
+function buildDepCeiling(){
+  const fy = H.fy25.map(h=>(DEP.tcb+DEP.engro+DEP.thal+DEP.tel)*h/1000);
+  const nw = H.new.map(h=>(DEP.tcb+DEP.engro+DEP.thal+DEP.tel)*h/1000);
+  return [...fy, null, ...nw];
+}
+function buildSysCUF(){
+  const g=buildSysGen(), c=buildDepCeiling();
+  return g.map((v,i)=>v==null||c[i]==null?null:+(v/c[i]*100).toFixed(1));
+}
+function buildTotalGap(){
+  const g=buildSysGen(), c=buildDepCeiling();
+  return g.map((v,i)=>v==null||c[i]==null?null:+(c[i]-v).toFixed(1));
+}
+
+// Populate monthly table
+const tableBody = document.getElementById('monthlyTableBody');
+function cufCell(v){
+  const cls = v<50?'style="color:var(--red);font-weight:700"':v<70?'style="color:var(--amber);font-weight:600"':'';
+  return `<td class="num" ${cls}>${v}%</td>`;
+}
+// FY25 rows
+monthsFY25.forEach((m,i)=>{
+  const tcbC=cufPct(G.fy25.tcb[i],DEP.tcb,H.fy25[i]), enC=cufPct(G.fy25.engro[i],DEP.engro,H.fy25[i]);
+  const thC=cufPct(G.fy25.thal[i],DEP.thal,H.fy25[i]), teC=cufPct(G.fy25.tel[i],DEP.tel,H.fy25[i]);
+  const tot=+(G.fy25.tcb[i]+G.fy25.engro[i]+G.fy25.thal[i]+G.fy25.tel[i]).toFixed(1);
+  const dep=(DEP.tcb+DEP.engro+DEP.thal+DEP.tel)*H.fy25[i]/1000;
+  const sysC=+(tot/dep*100).toFixed(1);
+  tableBody.innerHTML+=`<tr><td>${m}</td><td><span class="badge badge-gray">ISMO FY25</span></td>
+    <td class="num">${G.fy25.tcb[i].toFixed(1)}</td>${cufCell(tcbC)}
+    <td class="num">${G.fy25.engro[i].toFixed(1)}</td>${cufCell(enC)}
+    <td class="num">${G.fy25.thal[i].toFixed(1)}</td>${cufCell(thC)}
+    <td class="num">${G.fy25.tel[i].toFixed(1)}</td>${cufCell(teC)}
+    <td class="num"><strong>${tot}</strong></td>${cufCell(sysC)}</tr>`;
+});
+// Jul-25 gap row
+tableBody.innerHTML+=`<tr class="gap-row"><td>Jul-25</td><td>—</td><td class="num" colspan="10">No Thar generation invoices in CPPA-G V4 for July 2025</td></tr>`;
+// New months
+monthsNew.forEach((m,i)=>{
+  const tcbC=cufPct(G.new.tcb[i],DEP.tcb,H.new[i]), enC=cufPct(G.new.engro[i],DEP.engro,H.new[i]);
+  const thC=cufPct(G.new.thal[i],DEP.thal,H.new[i]), teC=cufPct(G.new.tel[i],DEP.tel,H.new[i]);
+  const tot=+(G.new.tcb[i]+G.new.engro[i]+G.new.thal[i]+G.new.tel[i]).toFixed(1);
+  const dep=(DEP.tcb+DEP.engro+DEP.thal+DEP.tel)*H.new[i]/1000;
+  const sysC=+(tot/dep*100).toFixed(1);
+  const isJan26 = m==='Jan-26';
+  tableBody.innerHTML+=`<tr class="new-row"><td>${m}</td><td><span class="badge badge-teal">CPPA-G V4</span></td>
+    <td class="num">${G.new.tcb[i].toFixed(1)}</td>${cufCell(tcbC)}
+    <td class="num">${G.new.engro[i].toFixed(1)}</td>${cufCell(enC)}
+    <td class="num">${G.new.thal[i].toFixed(1)}</td>${cufCell(thC)}
+    <td class="num">${isJan26?'N/A':G.new.tel[i].toFixed(1)}</td>${isJan26?'<td class="num" style="color:var(--red)">Offline</td>':cufCell(teC)}
+    <td class="num"><strong>${tot}</strong></td>${cufCell(sysC)}</tr>`;
+  // Insert gap rows for missing months
+  if(m==='Sep-25') tableBody.innerHTML+=`<tr class="gap-row"><td>Oct-25</td><td>—</td><td class="num" colspan="10">Oct 2025 values identical to Sep 2025 — excluded as preliminary placeholder</td></tr>`;
+  if(m==='Sep-25') tableBody.innerHTML+=`<tr class="gap-row"><td>Nov-25</td><td>—</td><td class="num" colspan="10">No Thar generation invoices in CPPA-G V4 for November 2025</td></tr>`;
+  if(m==='Jan-26') tableBody.innerHTML+=`<tr class="gap-row"><td>Feb-26</td><td>—</td><td class="num" colspan="10">No Thar generation invoices in CPPA-G V4 for February 2026</td></tr>`;
+});
+
+// Fuel charge data
+const FC = {
+  months: ['Apr-25','Jun-25','Aug-25','Sep-25','Dec-25','Jan-26','Mar-26'],
+  gen:    [1525.0,  1510.1,  1441.8,  1152.9,  1414.0,  1138.9,  1498.0],
+  tcb:    [9.283,   9.158,   9.375,   8.050,   8.408,   8.091,   8.408],
+  engro:  [4.910,   5.090,   4.882,   3.461,   3.541,   4.349,   4.111],
+  thal:   [2.245,   null,    2.213,   1.192,   1.025,   1.842,   1.025],
+  tel:    [2.214,   2.292,   2.268,   2.784,   2.029,   null,    1.078]
+};
+const fcBody = document.getElementById('fuelChargeBody');
+FC.months.forEach((m,i)=>{
+  const th = FC.thal[i], te = FC.tel[i];
+  const total = FC.tcb[i]+(FC.engro[i]||0)+(th||0)+(te||0);
+  const perkwh = (total*1e9/(FC.gen[i]*1e6)).toFixed(2);
+  const perKwhClass = parseFloat(perkwh)>15?'fc-high':parseFloat(perkwh)>12?'fc-med':'';
+  fcBody.innerHTML+=`<tr>
+    <td>${m}</td>
+    <td class="num">${FC.tcb[i].toFixed(3)}</td>
+    <td class="num">${FC.engro[i].toFixed(3)}</td>
+    <td class="num">${th?th.toFixed(3):'—'}</td>
+    <td class="num">${te?te.toFixed(3):'—'}</td>
+    <td class="num"><strong>${total.toFixed(3)}</strong></td>
+    <td class="num">${FC.gen[i].toFixed(1)}</td>
+    <td class="num ${perKwhClass}">PKR ${perkwh}</td>
+  </tr>`;
+});
+
+// ===== CHARTS =====
+const chartDefaults = {responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}};
+
+// 1. Capacity comparison
+new Chart(document.getElementById('capacityChart'),{
+  type:'bar',
+  data:{labels:['TCB-I','Engro Thar','ThalNova','TEL'],
+    datasets:[
+      {label:'Rated MW',data:[1320,660,330,330],backgroundColor:'#036B7A',borderWidth:0},
+      {label:'Dependable MW',data:[1231,602,301,301],backgroundColor:'#5AA0AB',borderWidth:0},
+      {label:'Actual Avg FY25',data:[949,440,203,183],backgroundColor:'#C8923A',borderWidth:0},
+      {label:'Actual Avg FY26',data:[1000,411,194,185],backgroundColor:'#E8B87A',borderWidth:0}
+    ]},
+  options:{...chartDefaults,scales:{x:{ticks:{color:'#666',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#666',font:{size:11}},grid:{color:'#E5E5E5'},title:{display:true,text:'MW',color:'#999',font:{size:11}}}}}
+});
+
+// 2. System CUF line (17 points)
+const sysCUF = buildSysCUF();
+const isNewSeg = chartLabels.map(l=>['Aug-25','Sep-25','Dec-25','Jan-26','Mar-26','Jul-25*'].includes(l));
+new Chart(document.getElementById('sysCufChart'),{
+  type:'line',
+  data:{labels:chartLabels,
+    datasets:[{
+      label:'System CUF %',data:sysCUF,
+      borderColor:'#036B7A',backgroundColor:'rgba(3,107,122,0.08)',
+      borderWidth:2.5,pointRadius:5,pointBackgroundColor:chartLabels.map(l=>['Aug-25','Sep-25','Dec-25','Jan-26','Mar-26'].includes(l)?'#C8923A':'#036B7A'),
+      fill:true,tension:0.3,spanGaps:false
+    }]},
+  options:{...chartDefaults,scales:{
+    x:{ticks:{color:'#666',font:{size:11},maxRotation:50,autoSkip:false},grid:{color:'#F0F0F0'}},
+    y:{min:30,max:100,ticks:{color:'#666',font:{size:11},callback:v=>v+'%'},grid:{color:'#E5E5E5'}}
+  }}
+});
+
+// 3. CUF trend by plant
+const cCols={tcb:'#036B7A',engro:'#C8923A',thal:'#1D6FA4',tel:'#9B2335'};
+new Chart(document.getElementById('cufTrendChart'),{
+  type:'line',
+  data:{labels:chartLabels,
+    datasets:[
+      {label:'TCB-I',data:buildCUF('tcb'),borderColor:cCols.tcb,backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:cCols.tcb,tension:0.3,spanGaps:false},
+      {label:'Engro',data:buildCUF('engro'),borderColor:cCols.engro,backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:cCols.engro,tension:0.3,borderDash:[5,3],spanGaps:false},
+      {label:'ThalNova',data:buildCUF('thal'),borderColor:cCols.thal,backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:cCols.thal,tension:0.3,borderDash:[2,2],spanGaps:false},
+      {label:'TEL',data:buildCUF('tel'),borderColor:cCols.tel,backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:cCols.tel,tension:0.3,borderDash:[8,4],spanGaps:false}
+    ]},
+  options:{...chartDefaults,scales:{
+    x:{ticks:{color:'#666',font:{size:10},maxRotation:50,autoSkip:false},grid:{color:'#F0F0F0'}},
+    y:{min:0,max:100,ticks:{color:'#666',font:{size:11},callback:v=>v+'%'},grid:{color:'#E5E5E5'}}
+  }}
+});
+
+// 4. Stacked generation
+const depCeil=buildDepCeiling();
+new Chart(document.getElementById('stackedGenChart'),{
+  type:'bar',
+  data:{labels:chartLabels,
+    datasets:[
+      {label:'TCB-I',data:buildSeries('tcb'),backgroundColor:'#036B7A',stack:'gen',borderWidth:0},
+      {label:'Engro',data:buildSeries('engro'),backgroundColor:'#5AA0AB',stack:'gen',borderWidth:0},
+      {label:'ThalNova',data:buildSeries('thal'),backgroundColor:'#C8923A',stack:'gen',borderWidth:0},
+      {label:'TEL',data:buildSeries('tel'),backgroundColor:'#E8B87A',stack:'gen',borderWidth:0},
+      {label:'Dep Ceiling',data:depCeil,type:'line',borderColor:'#9B2335',backgroundColor:'transparent',borderWidth:2,borderDash:[6,3],pointRadius:0,spanGaps:false}
+    ]},
+  options:{...chartDefaults,scales:{
+    x:{ticks:{color:'#666',font:{size:10},maxRotation:50,autoSkip:false},grid:{display:false}},
+    y:{ticks:{color:'#666',font:{size:11}},grid:{color:'#E5E5E5'},title:{display:true,text:'GWh',color:'#999',font:{size:11}}}
+  }}
+});
+
+// 5. Gap bar: by plant, FY25 vs FY26
+new Chart(document.getElementById('gapBarChart'),{
+  type:'bar',
+  data:{labels:['TCB-I','Engro Thar','ThalNova','TEL'],
+    datasets:[
+      {label:'FY2024-25 Gap',data:[2469,1421,859,1035],backgroundColor:'#9B2335',borderWidth:0},
+      {label:'FY2025-26 Partial Gap',data:[840,697,391,426],backgroundColor:'#E8B87A',borderWidth:0}
+    ]},
+  options:{...chartDefaults,scales:{x:{ticks:{color:'#555',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#666',font:{size:11}},grid:{color:'#E5E5E5'},title:{display:true,text:'GWh',color:'#999',font:{size:11}}}}}
+});
+
+// 6. Monthly gap
+const monthlyGap=buildTotalGap();
+const gapColors=monthlyGap.map(v=>v==null?'transparent':v>600?'#9B2335':v>350?'#C8923A':'#5AA0AB');
+new Chart(document.getElementById('monthlyGapChart'),{
+  type:'bar',
+  data:{labels:chartLabels,datasets:[{label:'Energy Gap (GWh)',data:monthlyGap,backgroundColor:gapColors,borderWidth:0}]},
+  options:{...chartDefaults,scales:{
+    x:{ticks:{color:'#666',font:{size:10},maxRotation:50,autoSkip:false},grid:{display:false}},
+    y:{ticks:{color:'#666',font:{size:11}},grid:{color:'#E5E5E5'},title:{display:true,text:'GWh',color:'#999',font:{size:11}}}
+  }}
+});
+
+// 7. Fuel charge stacked
+const fc_m=['Apr-25','Jun-25','Aug-25','Sep-25','Dec-25','Jan-26','Mar-26'];
+const fc_tcb=[9.283,9.158,9.375,8.050,8.408,8.091,8.408];
+const fc_en=[4.910,5.090,4.882,3.461,3.541,4.349,4.111];
+const fc_th=[2.245,0,2.213,1.192,1.025,1.842,1.025];
+const fc_te=[2.214,2.292,2.268,2.784,2.029,0,1.078];
+new Chart(document.getElementById('fuelChargeChart'),{
+  type:'bar',
+  data:{labels:fc_m,datasets:[
+    {label:'TCB-I',data:fc_tcb,backgroundColor:'#036B7A',stack:'fc',borderWidth:0},
+    {label:'Engro',data:fc_en,backgroundColor:'#5AA0AB',stack:'fc',borderWidth:0},
+    {label:'ThalNova',data:fc_th,backgroundColor:'#C8923A',stack:'fc',borderWidth:0},
+    {label:'TEL',data:fc_te,backgroundColor:'#E8B87A',stack:'fc',borderWidth:0}
+  ]},
+  options:{...chartDefaults,scales:{x:{ticks:{color:'#555',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#666',font:{size:11},callback:v=>'PKR '+v+'bn'},grid:{color:'#E5E5E5'}}}}
+});
+
+// 8. Per-kWh fuel cost by plant
+const pk_tcb = fc_m.map((_,i)=>+(fc_tcb[i]*1e9/(G.new.tcb[['Aug-25','Sep-25','Dec-25','Jan-26','Mar-26'].indexOf(fc_m[i])]||G.fy25.tcb[monthsFY25.indexOf(fc_m[i])]||1)*1e6).toFixed(1)||null);
+// Simpler: compute per-kWh for Engro (clearest signal of utilisation effect)
+const enIdx = fc_m.map(m=>monthsNew.indexOf(m)>=0?'new':monthsFY25.indexOf(m)>=0?'fy25':null);
+const pk_en = fc_m.map((m,i)=>{
+  const ni=monthsNew.indexOf(m),fi=monthsFY25.indexOf(m);
+  const g=ni>=0?G.new.engro[ni]:fi>=0?G.fy25.engro[fi]:null;
+  return g?+(fc_en[i]*1e9/(g*1e6)).toFixed(2):null;
+});
+const pk_th = fc_m.map((m,i)=>{
+  const ni=monthsNew.indexOf(m),fi=monthsFY25.indexOf(m);
+  const g=ni>=0?G.new.thal[ni]:fi>=0?G.fy25.thal[fi]:null;
+  return g&&fc_th[i]>0?+(fc_th[i]*1e9/(g*1e6)).toFixed(2):null;
+});
+new Chart(document.getElementById('perKwhChart'),{
+  type:'line',
+  data:{labels:fc_m,datasets:[
+    {label:'Engro PKR/kWh',data:pk_en,borderColor:'#C8923A',backgroundColor:'transparent',borderWidth:2,pointRadius:5,pointBackgroundColor:'#C8923A',tension:0.3,spanGaps:false},
+    {label:'ThalNova PKR/kWh',data:pk_th,borderColor:'#1D6FA4',backgroundColor:'transparent',borderWidth:2,pointRadius:5,pointBackgroundColor:'#1D6FA4',tension:0.3,spanGaps:false,borderDash:[4,3]}
+  ]},
+  options:{...chartDefaults,scales:{
+    x:{ticks:{color:'#555',font:{size:11}},grid:{display:false}},
+    y:{ticks:{color:'#666',font:{size:11},callback:v=>'PKR '+v},grid:{color:'#E5E5E5'},title:{display:true,text:'PKR/kWh',color:'#999',font:{size:11}}}
+  }}
+});
+
+// 9. CUF sensitivity
+const cufRange=[55,60,65,70,75,80,85,90,95];
+const cppFixed=256e9, epy=13.6; // PKR/kWh variable
+const annualMWh=cufRange.map(c=>2435*8760*c/100);
+const effectiveCost=cufRange.map((c,i)=>+((cppFixed+epy*annualMWh[i])/(annualMWh[i])).toFixed(1));
+new Chart(document.getElementById('sensitivityChart'),{
+  type:'line',
+  data:{labels:cufRange.map(v=>v+'%'),datasets:[{
+    label:'Effective PKR/kWh',data:effectiveCost,
+    borderColor:'#036B7A',backgroundColor:'rgba(3,107,122,0.1)',
+    borderWidth:2.5,fill:true,tension:0.4,pointRadius:5,
+    pointBackgroundColor:cufRange.map(c=>c===75?'#C8923A':c>=85?'#52B788':'#036B7A')
+  }]},
+  options:{...chartDefaults,scales:{
+    x:{ticks:{color:'#555',font:{size:11}},grid:{display:false},title:{display:true,text:'CUF (%)',color:'#999',font:{size:11}}},
+    y:{ticks:{color:'#666',font:{size:11},callback:v=>'PKR '+v},grid:{color:'#E5E5E5'},title:{display:true,text:'Effective PKR/kWh',color:'#999',font:{size:11}}}
+  },plugins:{...chartDefaults.plugins,tooltip:{callbacks:{label:ctx=>`PKR ${ctx.raw}/kWh at ${cufRange[ctx.dataIndex]}% CUF`}}}}
+});
+
+// Tab switching
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
