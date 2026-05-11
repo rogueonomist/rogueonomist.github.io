@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCGCL CMSF — Live Fund Model</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
+:root{--bg:#F7F6F2;--sur:#FFF;--brd:#E2E0D8;--teal:#036B7A;--teal-lt:#E6F4F6;--amb:#C8923A;--amb-lt:#FEF6EB;--grn:#2E7D57;--grn-lt:#E8F5EE;--red:#9B2335;--red-lt:#FDECEA;--ink:#1A1918;--ink2:#4A4845;--ink3:#7A7874;--ink4:#ABA9A4;--sw:290px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);font-size:13.5px;line-height:1.55;}
+.app{display:flex;height:100vh;overflow:hidden;}
+/* SIDEBAR */
+.sb{width:var(--sw);min-width:var(--sw);background:var(--ink);display:flex;flex-direction:column;overflow:hidden;}
+.sb-hd{padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0;}
+.sb-logo{font-family:'DM Serif Display',serif;font-size:16px;color:#fff;line-height:1.2;}
+.sb-logo span{color:#5BBFCE;}
+.sb-tag{font-size:9.5px;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+.sb-body{flex:1;overflow-y:auto;padding:0 0 20px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent;}
+.sb-body::-webkit-scrollbar{width:3px;}
+.sb-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);}
+.ps{padding:14px 20px 6px;}
+.ps-hd{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.07);}
+.pr{margin-bottom:12px;}
+.pl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+.pn{font-size:11px;color:rgba(255,255,255,.7);}
+.pv{font-family:'DM Mono',monospace;font-size:11px;color:#5BBFCE;font-weight:500;}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:rgba(255,255,255,.14);border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;background:#5BBFCE;border-radius:50%;border:2px solid var(--ink);box-shadow:0 0 0 2px rgba(91,191,206,.25);transition:box-shadow .15s;}
+input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 5px rgba(91,191,206,.2);}
+.pi{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:4px;padding:5px 9px;color:#fff;font-family:'DM Mono',monospace;font-size:11.5px;outline:none;transition:border-color .15s;}
+.pi:focus{border-color:#5BBFCE;}
+.pg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
+.pg3 label{font-size:9px;color:rgba(255,255,255,.35);display:block;margin-bottom:2px;letter-spacing:.03em;}
+.sb-reset{margin:8px 20px 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.6);font-size:10.5px;font-weight:500;cursor:pointer;padding:7px;width:calc(100% - 40px);text-align:center;transition:all .15s;}
+.sb-reset:hover{background:rgba(255,255,255,.11);color:#fff;}
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:56px;background:var(--sur);border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;padding:0 26px;flex-shrink:0;}
+.tb-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--ink);}
+.tb-meta{font-size:10.5px;color:var(--ink4);letter-spacing:.03em;}
+.live-bdg{display:inline-flex;align-items:center;gap:5px;background:var(--grn-lt);color:var(--grn);font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:20px;}
+.ldot{width:5px;height:5px;background:var(--grn);border-radius:50%;animation:pulse 1.8s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.tab-bar{background:var(--sur);border-bottom:1px solid var(--brd);display:flex;padding:0 26px;flex-shrink:0;}
+.tb{background:none;border:none;border-bottom:2px solid transparent;padding:10px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);cursor:pointer;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;}
+.tb:hover{color:var(--ink);}
+.tb.active{color:var(--teal);border-bottom-color:var(--teal);}
+.ca{flex:1;overflow-y:auto;padding:22px 26px 40px;}
+.tp{display:none;}.tp.active{display:block;}
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px;}
+/* KPI */
+.kpi{background:var(--sur);border:1px solid var(--brd);border-radius:7px;padding:13px 15px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi.tc::before{background:var(--teal)}.kpi.ac::before{background:var(--amb)}.kpi.gc::before{background:var(--grn)}.kpi.rc::before{background:var(--red)}.kpi.bc::before{background:#3B82F6}
+.kv{font-family:'DM Serif Display',serif;font-size:21px;color:var(--ink);line-height:1;margin-bottom:5px;}
+.kl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink4);}
+.ks{font-size:10.5px;color:var(--ink3);margin-top:3px;}
+/* PANEL */
+.panel{background:var(--sur);border:1px solid var(--brd);border-radius:7px;padding:16px 18px;margin-bottom:14px;}
+.phd{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.ptag{font-size:9.5px;font-weight:600;background:var(--teal-lt);color:var(--teal);padding:2px 7px;border-radius:3px;letter-spacing:.02em;text-transform:none;}
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);padding:6px 9px;border-bottom:2px solid var(--brd);text-align:left;white-space:nowrap;}
+th.r{text-align:right}
+td{padding:6px 9px;border-bottom:1px solid var(--brd);color:var(--ink2);}
+td.r{text-align:right;font-family:'DM Mono',monospace;font-size:12px;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg);}
+.tr-tot td{font-weight:700;background:var(--bg)!important;color:var(--ink);}
+.tr-tot td.r{font-family:'DM Mono',monospace;}
+/* CHIPS */
+.chip{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700;}
+.chip.g{background:var(--grn-lt);color:var(--grn)}.chip.a{background:var(--amb-lt);color:#8B5E1A}.chip.r{background:var(--red-lt);color:var(--red)}.chip.t{background:var(--teal-lt);color:var(--teal)}.chip.x{background:var(--bg);color:var(--ink3)}
+/* VERDICT */
+.vrd{background:var(--amb-lt);border-left:3px solid var(--amb);border-radius:0 5px 5px 0;padding:11px 14px;margin-bottom:14px;font-size:12.5px;color:var(--ink2);line-height:1.65;}
+/* SEASON */
+.s-lo{color:var(--grn);font-weight:600}.s-md{color:var(--ink3);font-weight:500}.s-el{color:#B04800;font-weight:600}.s-hi{color:var(--red);font-weight:700}
+/* WATERFALL */
+.wf{border:1px solid var(--brd);border-radius:6px;overflow:hidden;font-size:12.5px;margin-bottom:14px;}
+.wf-hd,.wf-rw{display:grid;grid-template-columns:108px 1fr 128px 120px;}
+.wf-hd{background:var(--bg);border-bottom:1px solid var(--brd);}
+.wfc{padding:8px 11px;}
+.wf-hd .wfc{font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);}
+.wf-rw{border-bottom:1px solid var(--brd);}
+.wf-rw:last-child{border-bottom:none;}
+.wfc.r{text-align:right;font-family:'DM Mono',monospace;font-size:12px;}
+/* FORMULA */
+.fml{background:var(--bg);border:1px solid var(--brd);border-left:3px solid var(--teal);border-radius:0 4px 4px 0;padding:11px 13px;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--ink2);line-height:1.75;overflow-x:auto;margin:8px 0;white-space:pre;}
+/* SECTION */
+.slbl{font-size:9.5px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--ink4);margin-bottom:4px;}
+.stit{font-family:'DM Serif Display',serif;font-size:19px;color:var(--ink);margin-bottom:12px;line-height:1.3;font-weight:400;}
+hr{border:none;border-top:1px solid var(--brd);margin:20px 0;}
+@media(max-width:1100px){.g5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.sb{display:none}.g2,.g3{grid-template-columns:1fr}.g5{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-hd">
+    <div class="sb-logo">NCGCL <span>CMSF</span></div>
+    <div class="sb-tag">Live Parameter Controls</div>
+  </div>
+  <div class="sb-body">
+
+    <div class="ps">
+      <div class="ps-hd">Portfolio</div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Contracted MW</span><span class="pv" id="lbl_mw">1,000 MW</span></div>
+        <input type="range" id="sl_mw" min="100" max="5000" step="50" value="1000" oninput="sync('mw',+this.value,'lbl_mw',v=>v.toLocaleString()+' MW')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Load Factor</span><span class="pv" id="lbl_lf">65%</span></div>
+        <input type="range" id="sl_lf" min="30" max="90" step="1" value="65" oninput="sync('lf',+this.value,'lbl_lf',v=>v+'%')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Mix: BPC / Supplier / Trader (%)</span></div>
+        <div class="pg3">
+          <div><label>BPC %</label><input class="pi" type="number" id="ip_bpc" value="80" min="0" max="100" oninput="ps('pct_bpc',+this.value)"></div>
+          <div><label>Supplier %</label><input class="pi" type="number" id="ip_sup" value="15" min="0" max="100" oninput="ps('pct_sup',+this.value)"></div>
+          <div><label>Trader %</label><input class="pi" type="number" id="ip_trd" value="5" min="0" max="100" oninput="ps('pct_trd',+this.value)"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps">
+      <div class="ps-hd">Seed Capital (PKR M / MW)</div>
+      <div class="pr">
+        <div class="pl"><span class="pn">BPC Upfront Fee</span><span class="pv" id="lbl_sbpc">1.50 M/MW</span></div>
+        <input type="range" id="sl_sbpc" min="0.5" max="5" step="0.1" value="1.5" oninput="sync('seed_bpc',+this.value,'lbl_sbpc',v=>v.toFixed(2)+' M/MW')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Supplier Upfront Fee</span><span class="pv" id="lbl_ssup">2.00 M/MW</span></div>
+        <input type="range" id="sl_ssup" min="0.5" max="5" step="0.1" value="2.0" oninput="sync('seed_sup',+this.value,'lbl_ssup',v=>v.toFixed(2)+' M/MW')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Trader Upfront Fee</span><span class="pv" id="lbl_strd">2.50 M/MW</span></div>
+        <input type="range" id="sl_strd" min="0.5" max="6" step="0.1" value="2.5" oninput="sync('seed_trd',+this.value,'lbl_strd',v=>v.toFixed(2)+' M/MW')">
+      </div>
+    </div>
+
+    <div class="ps">
+      <div class="ps-hd">Quarterly Levy</div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Base Levy Rate (PKR/kWh)</span><span class="pv" id="lbl_lvy">0.150</span></div>
+        <input type="range" id="sl_lvy" min="0.02" max="0.50" step="0.005" value="0.15" oninput="sync('levy',+this.value,'lbl_lvy',v=>(+v).toFixed(3))">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">High-Risk Surcharge Uplift</span><span class="pv" id="lbl_src">15%</span></div>
+        <input type="range" id="sl_src" min="0" max="60" step="1" value="15" oninput="sync('surc',+this.value,'lbl_src',v=>v+'%')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Stress-Hour Rider (PKR/kWh)</span><span class="pv" id="lbl_rdr">0.050</span></div>
+        <input type="range" id="sl_rdr" min="0" max="0.20" step="0.005" value="0.05" oninput="sync('rider',+this.value,'lbl_rdr',v=>(+v).toFixed(3))">
+      </div>
+    </div>
+
+    <div class="ps">
+      <div class="ps-hd">Fund Economics</div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Investment Return (% p.a.)</span><span class="pv" id="lbl_ir">18.0%</span></div>
+        <input type="range" id="sl_ir" min="5" max="25" step="0.5" value="18" oninput="sync('ir',+this.value,'lbl_ir',v=>(+v).toFixed(1)+'%')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Monthly OpEx (PKR M)</span><span class="pv" id="lbl_opx">5.0 M</span></div>
+        <input type="range" id="sl_opx" min="1" max="30" step="0.5" value="5" oninput="sync('opex',+this.value,'lbl_opx',v=>(+v).toFixed(1)+' M')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Monthly Reinsurance (PKR M)</span><span class="pv" id="lbl_ri">3.0 M</span></div>
+        <input type="range" id="sl_ri" min="0" max="15" step="0.5" value="3" oninput="sync('reinsu',+this.value,'lbl_ri',v=>(+v).toFixed(1)+' M')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">NCGCL Mgmt Fee (% of levy)</span><span class="pv" id="lbl_fee">1.00%</span></div>
+        <input type="range" id="sl_fee" min="0.25" max="3" step="0.25" value="1" oninput="sync('fee',+this.value,'lbl_fee',v=>(+v).toFixed(2)+'%')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">NCGCL Guarantee Fee (% p.a.)</span><span class="pv" id="lbl_gfee">1.50%</span></div>
+        <input type="range" id="sl_gfee" min="0.25" max="3" step="0.25" value="1.5" oninput="sync('gfee',+this.value,'lbl_gfee',v=>(+v).toFixed(2)+'%')">
+      </div>
+    </div>
+
+    <div class="ps">
+      <div class="ps-hd">Risk Parameters</div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Imbalance Rate (all bands)</span><span class="pv" id="lbl_imb">5.0%</span></div>
+        <input type="range" id="sl_imb" min="1" max="15" step="0.5" value="5" oninput="sync('imbal',+this.value,'lbl_imb',v=>(+v).toFixed(1)+'%')">
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Strike Prices (PKR/kWh)</span></div>
+        <div class="pg3">
+          <div><label>Evening</label><input class="pi" type="number" id="ip_sev" value="21.50" step="0.5" oninput="ps('stk_ev',+this.value)"></div>
+          <div><label>Sunshine</label><input class="pi" type="number" id="ip_ssun" value="16.50" step="0.5" oninput="ps('stk_sun',+this.value)"></div>
+          <div><label>Morning</label><input class="pi" type="number" id="ip_smrn" value="20.50" step="0.5" oninput="ps('stk_morn',+this.value)"></div>
+        </div>
+      </div>
+      <div class="pr">
+        <div class="pl"><span class="pn">Coverage % (post-deductible)</span></div>
+        <div class="pg3">
+          <div><label>Evening</label><input class="pi" type="number" id="ip_cev" value="80" min="0" max="100" oninput="ps('cov_ev',+this.value)"></div>
+          <div><label>Sunshine</label><input class="pi" type="number" id="ip_csun" value="55" min="0" max="100" oninput="ps('cov_sun',+this.value)"></div>
+          <div><label>Morning</label><input class="pi" type="number" id="ip_cmrn" value="65" min="0" max="100" oninput="ps('cov_morn',+this.value)"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="sb-reset" onclick="resetDef()">↺ Reset to Defaults</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="tb-title">CTBCM Market Stabilisation Fund — Live Model</div>
+      <div class="tb-meta">Ammar H. Khan · NCGCL Product Development · May 2026 · 14 months ISMO data (May 2024 – Jan 2026)</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="live-bdg"><span class="ldot"></span>Live</div>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tb active" onclick="sTab('ov',this)">Overview</button>
+    <button class="tb" onclick="sTab('sz',this)">Fund Sizing</button>
+    <button class="tb" onclick="sTab('sm',this)">Simulation</button>
+    <button class="tb" onclick="sTab('ec',this)">Economics</button>
+    <button class="tb" onclick="sTab('mt',this)">Methods</button>
+  </div>
+
+  <div class="ca">
+
+    <!-- OVERVIEW -->
+    <div class="tp active" id="tp-ov">
+      <div class="slbl">Executive Summary</div>
+      <div class="stit">Fund at a Glance — Recalculates Live as You Adjust Parameters</div>
+      <div class="g5">
+        <div class="kpi tc"><div class="kv" id="k_seed">—</div><div class="kl">Total Seed Capital</div><div class="ks" id="k_seed_s">—</div></div>
+        <div class="kpi ac"><div class="kv" id="k_levy">—</div><div class="kl">Monthly Levy</div><div class="ks" id="k_levy_s">—</div></div>
+        <div class="kpi gc"><div class="kv" id="k_claims">—</div><div class="kl">Avg Monthly Claims</div><div class="ks" id="k_claims_s">—</div></div>
+        <div class="kpi bc"><div class="kv" id="k_res">—</div><div class="kl">Reserve After 14 Mo</div><div class="ks" id="k_res_s">—</div></div>
+        <div class="kpi rc"><div class="kv" id="k_lr">—</div><div class="kl">Avg Loss Ratio</div><div class="ks" id="k_lr_s">—</div></div>
+      </div>
+      <div class="vrd" id="vrd_ov">—</div>
+      <div class="panel">
+        <div class="phd">Exhibit 1 — Marginal Price Regime: Mean vs Evening Peak vs P90 (PKR/kWh) <span class="ptag">ISMO Data</span></div>
+        <div style="position:relative;height:250px;"><canvas id="ch_mp"></canvas></div>
+      </div>
+      <div class="g2">
+        <div class="panel"><div class="phd">Exhibit 2 — Intraday Volatility (CV%)</div><div style="position:relative;height:195px;"><canvas id="ch_vol"></canvas></div></div>
+        <div class="panel"><div class="phd">Exhibit 3 — Levy vs Claims (PKR M) <span class="ptag">Live</span></div><div style="position:relative;height:195px;"><canvas id="ch_clev"></canvas></div></div>
+      </div>
+      <hr>
+      <div class="slbl">Risk Architecture</div>
+      <div class="stit">Six-Layer Waterfall — Participants First, NCGCL Second, DFIs Last</div>
+      <div class="wf">
+        <div class="wf-hd"><div class="wfc">Layer</div><div class="wfc">Risk Bearer</div><div class="wfc r">Size</div><div class="wfc r">Trigger</div></div>
+        <div class="wf-rw"><div class="wfc" style="color:var(--ink3);font-weight:600;">Layer 0</div><div class="wfc">Member deductible (2–4% per band)</div><div class="wfc r" style="color:var(--ink3);">Member-borne</div><div class="wfc r">Always retained</div></div>
+        <div class="wf-rw"><div class="wfc" style="color:var(--teal);font-weight:600;">Layer 1</div><div class="wfc">Member-specific reserve account</div><div class="wfc r" style="color:var(--teal);" id="wf1">—</div><div class="wfc r">First claim draw</div></div>
+        <div class="wf-rw" style="background:var(--amb-lt);"><div class="wfc" style="color:var(--amb);font-weight:700;">Layer 2 ★</div><div class="wfc"><strong>Pooled CMSF Reserve — member-funded levy</strong></div><div class="wfc r" style="color:var(--amb);font-weight:700;" id="wf2">—</div><div class="wfc r">After Layer 1</div></div>
+        <div class="wf-rw"><div class="wfc" style="color:var(--teal);font-weight:600;">Layer 3</div><div class="wfc">NCGCL second-loss guarantee</div><div class="wfc r" style="color:var(--teal);" id="wf3">—</div><div class="wfc r">&gt;60% reserve drawn</div></div>
+        <div class="wf-rw"><div class="wfc" style="color:#6B4B9A;font-weight:600;">Layer 4</div><div class="wfc">DFI / GuarantCo / ADB counter-guarantee</div><div class="wfc r" style="color:#6B4B9A;" id="wf4">—</div><div class="wfc r">Systemic event</div></div>
+        <div class="wf-rw"><div class="wfc" style="color:var(--red);font-weight:600;">Layer 5</div><div class="wfc">Uncovered tail — retained by participant</div><div class="wfc r" style="color:var(--red);">Uncapped</div><div class="wfc r">Above annual cap</div></div>
+      </div>
+    </div>
+
+    <!-- SIZING -->
+    <div class="tp" id="tp-sz">
+      <div class="slbl">Fund Sizing</div>
+      <div class="stit">Seed Capital, Target Reserve, and Levy — Driven Live by Your Parameters</div>
+      <div class="g3">
+        <div class="panel"><div class="phd">Seed Capital <span class="ptag">Live</span></div><table><thead><tr><th>Type</th><th class="r">MW</th><th class="r">PKR M/MW</th><th class="r">Total M</th></tr></thead><tbody id="tb_seed"></tbody></table></div>
+        <div class="panel"><div class="phd">Target Reserve <span class="ptag">Live</span></div><table><tbody id="tb_res"></tbody></table></div>
+        <div class="panel"><div class="phd">Quarterly Levy Invoice <span class="ptag">Live</span></div><table><tbody id="tb_lvy"></tbody></table></div>
+      </div>
+      <div class="g2">
+        <div class="panel"><div class="phd">Reserve Alert Framework</div>
+          <table><tr><th>Reserve Level</th><th class="r">Status</th><th>Action</th></tr>
+          <tr><td>&gt;120% target</td><td class="r">Surplus</td><td><span class="chip g">Credit next quarter</span></td></tr>
+          <tr><td>75–120% target</td><td class="r">Normal</td><td><span class="chip t">No action</span></td></tr>
+          <tr><td>&lt;75% target</td><td class="r">Watch</td><td><span class="chip a">Risk Committee</span></td></tr>
+          <tr><td>&lt;40% / &gt;60% drawn</td><td class="r">Activate</td><td><span class="chip r">NCGCL Layer 3</span></td></tr>
+          <tr><td>NCGCL &gt;50% guarantee</td><td class="r">Systemic</td><td><span class="chip r">DFI Layer 4</span></td></tr></table>
+        </div>
+        <div class="panel"><div class="phd">Scale Scenarios <span class="ptag">Live</span></div><table><tr><th>Portfolio</th><th class="r">Seed (M)</th><th class="r">Mo Levy (M)</th><th class="r">Yr-1 Reserve</th></tr><tbody id="tb_scl"></tbody></table></div>
+      </div>
+      <div class="panel"><div class="phd">Levy Formula <span class="ptag">Live</span></div><div class="fml" id="fml_lvy">—</div></div>
+    </div>
+
+    <!-- SIMULATION -->
+    <div class="tp" id="tp-sm">
+      <div class="slbl">Monthly Simulation — 14 Months of ISMO Data</div>
+      <div class="stit">How the CMSF Would Have Operated: May 2024 – January 2026</div>
+      <div class="vrd" id="vrd_sm">—</div>
+      <div class="panel"><div class="phd">Exhibit 4 — Reserve Balance vs Monthly Claims <span class="ptag">Live</span></div><div style="position:relative;height:280px;"><canvas id="ch_res"></canvas></div></div>
+      <div class="g2">
+        <div class="panel"><div class="phd">Exhibit 5 — Loss Ratio by Month (%) <span class="ptag">Live</span></div><div style="position:relative;height:190px;"><canvas id="ch_lr"></canvas></div></div>
+        <div class="panel"><div class="phd">Exhibit 6 — Net Monthly Movement (PKR M) <span class="ptag">Live</span></div><div style="position:relative;height:190px;"><canvas id="ch_net"></canvas></div></div>
+      </div>
+      <div class="panel" style="overflow-x:auto;">
+        <div class="phd">Exhibit 7 — Full Monthly Ledger <span class="ptag">Recalculates Live</span></div>
+        <table><thead><tr><th>Month</th><th class="r">Mean MP</th><th class="r">Ev Peak</th><th class="r">P90</th><th>Regime</th><th class="r">Claims M</th><th class="r">Levy M</th><th class="r">Inv Inc M</th><th class="r">Op+RI M</th><th class="r">Net M</th><th class="r">Reserve M</th><th class="r">L/R %</th></tr></thead><tbody id="tb_sim"></tbody></table>
+      </div>
+      <div class="panel" style="margin-top:4px;"><div class="phd">Exhibit 8 — Claims by Time Band, Key Months (PKR M) <span class="ptag">Live</span></div><div style="position:relative;height:240px;"><canvas id="ch_band"></canvas></div></div>
+    </div>
+
+    <!-- ECONOMICS -->
+    <div class="tp" id="tp-ec">
+      <div class="slbl">Fund &amp; NCGCL Economics</div>
+      <div class="stit">Investment Income is the Structural Backstop — Levy Surplus Compounds the Reserve</div>
+      <div class="g5">
+        <div class="kpi tc"><div class="kv" id="e_lvy">—</div><div class="kl">Annual Levy Income</div><div class="ks">Base + surcharge + rider</div></div>
+        <div class="kpi gc"><div class="kv" id="e_inv">—</div><div class="kl">Yr-2 Investment Income</div><div class="ks">On mature reserve</div></div>
+        <div class="kpi ac"><div class="kv" id="e_fee">—</div><div class="kl">NCGCL Annual Fees</div><div class="ks">Mgmt + guarantee</div></div>
+        <div class="kpi bc"><div class="kv" id="e_sur">—</div><div class="kl">Annual Fund Surplus</div><div class="ks">Accrues to reserve</div></div>
+        <div class="kpi rc"><div class="kv" id="e_bkv">—</div><div class="kl">Break-even Claims</div><div class="ks">Monthly zero-P&amp;L threshold</div></div>
+      </div>
+      <div class="g2">
+        <div class="panel"><div class="phd">Annual P&amp;L — Year 2 <span class="ptag">Live</span></div><table><thead><tr><th>Item</th><th class="r">PKR M/yr</th></tr></thead><tbody id="tb_pnl"></tbody></table></div>
+        <div class="panel"><div class="phd">NCGCL Income Breakdown <span class="ptag">Live</span></div><table><thead><tr><th>Fee Type</th><th>Basis</th><th class="r">PKR M/yr</th></tr></thead><tbody id="tb_nc"></tbody></table></div>
+      </div>
+      <div class="panel"><div class="phd">Exhibit 9 — Investment Income vs Costs vs Levy Over Period <span class="ptag">Live</span></div><div style="position:relative;height:240px;"><canvas id="ch_inv"></canvas></div></div>
+      <div class="g2">
+        <div class="panel"><div class="phd">Break-Even Analysis <span class="ptag">Live</span></div><table><tr><th>Claims Band (M)</th><th class="r">Loss Ratio</th><th>P&amp;L</th><th>Reserve</th></tr><tbody id="tb_bkv"></tbody></table></div>
+        <div class="panel"><div class="phd">NCGCL Scale Economics <span class="ptag">Live</span></div><table><tr><th>Portfolio</th><th class="r">Levy/yr</th><th class="r">Mgmt Fee</th><th class="r">Guar. Fee</th></tr><tbody id="tb_scle"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- METHODS -->
+    <div class="tp" id="tp-mt">
+      <div class="slbl">Methods &amp; Assumptions</div>
+      <div class="stit">14 Months of ISMO Verified Data — Active Parameters Shown Live</div>
+      <div class="g2">
+        <div class="panel"><div class="phd">ISMO Data Coverage</div>
+          <table><thead><tr><th>Month</th><th class="r">Mean MP</th><th class="r">P90</th><th class="r">Ev Peak</th><th class="r">CV%</th><th>Source</th></tr></thead><tbody id="tb_ismo"></tbody></table>
+        </div>
+        <div class="panel"><div class="phd">Active Parameters <span class="ptag">Live</span></div><table><tbody id="tb_prms"></tbody></table></div>
+      </div>
+      <div class="panel"><div class="phd">Formula Library</div>
+        <div class="fml">Monthly Energy  = Contracted MW × Load Factor × 720h / 1000  [GWh]
+Base Levy (M)  = Monthly GWh × 1,000,000 kWh/GWh × Levy Rate (PKR/kWh) / 1,000,000
+Surcharge (M)  = Base Levy × Surcharge % × High-Risk Share (30%)
+Rider (M)      = Monthly GWh × 1,000,000 × Rider Rate / 1,000,000
+Total Levy (M) = Base + Surcharge + Rider
+
+Band Claim (M) = Band MWh × Imbalance Rate × 1000 × Max(0, Actual MP − Strike) × (1−Ded%) × Coverage% / 1,000,000
+
+Monthly Net    = Levy + Investment Income − Total Claims − OpEx − Reinsurance − Mgmt Fee
+Investment Inc = Reserve × (Investment Rate / 12)
+Reserve (end)  = Reserve (start) + Monthly Net</div>
+      </div>
+      <div class="panel"><div class="phd">Structural Observations from Real Data</div>
+        <table><tr><th>Observation</th><th>Implication</th></tr>
+        <tr><td>CV% rising 9.7% → 37.3% (May-24 → Aug-25)</td><td>BTM solar deepens intraday spread; evening strike calibration increasingly critical</td></tr>
+        <tr><td>Jan-2026 mean MP at PKR 26.98 — highest in dataset</td><td>RLNG spikes create sustained high-MP regimes; size reserve for 2–3 consecutive stress months</td></tr>
+        <tr><td>Aug-2025 sunshine MP drops to PKR 8.41/kWh</td><td>Solar oversupply floors sunshine-hour prices; near-zero sunshine claims build reserve fast</td></tr>
+        <tr><td>Evening-to-sunshine MP ratio expanding YoY</td><td>Time-band differentiation becomes more valuable annually; evening-peak window is most bankable product</td></tr>
+        <tr><td>Nov-2024: zero claims despite full levy collection</td><td>Low-MP winter months generate pure surplus — build reserve before summer stress season</td></tr></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+/* ═══ ISMO DATA (fixed empirical) ═══ */
+const ISMO=[
+  {m:'May-2024',mp:18.89,p90:21.21,ev:19.48,sun:16.52,mn:18.40,ni:17.90,cv:9.7},
+  {m:'Jun-2024',mp:20.02,p90:21.42,ev:21.29,sun:20.65,mn:19.80,ni:19.40,cv:6.6},
+  {m:'Sep-2024',mp:18.05,p90:23.00,ev:22.40,sun:13.03,mn:20.10,ni:16.80,cv:23.6},
+  {m:'Oct-2024',mp:19.45,p90:22.68,ev:22.04,sun:16.71,mn:19.20,ni:17.90,cv:13.1},
+  {m:'Nov-2024',mp:14.71,p90:16.80,ev:16.33,sun:13.17,mn:15.00,ni:14.20,cv:12.3},
+  {m:'Dec-2024',mp:20.97,p90:25.35,ev:24.10,sun:20.45,mn:22.10,ni:20.30,cv:16.3},
+  {m:'Jan-2025',mp:21.90,p90:27.87,ev:26.55,sun:22.90,mn:24.00,ni:21.10,cv:25.8},
+  {m:'Mar-2025',mp:17.48,p90:24.00,ev:23.85,sun:12.85,mn:20.50,ni:16.20,cv:28.7},
+  {m:'May-2025',mp:15.56,p90:20.68,ev:16.54,sun:10.83,mn:15.30,ni:14.80,cv:30.4},
+  {m:'Jul-2025',mp:15.57,p90:22.31,ev:18.27,sun:10.68,mn:14.90,ni:14.60,cv:35.9},
+  {m:'Aug-2025',mp:13.44,p90:20.67,ev:17.11,sun:8.41, mn:12.50,ni:12.80,cv:37.3},
+  {m:'Sep-2025',mp:14.72,p90:20.84,ev:19.65,sun:8.85, mn:14.10,ni:13.90,cv:34.3},
+  {m:'Oct-2025',mp:18.35,p90:22.99,ev:22.06,sun:11.06,mn:18.40,ni:17.80,cv:29.6},
+  {m:'Jan-2026',mp:26.98,p90:33.43,ev:33.39,sun:27.57,mn:29.80,ni:25.40,cv:18.6},
+];
+
+/* ═══ PARAMS ═══ */
+const DEF={mw:1000,lf:65,pct_bpc:80,pct_sup:15,pct_trd:5,seed_bpc:1.5,seed_sup:2.0,seed_trd:2.5,levy:0.15,surc:15,rider:0.05,ir:18,opex:5,reinsu:3,fee:1.0,gfee:1.5,imbal:5,stk_ev:21.5,stk_sun:16.5,stk_morn:20.5,cov_ev:80,cov_sun:55,cov_morn:65};
+let P={...DEF};
+
+function sync(k,v,lid,fmt){P[k]=v;document.getElementById(lid).textContent=fmt(v);recalc();}
+function ps(k,v){P[k]=v;recalc();}
+function resetDef(){
+  P={...DEF};
+  const sliders={sl_mw:'mw',sl_lf:'lf',sl_sbpc:'seed_bpc',sl_ssup:'seed_sup',sl_strd:'seed_trd',sl_lvy:'levy',sl_src:'surc',sl_rdr:'rider',sl_ir:'ir',sl_opx:'opex',sl_ri:'reinsu',sl_fee:'fee',sl_gfee:'gfee',sl_imb:'imbal'};
+  Object.entries(sliders).forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=DEF[k];});
+  document.getElementById('lbl_mw').textContent='1,000 MW';
+  document.getElementById('lbl_lf').textContent='65%';
+  document.getElementById('lbl_sbpc').textContent='1.50 M/MW';
+  document.getElementById('lbl_ssup').textContent='2.00 M/MW';
+  document.getElementById('lbl_strd').textContent='2.50 M/MW';
+  document.getElementById('lbl_lvy').textContent='0.150';
+  document.getElementById('lbl_src').textContent='15%';
+  document.getElementById('lbl_rdr').textContent='0.050';
+  document.getElementById('lbl_ir').textContent='18.0%';
+  document.getElementById('lbl_opx').textContent='5.0 M';
+  document.getElementById('lbl_ri').textContent='3.0 M';
+  document.getElementById('lbl_fee').textContent='1.00%';
+  document.getElementById('lbl_gfee').textContent='1.50%';
+  document.getElementById('lbl_imb').textContent='5.0%';
+  ['ip_bpc','ip_sup','ip_trd'].forEach((id,i)=>{const e=document.getElementById(id);if(e)e.value=[80,15,5][i];});
+  ['ip_sev','ip_ssun','ip_smrn'].forEach((id,i)=>{const e=document.getElementById(id);if(e)e.value=[21.5,16.5,20.5][i];});
+  ['ip_cev','ip_csun','ip_cmrn'].forEach((id,i)=>{const e=document.getElementById(id);if(e)e.value=[80,55,65][i];});
+  recalc();
+}
+
+/* ═══ HELPERS ═══ */
+const f=v=>Math.round(+v).toLocaleString('en');
+const f1=v=>(+v).toFixed(1);
+const f2=v=>(+v).toFixed(2);
+
+/* ═══ SIMULATION ENGINE ═══ */
+function runSim(){
+  const mwh=P.mw*(P.lf/100)*720; // MWh/month
+  const ir=P.imbal/100;
+  const bands={ev:4/24,sun:6/24,mn:4/24,ni:8/24};
+  const stk={ev:P.stk_ev,sun:P.stk_sun,mn:P.stk_morn,ni:17.5};
+  const cov={ev:P.cov_ev/100,sun:P.cov_sun/100,mn:P.cov_morn/100,ni:0.50};
+  const ded={ev:0.02,sun:0.04,mn:0.03,ni:0.03};
+
+  const bpcMw=P.mw*P.pct_bpc/100, supMw=P.mw*P.pct_sup/100, trdMw=P.mw*P.pct_trd/100;
+  const seed=bpcMw*P.seed_bpc+supMw*P.seed_sup+trdMw*P.seed_trd;
+
+  const baseLvy=mwh*1000*P.levy/1e6;
+  const srcLvy=baseLvy*P.surc/100*0.3;
+  const rdrLvy=mwh*1000*P.rider/1e6;
+  const totLvy=baseLvy+srcLvy+rdrLvy;
+  const mgmtFee=baseLvy*P.fee/100;
+  const fixCost=P.opex+P.reinsu+mgmtFee;
+
+  const calc=(bndMwh,actMp,strike,coverage,deductible)=>{
+    const vol=bndMwh*ir;
+    const excess=Math.max(0,actMp-strike);
+    const gross=vol*1000*excess/1e6;
+    return Math.max(0,gross*(1-deductible))*coverage;
+  };
+
+  let res=seed;
+  const rows=[];
+  for(const d of ISMO){
+    const inv=res*(P.ir/100/12);
+    const evC=calc(mwh*bands.ev,d.ev,stk.ev,cov.ev,ded.ev);
+    const sunC=calc(mwh*bands.sun,d.sun,stk.sun,cov.sun,ded.sun);
+    const mnC=calc(mwh*bands.mn,d.mn,stk.mn,cov.mn,ded.mn);
+    const niC=calc(mwh*bands.ni,d.ni,stk.ni,cov.ni,ded.ni);
+    const totC=evC+sunC+mnC+niC;
+    const net=totLvy+inv-totC-fixCost;
+    const rs=res; res+=net;
+    rows.push({m:d.m,mp:d.mp,p90:d.p90,ev:d.ev,sun:d.sun,cv:d.cv,evC,sunC,mnC,niC,totC,totLvy,inv,fixCost,net,rs,re:res,lr:totC/totLvy*100,season:d.mp<15.5?'Low-MP':d.mp<18?'Moderate':d.mp<23?'Elevated':'High-Stress'});
+  }
+  return{rows,seed,mwh,baseLvy,srcLvy,rdrLvy,totLvy,fixCost,mgmtFee,bpcMw,supMw,trdMw};
+}
+
+/* ═══ CHARTS ═══ */
+const TC='#036B7A',AC='#C8923A',GC='#2E7D57',RC='#9B2335';
+const CI={};
+
+function mChart(id,type,data,opts){
+  if(CI[id])CI[id].destroy();
+  CI[id]=new Chart(document.getElementById(id),{type,data,options:{responsive:true,maintainAspectRatio:false,animation:{duration:200},...opts}});
+}
+function uDs(id,i,data){const c=CI[id];if(c&&c.data.datasets[i])c.data.datasets[i].data=data;}
+function uChart(id){CI[id]?.update('none');}
+
+function initCharts(){
+  const L=ISMO.map(d=>d.m);
+  mChart('ch_mp','bar',{labels:L,datasets:[
+    {label:'Mean MP',data:[],backgroundColor:TC+'88',borderColor:TC,borderWidth:1,yAxisID:'y'},
+    {label:'Evening Peak',data:[],type:'line',borderColor:AC,borderWidth:2.5,pointRadius:4,tension:.3,backgroundColor:'transparent',yAxisID:'y'},
+    {label:'P90',data:[],type:'line',borderColor:RC,borderWidth:1.5,borderDash:[4,4],pointRadius:3,tension:.3,backgroundColor:'transparent',yAxisID:'y'},
+  ]},{plugins:{legend:{position:'top',labels:{font:{size:10}}}},scales:{y:{min:6,title:{display:true,text:'PKR/kWh',font:{size:10}}}}});
+
+  mChart('ch_vol','bar',{labels:L,datasets:[{label:'CV%',data:ISMO.map(d=>d.cv),backgroundColor:ISMO.map(d=>d.cv>30?RC+'88':AC+'88'),borderColor:ISMO.map(d=>d.cv>30?RC:AC),borderWidth:1}]},
+    {plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'CV%',font:{size:10}}}}});
+
+  mChart('ch_clev','bar',{labels:L,datasets:[
+    {label:'Levy (M)',data:[],backgroundColor:TC+'88',borderColor:TC,borderWidth:1},
+    {label:'Claims (M)',data:[],backgroundColor:RC+'88',borderColor:RC,borderWidth:1},
+  ]},{plugins:{legend:{position:'top',labels:{font:{size:10}}}},scales:{y:{beginAtZero:true,title:{display:true,text:'PKR M',font:{size:10}}}}});
+
+  mChart('ch_res','line',{labels:L,datasets:[
+    {label:'Reserve (M)',data:[],borderColor:TC,backgroundColor:TC+'15',fill:true,borderWidth:2.5,pointRadius:5,tension:.3,yAxisID:'y'},
+    {label:'Monthly Claims (M)',data:[],borderColor:RC,borderWidth:2,borderDash:[5,4],pointRadius:4,tension:.3,backgroundColor:'transparent',yAxisID:'y2'},
+  ]},{plugins:{legend:{position:'top',labels:{font:{size:10}}}},
+    scales:{y:{position:'left',title:{display:true,text:'Reserve (PKR M)',font:{size:10}},beginAtZero:false},y2:{position:'right',title:{display:true,text:'Claims (PKR M)',font:{size:10}},beginAtZero:true,grid:{drawOnChartArea:false}}}});
+
+  mChart('ch_lr','bar',{labels:L,datasets:[{label:'Loss Ratio %',data:[],backgroundColor:[],borderColor:[],borderWidth:1}]},
+    {plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'%',font:{size:10}}}}});
+
+  mChart('ch_net','bar',{labels:L,datasets:[{label:'Net Move (M)',data:[],backgroundColor:[],borderColor:[],borderWidth:1}]},
+    {plugins:{legend:{display:false}},scales:{y:{title:{display:true,text:'PKR M',font:{size:10}}}}});
+
+  mChart('ch_band','bar',{
+    labels:['May-24','Sep-24','Dec-24','Jan-25','Aug-25','Jan-26'],
+    datasets:[
+      {label:'Evening Peak',data:[],backgroundColor:RC+'BB',stack:'a'},
+      {label:'Morning',data:[],backgroundColor:AC+'BB',stack:'a'},
+      {label:'Sunshine',data:[],backgroundColor:GC+'BB',stack:'a'},
+      {label:'Night',data:[],backgroundColor:'#999999BB',stack:'a'},
+    ]
+  },{plugins:{legend:{position:'top',labels:{font:{size:10}}}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,title:{display:true,text:'PKR M',font:{size:10}}}}});
+
+  mChart('ch_inv','line',{labels:L,datasets:[
+    {label:'Investment Income (M/mo)',data:[],borderColor:GC,backgroundColor:GC+'18',fill:true,borderWidth:2,pointRadius:3,tension:.3},
+    {label:'Op+RI+Fee (M/mo)',data:[],borderColor:RC,borderWidth:1.5,borderDash:[5,4],pointRadius:0,backgroundColor:'transparent'},
+    {label:'Levy (M/mo)',data:[],borderColor:TC,borderWidth:1.5,borderDash:[3,3],pointRadius:0,backgroundColor:'transparent'},
+  ]},{plugins:{legend:{position:'top',labels:{font:{size:10}}}},scales:{y:{beginAtZero:true,title:{display:true,text:'PKR M',font:{size:10}}}}});
+}
+
+/* ═══ DOM HELPERS ═══ */
+const $=id=>document.getElementById(id);
+const setText=(id,v)=>{const e=$(id);if(e)e.textContent=v;};
+const setHTML=(id,v)=>{const e=$(id);if(e)e.innerHTML=v;};
+const row2=(l,v,s='')=>`<tr><td>${l}</td><td class="r" style="${s}">${v}</td></tr>`;
+
+/* ═══ MAIN RECALCULATE ═══ */
+function recalc(){
+  const S=runSim();
+  const{rows,seed,mwh,baseLvy,srcLvy,rdrLvy,totLvy,fixCost,mgmtFee,bpcMw,supMw,trdMw}=S;
+  const avgC=rows.reduce((a,r)=>a+r.totC,0)/rows.length;
+  const maxC=Math.max(...rows.map(r=>r.totC));
+  const finRes=rows[rows.length-1].re;
+  const avgLR=rows.reduce((a,r)=>a+r.lr,0)/rows.length;
+  const totSurplus=rows.reduce((a,r)=>a+r.net,0);
+  const gwh=(mwh/1000).toFixed(0);
+
+  /* KPIs — overview */
+  setText('k_seed','PKR '+f(seed)+'M');
+  setText('k_seed_s',`${f(P.mw)} MW · avg PKR ${(seed/P.mw).toFixed(2)}M/MW`);
+  setText('k_levy','PKR '+f1(totLvy)+'M');
+  setText('k_levy_s',`PKR ${(+P.levy).toFixed(3)}/kWh × ${gwh} GWh`);
+  setText('k_claims','PKR '+f1(avgC)+'M');
+  setText('k_claims_s',`Range: 0 – ${f1(maxC)}M/month`);
+  setText('k_res','PKR '+f(finRes)+'M');
+  setText('k_res_s',`${((finRes/seed-1)*100).toFixed(0)}% above seed`);
+  setText('k_lr',f1(avgLR)+'%');
+  setText('k_lr_s',`Solvency: ${avgLR<40?'Excellent':avgLR<70?'Good':avgLR<100?'Adequate':'Watch'}`);
+
+  /* Verdict */
+  const stressN=rows.filter(r=>r.lr>100).length;
+  setText('vrd_ov',`At PKR ${(+P.levy).toFixed(3)}/kWh on ${f(P.mw)} MW (${gwh} GWh/month), CMSF collects PKR ${f1(totLvy)}M/month against average claims of PKR ${f1(avgC)}M — a ${f1(avgLR)}% loss ratio. Reserve grows from PKR ${f(seed)}M to PKR ${f(finRes)}M (+${((finRes/seed-1)*100).toFixed(0)}%) over 14 months. ${stressN===0?'No month exceeds 100% loss ratio under these parameters.':'Only '+stressN+' month(s) exceed 100% loss ratio — absorbed by reserve.'} 14-month surplus: PKR ${f1(totSurplus)}M. Investment income reaches PKR ${f1(rows[rows.length-1].inv)}M/month by Jan-2026.`);
+
+  /* Waterfall */
+  setText('wf1','PKR '+(seed*0.03).toFixed(0)+'M ea.');
+  setText('wf2','PKR '+f(finRes)+'M');
+  setText('wf3','PKR '+(finRes*0.35).toFixed(0)+'M');
+  setText('wf4','PKR '+(finRes*0.6).toFixed(0)+'M');
+
+  /* ── SIZING TAB ── */
+  setHTML('tb_seed',[
+    `<tr><td>BPC</td><td class="r">${f(bpcMw)}</td><td class="r">${f2(P.seed_bpc)}</td><td class="r">${(bpcMw*P.seed_bpc).toFixed(0)}</td></tr>`,
+    `<tr><td>Supplier/CGP</td><td class="r">${f(supMw)}</td><td class="r">${f2(P.seed_sup)}</td><td class="r">${(supMw*P.seed_sup).toFixed(0)}</td></tr>`,
+    `<tr><td>Trader</td><td class="r">${f(trdMw)}</td><td class="r">${f2(P.seed_trd)}</td><td class="r">${(trdMw*P.seed_trd).toFixed(0)}</td></tr>`,
+    `<tr class="tr-tot"><td>Total Seed</td><td class="r">${f(P.mw)}</td><td class="r">—</td><td class="r" style="color:var(--teal);">${f(seed)}</td></tr>`,
+  ].join(''));
+
+  const tgtRes=Math.max(maxC*3*1.2-totLvy*3+avgC*2,seed*0.15);
+  setHTML('tb_res',[
+    row2('Worst monthly claim (observed)',f1(maxC)),
+    row2('P95 quarterly stress (×3 mo ×1.2x)',(maxC*3*1.2).toFixed(0)),
+    row2('Less: expected quarterly levy','('+f1(totLvy*3)+')'),
+    row2('2-month liquidity buffer',f1(avgC*2)),
+    row2('<strong>Pilot target reserve (P90)</strong>',`<strong>${tgtRes.toFixed(0)}</strong>`),
+    row2('Seed capital (actual)',`<span style="color:var(--grn);font-weight:700;">${f(seed)} ✓ (${(seed/tgtRes).toFixed(1)}×)</span>`),
+  ].join(''));
+
+  setHTML('tb_lvy',[
+    row2(`Base levy (${gwh} GWh × 3 × PKR ${(+P.levy).toFixed(3)}/kWh)`,(baseLvy*3).toFixed(1)),
+    row2(`Risk surcharge (${P.surc}%, 30% portfolio)`,(srcLvy*3).toFixed(1)),
+    row2(`Stress-hour rider (PKR ${(+P.rider).toFixed(3)}/kWh)`,(rdrLvy*3).toFixed(1)),
+    `<tr class="tr-tot"><td>Total Quarterly Collection</td><td class="r" style="color:var(--teal);">${(totLvy*3).toFixed(1)}</td></tr>`,
+  ].join(''));
+
+  setHTML('tb_scl',[500,1000,2500,5000,10000].map(mwx=>{
+    const s=mwx*(P.pct_bpc/100*P.seed_bpc+P.pct_sup/100*P.seed_sup+P.pct_trd/100*P.seed_trd);
+    const lv=mwx*(P.lf/100)*720*1000*P.levy/1e6;
+    const yr1=(s+lv*12).toFixed(0);
+    const hl=mwx===P.mw?' style="background:var(--teal-lt);"':'';
+    return `<tr${hl}><td>${f(mwx)} MW${mwx===P.mw?' ←':''}</td><td class="r">${f(s)}</td><td class="r">${f1(lv)}</td><td class="r">${f(+yr1)}</td></tr>`;
+  }).join(''));
+
+  $('fml_lvy').textContent=`Monthly Energy  = ${f(P.mw)} MW × ${P.lf}% LF × 720h = ${gwh} GWh = ${f(mwh*1000)} kWh
+Base Levy      = ${f(mwh*1000)} kWh × PKR ${(+P.levy).toFixed(3)} = PKR ${f1(baseLvy)}M/month
+Surcharge      = PKR ${f1(baseLvy)}M × ${P.surc}% × 30% = PKR ${f1(srcLvy)}M/month
+Rider          = ${f(mwh*1000)} kWh × PKR ${(+P.rider).toFixed(3)} = PKR ${f1(rdrLvy)}M/month
+Total Monthly  = PKR ${f1(totLvy)}M  ·  Annual = PKR ${f1(totLvy*12)}M`;
+
+  /* ── SIMULATION TAB ── */
+  setText('vrd_sm',`${f(P.mw)} MW · PKR ${f1(totLvy)}M levy/mo · ${P.imbal}% imbalance rate · Evening strike PKR ${P.stk_ev}/kWh @ ${P.cov_ev}% · IR ${P.ir}% p.a. · Seed PKR ${f(seed)}M → Final reserve PKR ${f(finRes)}M (+${((finRes/seed-1)*100).toFixed(0)}%)`);
+
+  const sClass={Low:'s-lo','Moderate':'s-md','Elevated':'s-el','High-Stress':'s-hi'};
+  setHTML('tb_sim',[...rows.map(r=>{
+    const lrc=r.lr>100?'color:var(--red);font-weight:700;':r.lr>60?'color:#B04800;font-weight:600;':'color:var(--grn);';
+    const nc=r.net<0?'color:var(--red);':'color:var(--grn);';
+    return `<tr>
+      <td style="font-weight:600;">${r.m}</td><td class="r">${f1(r.mp)}</td><td class="r">${f1(r.ev)}</td><td class="r">${f1(r.p90)}</td>
+      <td><span class="${sClass[r.season]||'s-md'}">${r.season}</span></td>
+      <td class="r" style="${r.lr>60?'font-weight:700;':''}">${f1(r.totC)}</td>
+      <td class="r">${f1(r.totLvy)}</td><td class="r">${f1(r.inv)}</td><td class="r">${f1(r.fixCost)}</td>
+      <td class="r" style="${nc}">${f1(r.net)}</td>
+      <td class="r" style="font-weight:600;">${f(r.re)}</td>
+      <td class="r" style="${lrc}">${f1(r.lr)}%</td>
+    </tr>`;
+  }),`<tr class="tr-tot">
+    <td>TOTAL</td><td class="r">—</td><td class="r">—</td><td class="r">—</td><td>—</td>
+    <td class="r" style="color:var(--red);">${f1(rows.reduce((a,r)=>a+r.totC,0))}</td>
+    <td class="r">${f1(rows.reduce((a,r)=>a+r.totLvy,0))}</td>
+    <td class="r">${f1(rows.reduce((a,r)=>a+r.inv,0))}</td>
+    <td class="r">${f1(rows.reduce((a,r)=>a+r.fixCost,0))}</td>
+    <td class="r" style="color:var(--grn);font-weight:700;">${f1(totSurplus)}</td>
+    <td class="r" style="font-weight:700;">${f(finRes)}</td>
+    <td class="r">${f1(avgLR)}%</td>
+  </tr>`].join(''));
+
+  /* ── ECONOMICS TAB ── */
+  const annLvy=totLvy*12;
+  const yr2inv=finRes*(P.ir/100);
+  const annC=avgC*12;
+  const annFix=fixCost*12;
+  const annSur=annLvy+yr2inv-annC-annFix;
+  const ncMgmt=baseLvy*12*P.fee/100;
+  const ncGfee=finRes*0.35*P.gfee/100;
+  const nMem=Math.round(P.mw/20);
+  const nClaim=Math.max(5,Math.round(avgC/2));
+  const ncTotal=ncMgmt+ncGfee+nClaim*0.5+nMem*0.5;
+  const bkEven=totLvy+rows[rows.length-1].inv-fixCost;
+
+  setText('e_lvy','PKR '+f1(annLvy)+'M');
+  setText('e_inv','PKR '+f1(yr2inv)+'M');
+  setText('e_fee','PKR '+f1(ncTotal)+'M');
+  setText('e_sur','PKR '+f1(annSur)+'M');
+  setText('e_bkv','PKR '+f1(bkEven)+'M/mo');
+
+  setHTML('tb_pnl',[
+    row2(`Base levy (${gwh} GWh/mo × 12 × PKR ${(+P.levy).toFixed(3)}/kWh)`,(baseLvy*12).toFixed(0)),
+    row2('Risk surcharges',(srcLvy*12).toFixed(0)),
+    row2('Stress-hour rider fees',(rdrLvy*12).toFixed(0)),
+    row2(`Investment income (${P.ir}% p.a. on PKR ${f(finRes)}M)`,yr2inv.toFixed(0)),
+    row2('Liquidity advance fees (est.)','5'),
+    `<tr class="tr-tot"><td>Total Revenue</td><td class="r" style="color:var(--teal);">${(annLvy+yr2inv+5).toFixed(0)}</td></tr>`,
+    row2('Claims (avg '+f1(avgLR)+'% loss ratio)',annC.toFixed(0),'color:var(--red);'),
+    row2(`OpEx (${P.opex} × 12)`,(P.opex*12).toFixed(0)),
+    row2(`Reinsurance (${P.reinsu} × 12)`,(P.reinsu*12).toFixed(0)),
+    row2(`NCGCL mgmt fee (${P.fee}% of levy)`,ncMgmt.toFixed(0)),
+    `<tr class="tr-tot"><td>Total Costs</td><td class="r" style="color:var(--red);">(${annFix.toFixed(0)})</td></tr>`,
+    `<tr class="tr-tot"><td style="color:var(--grn);">Annual Surplus → Reserve</td><td class="r" style="color:var(--grn);font-weight:700;">${annSur.toFixed(0)}</td></tr>`,
+  ].join(''));
+
+  setHTML('tb_nc',[
+    `<tr><td>Mgmt fee</td><td>${P.fee}% of levy</td><td class="r">${ncMgmt.toFixed(1)}</td></tr>`,
+    `<tr><td>Onboarding (one-time)</td><td>PKR 2M × ${nMem} members</td><td class="r">${(nMem*2).toFixed(0)} ★</td></tr>`,
+    `<tr><td>Claims admin</td><td>PKR 0.5M × ${nClaim} claims/yr</td><td class="r">${(nClaim*0.5).toFixed(1)}</td></tr>`,
+    `<tr><td>Second-loss guar fee</td><td>${P.gfee}% on PKR ${(finRes*0.35).toFixed(0)}M</td><td class="r">${ncGfee.toFixed(1)}</td></tr>`,
+    `<tr><td>Data/analytics</td><td>PKR 0.5M × ${nMem} members</td><td class="r">${(nMem*0.5).toFixed(0)}</td></tr>`,
+    `<tr class="tr-tot"><td colspan="2">Total Recurring Annual</td><td class="r" style="color:var(--teal);">${ncTotal.toFixed(0)}</td></tr>`,
+  ].join(''));
+
+  const bks=[[0,0.2,'Excellent surplus','g','Builds rapidly'],[0.2,0.5,'Good surplus','g','Builds steadily'],[0.5,0.85,'Slim surplus','a','Holds flat'],[0.85,1.20,'Near break-even','a','Absorbs small deficits'],[1.20,2.00,'Deficit','r','NCGCL watch'],[2.00,99,'Stress event','r','Layer 3 activate']];
+  setHTML('tb_bkv',bks.map(([lo,hi,msg,chip,res])=>`<tr><td>${(totLvy*lo).toFixed(0)}–${hi===99?'∞':(totLvy*hi).toFixed(0)}</td><td class="r">${(lo*100).toFixed(0)}–${hi===99?'∞':(hi*100).toFixed(0)}%</td><td><span class="chip ${chip}">${msg}</span></td><td>${res}</td></tr>`).join(''));
+
+  setHTML('tb_scle',[500,1000,2500,5000,10000].map(mwx=>{
+    const lv=mwx*(P.lf/100)*720*1000*P.levy/1e6*12;
+    const mf=lv*P.fee/100;
+    const s=mwx*(P.pct_bpc/100*P.seed_bpc+P.pct_sup/100*P.seed_sup+P.pct_trd/100*P.seed_trd);
+    const gf=s*0.35*P.gfee/100;
+    const hl=mwx===P.mw?' style="background:var(--teal-lt);"':'';
+    return `<tr${hl}><td>${f(mwx)} MW${mwx===P.mw?' ←':''}</td><td class="r">${f1(lv)}</td><td class="r">${f1(mf)}</td><td class="r">${f1(gf)}</td></tr>`;
+  }).join(''));
+
+  /* ── METHODS TAB ── */
+  setHTML('tb_ismo',ISMO.map(d=>`<tr><td style="font-weight:600;">${d.m}</td><td class="r">${d.mp.toFixed(2)}</td><td class="r">${d.p90.toFixed(2)}</td><td class="r">${d.ev.toFixed(2)}</td><td class="r">${d.cv.toFixed(1)}</td><td><span class="chip t">ISMO</span></td></tr>`).join(''));
+
+  setHTML('tb_prms',[
+    ['Portfolio MW',f(P.mw)+' MW'],['Load Factor',P.lf+'%'],['Monthly Energy',gwh+' GWh'],['Seed Capital','PKR '+f(seed)+'M'],
+    ['Base Levy','PKR '+(+P.levy).toFixed(3)+'/kWh'],['Total Monthly Levy','PKR '+f1(totLvy)+'M'],['Investment Rate',P.ir+'% p.a.'],
+    ['Monthly OpEx','PKR '+P.opex+'M'],['Monthly Reinsurance','PKR '+P.reinsu+'M'],['NCGCL Mgmt Fee',P.fee+'% of levy'],
+    ['Evening Strike','PKR '+P.stk_ev+'/kWh'],['Sunshine Strike','PKR '+P.stk_sun+'/kWh'],['Morning Strike','PKR '+P.stk_morn+'/kWh'],
+    ['Imbalance Rate',P.imbal+'%'],['Evening Coverage',P.cov_ev+'%'],['Sunshine Coverage',P.cov_sun+'%'],['Morning Coverage',P.cov_morn+'%'],
+  ].map(([k,v])=>`<tr><td>${k}</td><td class="r" style="font-family:'DM Mono',monospace;color:var(--teal);">${v}</td></tr>`).join(''));
+
+  /* ── UPDATE CHARTS ── */
+  // ch_mp
+  uDs('ch_mp',0,rows.map(r=>r.mp));uDs('ch_mp',1,rows.map(r=>r.ev));uDs('ch_mp',2,rows.map(r=>r.p90));uChart('ch_mp');
+  // ch_vol — static
+  uChart('ch_vol');
+  // ch_clev
+  uDs('ch_clev',0,rows.map(r=>r.totLvy));uDs('ch_clev',1,rows.map(r=>r.totC));uChart('ch_clev');
+  // ch_res
+  if(CI['ch_res'])CI['ch_res'].options.scales.y.min=Math.floor(seed*0.88/100)*100;
+  uDs('ch_res',0,rows.map(r=>r.re));uDs('ch_res',1,rows.map(r=>r.totC));uChart('ch_res');
+  // ch_lr
+  const lrC=rows.map(r=>r.lr>100?RC+'BB':r.lr>60?AC+'BB':GC+'BB');
+  if(CI['ch_lr']){CI['ch_lr'].data.datasets[0].data=rows.map(r=>r.lr.toFixed(1));CI['ch_lr'].data.datasets[0].backgroundColor=lrC;CI['ch_lr'].data.datasets[0].borderColor=rows.map(r=>r.lr>100?RC:r.lr>60?AC:GC);}uChart('ch_lr');
+  // ch_net
+  const ncol=rows.map(r=>r.net<0?RC+'BB':GC+'88');
+  if(CI['ch_net']){CI['ch_net'].data.datasets[0].data=rows.map(r=>r.net.toFixed(1));CI['ch_net'].data.datasets[0].backgroundColor=ncol;CI['ch_net'].data.datasets[0].borderColor=rows.map(r=>r.net<0?RC:GC);}uChart('ch_net');
+  // ch_band
+  const km=['May-2024','Sep-2024','Dec-2024','Jan-2025','Aug-2025','Jan-2026'];
+  const kr=km.map(m=>rows.find(r=>r.m===m));
+  if(CI['ch_band']){CI['ch_band'].data.datasets[0].data=kr.map(r=>r?r.evC.toFixed(2):0);CI['ch_band'].data.datasets[1].data=kr.map(r=>r?r.mnC.toFixed(2):0);CI['ch_band'].data.datasets[2].data=kr.map(r=>r?r.sunC.toFixed(2):0);CI['ch_band'].data.datasets[3].data=kr.map(r=>r?r.niC.toFixed(2):0);}uChart('ch_band');
+  // ch_inv
+  uDs('ch_inv',0,rows.map(r=>r.inv.toFixed(1)));uDs('ch_inv',1,rows.map(r=>r.fixCost.toFixed(1)));uDs('ch_inv',2,rows.map(r=>r.totLvy.toFixed(1)));uChart('ch_inv');
+}
+
+/* ═══ TAB SWITCHING ═══ */
+const TABS={ov:'tp-ov',sz:'tp-sz',sm:'tp-sm',ec:'tp-ec',mt:'tp-mt'};
+function sTab(id,btn){
+  document.querySelectorAll('.tp').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'));
+  document.getElementById(TABS[id]).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+/* ═══ INIT ═══ */
+document.addEventListener('DOMContentLoaded',()=>{initCharts();recalc();});
+</script>
+</body>
+</html>
