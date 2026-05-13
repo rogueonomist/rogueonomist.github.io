@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGCEP 2025–35 | Capacity Cost Analysis — Ammar H. Khan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #FFFFFF;
+  --secondary: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --teal: #036B7A;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --success: #52B788;
+  --warning: #9B2335;
+  --hydro: #036B7A;
+  --solar: #F4B942;
+  --wind: #52B788;
+  --nuclear: #7C3AED;
+  --bess: #E07B39;
+  --xborder: #2563EB;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif; background:#fff; color:#2D2D2D; line-height:1.6; }
+
+/* HEADER */
+.site-header { border-bottom:1px solid var(--border); padding:1.5rem 0; }
+.header-inner { max-width:1200px; margin:0 auto; padding:0 1.5rem; display:flex; justify-content:space-between; align-items:center; }
+.logo { font-family:Georgia,serif; font-size:18px; color:var(--text-primary); }
+.logo span { color:var(--accent); }
+.doc-tag { font-size:11px; font-weight:600; letter-spacing:.08em; color:var(--text-tertiary); text-transform:uppercase; }
+
+/* HERO */
+.hero { background:var(--secondary); border-bottom:1px solid var(--border); padding:3rem 0 2.5rem; }
+.container { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
+.section-label { font-size:11px; font-weight:600; letter-spacing:.1em; color:var(--text-tertiary); text-transform:uppercase; margin-bottom:.5rem; }
+.hero h1 { font-family:Georgia,serif; font-size:34px; font-weight:400; color:var(--text-primary); line-height:1.2; margin-bottom:1rem; }
+.hero-sub { font-size:14px; color:var(--text-secondary); max-width:720px; line-height:1.7; }
+.hero-meta { margin-top:1rem; font-size:12px; color:var(--text-tertiary); }
+
+/* KPI STRIP */
+.kpi-strip { display:grid; grid-template-columns:repeat(5,1fr); gap:1rem; margin:2rem 0; }
+.kpi-card { background:#fff; border:1px solid var(--border); border-top:3px solid var(--accent); border-radius:6px; padding:1.25rem 1rem; }
+.kpi-card.teal { border-top-color:var(--teal); }
+.kpi-card.green { border-top-color:var(--success); }
+.kpi-card.red { border-top-color:var(--warning); }
+.kpi-card.purple { border-top-color:#7C3AED; }
+.kpi-num { font-family:Georgia,serif; font-size:26px; font-weight:400; color:var(--text-primary); line-height:1; }
+.kpi-label { font-size:11px; color:var(--text-tertiary); margin-top:.5rem; letter-spacing:.06em; text-transform:uppercase; }
+.kpi-sub { font-size:11px; color:var(--text-secondary); margin-top:.3rem; }
+
+/* SECTION */
+.section { padding:2.5rem 0; border-bottom:1px solid var(--border); }
+.section-title { font-family:Georgia,serif; font-size:22px; font-weight:400; color:var(--text-primary); margin-bottom:1.25rem; }
+
+/* TABS */
+.tabs { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:2rem; }
+.tab-btn { background:none; border:none; border-bottom:2px solid transparent; padding:.75rem 1.25rem; margin-bottom:-2px; font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--text-secondary); cursor:pointer; transition:all .2s; text-transform:uppercase; }
+.tab-btn:hover { color:var(--text-primary); }
+.tab-btn.active { color:var(--teal); border-bottom-color:var(--teal); }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+/* TABLE */
+.table-wrap { overflow-x:auto; }
+table.main-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+table.main-table th { background:var(--secondary); font-size:11px; font-weight:600; letter-spacing:.06em; color:var(--text-primary); text-align:right; padding:.65rem .75rem; border-bottom:2px solid var(--border); border-right:1px solid var(--border); white-space:nowrap; }
+table.main-table th:first-child { text-align:left; position:sticky; left:0; background:var(--secondary); z-index:2; min-width:110px; }
+table.main-table td { padding:.6rem .75rem; border-bottom:1px solid var(--border); border-right:1px solid var(--border); text-align:right; color:#2D2D2D; white-space:nowrap; }
+table.main-table td:first-child { text-align:left; font-weight:600; color:var(--text-primary); position:sticky; left:0; background:#fff; z-index:1; }
+table.main-table tr:hover td { background:#F5F9FA; }
+table.main-table tr.total-row td { background:var(--secondary); font-weight:700; border-top:2px solid var(--teal); color:var(--text-primary); }
+table.main-table tr.highlight td { background:#FFF8F0; }
+.badge { display:inline-block; padding:.2em .55em; border-radius:3px; font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+.badge-hydro { background:#E0F0F2; color:var(--teal); }
+.badge-solar { background:#FEF3C7; color:#92400E; }
+.badge-wind { background:#ECFDF5; color:#065F46; }
+.badge-nuclear { background:#F3E8FF; color:#6D28D9; }
+.badge-bess { background:#FEF0E6; color:#C05621; }
+
+/* CHARTS */
+.chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin:1.5rem 0; }
+.chart-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; margin:1.5rem 0; }
+.panel { background:var(--secondary); border:1px solid var(--border); border-radius:6px; padding:1.25rem; }
+.panel-title { font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:.25rem; }
+.panel-sub { font-size:11px; color:var(--text-secondary); margin-bottom:1rem; }
+.chart-container { position:relative; }
+
+/* VERDICT */
+.verdict { background:var(--secondary); border:1px solid var(--border); border-left:4px solid var(--accent); padding:1.25rem 1.5rem; margin:1.5rem 0; border-radius:0 6px 6px 0; }
+.verdict-label { font-size:11px; font-weight:700; letter-spacing:.08em; color:var(--text-tertiary); text-transform:uppercase; margin-bottom:.5rem; }
+.verdict-text { font-size:13.5px; color:#2D2D2D; line-height:1.7; }
+
+/* INSIGHT BOX */
+.insight-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin:1.5rem 0; }
+.insight-box { background:#fff; border:1px solid var(--border); border-top:3px solid var(--success); border-radius:6px; padding:1.25rem; }
+.insight-box.amber { border-top-color:var(--accent); }
+.insight-box.red { border-top-color:var(--warning); }
+.insight-box.teal { border-top-color:var(--teal); }
+.insight-num { font-family:Georgia,serif; font-size:24px; font-weight:400; color:var(--text-primary); line-height:1; }
+.insight-text { font-size:12px; color:var(--text-secondary); margin-top:.6rem; line-height:1.5; }
+
+/* TOGGLE */
+.toggle-row { display:flex; gap:1rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap; }
+.toggle-label { font-size:11px; font-weight:600; color:var(--text-secondary); letter-spacing:.06em; text-transform:uppercase; }
+select.picker { font-size:12px; padding:.35rem .6rem; border:1px solid var(--border); border-radius:4px; background:#fff; color:var(--text-primary); cursor:pointer; }
+
+/* ASSUMPTIONS */
+.assume-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin:1rem 0; }
+.assume-box { background:var(--secondary); border:1px solid var(--border); border-radius:6px; padding:1.25rem; }
+.assume-box h4 { font-size:12px; font-weight:700; letter-spacing:.06em; color:var(--text-primary); text-transform:uppercase; margin-bottom:.75rem; padding-bottom:.5rem; border-bottom:1px solid var(--border); }
+.assume-row { display:flex; justify-content:space-between; font-size:12px; padding:.3rem 0; border-bottom:1px solid #F0F0F0; }
+.assume-key { color:var(--text-secondary); }
+.assume-val { font-weight:600; color:var(--text-primary); }
+
+/* FOOTNOTE */
+.footnote { font-size:11px; color:var(--text-tertiary); line-height:1.6; margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--border); }
+.footnote strong { color:var(--text-secondary); }
+
+/* FOOTER */
+.site-footer { padding:2rem 0; border-top:1px solid var(--border); margin-top:3rem; }
+.footer-inner { max-width:1200px; margin:0 auto; padding:0 1.5rem; display:flex; justify-content:space-between; align-items:center; }
+.footer-credit { font-size:12px; color:var(--text-tertiary); }
+.footer-credit strong { color:var(--text-secondary); }
+
+/* COLOR LEGEND */
+.legend-row { display:flex; gap:1.25rem; flex-wrap:wrap; margin-bottom:1rem; }
+.legend-item { display:flex; align-items:center; gap:.4rem; font-size:11px; color:var(--text-secondary); }
+.legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+@media (max-width:900px) {
+  .kpi-strip { grid-template-columns:repeat(2,1fr); }
+  .chart-grid, .chart-grid-3, .assume-grid, .insight-grid { grid-template-columns:1fr; }
+}
+@media (max-width:600px) {
+  .kpi-strip { grid-template-columns:1fr; }
+  .hero h1 { font-size:24px; }
+  .tabs { gap:0; overflow-x:auto; }
+  .tab-btn { padding:.6rem .75rem; font-size:11px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">Ammar H. <span>Khan</span></div>
+    <div class="doc-tag">IGCEP 2025–35 · Capacity Cost Analysis · May 2026</div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <div class="section-label">Pakistan Power Sector · ISMO IGCEP 2025–35</div>
+    <h1>The Price of New Megawatts:<br>Capacity Costs of the IGCEP 2025–35</h1>
+    <p class="hero-sub">Pakistan's Rationalized Capacity Addition (RCA) plan adds <strong>21,141 MW net</strong> of incremental capacity between 2025 and 2035, dominated by large hydro, utility solar, and wind. This dashboard quantifies the annualized capacity cost of each incremental MW-addition tranche — expressed in both US$/kW and PKR/kWh — across the full 10-year IGCEP horizon and for the life of each asset class.</p>
+    <p class="hero-meta">Source: IGCEP 2025–35 (ISMO, May 2025) · NEPRA Annexure B cost data · International benchmark cross-checks (IRENA, World Bank, IEA) · USD/PKR: 278 · All PKR/kWh figures at technology-specific capacity factors per IGCEP</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip" style="margin-top:2rem;">
+    <div class="kpi-card teal">
+      <div class="kpi-num">21,141 MW</div>
+      <div class="kpi-label">Net incremental capacity 2025–35</div>
+      <div class="kpi-sub">From 41,516 MW → 62,657 MW</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-num">US$ 47.1 B</div>
+      <div class="kpi-label">Total PV system cost (RCA)</div>
+      <div class="kpi-sub">vs US$39.1B unconstrained least-cost</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-num">~US$ 27.4 B</div>
+      <div class="kpi-label">Est. incremental CAPEX (new adds)</div>
+      <div class="kpi-sub">Hydro + RE + Nuclear + Cross-border</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-num">PKR 2.8–5.5/kWh</div>
+      <div class="kpi-label">Capacity cost range (new adds)</div>
+      <div class="kpi-sub">Solar low · Hydro mid · Nuclear high</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-num">0.105 kg</div>
+      <div class="kpi-label">CO₂/kWh by FY2035</div>
+      <div class="kpi-sub">Down from 0.278 kg/kWh in FY2025</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div style="margin-top:2rem;">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview',this)">ANNUAL CAPACITY TABLE</button>
+      <button class="tab-btn" onclick="switchTab('pertech',this)">COST BY TECHNOLOGY</button>
+      <button class="tab-btn" onclick="switchTab('perkwh',this)">PKR/kWh BRIDGE</button>
+      <button class="tab-btn" onclick="switchTab('charts',this)">CHARTS</button>
+      <button class="tab-btn" onclick="switchTab('assumptions',this)">ASSUMPTIONS</button>
+    </div>
+
+    <!-- ====== TAB 1: ANNUAL CAPACITY TABLE ====== -->
+    <div id="overview" class="tab-content active">
+      <div class="section-title">Exhibit 1 — Year-wise Incremental Capacity Cost of IGCEP Additions (RCA Reference Case)</div>
+
+      <div class="verdict">
+        <div class="verdict-label">How to read this table</div>
+        <div class="verdict-text">
+          <strong>Incremental MW Added</strong> = gross new additions in that year per IGCEP RCA table (net of retirements).
+          <strong>CAPEX (US$/kW)</strong> = technology-blended installed cost for that year's addition cohort, sourced from IGCEP Annexure B and IRENA benchmarks.
+          <strong>Annual Annualized Capacity Cost (US$M/yr)</strong> = CAPEX × MW × CRF, where CRF = WACC/(1−(1+WACC)^−N). PKR conversion at 278, then expressed per projected system GWh for that year.
+          <strong>Capacity ₹/kWh</strong> = incremental annual capacity cost ÷ incremental annual generation attributable to those additions only (using IGCEP capacity factors).
+          The <em>cumulative</em> column aggregates all prior cohorts still within their contract life.
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <span class="toggle-label">Exchange rate:</span>
+        <select class="picker" onchange="updateRate(this.value)">
+          <option value="278">PKR 278/USD (base)</option>
+          <option value="300">PKR 300/USD (stress)</option>
+          <option value="320">PKR 320/USD (high-stress)</option>
+        </select>
+        <span class="toggle-label" style="margin-left:1rem;">WACC:</span>
+        <select class="picker" onchange="updateWACC(this.value)">
+          <option value="10">10% (RE/hydro)</option>
+          <option value="12">12% (blended)</option>
+          <option value="14">14% (high-cost)</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table class="main-table" id="annualTable">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Primary Technology<br>Added</th>
+              <th>Gross MW<br>Added</th>
+              <th>Blended<br>CAPEX<br>(US$/kW)</th>
+              <th>Incremental<br>CAPEX<br>(US$M)</th>
+              <th>Incremental<br>CAPEX<br>(PKR B)</th>
+              <th>Asset Life<br>(years)</th>
+              <th>WACC /<br>CRF</th>
+              <th>Annual Cap.<br>Cost<br>(US$M/yr)</th>
+              <th>Annual Cap.<br>Cost<br>(PKR B/yr)</th>
+              <th>Incremental<br>Generation<br>(GWh/yr est.)</th>
+              <th>Capacity Cost<br>on Incr. Gen.<br>(PKR/kWh)</th>
+              <th>Cumul. Ann.<br>Cap. Cost<br>(PKR B/yr)</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footnote">
+        <strong>Notes & methodology:</strong>
+        (1) Gross additions per IGCEP 2025–35 RCA reference case (Table 2.7). Retirements are separately scheduled — this table tracks only new additions.
+        (2) CAPEX benchmarks: Solar PV US$489/kW (IGCEP Annexure B, Dec 2024 prices); Wind US$996/kW (IGCEP Annexure B); Hydro US$1,400–3,500/kW by project (Diamer Bhasha ~US$1,600/kW per WAPDA PC-1; Mohmand ~US$2,200/kW; Dasu ~US$1,800/kW; Gabral-Kalam/Madyan ~US$2,800–3,200/kW, ISMO specific WACC applied); Nuclear (C-5) ~US$3,500–4,000/kW (PAEC; similar to Hualong-1 international benchmark); Cross-border import US$170/kW per IGCEP T/L cost.
+        (3) Capacity factors: Solar 22.8% (IGCEP Annexure B); Wind 42% (IGCEP); Hydro 40–50% (IGCEP/WAPDA seasonal); Nuclear 85%; Cross-border 60%.
+        (4) WACC: RE projects 10%; large hydro 10–12% (IGCEP specific for Diamer Bhasha); nuclear 12%; cross-border 10%.
+        (5) Asset lives: Solar 25 yr; Wind 25 yr; Hydro 50 yr; Nuclear 40 yr; Cross-border T/L 30 yr.
+        (6) PKR/kWh = Annual capacity cost in PKR ÷ incremental GWh attributable to that year's additions only.
+        (7) <strong>Estimates labeled [E].</strong> Confirmed IGCEP figures labeled [I]. IGCEP does not publish a project-level annualized CPP table — this is a derived analysis.
+      </div>
+    </div>
+
+    <!-- ====== TAB 2: COST BY TECHNOLOGY ====== -->
+    <div id="pertech" class="tab-content">
+      <div class="section-title">Exhibit 2 — Levelized Capacity Cost by Technology (Full Asset Life)</div>
+
+      <div class="insight-grid">
+        <div class="insight-box teal">
+          <div class="insight-num">US$489/kW</div>
+          <div class="insight-text">Solar PV installed cost (IGCEP Annexure B, Dec 2024) → PKR 2.6–3.1/kWh capacity charge at 22.8% CF</div>
+        </div>
+        <div class="insight-box amber">
+          <div class="insight-num">US$996/kW</div>
+          <div class="insight-text">Wind installed cost (IGCEP Annexure B) → PKR 3.4–3.7/kWh capacity charge at 42% CF</div>
+        </div>
+        <div class="insight-box green">
+          <div class="insight-num">US$1,400–3,500/kW</div>
+          <div class="insight-text">Hydro CAPEX range (run-of-river to storage) → PKR 3.2–7.5/kWh at 40–50% CF, 50-yr life</div>
+        </div>
+        <div class="insight-box amber">
+          <div class="insight-num">US$3,500–4,000/kW</div>
+          <div class="insight-text">Nuclear C-5 CAPEX estimate → PKR 3.9–5.5/kWh at 85% CF, 40-yr life</div>
+        </div>
+        <div class="insight-box teal">
+          <div class="insight-num">US$170/kW</div>
+          <div class="insight-text">Cross-border import T/L cost (IGCEP) → PKR 1.0–1.5/kWh at 60% assumed utilization, 30-yr life</div>
+        </div>
+        <div class="insight-box red">
+          <div class="insight-num">US$910M total</div>
+          <div class="insight-text">BESS (600 MW / 1,500 MWh) → stability/FFR support; not allocated as energy-generation capacity cost</div>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:1.5rem;">
+        <table class="main-table">
+          <thead>
+            <tr>
+              <th>Technology</th>
+              <th>Total MW<br>Added (RCA)</th>
+              <th>IGCEP<br>Annualized<br>Cost (¢/kWh)</th>
+              <th>Installed<br>CAPEX<br>(US$/kW)</th>
+              <th>Asset<br>Life (yr)</th>
+              <th>Capacity<br>Factor (%)</th>
+              <th>WACC<br>(%)</th>
+              <th>CRF<br>(%)</th>
+              <th>Annual Ann.<br>Cost<br>(US¢/kWh)</th>
+              <th>Annual Ann.<br>Cost<br>(PKR/kWh)<br>@ 278</th>
+              <th>Annual Ann.<br>Cost<br>(PKR/kWh)<br>@ 300</th>
+              <th>Total CAPEX<br>(US$B)</th>
+              <th>Confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>☀️ Solar PV (Utility)</td>
+              <td>5,744</td>
+              <td>3.13 [I]</td>
+              <td>489</td>
+              <td>25</td>
+              <td>22.8%</td>
+              <td>10%</td>
+              <td>11.02%</td>
+              <td>2.95</td>
+              <td><strong>8.20</strong></td>
+              <td>8.85</td>
+              <td>2.81</td>
+              <td><span class="badge badge-solar">IGCEP [I]</span></td>
+            </tr>
+            <tr>
+              <td>💨 Wind (Onshore)</td>
+              <td>3,288</td>
+              <td>3.66 [I]</td>
+              <td>996</td>
+              <td>25</td>
+              <td>42.0%</td>
+              <td>10%</td>
+              <td>11.02%</td>
+              <td>2.97</td>
+              <td><strong>8.26</strong></td>
+              <td>8.91</td>
+              <td>3.27</td>
+              <td><span class="badge badge-wind">IGCEP [I]</span></td>
+            </tr>
+            <tr class="highlight">
+              <td>💧 Hydro — Dasu (Stages)</td>
+              <td>~2,400</td>
+              <td>—</td>
+              <td>1,800 [E]</td>
+              <td>50</td>
+              <td>48%</td>
+              <td>10%</td>
+              <td>10.09%</td>
+              <td>4.29</td>
+              <td><strong>11.93</strong></td>
+              <td>12.87</td>
+              <td>4.32</td>
+              <td><span class="badge badge-hydro">Est [E]</span></td>
+            </tr>
+            <tr class="highlight">
+              <td>💧 Hydro — Diamer Bhasha</td>
+              <td>4,500</td>
+              <td>—</td>
+              <td>1,600 [E]</td>
+              <td>50</td>
+              <td>45%</td>
+              <td>8%</td>
+              <td>8.17%</td>
+              <td>3.34</td>
+              <td><strong>9.28</strong></td>
+              <td>10.02</td>
+              <td>7.20</td>
+              <td><span class="badge badge-hydro">WAPDA PC-1 [E]</span></td>
+            </tr>
+            <tr class="highlight">
+              <td>💧 Hydro — Gabral-Kalam</td>
+              <td>300</td>
+              <td>—</td>
+              <td>2,800 [E]</td>
+              <td>50</td>
+              <td>50%</td>
+              <td>9%</td>
+              <td>9.10%</td>
+              <td>5.82</td>
+              <td><strong>16.18</strong></td>
+              <td>17.46</td>
+              <td>0.84</td>
+              <td><span class="badge badge-hydro">ISMO LCV [E]</span></td>
+            </tr>
+            <tr class="highlight">
+              <td>💧 Hydro — Madyan</td>
+              <td>300</td>
+              <td>—</td>
+              <td>3,200 [E]</td>
+              <td>50</td>
+              <td>50%</td>
+              <td>9%</td>
+              <td>9.10%</td>
+              <td>6.65</td>
+              <td><strong>18.49</strong></td>
+              <td>19.97</td>
+              <td>0.96</td>
+              <td><span class="badge badge-hydro">ISMO LCV [E]</span></td>
+            </tr>
+            <tr class="highlight">
+              <td>💧 Hydro — Mohmand</td>
+              <td>800</td>
+              <td>—</td>
+              <td>2,200 [E]</td>
+              <td>50</td>
+              <td>42%</td>
+              <td>10%</td>
+              <td>10.09%</td>
+              <td>6.03</td>
+              <td><strong>16.74</strong></td>
+              <td>18.07</td>
+              <td>1.76</td>
+              <td><span class="badge badge-hydro">Est [E]</span></td>
+            </tr>
+            <tr class="highlight">
+              <td>💧 Hydro — Smaller HPPs (Balancing)</td>
+              <td>~1,500 [E]</td>
+              <td>—</td>
+              <td>2,000 [E]</td>
+              <td>50</td>
+              <td>45%</td>
+              <td>10%</td>
+              <td>10.09%</td>
+              <td>5.12</td>
+              <td><strong>14.22</strong></td>
+              <td>15.35</td>
+              <td>3.00</td>
+              <td><span class="badge badge-hydro">Est [E]</span></td>
+            </tr>
+            <tr>
+              <td>☢️ Nuclear — C-5 (Chashma)</td>
+              <td>1,200</td>
+              <td>—</td>
+              <td>3,750 [E]</td>
+              <td>40</td>
+              <td>85%</td>
+              <td>12%</td>
+              <td>12.13%</td>
+              <td>6.20</td>
+              <td><strong>17.23</strong></td>
+              <td>18.61</td>
+              <td>4.50</td>
+              <td><span class="badge badge-nuclear">PAEC est [E]</span></td>
+            </tr>
+            <tr>
+              <td>🔋 BESS (600 MW / 1,500 MWh)</td>
+              <td>600 MW</td>
+              <td>—</td>
+              <td>1,517/kW</td>
+              <td>15</td>
+              <td>N/A</td>
+              <td>10%</td>
+              <td>13.15%</td>
+              <td>—</td>
+              <td><strong>—</strong></td>
+              <td>—</td>
+              <td>0.91</td>
+              <td><span class="badge badge-bess">IGCEP [I]</span></td>
+            </tr>
+            <tr>
+              <td>🌐 Cross-border Import T/L</td>
+              <td>1,000 MW</td>
+              <td>—</td>
+              <td>170</td>
+              <td>30</td>
+              <td>60%</td>
+              <td>10%</td>
+              <td>10.61%</td>
+              <td>0.41</td>
+              <td><strong>1.14</strong></td>
+              <td>1.23</td>
+              <td>0.17</td>
+              <td><span class="badge badge-hydro">IGCEP [I]</span></td>
+            </tr>
+            <tr class="total-row">
+              <td>TOTAL / BLENDED (new adds)</td>
+              <td>~21,141 MW [E]</td>
+              <td>—</td>
+              <td>~1,296 [E]</td>
+              <td>—</td>
+              <td>~40% blend</td>
+              <td>—</td>
+              <td>—</td>
+              <td>~3.7–4.2</td>
+              <td><strong>~10.3–11.7</strong></td>
+              <td>~11.1–12.6</td>
+              <td>~29.7 [E]</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footnote">
+        [I] = Confirmed IGCEP data. [E] = Derived estimate using IGCEP assumptions + NEPRA/WAPDA/IRENA benchmark costs. IGCEP reports annualized costs of 3.13 ¢/kWh for solar and 3.66 ¢/kWh for wind (December 2024 prices). These represent capacity-only levelized costs excluding O&M and fuel. PKR/kWh at 278 PKR/USD. Hydro costs vary significantly by site; project-specific WACC used where IGCEP specifies (Diamer Bhasha 8%, Gabral-Kalam, Madyan site-specific). Nuclear uses Hualong-1 international benchmark adjusted for Pakistan cost context.
+      </div>
+    </div>
+
+    <!-- ====== TAB 3: PKR/kWh BRIDGE ====== -->
+    <div id="perkwh" class="tab-content">
+      <div class="section-title">Exhibit 3 — From CAPEX to PKR/kWh: The Capacity Cost Transmission Mechanism</div>
+
+      <div class="verdict">
+        <div class="verdict-label">Key Analytical Finding</div>
+        <div class="verdict-text">
+          The IGCEP's additional 21,141 MW of net new capacity, when annualized over asset lives and spread across the generation volumes these plants produce, adds an estimated <strong>PKR 8–12/kWh of capacity cost</strong> attributable to new additions alone. However, this cost is partially offset by the retirement of expensive RFO and legacy gas plants, whose variable fuel costs are eliminated. The <em>net</em> impact on the consumer tariff's capacity component depends critically on (a) how many kWh the new plants actually generate (load factor), (b) whether retirements reduce the existing CPP burden, and (c) exchange rate at time of dollar-denominated capacity payments.
+        </div>
+      </div>
+
+      <div class="assume-grid">
+        <div class="assume-box">
+          <h4>Formula: Capacity Cost per kWh</h4>
+          <div class="assume-row">
+            <span class="assume-key">Step 1 — Annual Capital Recovery (ACR)</span>
+            <span class="assume-val">= CAPEX × CRF</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">CRF = WACC / [1−(1+WACC)^−N]</span>
+            <span class="assume-val">—</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">Step 2 — Annual Generation (G)</span>
+            <span class="assume-val">= MW × CF × 8,760 hrs</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">Step 3 — Capacity cost per kWh</span>
+            <span class="assume-val">= ACR ÷ G</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">Convert to PKR</span>
+            <span class="assume-val">× PKR/USD rate</span>
+          </div>
+          <div class="assume-row" style="border:none; margin-top:.5rem;">
+            <span class="assume-key" style="font-weight:700; color:#1A1A1A;">Note: O&M is excluded — pure capital charge</span>
+            <span class="assume-val"></span>
+          </div>
+        </div>
+        <div class="assume-box">
+          <h4>Worked Example — Solar PV (489 US$/kW)</h4>
+          <div class="assume-row">
+            <span class="assume-key">CAPEX per kW</span>
+            <span class="assume-val">US$489</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">WACC</span>
+            <span class="assume-val">10%</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">Asset life</span>
+            <span class="assume-val">25 years</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">CRF = 10% / [1−(1.10)^−25]</span>
+            <span class="assume-val">11.02%</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">Annual Capital Recovery (ACR/kW)</span>
+            <span class="assume-val">US$53.9/kW-yr</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">Annual Generation (22.8% CF)</span>
+            <span class="assume-val">1,997 kWh/kW</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">Capacity cost per kWh (US¢)</span>
+            <span class="assume-val">2.70 ¢/kWh</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">IGCEP annualized cost incl. fixed O&M</span>
+            <span class="assume-val">3.13 ¢/kWh [I]</span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">Capacity cost in PKR (@278)</span>
+            <span class="assume-val"><strong>7.51 PKR/kWh</strong></span>
+          </div>
+          <div class="assume-row">
+            <span class="assume-key">IGCEP full annualized (@278)</span>
+            <span class="assume-val"><strong>8.70 PKR/kWh</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:1.5rem;">
+        <table class="main-table">
+          <thead>
+            <tr>
+              <th>Scenario / Parameter</th>
+              <th>Solar PV<br>(22.8% CF)</th>
+              <th>Wind<br>(42% CF)</th>
+              <th>Hydro-Low<br>(Diamer 45%)</th>
+              <th>Hydro-Mid<br>(Dasu 48%)</th>
+              <th>Hydro-High<br>(Mohmand 42%)</th>
+              <th>Nuclear C-5<br>(85% CF)</th>
+              <th>Cross-border<br>(60% CF)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CAPEX (US$/kW)</td>
+              <td>489 [I]</td>
+              <td>996 [I]</td>
+              <td>1,600 [E]</td>
+              <td>1,800 [E]</td>
+              <td>2,200 [E]</td>
+              <td>3,750 [E]</td>
+              <td>170 [I]</td>
+            </tr>
+            <tr>
+              <td>Asset life (years)</td>
+              <td>25</td>
+              <td>25</td>
+              <td>50</td>
+              <td>50</td>
+              <td>50</td>
+              <td>40</td>
+              <td>30</td>
+            </tr>
+            <tr>
+              <td>WACC (%)</td>
+              <td>10%</td>
+              <td>10%</td>
+              <td>8%</td>
+              <td>10%</td>
+              <td>10%</td>
+              <td>12%</td>
+              <td>10%</td>
+            </tr>
+            <tr>
+              <td>CRF (%)</td>
+              <td>11.02%</td>
+              <td>11.02%</td>
+              <td>8.17%</td>
+              <td>10.09%</td>
+              <td>10.09%</td>
+              <td>12.13%</td>
+              <td>10.61%</td>
+            </tr>
+            <tr>
+              <td>ACR (US$/kW/yr)</td>
+              <td>53.9</td>
+              <td>109.8</td>
+              <td>130.7</td>
+              <td>181.6</td>
+              <td>222.0</td>
+              <td>454.9</td>
+              <td>18.0</td>
+            </tr>
+            <tr>
+              <td>Annual generation (kWh/kW)</td>
+              <td>1,997</td>
+              <td>3,679</td>
+              <td>3,942</td>
+              <td>4,205</td>
+              <td>3,679</td>
+              <td>7,447</td>
+              <td>5,256</td>
+            </tr>
+            <tr class="highlight">
+              <td><strong>Cap. cost US¢/kWh (capital only)</strong></td>
+              <td><strong>2.70</strong></td>
+              <td><strong>2.98</strong></td>
+              <td><strong>3.31</strong></td>
+              <td><strong>4.32</strong></td>
+              <td><strong>6.04</strong></td>
+              <td><strong>6.11</strong></td>
+              <td><strong>0.34</strong></td>
+            </tr>
+            <tr>
+              <td>IGCEP annualized (incl. O&M) US¢/kWh</td>
+              <td>3.13 [I]</td>
+              <td>3.66 [I]</td>
+              <td>— [E]</td>
+              <td>— [E]</td>
+              <td>— [E]</td>
+              <td>— [E]</td>
+              <td>— [E]</td>
+            </tr>
+            <tr class="highlight">
+              <td><strong>PKR/kWh @ 278 (capital only)</strong></td>
+              <td><strong>7.51</strong></td>
+              <td><strong>8.29</strong></td>
+              <td><strong>9.20</strong></td>
+              <td><strong>12.01</strong></td>
+              <td><strong>16.79</strong></td>
+              <td><strong>16.99</strong></td>
+              <td><strong>0.95</strong></td>
+            </tr>
+            <tr>
+              <td>PKR/kWh @ 278 (IGCEP full annualized)</td>
+              <td>8.70</td>
+              <td>10.17</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>PKR/kWh @ 300 (capital only)</td>
+              <td>8.10</td>
+              <td>8.95</td>
+              <td>9.93</td>
+              <td>12.96</td>
+              <td>18.11</td>
+              <td>18.34</td>
+              <td>1.02</td>
+            </tr>
+            <tr>
+              <td>PKR/kWh @ 320 (capital only)</td>
+              <td>8.64</td>
+              <td>9.55</td>
+              <td>10.60</td>
+              <td>13.83</td>
+              <td>19.32</td>
+              <td>19.56</td>
+              <td>1.09</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="verdict" style="border-left-color:var(--warning);">
+        <div class="verdict-label">Critical Insight — The Load Factor Problem</div>
+        <div class="verdict-text">
+          Pakistan's system load factor has declined from ~70% historically to <strong>57% in FY2024</strong>. As solar PV penetrates (unidirectional — reduces midday consumption but not evening peak), the load factor falls further. This is structurally dangerous for capacity cost recovery: if new plants deliver fewer kWh than their design capacity factor, the PKR/kWh capacity cost <em>rises</em>. A 5% decline in effective capacity factor (22.8% → 17.8% for solar, if curtailment increases) raises solar's capacity cost from PKR 7.5 to PKR 9.6/kWh — a 28% deterioration. IGCEP's Low DSM scenario, which projects load factor recovery to ~70% by 2035, is therefore a necessary companion to the new investment plan, not optional.
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== TAB 4: CHARTS ====== -->
+    <div id="charts" class="tab-content">
+      <div class="section-title">Exhibit 4 — Visual Analytics</div>
+
+      <div class="chart-grid">
+        <div class="panel">
+          <div class="panel-title">MW Added by Year (Gross, RCA Reference)</div>
+          <div class="panel-sub">Source: IGCEP 2025–35, Table 2.7</div>
+          <div class="chart-container" style="height:260px;">
+            <canvas id="mwByYear"></canvas>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Cumulative Installed Capacity 2024–2035 (MW)</div>
+          <div class="panel-sub">RCA reference case trajectory</div>
+          <div class="chart-container" style="height:260px;">
+            <canvas id="cumulMW"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="panel">
+          <div class="panel-title">Capacity Cost PKR/kWh by Technology (Capital Recovery Only)</div>
+          <div class="panel-sub">WACC 10% base; IGCEP capacity factors; PKR 278/USD</div>
+          <div class="chart-container" style="height:260px;">
+            <canvas id="costByTech"></canvas>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Annual Annualized Capacity Cost — Incremental (PKR Billion/yr)</div>
+          <div class="panel-sub">Estimated annual capacity charge of each year's addition cohort</div>
+          <div class="chart-container" style="height:260px;">
+            <canvas id="annualCost"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="panel">
+          <div class="panel-title">Sensitivity — PKR/kWh vs Exchange Rate (Solar PV)</div>
+          <div class="panel-sub">Capital cost component only; WACC 10%, CF 22.8%</div>
+          <div class="chart-container" style="height:260px;">
+            <canvas id="fxSensitivity"></canvas>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">2035 Capacity Mix — RCA Reference (MW)</div>
+          <div class="panel-sub">Total 62,657 MW | Source: IGCEP 2025–35</div>
+          <div class="chart-container" style="height:260px;">
+            <canvas id="capMix"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend-row" style="margin-top:1rem;">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--teal);"></div> Hydro</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--solar);"></div> Solar PV</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--wind);"></div> Wind</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--nuclear);"></div> Nuclear</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--bess);"></div> BESS/Cross-border</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#94A3B8;"></div> RLNG/Gas/Coal (retained)</div>
+      </div>
+    </div>
+
+    <!-- ====== TAB 5: ASSUMPTIONS ====== -->
+    <div id="assumptions" class="tab-content">
+      <div class="section-title">Exhibit 5 — Full Assumption Register & Method Notes</div>
+
+      <div class="assume-grid">
+        <div class="assume-box">
+          <h4>IGCEP Source Assumptions (Confirmed)</h4>
+          <div class="assume-row"><span class="assume-key">Solar PV installed cost</span><span class="assume-val">US$489.04/kW</span></div>
+          <div class="assume-row"><span class="assume-key">Solar annual energy (per 100 MWp)</span><span class="assume-val">199.73 GWh → CF 22.8%</span></div>
+          <div class="assume-row"><span class="assume-key">Solar IGCEP annualized cost</span><span class="assume-val">3.13 ¢/kWh</span></div>
+          <div class="assume-row"><span class="assume-key">Wind installed cost</span><span class="assume-val">US$995.71/kW</span></div>
+          <div class="assume-row"><span class="assume-key">Wind annual energy (per 100 MW)</span><span class="assume-val">367.92 GWh → CF 42%</span></div>
+          <div class="assume-row"><span class="assume-key">Wind IGCEP annualized cost</span><span class="assume-val">3.66 ¢/kWh</span></div>
+          <div class="assume-row"><span class="assume-key">South-to-Centre T/L cost</span><span class="assume-val">US$550/kW, 30 yr</span></div>
+          <div class="assume-row"><span class="assume-key">NGC-to-KE T/L cost</span><span class="assume-val">US$170/kW, 30 yr</span></div>
+          <div class="assume-row"><span class="assume-key">BESS total cost</span><span class="assume-val">US$910M (600 MW / 1,500 MWh)</span></div>
+          <div class="assume-row"><span class="assume-key">Fuel price base</span><span class="assume-val">January 2025 merit-order</span></div>
+          <div class="assume-row"><span class="assume-key">Cost index date</span><span class="assume-val">December 2024</span></div>
+          <div class="assume-row"><span class="assume-key">LOLP reliability criterion</span><span class="assume-val">1%</span></div>
+          <div class="assume-row"><span class="assume-key">Net metering (NGC)</span><span class="assume-val">8,120 MW by 2035</span></div>
+          <div class="assume-row"><span class="assume-key">IGCEP RCA PV cost (total system)</span><span class="assume-val">US$47.13 billion</span></div>
+        </div>
+        <div class="assume-box">
+          <h4>Derived / Estimated Assumptions [E]</h4>
+          <div class="assume-row"><span class="assume-key">USD/PKR base rate</span><span class="assume-val">278 (May 2026)</span></div>
+          <div class="assume-row"><span class="assume-key">USD/PKR stress rate</span><span class="assume-val">300 / 320</span></div>
+          <div class="assume-row"><span class="assume-key">WACC — solar / wind</span><span class="assume-val">10%</span></div>
+          <div class="assume-row"><span class="assume-key">WACC — Diamer Bhasha</span><span class="assume-val">8% (IGCEP specific)</span></div>
+          <div class="assume-row"><span class="assume-key">WACC — Gabral-Kalam / Madyan</span><span class="assume-val">9% (IGCEP specific)</span></div>
+          <div class="assume-row"><span class="assume-key">WACC — nuclear C-5</span><span class="assume-val">12%</span></div>
+          <div class="assume-row"><span class="assume-key">Diamer Bhasha CAPEX</span><span class="assume-val">US$1,600/kW (WAPDA PC-1 ref.)</span></div>
+          <div class="assume-row"><span class="assume-key">Dasu HPP CAPEX</span><span class="assume-val">US$1,800/kW [E]</span></div>
+          <div class="assume-row"><span class="assume-key">Mohmand CAPEX</span><span class="assume-val">US$2,200/kW [E]</span></div>
+          <div class="assume-row"><span class="assume-key">Gabral-Kalam CAPEX</span><span class="assume-val">US$2,800/kW [E]</span></div>
+          <div class="assume-row"><span class="assume-key">Madyan CAPEX</span><span class="assume-val">US$3,200/kW [E]</span></div>
+          <div class="assume-row"><span class="assume-key">Nuclear C-5 CAPEX</span><span class="assume-val">US$3,750/kW [E] (Hualong-1 ref.)</span></div>
+          <div class="assume-row"><span class="assume-key">Hydro asset life</span><span class="assume-val">50 years</span></div>
+          <div class="assume-row"><span class="assume-key">Solar / wind asset life</span><span class="assume-val">25 years</span></div>
+          <div class="assume-row"><span class="assume-key">Nuclear asset life</span><span class="assume-val">40 years</span></div>
+        </div>
+      </div>
+
+      <div class="assume-grid" style="margin-top:1rem;">
+        <div class="assume-box">
+          <h4>International Benchmarks Used</h4>
+          <div class="assume-row"><span class="assume-key">IRENA solar global weighted avg (2024)</span><span class="assume-val">US$400–550/kW</span></div>
+          <div class="assume-row"><span class="assume-key">IRENA wind onshore global avg (2024)</span><span class="assume-val">US$900–1,100/kW</span></div>
+          <div class="assume-row"><span class="assume-key">World Bank hydro CAPEX range</span><span class="assume-val">US$1,000–4,500/kW (site-specific)</span></div>
+          <div class="assume-row"><span class="assume-key">Hualong-1 nuclear (China/Pak context)</span><span class="assume-val">US$3,000–4,500/kW</span></div>
+          <div class="assume-row"><span class="assume-key">India large hydro (Tapovan, Parbati)</span><span class="assume-val">US$1,800–2,500/kW</span></div>
+          <div class="assume-row"><span class="assume-key">IEA projected cost of electricity (LCOE) — wind</span><span class="assume-val">3–5 ¢/kWh</span></div>
+          <div class="assume-row"><span class="assume-key">IEA LCOE — solar PV (utility, 2024)</span><span class="assume-val">2–5 ¢/kWh</span></div>
+        </div>
+        <div class="assume-box">
+          <h4>Caveats & Limitations</h4>
+          <div class="assume-row"><span class="assume-key">IGCEP is indicative, not contractual</span><span class="assume-val">No legal capacity obligations from plan</span></div>
+          <div class="assume-row"><span class="assume-key">Hydro CAPEX range is wide</span><span class="assume-val">±30–40% due to geological risk</span></div>
+          <div class="assume-row"><span class="assume-key">Exchange rate risk</span><span class="assume-val">Dollar-denominated CPP; PKR depreciation raises PKR/kWh directly</span></div>
+          <div class="assume-row"><span class="assume-key">Load factor risk</span><span class="assume-val">Lower CF → higher PKR/kWh (inverse)</span></div>
+          <div class="assume-row"><span class="assume-key">No O&M in capital-only columns</span><span class="assume-val">Add ~0.5–1.5 ¢/kWh for full LCOE</span></div>
+          <div class="assume-row"><span class="assume-key">IGCEP PV cost ≠ NPV of capacity costs</span><span class="assume-val">Includes energy/fuel costs too</span></div>
+          <div class="assume-row"><span class="assume-key">Diamer Bhasha WACC sensitivity</span><span class="assume-val">8% ISMO vs 10% commercial → PKR 1–2/kWh difference</span></div>
+        </div>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict-label">Policy Conclusion</div>
+        <div class="verdict-text">
+          Pakistan is transitioning from a high-fuel, low-capital-cost generation fleet (RLNG, RFO) to a low-fuel, high-capital-cost fleet (hydro, solar, nuclear). This is a correct structural direction: fuel cost elimination de-risks consumers from commodity price shocks. But the transition imposes a <strong>front-loaded capital burden</strong>: PKR 7–17/kWh of capacity cost on new additions (depending on technology and exchange rate), compared to PKR 4–9/kWh variable fuel cost for RLNG/coal that it replaces. The financing structure — whether sovereign-backed, CPPA-G guaranteed, or CTBCM bilateral — determines who bears this capital risk and when. NCGCL's CTBCM de-risk products (CIG, CPFG, CPBG) are directly relevant to managing the imbalance volatility that arises during this transition period.
+        </div>
+      </div>
+    </div>
+  </div><!-- end tabs -->
+
+</div><!-- end container -->
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-credit"><strong>Ammar H. Khan</strong> · Pakistan Power Sector Analysis · NCGCL</div>
+    <div class="footer-credit">Sources: IGCEP 2025–35 (ISMO, May 2025) · NEPRA SoI 2024 · IRENA · World Bank · IEA · WAPDA · All estimates labeled [E]</div>
+  </div>
+</footer>
+
+<script>
+// ====================== DATA ======================
+let usdPkr = 278;
+let baseWACC = 0.10;
+
+const years = [2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035];
+
+// Per IGCEP Table 2.7 — gross additions (positive values only)
+const additions = {
+  2025: { hydro:53, re:0, nuclear:0, xborder:0, type:"Hydro (minor)", totalMW:53 },
+  2026: { hydro:182, re:1200, nuclear:0, xborder:0, type:"Solar/Wind + Hydro", totalMW:1382 },
+  2027: { hydro:1960, re:1651, nuclear:0, xborder:0, type:"Hydro (Dasu I) + Solar/Wind", totalMW:3611 },
+  2028: { hydro:2900, re:1590, nuclear:0, xborder:1000, type:"Hydro (Diamer Ph1) + RE + X-border", totalMW:5490 },
+  2029: { hydro:230, re:1390, nuclear:0, xborder:0, type:"Solar/Wind", totalMW:1620 },
+  2030: { hydro:0, re:1434, nuclear:0, xborder:0, type:"Solar/Wind", totalMW:1434 },
+  2031: { hydro:0, re:1376, nuclear:0, xborder:0, type:"Solar/Wind", totalMW:1376 },
+  2032: { hydro:0, re:500, nuclear:1200, xborder:0, type:"Nuclear C-5 + Solar", totalMW:1700 },
+  2033: { hydro:1505, re:2025, nuclear:0, xborder:0, type:"Hydro (Diamer Ph2+) + Solar/Wind", totalMW:3530 },
+  2034: { hydro:1500, re:241, nuclear:0, xborder:0, type:"Hydro + minor Solar", totalMW:1741 },
+  2035: { hydro:1500, re:279, nuclear:0, xborder:0, type:"Hydro + minor Solar", totalMW:1779 },
+};
+
+// CRF function
+function crf(wacc, n) { return wacc / (1 - Math.pow(1+wacc, -n)); }
+
+// Technology blended CAPEX and CF for each year
+function getBlendedParams(yr) {
+  const d = additions[yr];
+  let totalMW = d.totalMW;
+  if(totalMW === 0) return null;
+  
+  // CAPEX by sub-type
+  const hydroCAPEX = yr <= 2028 ? 1600 : 2000; // Dasu/Diamer early, larger hydro later
+  const reSolar = 489, reWind = 996, reBlend = 0.55*reSolar + 0.45*reWind; // rough split
+  const nuclearCAPEX = 3750;
+  const xborderCAPEX = 170;
+  
+  // Weighted CAPEX
+  let capex = 0;
+  if(totalMW > 0) {
+    capex = (d.hydro*hydroCAPEX + d.re*reBlend + d.nuclear*nuclearCAPEX + d.xborder*xborderCAPEX) / totalMW;
+  }
+  
+  // CF for generation estimate
+  const hydroCF = 0.45, reCF = 0.32, nuclearCF = 0.85, xborderCF = 0.60;
+  const annualGWh = (d.hydro*hydroCF + d.re*reCF + d.nuclear*nuclearCF + d.xborder*xborderCF) * 8.76;
+  
+  // WACC blend
+  const hydroWACC = (yr===2028 || yr===2033||yr===2034||yr===2035) ? 0.08 : 0.10;
+  const blendedWACC = totalMW > 0 ? (d.hydro*hydroWACC + d.re*0.10 + d.nuclear*0.12 + d.xborder*0.10) / totalMW : 0.10;
+  
+  // Asset life blend
+  const blendedLife = totalMW > 0 ? (d.hydro*50 + d.re*25 + d.nuclear*40 + d.xborder*30) / totalMW : 25;
+  
+  return { capex, annualGWh, blendedWACC, blendedLife };
+}
+
+function buildTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  
+  let cumulative = 0;
+  
+  years.forEach((yr, i) => {
+    const d = additions[yr];
+    const p = getBlendedParams(yr);
+    if(!p || d.totalMW <= 0) return;
+    
+    const crfVal = crf(p.blendedWACC, p.blendedLife);
+    const capexPKR = p.capex * usdPkr / 1000; // PKR thousands per kW
+    const totalCapexUSD = d.totalMW * p.capex / 1000; // US$M
+    const totalCapexPKR = totalCapexUSD * usdPkr / 1000; // PKR billion
+    
+    const annCapCostUSD = totalCapexUSD * crfVal; // US$M/yr
+    const annCapCostPKR = annCapCostUSD * usdPkr / 1000; // PKR B/yr
+    
+    const genGWh = p.annualGWh; // GWh/yr from this cohort
+    const pKRperKWh = genGWh > 0 ? (annCapCostPKR * 1000) / genGWh : 0;
+    
+    cumulative += annCapCostPKR;
+    
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${yr}</td>
+      <td>${d.type}</td>
+      <td>${d.totalMW.toLocaleString()}</td>
+      <td>${p.capex.toFixed(0)}</td>
+      <td>${totalCapexUSD.toFixed(0)}</td>
+      <td>${totalCapexPKR.toFixed(1)}</td>
+      <td>${p.blendedLife.toFixed(0)}</td>
+      <td>${(p.blendedWACC*100).toFixed(1)}% / ${(crfVal*100).toFixed(2)}%</td>
+      <td>${annCapCostUSD.toFixed(0)}</td>
+      <td>${annCapCostPKR.toFixed(1)}</td>
+      <td>${genGWh.toFixed(0)}</td>
+      <td style="font-weight:700; color:${pKRperKWh>15?'#9B2335':pKRperKWh>10?'#C8923A':'#036B7A'}">${pKRperKWh.toFixed(2)}</td>
+      <td>${cumulative.toFixed(1)}</td>
+    `;
+    tbody.appendChild(row);
+  });
+  
+  // Total row
+  const totRow = document.createElement('tr');
+  totRow.className = 'total-row';
+  const totalMW = Object.values(additions).reduce((s,d) => s+d.totalMW, 0);
+  totRow.innerHTML = `
+    <td>TOTAL 2025–35</td>
+    <td>All technologies</td>
+    <td>${totalMW.toLocaleString()}</td>
+    <td>~1,296 [E]</td>
+    <td>~29,700 [E]</td>
+    <td>~8,257 [E]</td>
+    <td>—</td>
+    <td>~10%/~10.5%</td>
+    <td>~3,115 [E]</td>
+    <td>~866 [E]</td>
+    <td>~98,000 [E]</td>
+    <td>~8.8 [E]</td>
+    <td>—</td>
+  `;
+  tbody.appendChild(totRow);
+}
+
+function updateRate(val) { usdPkr = parseFloat(val); buildTable(); }
+function updateWACC(val) { baseWACC = parseFloat(val)/100; buildTable(); }
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ====================== CHARTS ======================
+const teal = '#036B7A', solar = '#F4B942', wind = '#52B788', nuclear = '#7C3AED', bess = '#E07B39', gray = '#94A3B8';
+
+function initCharts() {
+  // Chart 1 — MW Added by Year
+  new Chart(document.getElementById('mwByYear'), {
+    type:'bar',
+    data:{
+      labels: years,
+      datasets:[
+        { label:'Hydro', data: years.map(y=>additions[y].hydro), backgroundColor: teal },
+        { label:'Solar/Wind (RE)', data: years.map(y=>additions[y].re), backgroundColor: solar },
+        { label:'Nuclear', data: years.map(y=>additions[y].nuclear), backgroundColor: nuclear },
+        { label:'Cross-border', data: years.map(y=>additions[y].xborder), backgroundColor: bess },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'bottom', labels:{boxWidth:10,font:{size:10}}}, tooltip:{mode:'index'} },
+      scales:{
+        x:{ stacked:true, ticks:{font:{size:10}} },
+        y:{ stacked:true, ticks:{font:{size:10}}, title:{display:true, text:'MW', font:{size:10}} }
+      }
+    }
+  });
+
+  // Chart 2 — Cumulative
+  const cumData = [41516];
+  const cumYears = ['Nov-24', ...years.map(String)];
+  let run = 41516;
+  years.forEach(yr => {
+    const net = [2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035];
+    const netAdds = {2025:-83,2026:1382,2027:3401,2028:5124,2029:1125,2030:1434,2031:790,2032:1512,2033:3320,2034:1581,2035:1556};
+    run += netAdds[yr];
+    cumData.push(run);
+  });
+  new Chart(document.getElementById('cumulMW'), {
+    type:'line',
+    data:{
+      labels: cumYears,
+      datasets:[{ label:'Cumul. Capacity (MW)', data:cumData, borderColor:teal, backgroundColor:'rgba(3,107,122,0.1)', fill:true, tension:0.3, pointRadius:4 }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        x:{ ticks:{font:{size:10}} },
+        y:{ ticks:{font:{size:10}, callback:v=>v.toLocaleString()}, title:{display:true, text:'MW', font:{size:10}} }
+      }
+    }
+  });
+
+  // Chart 3 — Cost by Technology
+  new Chart(document.getElementById('costByTech'), {
+    type:'bar',
+    data:{
+      labels:['Solar PV\n(22.8% CF)','Wind\n(42% CF)','Hydro-Diamer\n(45% CF)','Hydro-Dasu\n(48% CF)','Hydro-Mohmand\n(42% CF)','Nuclear C-5\n(85% CF)','Cross-border\n(60% CF)'],
+      datasets:[{
+        label:'PKR/kWh (capital, 278 rate)',
+        data:[7.51, 8.29, 9.20, 12.01, 16.79, 16.99, 0.95],
+        backgroundColor:[solar, wind, teal, '#047E8E', '#0A9EAF', nuclear, bess]
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>`PKR ${c.raw}/kWh`}} },
+      scales:{
+        x:{ ticks:{font:{size:10}}, title:{display:true,text:'PKR/kWh',font:{size:10}} },
+        y:{ ticks:{font:{size:10}} }
+      }
+    }
+  });
+
+  // Chart 4 — Annual cost
+  const annCosts = years.map(yr => {
+    const p = getBlendedParams(yr);
+    if(!p||additions[yr].totalMW<=0) return 0;
+    const totalCapexUSD = additions[yr].totalMW * p.capex / 1000;
+    const crfVal = crf(p.blendedWACC, p.blendedLife);
+    return parseFloat((totalCapexUSD * crfVal * usdPkr / 1000).toFixed(1));
+  });
+  new Chart(document.getElementById('annualCost'), {
+    type:'bar',
+    data:{
+      labels: years,
+      datasets:[{ label:'Ann. Cap. Cost (PKR B/yr)', data:annCosts, backgroundColor:teal+'99', borderColor:teal, borderWidth:1 }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        x:{ ticks:{font:{size:10}} },
+        y:{ ticks:{font:{size:10}}, title:{display:true,text:'PKR B/yr',font:{size:10}} }
+      }
+    }
+  });
+
+  // Chart 5 — FX Sensitivity (Solar)
+  const rates = [250,260,270,278,290,300,310,320];
+  new Chart(document.getElementById('fxSensitivity'), {
+    type:'line',
+    data:{
+      labels: rates.map(r=>`${r}`),
+      datasets:[
+        { label:'Solar PV (capital)', data:rates.map(r=>parseFloat((2.70*r/100).toFixed(2))), borderColor:solar, backgroundColor:solar+'33', fill:true, tension:0.3 },
+        { label:'Wind (capital)', data:rates.map(r=>parseFloat((2.98*r/100).toFixed(2))), borderColor:wind, tension:0.3 },
+        { label:'Hydro-Diamer (capital)', data:rates.map(r=>parseFloat((3.31*r/100).toFixed(2))), borderColor:teal, tension:0.3 },
+        { label:'Nuclear (capital)', data:rates.map(r=>parseFloat((6.11*r/100).toFixed(2))), borderColor:nuclear, tension:0.3, borderDash:[4,4] },
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}} },
+      scales:{
+        x:{ title:{display:true,text:'PKR/USD',font:{size:10}}, ticks:{font:{size:10}} },
+        y:{ title:{display:true,text:'PKR/kWh',font:{size:10}}, ticks:{font:{size:10}} }
+      }
+    }
+  });
+
+  // Chart 6 — 2035 capacity mix
+  new Chart(document.getElementById('capMix'), {
+    type:'doughnut',
+    data:{
+      labels:['Hydro (21,395 MW)','Solar PV (11,544 MW)','RLNG (8,224 MW)','Wind (5,133 MW)','Nuclear (4,730 MW)','Imported Coal (4,680 MW)','Local Coal (3,300 MW)','Gas (1,433 MW)','Cross-border (1,000 MW)','RFO (819 MW)','Bagasse (400 MW)'],
+      datasets:[{
+        data:[21395,11544,8224,5133,4730,4680,3300,1433,1000,819,400],
+        backgroundColor:[teal,solar,gray,wind,nuclear,'#64748B','#475569',gray+'88',bess,'#7F8EA0','#A3B4A0'],
+        borderWidth:1, borderColor:'#fff'
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'55%',
+      plugins:{
+        legend:{position:'right', labels:{boxWidth:10,font:{size:9}}},
+        tooltip:{callbacks:{label:c=>`${c.label}: ${(c.raw/62657*100).toFixed(1)}%`}}
+      }
+    }
+  });
+}
+
+// INIT
+buildTable();
+initCharts();
+</script>
+</body>
+</html>
