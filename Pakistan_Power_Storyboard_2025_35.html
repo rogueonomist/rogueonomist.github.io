@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Power Sector: The Capacity Cost Crisis | Ammar H. Khan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF; --bg2: #FAFAFA; --border: #E5E5E5;
+  --accent: #C8923A; --teal: #036B7A; --green: #52B788;
+  --red: #9B2335; --blue: #1B5E96; --navy: #0D3B5E; --purple: #7C3AED;
+  --text: #1A1A1A; --text2: #666666; --text3: #999999;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--bg);color:#2D2D2D;line-height:1.6;font-size:14px;}
+
+/* ── CONTAINERS ── */
+.wrap{max-width:1160px;margin:0 auto;padding:0 1.5rem;}
+
+/* ── HEADER ── */
+.site-header{background:var(--bg);border-bottom:1px solid var(--border);padding:.9rem 0;}
+.site-header .wrap{display:flex;justify-content:space-between;align-items:center;}
+.logo{font-family:Georgia,serif;font-size:16px;color:var(--text);}
+.logo span{color:var(--accent);}
+.doc-tag{font-size:11px;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;}
+
+/* ── HERO ── */
+.hero{border-bottom:3px solid var(--accent);padding:3.5rem 0 2.5rem;}
+.chapter-pill{display:inline-block;background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.3em .8em;border-radius:3px;margin-bottom:1rem;}
+.hero h1{font-family:Georgia,serif;font-size:34px;font-weight:400;color:var(--text);line-height:1.2;margin-bottom:.9rem;max-width:780px;}
+.hero-sub{font-size:14px;color:var(--text2);max-width:760px;line-height:1.75;}
+.hero-meta{margin-top:1rem;font-size:11.5px;color:var(--text3);}
+
+/* ── STICKY CONTROLS ── */
+.sticky-bar{position:sticky;top:0;z-index:100;background:var(--navy);border-bottom:2px solid var(--accent);padding:.75rem 0;}
+.sticky-inner{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;}
+.sticky-label{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.6);text-transform:uppercase;white-space:nowrap;}
+.scen-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:11px;font-weight:600;padding:.4rem .85rem;border-radius:4px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.scen-btn:hover{background:rgba(255,255,255,.2);}
+.scen-btn.active-slow{background:var(--red);border-color:var(--red);color:#fff;}
+.scen-btn.active-base{background:var(--teal);border-color:var(--teal);color:#fff;}
+.scen-btn.active-high{background:var(--green);border-color:var(--green);color:#fff;}
+.ctrl-group{display:flex;align-items:center;gap:.5rem;}
+.ctrl-group label{font-size:10.5px;color:rgba(255,255,255,.65);white-space:nowrap;}
+.ctrl-group span{font-size:11px;font-weight:700;color:#F4C762;min-width:36px;}
+.ctrl-group input[type=range]{width:90px;accent-color:var(--accent);}
+.divider-v{width:1px;height:22px;background:rgba(255,255,255,.2);}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin:2rem 0;}
+.kpi{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1.1rem 1rem;}
+.kpi.k-amber{border-top:3px solid var(--accent);}
+.kpi.k-teal{border-top:3px solid var(--teal);}
+.kpi.k-red{border-top:3px solid var(--red);}
+.kpi.k-green{border-top:3px solid var(--green);}
+.kpi.k-purple{border-top:3px solid var(--purple);}
+.kpi-num{font-family:Georgia,serif;font-size:22px;color:var(--text);line-height:1;}
+.kpi-lbl{font-size:10.5px;color:var(--text3);margin-top:.4rem;letter-spacing:.05em;text-transform:uppercase;}
+.kpi-sub{font-size:11px;color:var(--text2);margin-top:.25rem;}
+
+/* ── ACT SECTIONS ── */
+.act{padding:3rem 0;border-bottom:1px solid var(--border);}
+.act-num{font-family:Georgia,serif;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:.5rem;}
+.act-title{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--text);margin-bottom:.9rem;line-height:1.25;}
+.act-sub{font-size:13.5px;color:var(--text2);max-width:760px;line-height:1.75;margin-bottom:1.75rem;}
+
+/* ── PANELS ── */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:1.25rem;}
+.panel-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:.25rem;letter-spacing:.02em;}
+.panel-sub{font-size:11px;color:var(--text3);margin-bottom:.9rem;line-height:1.5;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.25rem 0;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin:1.25rem 0;}
+.grid-32{display:grid;grid-template-columns:3fr 2fr;gap:1.25rem;margin:1.25rem 0;}
+.grid-23{display:grid;grid-template-columns:2fr 3fr;gap:1.25rem;margin:1.25rem 0;}
+
+/* ── CHARTS ── */
+.ch-wrap{position:relative;}
+
+/* ── VERDICT / CALLOUT ── */
+.verdict{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.1rem 1.25rem;border-radius:0 6px 6px 0;margin:1.25rem 0;}
+.verdict.v-red{border-left-color:var(--red);}
+.verdict.v-green{border-left-color:var(--green);}
+.verdict.v-teal{border-left-color:var(--teal);}
+.verdict-label{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:.35rem;}
+.verdict-text{font-size:13px;color:#2D2D2D;line-height:1.7;}
+
+/* ── INSIGHT BOXES ── */
+.insight-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.25rem 0;}
+.ins{background:var(--bg);border:1px solid var(--border);border-top:3px solid var(--green);border-radius:6px;padding:1.1rem;}
+.ins.i-amber{border-top-color:var(--accent);}
+.ins.i-red{border-top-color:var(--red);}
+.ins.i-teal{border-top-color:var(--teal);}
+.ins.i-purple{border-top-color:var(--purple);}
+.ins-num{font-family:Georgia,serif;font-size:22px;color:var(--text);line-height:1;}
+.ins-txt{font-size:11px;color:var(--text2);margin-top:.4rem;line-height:1.5;}
+
+/* ── LEGEND ── */
+.leg{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.75rem;}
+.leg-item{display:flex;align-items:center;gap:.35rem;font-size:11px;color:var(--text2);}
+.leg-sq{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.leg-dash{width:16px;height:2px;border-radius:1px;border-top:2px dashed currentColor;}
+
+/* ── THE HEADLINE CHART ── */
+.headline-chart-wrap{background:var(--bg);border:2px solid var(--accent);border-radius:8px;padding:1.5rem;margin:1.5rem 0;}
+.headline-title{font-family:Georgia,serif;font-size:20px;font-weight:400;color:var(--text);margin-bottom:.35rem;}
+.headline-sub{font-size:12.5px;color:var(--text2);margin-bottom:1rem;line-height:1.6;}
+
+/* ── SCISSORS CHART ── */
+.scissors-wrap{background:var(--navy);border-radius:8px;padding:1.5rem;margin:1.5rem 0;}
+.scissors-wrap .panel-title{color:#fff;}
+.scissors-wrap .panel-sub{color:rgba(255,255,255,.65);}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl th{background:var(--bg2);font-size:10.5px;font-weight:700;letter-spacing:.05em;color:var(--text);text-align:right;padding:.55rem .6rem;border-bottom:2px solid var(--border);}
+.tbl th:first-child{text-align:left;}
+.tbl td{padding:.5rem .6rem;border-bottom:1px solid var(--border);text-align:right;color:#2D2D2D;white-space:nowrap;}
+.tbl td:first-child{text-align:left;font-weight:600;color:var(--text);}
+.tbl tr:hover td{background:var(--bg2);}
+.tbl tr.hl td{background:#FFF8EE;font-weight:700;border-top:2px solid var(--accent);}
+.tbl tr.hl-red td{background:#FEF2F2;font-weight:700;border-top:2px solid var(--red);}
+
+/* ── SCENARIO BADGE ── */
+.scen-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:10.5px;font-weight:700;padding:.25em .65em;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;}
+.sb-slow{background:#FEF2F2;color:var(--red);}
+.sb-base{background:#EDF7F8;color:var(--teal);}
+.sb-high{background:#ECFDF5;color:#065F46;}
+
+/* ── FOOTER ── */
+.footer{padding:1.5rem 0;border-top:1px solid var(--border);margin-top:3rem;}
+.footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.footer-txt{font-size:11px;color:var(--text3);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .kpi-strip,.grid-2,.grid-3,.grid-32,.grid-23,.insight-grid{grid-template-columns:1fr;}
+  .hero h1{font-size:24px;}
+  .sticky-inner{gap:.75rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <div class="wrap">
+    <div class="logo">Ammar H. <span>Khan</span></div>
+    <div class="doc-tag">Pakistan Power Sector · Storyboard Analysis · May 2026</div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="wrap">
+    <div class="chapter-pill">Integrated Policy Analysis</div>
+    <h1>Pakistan's Capacity Cost Crisis:<br>Demand Fracture Meets Capacity Lock-In</h1>
+    <p class="hero-sub">A five-act storyboard tracing Pakistan's power sector from the demand side to the supply side and finally to the price signal consumers and regulators must confront: <strong>Rs./kWh of capacity cost</strong>. The central thesis — that behind-the-meter solar and batteries will hold grid demand near flat while IGCEP capacity commitments add Rs. 400–600 billion in new capacity payments — produces a structural elevation in capacity cost per unit of grid electricity that no tariff framework currently acknowledges.</p>
+    <p class="hero-meta">Sources: IGCEP 2025–35 (ISMO) · EYB 2024-25 · BTM Solar Memo Dec 2025 · v5 Dynamic Capacity Cost Model (83 plants) · NEPRA SoI · Solar_Import_Projections.xlsx</p>
+  </div>
+</div>
+
+<!-- ── STICKY CONTROLS ── -->
+<div class="sticky-bar">
+  <div class="wrap">
+    <div class="sticky-inner">
+      <span class="sticky-label">Demand Scenario:</span>
+      <button class="scen-btn" id="btn-slow" onclick="setScenario('slow')">🔴 Stagnant Grid (Hypothesis)</button>
+      <button class="scen-btn active-base" id="btn-base" onclick="setScenario('base')">🔵 Base Case</button>
+      <button class="scen-btn" id="btn-high" onclick="setScenario('high')">🟢 High GDP</button>
+      <div class="divider-v"></div>
+      <div class="ctrl-group">
+        <label>SOFR Avg:</label>
+        <input type="range" id="s-sofr" min="1" max="8" step="0.25" value="3.5" oninput="updateMacro()">
+        <span id="v-sofr">3.5%</span>
+      </div>
+      <div class="ctrl-group">
+        <label>PKR/USD FY35:</label>
+        <input type="range" id="s-pkr" min="280" max="500" step="5" value="344" oninput="updateMacro()">
+        <span id="v-pkr">344</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ── KPI STRIP ── -->
+<div class="kpi-strip">
+  <div class="kpi k-amber">
+    <div class="kpi-num" id="kpi-grid35">—</div>
+    <div class="kpi-lbl">Grid Demand FY2034-35</div>
+    <div class="kpi-sub" id="kpi-grid35-sub">Selected scenario</div>
+  </div>
+  <div class="kpi k-teal">
+    <div class="kpi-num">Rs. 1,731B</div>
+    <div class="kpi-lbl">Existing CPP FY2025-26</div>
+    <div class="kpi-sub">83 plants, v5 model</div>
+  </div>
+  <div class="kpi k-red">
+    <div class="kpi-num" id="kpi-newcpp">—</div>
+    <div class="kpi-lbl">New IGCEP CPP FY2034-35</div>
+    <div class="kpi-sub">21,537 MW additions</div>
+  </div>
+  <div class="kpi k-purple">
+    <div class="kpi-num" id="kpi-totalcpp">—</div>
+    <div class="kpi-lbl">Total CPP FY2034-35</div>
+    <div class="kpi-sub">Existing + new projects</div>
+  </div>
+  <div class="kpi k-red" style="border-top-color:#7C3AED;">
+    <div class="kpi-num" id="kpi-cpkwh">—</div>
+    <div class="kpi-lbl">Capacity Cost / kWh FY2034-35</div>
+    <div class="kpi-sub" id="kpi-cpkwh-sub">Scenario-dependent</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- ACT I: THE FRACTURED DEMAND                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="act" id="act1">
+  <div class="act-num">Act I</div>
+  <div class="act-title">The Fractured Demand Equation</div>
+  <div class="act-sub">Historically, total electricity demand and grid demand were nearly identical — the grid was the only source. The equation has broken. Behind-the-meter solar now supplies 30.4 TWh annually (21% of retail demand) from 26.8 GW of installed capacity. Batteries are accelerating the fracture into evening hours. Grid demand peaked at 154 TWh in FY2022 and has <em>declined</em> to 140.4 TWh (gross) despite 3% GDP growth. The divergence between total electricity demand and grid demand is structural — not cyclical.</div>
+
+  <div class="grid-32">
+    <div class="panel">
+      <div class="panel-title">Exhibit 1 — Total electricity demand vs. grid demand (retail TWh)</div>
+      <div class="panel-sub">Area chart shows the widening BTM wedge. Grid demand (blue) is held down by solar self-consumption (amber dashes) and battery discharge (green dashes). Select demand scenario above to see all three projections.</div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-sq" style="background:var(--navy);"></div>Total electricity demand (TED)</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--blue);"></div>Grid retail demand</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--accent);opacity:.7;"></div>BTM self-consumed</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--green);opacity:.7;"></div>Battery discharge</div>
+      </div>
+      <div class="ch-wrap" style="height:280px;"><canvas id="ch-demand"></canvas></div>
+    </div>
+    <div class="panel" style="display:flex;flex-direction:column;gap:1rem;">
+      <div>
+        <div class="panel-title">Grid demand by scenario (FY2025–35)</div>
+        <div class="ch-wrap" style="height:185px;"><canvas id="ch-scen"></canvas></div>
+      </div>
+      <div>
+        <div class="panel-title">BTM solar capacity growth (GW) & displaced demand (TWh)</div>
+        <div class="ch-wrap" style="height:140px;"><canvas id="ch-btm"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="ins i-red">
+      <div class="ins-num">−9%</div>
+      <div class="ins-txt">Grid generation decline FY2022→FY2025 despite 9% GDP growth over same period</div>
+    </div>
+    <div class="ins i-amber">
+      <div class="ins-num">30.4 TWh</div>
+      <div class="ins-txt">BTM solar self-consumed in FY2025, up from ~500 GWh in FY2019</div>
+    </div>
+    <div class="ins i-teal">
+      <div class="ins-num" id="ins-grid35">—</div>
+      <div class="ins-txt">Projected grid retail demand in FY2034-35 (selected scenario)</div>
+    </div>
+    <div class="ins i-purple">
+      <div class="ins-num" id="ins-gridcagr">—</div>
+      <div class="ins-txt">Grid demand CAGR FY2025→FY2035 under selected demand scenario</div>
+    </div>
+  </div>
+
+  <div class="verdict v-red">
+    <div class="verdict-label">Act I Finding</div>
+    <div class="verdict-text" id="act1-verdict">Select a scenario above to see the projection.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- ACT II: THE CAPACITY LOCK-IN                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="act" id="act2">
+  <div class="act-num">Act II</div>
+  <div class="act-title">The Capacity Lock-In: IGCEP Adds Anyway</div>
+  <div class="act-sub">While grid demand stagnates, Pakistan's Indicative Generation Capacity Expansion Plan 2025–35 schedules 21,537 MW of new capacity additions — dominated by large hydro (Dasu, Diamer Bhasha) and successive waves of RE. These are not discretionary investments; many carry sovereign construction commitments. The capacity is being added into an already over-built system. Pakistan's reserve margin already exceeds 60% of peak demand. Every new MW locked in means another Rs. that grid consumers must pay regardless of whether the energy is dispatched.</div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title">Exhibit 2 — IGCEP new capacity additions by technology (MW)</div>
+      <div class="panel-sub">Commissioning schedule per IGCEP 2025-35 RCA reference case. FY2027-28 and FY2028-29 are the peak years (Dasu HPP + Diamer Bhasha Phase 1).</div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-sq" style="background:var(--teal);"></div>Hydro</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--accent);"></div>RE (Solar+Wind)</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--purple);"></div>Nuclear</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--blue);"></div>Cross-border</div>
+      </div>
+      <div class="ch-wrap" style="height:260px;"><canvas id="ch-igcep-mw"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Exhibit 3 — Capacity utilisation: installed vs. grid demand (GW / TWh)</div>
+      <div class="panel-sub">Rising installed capacity (GW, left) against flat grid demand (TWh, right) illustrates the structural over-build thesis. Reserve margins already exceed system requirements by a wide margin.</div>
+      <div class="ch-wrap" style="height:260px;"><canvas id="ch-capacity-vs-demand"></canvas></div>
+    </div>
+  </div>
+
+  <div class="verdict v-teal">
+    <div class="verdict-label">Act II Finding</div>
+    <div class="verdict-text">By FY2034-35, total installed capacity will reach approximately 70,000–75,000 MW against peak demand of roughly 28,000–32,000 MW — an implicit reserve margin of 130–160%. Under the stagnant grid scenario, each MW of capacity is serving fewer kWh of grid demand with every passing year. The fixed cost obligation — the capacity purchase payment — does not diminish with dispatch. It accumulates. This is the structural source of Pakistan's circular debt: a cost that grows while the denominator that should absorb it stagnates.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- ACT III: THE COST ESCALATION                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="act" id="act3">
+  <div class="act-num">Act III</div>
+  <div class="act-title">The Cost Escalation: CPP Rising on Two Fronts</div>
+  <div class="act-sub">Existing fleet CPP is rising — held up by currency depreciation and CPI indexation — but is partly offset by declining interest as debt matures (Sahiwal exits by FY2034, Port Qasim by FY2038). New IGCEP projects add a second and growing layer. Debt service on new projects is front-loaded: in Year 1 of each cohort, interest alone accounts for 45–50% of total capacity payment. Under the 70-30 debt-equity structure and 13-year amortization, the FCY debt burden is directly sensitive to SOFR and PKR/USD — adjust both sliders above to see the impact.</div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title">Exhibit 4 — Total CPP trajectory: existing fleet + IGCEP new projects (Rs. Billion)</div>
+      <div class="panel-sub">Stacked bars showing existing v5 model CPP (declining debt service, rising O&M) plus new project CPP by technology. New project CPP updates with SOFR and PKR/USD adjustments.</div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-sq" style="background:#9CA3AF;"></div>Existing Fleet (v5)</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--teal);"></div>New Hydro</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--accent);"></div>New RE</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--purple);"></div>Nuclear</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--blue);"></div>Cross-border</div>
+      </div>
+      <div class="ch-wrap" style="height:280px;"><canvas id="ch-cpp-stack"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Exhibit 5 — New project CPP components (Rs. Billion)</div>
+      <div class="panel-sub">Debt service (principal + interest) is front-loaded and sensitive to SOFR/FX. Interest declines over each cohort's 13-year debt window. Equity return and O&M are stable. Adjust sliders to stress-test.</div>
+      <div class="leg">
+        <div class="leg-item"><div class="leg-sq" style="background:#1E40AF;"></div>Principal</div>
+        <div class="leg-item"><div class="leg-sq" style="background:#DC2626;"></div>Interest</div>
+        <div class="leg-item"><div class="leg-sq" style="background:var(--green);"></div>Equity Return</div>
+        <div class="leg-item"><div class="leg-sq" style="background:#92400E;"></div>O&M + Insurance</div>
+      </div>
+      <div class="ch-wrap" style="height:280px;"><canvas id="ch-cpp-components"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin:1.25rem 0;">
+    <div class="ins i-red">
+      <div class="ins-num" id="ins-newcpp28">—</div>
+      <div class="ins-txt">New IGCEP CPP in FY2028-29 — peak commissioning year (Dasu + Diamer Phase 1 + RE)</div>
+    </div>
+    <div class="ins i-amber">
+      <div class="ins-num" id="ins-interest-pct">—</div>
+      <div class="ins-txt">Interest as share of new project CPP at peak — highlights SOFR sensitivity</div>
+    </div>
+    <div class="ins i-teal">
+      <div class="ins-num" id="ins-total-cpp35">—</div>
+      <div class="ins-txt">Total CPP in FY2034-35 (existing + all new projects at current assumptions)</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Act III Finding</div>
+    <div class="verdict-text" id="act3-verdict">Existing fleet CPP rises modestly from Rs. 1,731B to Rs. 1,840B over the decade — a 6% increase driven by CPI and FX indexation, partly offset by debt maturities. New IGCEP projects add a steep second layer that grows with each successive commissioning cohort. The total CPP burden reaches Rs. 2,300–2,500B by FY2034-35 depending on macro assumptions. Every 100bps rise in SOFR adds approximately Rs. 18–24B to annual new project interest costs.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- ACT IV: THE COLLISION — CPP/kWh                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="act" id="act4">
+  <div class="act-num">Act IV — The Headline</div>
+  <div class="act-title">The Collision: Capacity Cost Per Unit of Grid Electricity</div>
+  <div class="act-sub">This is the central metric. Total CPP (Rs. Billion) divided by grid retail demand (TWh) gives the capacity cost per kWh that grid consumers implicitly bear. When CPP rises and demand grows in tandem, the per-unit cost is absorbed. When CPP rises while demand stagnates — as solar and batteries hold grid demand flat — the per-unit burden escalates sharply. This is the scissors effect: costs rising, denominator stagnating.</div>
+
+  <!-- THE SCISSORS CHART -->
+  <div class="scissors-wrap">
+    <div class="panel-title" style="color:#fff;font-size:14px;margin-bottom:.25rem;">Exhibit 6 — The Scissors: Total CPP (rising) vs. Grid Demand (stagnant or slow)</div>
+    <div class="panel-sub">Left axis: Total CPP (Rs. Billion). Right axis: Grid demand (TWh). Under the stagnant scenario, the gap between a rising CPP numerator and a flat denominator produces the per-unit cost crisis.</div>
+    <div class="leg" style="margin-bottom:.75rem;">
+      <div class="leg-item" style="color:rgba(255,255,255,.75);"><div class="leg-sq" style="background:#F4C762;"></div>Total CPP (Rs. B, left axis)</div>
+      <div class="leg-item" style="color:rgba(255,255,255,.75);"><div class="leg-sq" style="background:#DC2626;"></div>Grid Demand — Stagnant (TWh, right)</div>
+      <div class="leg-item" style="color:rgba(255,255,255,.75);"><div class="leg-sq" style="background:#52B788;"></div>Grid Demand — Base (TWh, right)</div>
+      <div class="leg-item" style="color:rgba(255,255,255,.75);"><div class="leg-sq" style="background:#7C3AED;"></div>Grid Demand — High GDP (TWh, right)</div>
+    </div>
+    <div class="ch-wrap" style="height:300px;"><canvas id="ch-scissors"></canvas></div>
+  </div>
+
+  <!-- THE HEADLINE CHART -->
+  <div class="headline-chart-wrap">
+    <div class="headline-title">Exhibit 7 — Capacity Cost Per kWh of Grid Electricity (Rs./kWh)</div>
+    <div class="headline-sub">The headline metric. Under the stagnant grid hypothesis, capacity cost per kWh rises from Rs. 15.3 to Rs. 20–22 — a 35–45% increase that is borne entirely by grid consumers even before energy and distribution costs. Under high GDP growth, the rising denominator absorbs CPP increases and per-unit cost may actually decline slightly. The demand scenario is the decisive variable — not tariff renegotiation, not SOFR.</div>
+    <div class="leg">
+      <div class="leg-item" style="font-weight:600;"><div class="leg-sq" style="background:var(--red);width:12px;height:12px;"></div>Stagnant Grid (Hypothesis)</div>
+      <div class="leg-item" style="font-weight:600;"><div class="leg-sq" style="background:var(--teal);width:12px;height:12px;"></div>Base Case</div>
+      <div class="leg-item" style="font-weight:600;"><div class="leg-sq" style="background:var(--green);width:12px;height:12px;"></div>High GDP</div>
+      <div class="leg-item"><div style="width:25px;height:2px;background:#999;border-radius:1px;"></div>Consumer tariff estimate (Rs. 50/kWh)</div>
+    </div>
+    <div class="ch-wrap" style="height:320px;"><canvas id="ch-cpp-kwh"></canvas></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:.75rem;">Note: CPP/kWh = Total CPP (Rs. B) ÷ Grid Retail Demand (TWh). Rs.B/TWh = Rs./kWh exactly. Consumer tariff line at Rs. 50/kWh is indicative; adjust for scenario. Existing fleet CPP held at v5 model values; new project CPP dynamic per SOFR/PKR sliders.</div>
+  </div>
+
+  <!-- THE BURDEN CHART -->
+  <div class="grid-23">
+    <div class="panel">
+      <div class="panel-title">Exhibit 8 — CPP/kWh comparison table by scenario (Rs./kWh)</div>
+      <div class="panel-sub">Year-by-year capacity cost per kWh for all three demand scenarios. Highlighted cells show divergence.</div>
+      <div style="overflow-x:auto;">
+        <table class="tbl" id="cpp-kwh-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Stagnant 🔴</th>
+              <th>Base 🔵</th>
+              <th>High GDP 🟢</th>
+              <th>Spread</th>
+            </tr>
+          </thead>
+          <tbody id="cpp-kwh-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Exhibit 9 — CPP as % of consumer tariff burden</div>
+      <div class="panel-sub">Capacity cost as a share of a representative Rs. 50/kWh consumer tariff. In the stagnant scenario, capacity cost alone accounts for 40–45% of the retail bill by FY2034-35, before energy, T&D, and distribution margin.</div>
+      <div class="ch-wrap" style="height:300px;"><canvas id="ch-burden"></canvas></div>
+    </div>
+  </div>
+
+  <!-- SCENARIO-SENSITIVE VERDICT -->
+  <div class="verdict v-red">
+    <div class="verdict-label">Act IV — The Central Finding</div>
+    <div class="verdict-text" id="act4-verdict">Computing...</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- ACT V: VERDICT                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="act" id="act5" style="border-bottom:none;">
+  <div class="act-num">Act V — The Verdict</div>
+  <div class="act-title">Policy Implications: What the Numbers Demand</div>
+  <div class="act-sub">The arithmetic is unambiguous. If grid demand stagnates — which the BTM solar and battery trajectory makes increasingly likely — Pakistan's capacity cost per kWh will reach Rs. 20–22 by FY2034-35, representing 40–45% of the retail bill before a single unit of energy is generated. Three interventions follow directly from this analysis.</div>
+
+  <div class="grid-3">
+    <div class="panel" style="border-top:3px solid var(--red);">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--red);text-transform:uppercase;margin-bottom:.6rem;">Intervention 1</div>
+      <div style="font-family:Georgia,serif;font-size:16px;color:var(--text);margin-bottom:.6rem;">Renegotiate existing tariffs</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.65;">Pakistan has already begun negotiating down LPI and capacity payments with major CPEC and Thar coal plants. This analysis quantifies the stakes: Rs. 1.8–1.9 trillion of existing CPP that must be compressed. Each 10% reduction in existing CPP saves Rs. 173–184B annually — enough to reduce tariffs by Rs. 1.5/kWh under base demand assumptions.</div>
+    </div>
+    <div class="panel" style="border-top:3px solid var(--accent);">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;margin-bottom:.6rem;">Intervention 2</div>
+      <div style="font-family:Georgia,serif;font-size:16px;color:var(--text);margin-bottom:.6rem;">Condition new capacity on demand absorption</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.65;">The IGCEP pipeline adds 21,537 MW regardless of grid demand absorption. New contracts should carry demand-contingent capacity payments — lower fixed charges when utilisation falls below threshold. This shifts construction-period risk back to developers and aligns incentives with the grid's actual absorptive capacity. Hydro mega-projects (Dasu, Bhasha) require special treatment as sovereign assets.</div>
+    </div>
+    <div class="panel" style="border-top:3px solid var(--green);">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--green);text-transform:uppercase;margin-bottom:.6rem;">Intervention 3</div>
+      <div style="font-family:Georgia,serif;font-size:16px;color:var(--text);margin-bottom:.6rem;">Grow the grid denominator</div>
+      <div style="font-size:12.5px;color:var(--text2);line-height:1.65;">The fastest path to lower CPP/kWh is a larger denominator — more kWh sold through the grid. EV charging infrastructure, industrial electrification, and export-oriented manufacturing can grow grid demand without building new supply. A Rs. 1 rise in CPP/kWh can be neutralised by a 15 TWh increase in grid retail demand — roughly 13% above the FY2025 base. Policy should treat demand growth as a cost management instrument.</div>
+    </div>
+  </div>
+
+  <div class="verdict" style="margin-top:1.5rem;border-left-color:var(--navy);">
+    <div class="verdict-label">Closing Statement</div>
+    <div class="verdict-text">The capacity cost crisis is not primarily a tariff problem, a debt problem, or even a planning problem. It is a demand problem. Every analysis of Pakistan's power sector that begins with the supply side and works forward to costs is working in the wrong direction. <strong>The relevant question is not how much capacity costs — it is how many kWh of grid demand exist to absorb that cost.</strong> By FY2034-35, on current trajectories, grid consumers will be paying Rs. 20–22/kWh in capacity charges alone, before energy costs, T&D losses, and distribution margin. That is the structural fact this analysis produces. It should inform every tariff petition, every renegotiation, and every new PPA signed.</div>
+  </div>
+</div>
+
+</div><!-- end .wrap -->
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-txt"><strong>Ammar H. Khan</strong> · Pakistan Power Sector Analysis · NCGCL · May 2026</div>
+    <div class="footer-txt">Demand model: IGCEP 2025-35, EYB 2024-25, BTM Solar Memo Dec 2025, ISMO hourly data · CPP model: v5 Dynamic Capacity Cost Model (83 plants) · All [E] = estimates</div>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// 1. CORE DATA
+// ═══════════════════════════════════════════════════════════════
+
+const CPP_YRS = ['FY2025-26','FY2026-27','FY2027-28','FY2028-29','FY2029-30',
+                 'FY2030-31','FY2031-32','FY2032-33','FY2033-34','FY2034-35'];
+const N = 10;
+
+// Demand model labels (11 points: FY2025 base + 10 projection years)
+const DEM_YRS = ['FY2025','FY2026','FY2027','FY2028','FY2029','FY2030',
+                 'FY2031','FY2032','FY2033','FY2034','FY2035'];
+const BAT_GWH = [3.38,6.55,10.09,14.09,18.64,23.89,29.56,35.54,41.87,48.4,55.08];
+
+// Existing fleet CPP from v5 model (Rs. Billion)
+const EXIST_CPP = [1731.2,1740.8,1758.1,1761.9,1777.4,1754.5,1756.9,1793.2,1802.6,1839.7];
+
+// Existing fleet CPP sub-categories for stacked chart
+const EXIST_CATS = [
+  {lbl:'WAPDA Hydel',   d:[185.6,191.4,197.3,203.2,209.0,215.1,221.6,228.6,235.9,243.6], c:'rgba(3,107,122,0.6)'},
+  {lbl:'CPEC Coal',     d:[366.0,358.4,353.2,352.7,351.9,347.6,347.0,346.9,346.6,345.9], c:'rgba(75,85,99,0.7)'},
+  {lbl:'Thar Coal',     d:[298.6,298.6,300.7,305.2,309.7,312.7,318.0,324.1,330.2,336.5], c:'rgba(120,53,15,0.6)'},
+  {lbl:'Nuclear',       d:[352.0,349.5,348.9,353.4,357.8,358.0,363.2,369.2,375.2,381.3], c:'rgba(124,58,237,0.5)'},
+  {lbl:'Wind IPPs',     d:[140.2,148.0,156.2,146.2,153.4,138.0,144.7,151.9,135.9,142.6], c:'rgba(82,183,136,0.7)'},
+  {lbl:'Other Thermal', d:[388.8,395.0,401.8,400.7,375.6,383.1,362.4,372.5,378.8,389.8], c:'rgba(156,163,175,0.6)'},
+];
+
+// IGCEP new project cohorts
+const COHORTS = [
+  {fi:0,h:53,   r:0,    n:0,   x:0},
+  {fi:1,h:182,  r:1200, n:0,   x:0},
+  {fi:2,h:1960, r:1651, n:0,   x:0},
+  {fi:3,h:2900, r:1590, n:0,   x:1000},
+  {fi:4,h:230,  r:1390, n:0,   x:0},
+  {fi:5,h:0,    r:1434, n:0,   x:0},
+  {fi:6,h:0,    r:1376, n:0,   x:0},
+  {fi:7,h:0,    r:500,  n:1200,x:0},
+  {fi:8,h:1505, r:2025, n:0,   x:0},
+  {fi:9,h:1500, r:241,  n:0,   x:0},
+];
+
+const TECH = {
+  he:{capex:1600,om:18,  eq:0.15,sp:2.5,life:50},
+  hl:{capex:2000,om:18,  eq:0.15,sp:2.5,life:50},
+  re:{capex:717, om:16.2,eq:0.17,sp:3.0,life:25},
+  nu:{capex:3750,om:55,  eq:0.14,sp:2.0,life:40},
+  xb:{capex:170, om:5,   eq:0.12,sp:2.0,life:30},
+};
+const DR=0.70, DT=13, IR=0.0025;
+
+// Demand scenarios
+const SCEN = {
+  slow:{gdp:2.5,ela:0.9,btm:5.0,cy:400,lbl:'Stagnant Grid',c:getComputedStyle(document.documentElement).getPropertyValue('--red').trim()||'#9B2335'},
+  base:{gdp:3.5,ela:1.1,btm:4.0,cy:300,lbl:'Base Case',    c:'#036B7A'},
+  high:{gdp:5.0,ela:1.2,btm:2.5,cy:200,lbl:'High GDP',     c:'#52B788'},
+};
+
+// Current state
+let S = 'base';
+let SOFR_AVG = 3.5;
+let PKR_35 = 344;
+
+// Default SOFR path (FY2025-26 to FY2034-35)
+const SOFR_BASE = [4.5,4.0,3.5,3.5,3.5,3.0,3.0,3.0,3.0,3.0];
+const PKR_BASE  = [280,285,292,299,306,313,320,328,336,344];
+
+function getSOFR() {
+  const adj = SOFR_AVG - 3.5;
+  return SOFR_BASE.map(v => Math.max(0.5, v + adj));
+}
+function getPKR() {
+  const scale = PKR_35 / 344;
+  return PKR_BASE.map(v => parseFloat((v * scale).toFixed(0)));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 2. DEMAND COMPUTATION (from demand forecast model)
+// ═══════════════════════════════════════════════════════════════
+
+function getBTMCap(btmRate) {
+  const cap=[26.8]; let add=btmRate;
+  for(let i=1;i<11;i++){
+    cap.push(+(cap[i-1]+add).toFixed(1));
+    if(i>=2) add=Math.max(add*0.88,1.2);
+  }
+  return cap;
+}
+
+function computeDemand(sKey) {
+  const p=SCEN[sKey];
+  const tg=p.gdp/100*p.ela, sc0=0.78, scEnd=Math.max(sc0-0.08,0.52);
+  const cf=0.19, btmCap=getBTMCap(p.btm);
+  const out=[];
+  for(let i=0;i<11;i++){
+    const ted=143.5*Math.pow(1+tg,i);
+    const sc=sc0+(scEnd-sc0)*(i/10);
+    const sgen=btmCap[i]*cf*8.76;
+    const ssc=sgen*sc;
+    const excess=sgen-ssc;
+    const batDis=Math.min(excess,BAT_GWH[i]*p.cy/1000);
+    const grid=Math.max(ted-ssc-batDis,65);
+    out.push({ted,ssc,batDis,stranded:excess-batDis,grid,btmCap:btmCap[i]});
+  }
+  return out;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 3. CPP COMPUTATION (from CPP model)
+// ═══════════════════════════════════════════════════════════════
+
+function calcCPP(mw,tp,ci,ei,sofr,pkr) {
+  if(mw<=0) return{p:0,i:0,eq:0,om:0,tot:0};
+  const t=ei-ci+1;
+  if(t<1||t>tp.life) return{p:0,i:0,eq:0,om:0,tot:0};
+  const capex=mw*tp.capex/1000;
+  const debt=DR*capex, equity=(1-DR)*capex, ap=debt/DT;
+  const inDebt=t<=DT;
+  const outDebt=inDebt?debt-(t-1)*ap:0;
+  const princ=inDebt?ap:0;
+  const interest=outDebt*(sofr+tp.sp)/100;
+  const eqr=equity*tp.eq;
+  const om=mw*tp.om/1000+IR*capex;
+  const toB=x=>x*pkr/1000;
+  return{p:toB(princ),i:toB(interest),eq:toB(eqr),om:toB(om),tot:toB(princ+interest+eqr+om)};
+}
+
+function computeNewCPP() {
+  const sofr=getSOFR(), pkr=getPKR();
+  return Array.from({length:N},(_,ei)=>{
+    let h=0,r=0,n=0,x=0,p=0,i=0,eq=0,om=0;
+    for(const c of COHORTS){
+      const hp=c.fi<=3?TECH.he:TECH.hl;
+      const rh=calcCPP(c.h,hp,c.fi,ei,sofr[ei],pkr[ei]);
+      const rr=calcCPP(c.r,TECH.re,c.fi,ei,sofr[ei],pkr[ei]);
+      const rn=calcCPP(c.n,TECH.nu,c.fi,ei,sofr[ei],pkr[ei]);
+      const rx=calcCPP(c.x,TECH.xb,c.fi,ei,sofr[ei],pkr[ei]);
+      h+=rh.tot; r+=rr.tot; n+=rn.tot; x+=rx.tot;
+      p+=rh.p+rr.p+rn.p+rx.p;
+      i+=rh.i+rr.i+rn.i+rx.i;
+      eq+=rh.eq+rr.eq+rn.eq+rx.eq;
+      om+=rh.om+rr.om+rn.om+rx.om;
+    }
+    return{h,r,n,x,total:h+r+n+x,p,i,eq,om};
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 4. CHART INSTANCES
+// ═══════════════════════════════════════════════════════════════
+
+let CH={};
+function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
+
+const TK='#999', GL='rgba(0,0,0,0.05)';
+const f1=v=>v.toFixed(1), f0=v=>v.toFixed(0);
+const baseOpts={
+  responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false}},
+  scales:{
+    x:{ticks:{color:TK,font:{size:10},maxRotation:45},grid:{color:GL}},
+    y:{ticks:{color:TK,font:{size:10}},grid:{color:GL}}
+  }
+};
+
+// ── CHART 1: DEMAND AREA ──────────────────────────────────────
+function renderDemand(d) {
+  dc('demand');
+  CH.demand=new Chart(document.getElementById('ch-demand'),{
+    type:'line',
+    data:{labels:DEM_YRS,datasets:[
+      {label:'TED',data:d.map(p=>+p.ted.toFixed(1)),fill:true,backgroundColor:'rgba(13,59,94,.15)',borderColor:'#0D3B5E',borderWidth:2.5,tension:.35,pointRadius:3,pointHoverRadius:5},
+      {label:'Grid retail',data:d.map(p=>+p.grid.toFixed(1)),fill:true,backgroundColor:'rgba(27,94,150,.18)',borderColor:'#1B5E96',borderWidth:2.5,tension:.35,pointRadius:3,pointHoverRadius:5},
+      {label:'BTM solar',data:d.map(p=>+p.ssc.toFixed(1)),fill:false,borderColor:'#C8923A',borderWidth:1.8,borderDash:[6,3],tension:.35,pointRadius:2,pointStyle:'triangle'},
+      {label:'Battery',data:d.map(p=>+p.batDis.toFixed(1)),fill:false,borderColor:'#52B788',borderWidth:1.8,borderDash:[3,3],tension:.35,pointRadius:2,pointStyle:'rect'},
+    ]},
+    options:{...baseOpts,plugins:{...baseOpts.plugins,tooltip:{mode:'index',callbacks:{footer:items=>{
+      const ted=items.find(i=>i.dataset.label==='TED')?.raw||0;
+      const grid=items.find(i=>i.dataset.label==='Grid retail')?.raw||0;
+      return `BTM wedge: ${(ted-grid).toFixed(1)} TWh (${((ted-grid)/ted*100).toFixed(0)}% of TED)`;
+    }}}},
+    scales:{
+      x:{...baseOpts.scales.x},
+      y:{...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,callback:v=>v+' TWh'},title:{display:true,text:'Retail TWh',color:TK,font:{size:10}}}
+    }}
+  });
+}
+
+// ── CHART 2: SCENARIO COMPARISON ─────────────────────────────
+function renderScen() {
+  dc('scen');
+  const slow=computeDemand('slow'), base=computeDemand('base'), high=computeDemand('high');
+  CH.scen=new Chart(document.getElementById('ch-scen'),{
+    type:'line',
+    data:{labels:DEM_YRS,datasets:[
+      {label:'Stagnant',data:slow.map(p=>+p.grid.toFixed(1)),borderColor:'#9B2335',borderWidth:2.5,fill:false,tension:.3,pointRadius:2},
+      {label:'Base',    data:base.map(p=>+p.grid.toFixed(1)),borderColor:'#036B7A',borderWidth:2.5,fill:false,tension:.3,pointRadius:2},
+      {label:'High GDP',data:high.map(p=>+p.grid.toFixed(1)),borderColor:'#52B788',borderWidth:2.5,fill:false,tension:.3,pointRadius:2},
+    ]},
+    options:{...baseOpts,plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:8,font:{size:10}}},tooltip:{mode:'index'}},
+      scales:{x:{...baseOpts.scales.x},y:{...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,callback:v=>v+' TWh'}}}}
+  });
+}
+
+// ── CHART 3: BTM SOLAR ────────────────────────────────────────
+function renderBTM(d) {
+  dc('btm');
+  CH.btm=new Chart(document.getElementById('ch-btm'),{
+    type:'bar',
+    data:{labels:DEM_YRS,datasets:[
+      {label:'BTM Cap (GW)',data:d.map(p=>+p.btmCap.toFixed(1)),backgroundColor:'rgba(200,146,58,.75)',yAxisID:'yL'},
+      {label:'Displaced (TWh)',data:d.map(p=>+(p.ssc+p.batDis).toFixed(1)),backgroundColor:'rgba(82,183,136,.75)',yAxisID:'yR',type:'line',borderColor:'#52B788',borderWidth:2,pointRadius:2,fill:false},
+    ]},
+    options:{...baseOpts,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:8,font:{size:9}}}},
+      scales:{
+        x:{...baseOpts.scales.x},
+        yL:{type:'linear',position:'left',ticks:{color:TK,font:{size:9},callback:v=>v+'GW'},grid:{color:GL},title:{display:false}},
+        yR:{type:'linear',position:'right',ticks:{color:TK,font:{size:9},callback:v=>v+'T'},grid:{display:false}}
+      }}
+  });
+}
+
+// ── CHART 4: IGCEP MW ─────────────────────────────────────────
+function renderIGCEPmw() {
+  dc('igcep');
+  CH.igcep=new Chart(document.getElementById('ch-igcep-mw'),{
+    type:'bar',
+    data:{labels:CPP_YRS,datasets:[
+      {label:'Hydro',    data:COHORTS.map(c=>c.h), backgroundColor:'rgba(3,107,122,.85)'},
+      {label:'RE',       data:COHORTS.map(c=>c.r), backgroundColor:'rgba(200,146,58,.85)'},
+      {label:'Nuclear',  data:COHORTS.map(c=>c.n), backgroundColor:'rgba(124,58,237,.8)'},
+      {label:'X-Border', data:COHORTS.map(c=>c.x), backgroundColor:'rgba(27,94,150,.8)'},
+    ]},
+    options:{...baseOpts,plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:8,font:{size:10}}},tooltip:{mode:'index',callbacks:{footer:items=>
+      'Total: '+items.reduce((s,i)=>s+i.raw,0).toLocaleString()+' MW'}}},
+      scales:{
+        x:{stacked:true,...baseOpts.scales.x},
+        y:{stacked:true,...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,callback:v=>v.toLocaleString()+' MW'}}
+      }}
+  });
+}
+
+// ── CHART 5: CAPACITY VS DEMAND ───────────────────────────────
+function renderCapVsDem(d) {
+  dc('capd');
+  // Estimate total installed capacity (GW): existing ~46GW + cumulative new MW additions
+  let cumNewGW=46;
+  const instCap=COHORTS.map(c=>{
+    cumNewGW+=(c.h+c.r+c.n+c.x)/1000;
+    return +cumNewGW.toFixed(1);
+  });
+  const peakDem=d.slice(1).map(p=>+(p.grid/0.80*0.75/8.76).toFixed(1)); // Rough peak MW (GW) from TWh
+  CH.capd=new Chart(document.getElementById('ch-capacity-vs-demand'),{
+    type:'bar',
+    data:{labels:CPP_YRS,datasets:[
+      {label:'Total Installed Capacity (GW)',data:instCap,backgroundColor:'rgba(156,163,175,.5)',borderColor:'#6B7280',borderWidth:1,yAxisID:'y'},
+      {label:'Effective Peak Demand (GW, rough)',data:peakDem,type:'line',borderColor:'#9B2335',borderWidth:2.5,fill:false,tension:.3,pointRadius:3,yAxisID:'y'},
+    ]},
+    options:{...baseOpts,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:8,font:{size:10}}}},
+      scales:{
+        x:{...baseOpts.scales.x},
+        y:{...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,callback:v=>v+' GW'},title:{display:true,text:'GW',color:TK,font:{size:10}}}
+      }}
+  });
+}
+
+// ── CHART 6: CPP STACK ────────────────────────────────────────
+function renderCPPstack(newCPP) {
+  dc('cppst');
+  const datasets=[
+    {label:'Existing Fleet',data:EXIST_CPP.map(v=>+v.toFixed(1)),backgroundColor:'rgba(156,163,175,.75)',borderWidth:0},
+    {label:'New Hydro',     data:newCPP.map(r=>+r.h.toFixed(1)),backgroundColor:'rgba(3,107,122,.85)',borderWidth:0},
+    {label:'New RE',        data:newCPP.map(r=>+r.r.toFixed(1)),backgroundColor:'rgba(200,146,58,.85)',borderWidth:0},
+    {label:'Nuclear',       data:newCPP.map(r=>+r.n.toFixed(1)),backgroundColor:'rgba(124,58,237,.75)',borderWidth:0},
+    {label:'Cross-border',  data:newCPP.map(r=>+r.x.toFixed(1)),backgroundColor:'rgba(27,94,150,.8)',borderWidth:0},
+  ];
+  CH.cppst=new Chart(document.getElementById('ch-cpp-stack'),{
+    type:'bar',data:{labels:CPP_YRS,datasets},
+    options:{...baseOpts,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:8,font:{size:10}}},
+        tooltip:{mode:'index',callbacks:{footer:items=>'TOTAL: Rs. '+items.reduce((s,i)=>s+i.raw,0).toFixed(0)+'B'}}},
+      scales:{x:{stacked:true,...baseOpts.scales.x},y:{stacked:true,...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,callback:v=>'Rs. '+v.toLocaleString()+'B'}}}}
+  });
+}
+
+// ── CHART 7: CPP COMPONENTS ──────────────────────────────────
+function renderCPPcomps(newCPP) {
+  dc('cppco');
+  CH.cppco=new Chart(document.getElementById('ch-cpp-components'),{
+    type:'bar',
+    data:{labels:CPP_YRS,datasets:[
+      {label:'Principal', data:newCPP.map(r=>+r.p.toFixed(1)),backgroundColor:'rgba(30,64,175,.85)',borderWidth:0},
+      {label:'Interest',  data:newCPP.map(r=>+r.i.toFixed(1)),backgroundColor:'rgba(220,38,38,.8)',borderWidth:0},
+      {label:'Equity',    data:newCPP.map(r=>+r.eq.toFixed(1)),backgroundColor:'rgba(82,183,136,.8)',borderWidth:0},
+      {label:'O&M+Ins',  data:newCPP.map(r=>+r.om.toFixed(1)),backgroundColor:'rgba(146,64,14,.75)',borderWidth:0},
+    ]},
+    options:{...baseOpts,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:8,font:{size:10}}}},
+      scales:{x:{stacked:true,...baseOpts.scales.x},y:{stacked:true,...baseOpts.scales.y,ticks:{...baseOpts.scales.y.ticks,callback:v=>'Rs. '+v+'B'}}}}
+  });
+}
+
+// ── CHART 8: SCISSORS ────────────────────────────────────────
+function renderScissors(newCPP) {
+  dc('sc');
+  const totalCPP=EXIST_CPP.map((e,i)=>+(e+newCPP[i].total).toFixed(1));
+  const slow=computeDemand('slow'), base=computeDemand('base'), high=computeDemand('high');
+  CH.sc=new Chart(document.getElementById('ch-scissors'),{
+    type:'bar',
+    data:{labels:CPP_YRS,datasets:[
+      {label:'Total CPP (Rs. B)',data:totalCPP,backgroundColor:'rgba(244,199,98,.25)',borderColor:'#F4C762',borderWidth:2.5,type:'bar',yAxisID:'yL'},
+      {label:'Grid Demand — Stagnant',data:slow.slice(1).map(p=>+p.grid.toFixed(1)),type:'line',borderColor:'#DC2626',borderWidth:2.5,fill:false,tension:.3,pointRadius:3,yAxisID:'yR'},
+      {label:'Grid Demand — Base',    data:base.slice(1).map(p=>+p.grid.toFixed(1)),type:'line',borderColor:'#52B788',borderWidth:2,fill:false,tension:.3,pointRadius:2,borderDash:[6,3],yAxisID:'yR'},
+      {label:'Grid Demand — High GDP',data:high.slice(1).map(p=>+p.grid.toFixed(1)),type:'line',borderColor:'#7C3AED',borderWidth:2,fill:false,tension:.3,pointRadius:2,borderDash:[3,4],yAxisID:'yR'},
+    ]},
+    options:{...baseOpts,
+      plugins:{legend:{display:false},tooltip:{mode:'index',backgroundColor:'rgba(13,59,94,.95)',bodyColor:'#fff',titleColor:'#F4C762'}},
+      scales:{
+        x:{...baseOpts.scales.x,ticks:{...baseOpts.scales.x.ticks,color:'rgba(255,255,255,.65)'}},
+        yL:{type:'linear',position:'left',ticks:{color:'#F4C762',font:{size:10},callback:v=>'Rs. '+v.toLocaleString()+'B'},grid:{color:'rgba(255,255,255,.08)'},title:{display:true,text:'Total CPP (Rs. B)',color:'#F4C762',font:{size:10}}},
+        yR:{type:'linear',position:'right',ticks:{color:'rgba(255,255,255,.6)',font:{size:10},callback:v=>v+' TWh'},grid:{display:false},title:{display:true,text:'Grid Demand (TWh)',color:'rgba(255,255,255,.6)',font:{size:10}}}
+      }}
+  });
+}
+
+// ── CHART 9: CPP/kWh HEADLINE ────────────────────────────────
+function renderCPPkwh(newCPP) {
+  dc('kwhc');
+  const totalCPP=EXIST_CPP.map((e,i)=>e+newCPP[i].total);
+  const slow=computeDemand('slow'), base=computeDemand('base'), high=computeDemand('high');
+
+  const kwh_slow=totalCPP.map((t,i)=>+(t/slow[i+1].grid).toFixed(2));
+  const kwh_base=totalCPP.map((t,i)=>+(t/base[i+1].grid).toFixed(2));
+  const kwh_high=totalCPP.map((t,i)=>+(t/high[i+1].grid).toFixed(2));
+  const tariff=Array(N).fill(50);
+
+  CH.kwhc=new Chart(document.getElementById('ch-cpp-kwh'),{
+    type:'line',
+    data:{labels:CPP_YRS,datasets:[
+      {label:'Stagnant Grid',data:kwh_slow,borderColor:'#9B2335',backgroundColor:'rgba(155,35,53,.1)',fill:true,borderWidth:3,tension:.3,pointRadius:4,pointHoverRadius:6},
+      {label:'Base Case',    data:kwh_base,borderColor:'#036B7A',backgroundColor:'rgba(3,107,122,.08)',fill:true,borderWidth:3,tension:.3,pointRadius:4,pointHoverRadius:6},
+      {label:'High GDP',     data:kwh_high,borderColor:'#52B788',backgroundColor:'rgba(82,183,136,.08)',fill:true,borderWidth:3,tension:.3,pointRadius:4,pointHoverRadius:6},
+      {label:'Tariff (Rs. 50)',data:tariff,borderColor:'#9CA3AF',borderWidth:1.5,borderDash:[6,4],fill:false,pointRadius:0,tension:0},
+    ]},
+    options:{...baseOpts,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:11,weight:'600'}}},
+        tooltip:{mode:'index',callbacks:{label:c=>`${c.dataset.label}: Rs. ${c.raw}/kWh`,footer:items=>{
+          const slow=items.find(i=>i.dataset.label==='Stagnant Grid')?.raw;
+          const high=items.find(i=>i.dataset.label==='High GDP')?.raw;
+          if(slow&&high) return `Scenario spread: Rs. ${(slow-high).toFixed(2)}/kWh`;
+          return '';
+        }}}},
+      scales:{
+        x:{...baseOpts.scales.x},
+        y:{...baseOpts.scales.y,min:10,ticks:{...baseOpts.scales.y.ticks,callback:v=>'Rs. '+v+'/kWh'},title:{display:true,text:'Rs. per kWh',color:TK,font:{size:10}}}
+      }}
+  });
+  return {kwh_slow, kwh_base, kwh_high};
+}
+
+// ── CHART 10: BURDEN % ────────────────────────────────────────
+function renderBurden(newCPP) {
+  dc('burd');
+  const totalCPP=EXIST_CPP.map((e,i)=>e+newCPP[i].total);
+  const tariff=50;
+  const slow=computeDemand('slow'), base=computeDemand('base'), high=computeDemand('high');
+  const p_slow=totalCPP.map((t,i)=>+(t/slow[i+1].grid/tariff*100).toFixed(1));
+  const p_base=totalCPP.map((t,i)=>+(t/base[i+1].grid/tariff*100).toFixed(1));
+  const p_high=totalCPP.map((t,i)=>+(t/high[i+1].grid/tariff*100).toFixed(1));
+  CH.burd=new Chart(document.getElementById('ch-burden'),{
+    type:'line',
+    data:{labels:CPP_YRS,datasets:[
+      {label:'Stagnant',data:p_slow,borderColor:'#9B2335',backgroundColor:'rgba(155,35,53,.12)',fill:true,borderWidth:2.5,tension:.3,pointRadius:3},
+      {label:'Base',    data:p_base,borderColor:'#036B7A',backgroundColor:'rgba(3,107,122,.08)',fill:true,borderWidth:2.5,tension:.3,pointRadius:3},
+      {label:'High GDP',data:p_high,borderColor:'#52B788',backgroundColor:'rgba(82,183,136,.08)',fill:true,borderWidth:2.5,tension:.3,pointRadius:3},
+    ]},
+    options:{...baseOpts,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:8,font:{size:10}}}},
+      scales:{
+        x:{...baseOpts.scales.x},
+        y:{...baseOpts.scales.y,min:20,max:55,ticks:{...baseOpts.scales.y.ticks,callback:v=>v+'%'},title:{display:true,text:'% of Rs. 50/kWh tariff',color:TK,font:{size:10}}}
+      }}
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 5. TABLE & KPI UPDATES
+// ═══════════════════════════════════════════════════════════════
+
+function updateTable(kwhs) {
+  const {kwh_slow,kwh_base,kwh_high}=kwhs;
+  const tbody=document.getElementById('cpp-kwh-tbody');
+  tbody.innerHTML='';
+  CPP_YRS.forEach((yr,i)=>{
+    const spread=(kwh_slow[i]-kwh_high[i]).toFixed(2);
+    const isLast=(i===9);
+    const tr=document.createElement('tr');
+    if(isLast) tr.className='hl-red';
+    tr.innerHTML=`<td>${yr}</td>
+      <td style="color:#9B2335;font-weight:600;">Rs. ${kwh_slow[i]}</td>
+      <td style="color:#036B7A;font-weight:600;">Rs. ${kwh_base[i]}</td>
+      <td style="color:#52B788;font-weight:600;">Rs. ${kwh_high[i]}</td>
+      <td style="color:#666;">±${spread}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateKPIs(newCPP, demData, kwhs) {
+  const {kwh_slow,kwh_base,kwh_high}=kwhs;
+  const d35=demData[10];
+  const newCpp35=newCPP[9].total;
+  const totalCpp35=EXIST_CPP[9]+newCpp35;
+  const kwhMap={slow:kwh_slow[9],base:kwh_base[9],high:kwh_high[9]};
+  const kwhVal=kwhMap[S];
+
+  document.getElementById('kpi-grid35').textContent=d35.grid.toFixed(1)+' TWh';
+  document.getElementById('kpi-grid35-sub').textContent=SCEN[S].lbl+' scenario';
+  document.getElementById('kpi-newcpp').textContent='Rs. '+newCpp35.toFixed(0)+'B';
+  document.getElementById('kpi-totalcpp').textContent='Rs. '+totalCpp35.toFixed(0)+'B';
+  document.getElementById('kpi-cpkwh').textContent='Rs. '+kwhVal.toFixed(1)+'/kWh';
+  document.getElementById('kpi-cpkwh-sub').textContent=SCEN[S].lbl;
+
+  // Insights
+  document.getElementById('ins-grid35').textContent=d35.grid.toFixed(1)+' TWh';
+  const cagr=((d35.grid/113.1)**(1/10)-1)*100;
+  document.getElementById('ins-gridcagr').textContent=(cagr>=0?'+':'')+cagr.toFixed(1)+'% CAGR';
+}
+
+function updateInsights(newCPP) {
+  const newCpp28=newCPP[3].total;
+  document.getElementById('ins-newcpp28').textContent='Rs. '+newCpp28.toFixed(0)+'B';
+  const intPct=(newCPP[3].i/(newCPP[3].total||1)*100).toFixed(0)+'%';
+  document.getElementById('ins-interest-pct').textContent=intPct;
+  document.getElementById('ins-total-cpp35').textContent='Rs. '+(EXIST_CPP[9]+newCPP[9].total).toFixed(0)+'B';
+}
+
+function updateVerdicts(demData, kwhs) {
+  const {kwh_slow,kwh_base,kwh_high}=kwhs;
+  const d35=demData[10];
+  const scenLabel=SCEN[S].lbl;
+
+  // Act 1 verdict
+  const gridCAGR=((d35.grid/113.1)**(1/10)-1)*100;
+  const btmWedge=(demData[10].ted - demData[10].grid).toFixed(1);
+  document.getElementById('act1-verdict').innerHTML=
+    `Under the <strong>${scenLabel}</strong> scenario, grid retail demand reaches <strong>${d35.grid.toFixed(1)} TWh</strong> in FY2034-35 — a ${gridCAGR.toFixed(1)}% CAGR from the FY2025 base of 113.1 TWh. Total electricity demand continues growing (GDP-driven), but BTM solar and batteries absorb the incremental growth, with a <strong>${btmWedge} TWh BTM wedge</strong> by FY2035 separating TED from grid demand. The grid is structurally losing market share to distributed generation.`;
+
+  // Act 4 verdict
+  const slow35=kwh_slow[9], base35=kwh_base[9], high35=kwh_high[9];
+  const pctRiseSlow=((slow35/15.3-1)*100).toFixed(0);
+  document.getElementById('act4-verdict').innerHTML=
+    `The scissors effect is stark. Total CPP rises from Rs. 1,731B (FY2025-26) to Rs. ${(EXIST_CPP[9]+computeNewCPP()[9].total).toFixed(0)}B (FY2034-35). Divided across grid demand:<br><br>
+    <span class="scen-badge sb-slow">Stagnant Grid</span> → <strong>Rs. ${slow35.toFixed(1)}/kWh</strong> by FY2034-35 (+${pctRiseSlow}% from Rs. 15.3/kWh base) — capacity charge alone represents <strong>${(slow35/50*100).toFixed(0)}%</strong> of a Rs. 50/kWh retail tariff.<br><br>
+    <span class="scen-badge sb-base">Base Case</span> → <strong>Rs. ${base35.toFixed(1)}/kWh</strong> — still elevated but partially absorbed by demand growth.<br><br>
+    <span class="scen-badge sb-high">High GDP</span> → <strong>Rs. ${high35.toFixed(1)}/kWh</strong> — rising denominator largely neutralises CPP escalation.<br><br>
+    <strong>The demand scenario is the decisive variable.</strong> A Rs. ${(slow35-high35).toFixed(1)}/kWh gap separates the stagnant and high-growth outcomes by FY2034-35 — equivalent to a difference of Rs. ${((slow35-high35)*113).toFixed(0)} billion in total consumer bills annually.`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 6. MAIN RENDER LOOP
+// ═══════════════════════════════════════════════════════════════
+
+function renderAll() {
+  const demData=computeDemand(S);
+  const newCPP=computeNewCPP();
+
+  renderDemand(demData);
+  renderScen();
+  renderBTM(demData);
+  renderIGCEPmw();
+  renderCapVsDem(demData);
+  renderCPPstack(newCPP);
+  renderCPPcomps(newCPP);
+  renderScissors(newCPP);
+  const kwhs=renderCPPkwh(newCPP);
+  renderBurden(newCPP);
+
+  updateTable(kwhs);
+  updateKPIs(newCPP, demData, kwhs);
+  updateInsights(newCPP);
+  updateVerdicts(demData, kwhs);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 7. CONTROLS
+// ═══════════════════════════════════════════════════════════════
+
+function setScenario(s) {
+  S=s;
+  ['slow','base','high'].forEach(k=>{
+    const btn=document.getElementById('btn-'+k);
+    btn.className='scen-btn';
+    if(k===s) btn.classList.add('active-'+k);
+  });
+  renderAll();
+}
+
+function updateMacro() {
+  SOFR_AVG=parseFloat(document.getElementById('s-sofr').value);
+  PKR_35=parseFloat(document.getElementById('s-pkr').value);
+  document.getElementById('v-sofr').textContent=SOFR_AVG.toFixed(2)+'%';
+  document.getElementById('v-pkr').textContent=PKR_35;
+  renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 8. INIT
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('btn-base').classList.add('active-base');
+renderAll();
+</script>
+</body>
+</html>
