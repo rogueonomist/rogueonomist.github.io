@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Electricity Demand Forecast 2025–2035 | Ammar H. Khan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --white: #FFFFFF;
+  --bg: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --teal: #036B7A;
+  --green: #52B788;
+  --red: #9B2335;
+  --blue: #1B5E96;
+  --navy: #0D3B5E;
+  --purple: #7C3AED;
+  --text: #1A1A1A;
+  --text2: #666666;
+  --text3: #999999;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: var(--white);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* ── LAYOUT ── */
+.container { max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
+.header-band {
+  background: var(--navy);
+  color: #fff;
+  padding: 2.5rem 0 2rem;
+  margin-bottom: 2.5rem;
+}
+.header-band h1 {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+.header-band .meta {
+  font-size: 13px;
+  opacity: 0.75;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.header-band .meta span { display: flex; align-items: center; gap: 6px; }
+
+/* ── SECTION LABELS ── */
+.sec-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 0.5rem;
+}
+.sec-title {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+  line-height: 1.3;
+}
+section { margin-bottom: 3rem; }
+
+/* ── KPI CARDS ── */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.kpi-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  padding: 1.25rem;
+  border-radius: 4px;
+}
+.kpi-card.green-top { border-top-color: var(--green); }
+.kpi-card.teal-top  { border-top-color: var(--teal); }
+.kpi-card.red-top   { border-top-color: var(--red); }
+.kpi-card.blue-top  { border-top-color: var(--blue); }
+.kpi-card.purple-top { border-top-color: var(--purple); }
+.kpi-num {
+  font-family: Georgia, serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.kpi-label {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+.kpi-delta {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 6px;
+}
+
+/* ── PANELS ── */
+.panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+
+/* ── CHART WRAPPERS ── */
+.chart-wrap { position: relative; width: 100%; }
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: var(--text2);
+}
+.chart-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.leg-sq { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.leg-dash {
+  width: 20px;
+  height: 2px;
+  flex-shrink: 0;
+  border-radius: 1px;
+  background: repeating-linear-gradient(90deg, currentColor 0 5px, transparent 5px 8px);
+}
+
+/* ── CONTROLS SIDEBAR ── */
+.controls-panel {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 6px;
+  padding: 1.5rem;
+  position: sticky;
+  top: 1rem;
+}
+.controls-panel h3 {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding-bottom: 0.75rem;
+}
+.ctrl-group { margin-bottom: 1.25rem; }
+.ctrl-label {
+  font-size: 12px;
+  opacity: 0.8;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.ctrl-label strong {
+  font-weight: 600;
+  opacity: 1;
+  color: #F4C762;
+}
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.25);
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #F4C762;
+  cursor: pointer;
+}
+.ctrl-hint { font-size: 10px; opacity: 0.5; margin-top: 3px; }
+.scenario-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.scen-btn {
+  font-size: 11px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.scen-btn:hover, .scen-btn.active { background: rgba(255,255,255,0.15); }
+.igcep-note {
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 11px;
+  opacity: 0.75;
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+/* ── SIDEBAR LAYOUT ── */
+.sidebar-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ── TABLES ── */
+.est-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.est-table th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  text-align: right;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--border);
+  background: var(--white);
+  white-space: nowrap;
+}
+.est-table th:first-child { text-align: left; }
+.est-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.est-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+.est-table tr:hover td { background: var(--bg); }
+.est-table .hl-row td { font-weight: 700; color: var(--text); background: #FFF8EC; border-top: 1px solid var(--accent); }
+.est-table .sec-row td { background: var(--bg); font-style: italic; color: var(--text3); font-size: 11px; }
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.badge-amber { background: #FEF0D7; color: #8B5E1A; }
+.badge-green { background: #E8F5EF; color: #1E6B45; }
+.badge-red { background: #FDEEED; color: #7B1C1C; }
+.badge-blue { background: #E8F0FB; color: #1B4E80; }
+
+/* ── VERDICT BOXES ── */
+.verdict {
+  background: var(--bg);
+  border-left: 4px solid var(--accent);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 6px 6px 0;
+  margin: 1.5rem 0;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.verdict strong { color: var(--text); font-weight: 600; }
+.verdict-green { border-left-color: var(--green); }
+.verdict-red { border-left-color: var(--red); }
+.verdict-blue { border-left-color: var(--blue); }
+
+/* ── ASSUMPTION TABLE ── */
+.asm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.asm-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.asm-card-header {
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.asm-card-header .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #F4C762;
+}
+.asm-card-body { padding: 0; }
+.asm-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  align-items: start;
+}
+.asm-row:last-child { border-bottom: none; }
+.asm-key { color: var(--text2); }
+.asm-val { color: var(--text); font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.asm-source { color: var(--text3); font-size: 10px; text-align: right; white-space: nowrap; }
+
+/* ── FRAMEWORK DIAGRAM ── */
+.flow-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.flow-node {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  position: relative;
+}
+.flow-arrow {
+  width: 2px;
+  height: 20px;
+  background: var(--border);
+  position: relative;
+}
+.flow-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -4px;
+  border: 5px solid transparent;
+  border-top-color: var(--text3);
+  border-bottom: none;
+}
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  margin-top: 3rem;
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.7;
+}
+.footer strong { color: var(--text2); }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5rem;
+  gap: 0;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── TOOLTIP ── */
+.tooltip-wrap { position: relative; display: inline-block; cursor: help; }
+.tooltip-wrap .tip {
+  display: none;
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text);
+  color: #fff;
+  font-size: 11px;
+  padding: 5px 9px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+}
+.tooltip-wrap:hover .tip { display: block; }
+
+@media (max-width: 900px) {
+  .sidebar-layout { grid-template-columns: 1fr; }
+  .controls-panel { position: static; }
+  .two-col, .three-col, .asm-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header-band">
+  <div class="container">
+    <div class="sec-label" style="color:rgba(255,255,255,0.5); margin-bottom:8px">Pakistan Power Sector · Demand Forecasting Framework</div>
+    <h1>Grid Demand to 2035: The Solar and Battery Wedge</h1>
+    <p class="meta">
+      <span>📅 Forecast horizon: FY2025–FY2035</span>
+      <span>✍ Ammar H. Khan · NCGCL</span>
+      <span>📂 Sources: IGCEP 2025-35, ISMO hourly data, EYB 2024-25, BTM Solar Memo Dec 2025</span>
+    </p>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SECTION 0 — EXECUTIVE SUMMARY KPIs                       -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="kpi-strip" id="kpi-strip">
+  <!-- populated by JS -->
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SECTION 1 — FRAMEWORK OVERVIEW                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<section>
+  <div class="sec-label">Section 1</div>
+  <div class="sec-title">The demand decomposition identity</div>
+
+  <div class="verdict">
+    <strong>The core equation:</strong> Historically, <em>Total Electricity Demand (TED) ≈ Grid Demand</em> because the grid was the only source of electricity. With the rapid rise of behind-the-meter (BTM) solar and batteries, the equation has fractured into three components. TED still grows with GDP, but the grid captures a shrinking share of that growth. This model tracks all three layers simultaneously, anchored to FY2025 actuals.
+  </div>
+
+  <!-- Identity SVG diagram -->
+  <div style="overflow-x:auto; margin: 1.5rem 0;">
+    <svg viewBox="0 0 1060 220" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:1060px; font-family:-apple-system,sans-serif;">
+      <!-- TED Box -->
+      <rect x="10" y="80" width="180" height="60" rx="6" fill="#0D3B5E"/>
+      <text x="100" y="106" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Total Electricity</text>
+      <text x="100" y="122" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Demand (TED)</text>
+      <text x="100" y="138" text-anchor="middle" fill="#F4C762" font-size="10">GDP × 1.1 elasticity</text>
+
+      <!-- equals -->
+      <text x="210" y="116" text-anchor="middle" fill="#999" font-size="22" font-weight="300">=</text>
+
+      <!-- Grid Box -->
+      <rect x="230" y="20" width="180" height="60" rx="6" fill="#1B5E96"/>
+      <text x="320" y="45" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Grid Retail</text>
+      <text x="320" y="61" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Demand</text>
+      <text x="320" y="77" text-anchor="middle" fill="#A8D4F5" font-size="10">What IGCEP plans for</text>
+
+      <!-- plus signs -->
+      <text x="430" y="58" text-anchor="middle" fill="#999" font-size="22" font-weight="300">+</text>
+      <text x="430" y="118" text-anchor="middle" fill="#999" font-size="22" font-weight="300">+</text>
+
+      <!-- BTM Solar Box -->
+      <rect x="450" y="20" width="200" height="60" rx="6" fill="#C8923A"/>
+      <text x="550" y="45" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">BTM Solar</text>
+      <text x="550" y="61" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Self-Consumed (Day)</text>
+      <text x="550" y="77" text-anchor="middle" fill="#FEE2A2" font-size="10">Cap × CF × self-consumption rate</text>
+
+      <!-- Battery Box -->
+      <rect x="450" y="140" width="200" height="60" rx="6" fill="#52B788"/>
+      <text x="550" y="165" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Battery Discharge</text>
+      <text x="550" y="181" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">(Evening Offset)</text>
+      <text x="550" y="197" text-anchor="middle" fill="#C5EDDC" font-size="10">Battery GWh × annual cycles</text>
+
+      <!-- Stranded Box -->
+      <rect x="680" y="20" width="180" height="60" rx="6" fill="#9B2335"/>
+      <text x="770" y="45" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Stranded / Curtailed</text>
+      <text x="770" y="61" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Solar (Waste)</text>
+      <text x="770" y="77" text-anchor="middle" fill="#F5A8B4" font-size="10">Excess beyond battery capacity</text>
+
+      <!-- Connector lines -->
+      <line x1="190" y1="110" x2="230" y2="50" stroke="#E5E5E5" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="190" y1="110" x2="450" y2="50" stroke="#E5E5E5" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="190" y1="110" x2="450" y2="170" stroke="#E5E5E5" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <line x1="650" y1="50" x2="680" y2="50" stroke="#E5E5E5" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+      <!-- Day/Evening split note -->
+      <rect x="10" y="165" width="180" height="45" rx="4" fill="#FAFAFA" stroke="#E5E5E5"/>
+      <text x="100" y="183" text-anchor="middle" fill="#666" font-size="10" font-weight="600">DAY/EVENING SPLIT</text>
+      <text x="100" y="196" text-anchor="middle" fill="#666" font-size="10">Daytime (08:00–18:00): 41%</text>
+      <text x="100" y="208" text-anchor="middle" fill="#666" font-size="10">Evening (18:00–08:00): 59%</text>
+
+      <!-- Arrow from TED to note -->
+      <line x1="100" y1="140" x2="100" y2="165" stroke="#ccc" stroke-width="1" stroke-dasharray="3,2"/>
+
+      <!-- BTM solar gen note -->
+      <rect x="880" y="20" width="170" height="180" rx="4" fill="#FAFAFA" stroke="#E5E5E5"/>
+      <text x="965" y="40" text-anchor="middle" fill="#666" font-size="10" font-weight="600">FY2025 ANCHORS</text>
+      <line x1="880" y1="47" x2="1050" y2="47" stroke="#E5E5E5"/>
+      <text x="888" y="63" fill="#666" font-size="10">TED (retail):</text>
+      <text x="1042" y="63" text-anchor="end" fill="#1A1A1A" font-size="10" font-weight="600">143.5 TWh</text>
+      <text x="888" y="78" fill="#666" font-size="10">Grid retail demand:</text>
+      <text x="1042" y="78" text-anchor="end" fill="#1A1A1A" font-size="10" font-weight="600">113.1 TWh</text>
+      <text x="888" y="93" fill="#666" font-size="10">BTM solar stock:</text>
+      <text x="1042" y="93" text-anchor="end" fill="#1A1A1A" font-size="10" font-weight="600">26.8 GW</text>
+      <text x="888" y="108" fill="#666" font-size="10">BTM self-consumed:</text>
+      <text x="1042" y="108" text-anchor="end" fill="#1A1A1A" font-size="10" font-weight="600">30.4 TWh</text>
+      <text x="888" y="123" fill="#666" font-size="10">Battery stock:</text>
+      <text x="1042" y="123" text-anchor="end" fill="#1A1A1A" font-size="10" font-weight="600">3.4 GWh</text>
+      <text x="888" y="138" fill="#666" font-size="10">Battery discharge:</text>
+      <text x="1042" y="138" text-anchor="end" fill="#1A1A1A" font-size="10" font-weight="600">1.0 TWh</text>
+      <text x="888" y="153" fill="#666" font-size="10">Stranded solar:</text>
+      <text x="1042" y="153" text-anchor="end" fill="#1A1A1A" font-size="10" font-weight="600">14.0 TWh</text>
+      <text x="888" y="168" fill="#666" font-size="10">Grid share of TED:</text>
+      <text x="1042" y="168" text-anchor="end" fill="#1A1A1A" font-size="10" font-weight="600">79%</text>
+      <text x="888" y="183" fill="#999" font-size="9" font-style="italic">Source: IGCEP, EYB, BTM Memo</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SECTION 2 — INTERACTIVE CONTROLS + MAIN CHARTS           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<section>
+  <div class="sec-label">Section 2</div>
+  <div class="sec-title">Interactive projection engine</div>
+
+  <div class="sidebar-layout">
+    <!-- CHARTS COLUMN -->
+    <div>
+
+      <!-- CHART 1: TED vs Grid demand area chart -->
+      <div class="panel" style="margin-bottom:1.5rem">
+        <div class="panel-title">Exhibit 1 — Total electricity demand vs. grid demand (FY2025–FY2035, retail TWh)</div>
+        <div class="chart-legend" id="leg1">
+          <span><span class="leg-sq" style="background:#0D3B5E"></span>Total electricity demand (TED)</span>
+          <span><span class="leg-sq" style="background:#1B5E96"></span>Grid retail demand</span>
+          <span><span class="leg-sq" style="background:#C8923A"></span>BTM solar served (daytime)</span>
+          <span><span class="leg-sq" style="background:#52B788"></span>Battery discharge (evening)</span>
+          <span style="color:#9B2335;font-style:italic">⚠ Gap = stranded/curtailed solar</span>
+        </div>
+        <div class="chart-wrap" style="height:320px">
+          <canvas id="ch-main" role="img" aria-label="Area chart of Pakistan total electricity demand decomposition 2025 to 2035"></canvas>
+        </div>
+        <div class="verdict" style="margin:1rem 0 0" id="verdict-main"></div>
+      </div>
+
+      <!-- CHART 2: Stacked bar — daytime vs evening grid demand -->
+      <div class="two-col" style="margin-bottom:1.5rem">
+        <div class="panel">
+          <div class="panel-title">Exhibit 2 — Grid demand: daytime vs. evening (retail TWh)</div>
+          <div class="chart-legend">
+            <span><span class="leg-sq" style="background:#378ADD"></span>Daytime grid (solar residual)</span>
+            <span><span class="leg-sq" style="background:#0D3B5E"></span>Evening grid (battery residual)</span>
+          </div>
+          <div class="chart-wrap" style="height:260px">
+            <canvas id="ch-dayeve" role="img" aria-label="Stacked bar chart of daytime and evening grid demand"></canvas>
+          </div>
+        </div>
+
+        <!-- CHART 3: Duck curve evolution -->
+        <div class="panel">
+          <div class="panel-title">Exhibit 3 — Hourly load profile evolution (avg MW, FY2025 vs FY2035 est.)</div>
+          <div class="chart-legend">
+            <span><span class="leg-sq" style="background:#378ADD"></span>FY2025 actual (ISMO)</span>
+            <span><span class="leg-sq" style="background:#9B2335"></span>FY2035 projected</span>
+          </div>
+          <div class="chart-wrap" style="height:260px">
+            <canvas id="ch-duck" role="img" aria-label="Line chart showing hourly demand profile for FY2025 versus FY2035 showing deepening duck curve"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHART 4 & 5: BTM solar + battery trajectories -->
+      <div class="two-col" style="margin-bottom:1.5rem">
+        <div class="panel">
+          <div class="panel-title">Exhibit 4 — BTM solar capacity and energy displacement</div>
+          <div class="chart-legend">
+            <span><span class="leg-sq" style="background:#C8923A"></span>BTM capacity (GW, left)</span>
+            <span><span class="leg-sq" style="background:#F4C762"></span>Solar generation (TWh, right)</span>
+            <span><span class="leg-sq" style="background:#52B788"></span>Self-consumed (TWh, right)</span>
+            <span><span class="leg-sq" style="background:#9B2335"></span>Stranded (TWh, right)</span>
+          </div>
+          <div class="chart-wrap" style="height:250px">
+            <canvas id="ch-solar" role="img" aria-label="Mixed chart of BTM solar capacity growth and energy displacement"></canvas>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Exhibit 5 — Battery stock and evening displacement</div>
+          <div class="chart-legend">
+            <span><span class="leg-sq" style="background:#52B788"></span>Battery stock (GWh, left)</span>
+            <span><span class="leg-sq" style="background:#036B7A"></span>Evening displacement (TWh, right)</span>
+            <span><span class="leg-sq" style="background:#E5E5E5"></span>% of evening TED offset</span>
+          </div>
+          <div class="chart-wrap" style="height:250px">
+            <canvas id="ch-battery" role="img" aria-label="Mixed chart of battery stock and evening demand displacement"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHART 6: Grid share waterfall -->
+      <div class="panel" style="margin-bottom:1.5rem">
+        <div class="panel-title">Exhibit 6 — Grid share of total electricity demand (%) — the structural defection curve</div>
+        <div class="chart-legend">
+          <span><span class="leg-sq" style="background:#1B5E96"></span>Grid % of TED</span>
+          <span><span class="leg-sq" style="background:#C8923A"></span>BTM solar share</span>
+          <span><span class="leg-sq" style="background:#52B788"></span>Battery share</span>
+        </div>
+        <div class="chart-wrap" style="height:220px">
+          <canvas id="ch-share" role="img" aria-label="Stacked bar chart showing grid, BTM solar, and battery shares of total demand"></canvas>
+        </div>
+      </div>
+
+    </div><!-- end charts col -->
+
+    <!-- CONTROLS SIDEBAR -->
+    <div>
+      <div class="controls-panel">
+        <h3>⚙ Assumption Controls</h3>
+
+        <div style="font-size:11px; opacity:0.6; margin-bottom:1rem;">All charts update live as you adjust assumptions.</div>
+
+        <div class="scenario-btns">
+          <button class="scen-btn active" onclick="loadScenario('base')">Base</button>
+          <button class="scen-btn" onclick="loadScenario('low')">Low growth</button>
+          <button class="scen-btn" onclick="loadScenario('high')">High growth</button>
+          <button class="scen-btn" onclick="loadScenario('stress')">Solar stress</button>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">GDP growth rate <strong id="v-gdp">3.5%</strong></div>
+          <input type="range" id="s-gdp" min="2.0" max="6.0" step="0.5" value="3.5">
+          <div class="ctrl-hint">Historical avg 2.4% (FY23-24). IMF projects 3.5-4.5% to FY2030.</div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">Electricity–GDP elasticity <strong id="v-ela">1.10×</strong></div>
+          <input type="range" id="s-ela" min="0.7" max="1.4" step="0.05" value="1.10">
+          <div class="ctrl-hint">Historical 1.1x. Lower as efficiency and saturation rise.</div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">BTM solar additions/yr by FY2027 (GW) <strong id="v-btm">4.0 GW</strong></div>
+          <input type="range" id="s-btm" min="1.5" max="7.0" step="0.5" value="4.0">
+          <div class="ctrl-hint">FY2024 additions ≈6 GW. Expected decline as residential saturates.</div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">BTM solar CF (%) <strong id="v-cf">19%</strong></div>
+          <input type="range" id="s-cf" min="15" max="23" step="1" value="19">
+          <div class="ctrl-hint">Technical Annex Annex B: 19% average across segments.</div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">Self-consumption rate FY2025 <strong id="v-sc">68%</strong></div>
+          <input type="range" id="s-sc" min="55" max="82" step="1" value="68">
+          <div class="ctrl-hint">Weighted avg across 8 BTM segments. Declines ~0.8%/yr as over-panelling grows.</div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">Battery annual cycles <strong id="v-cy">300</strong></div>
+          <input type="range" id="s-cy" min="150" max="400" step="10" value="300">
+          <div class="ctrl-hint">Dec 2025 memo baseline: 300 cycles/yr ≈ 0.82 cycles/day.</div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="ctrl-label">Daytime demand share (%) <strong id="v-dt">41%</strong></div>
+          <input type="range" id="s-dt" min="35" max="48" step="1" value="41">
+          <div class="ctrl-hint">ISMO FY2025 hourly data: 41% avg. Higher in winter (44%), lower in summer (39%).</div>
+        </div>
+
+        <div class="igcep-note">
+          📊 <strong>IGCEP cross-check:</strong> IGCEP Low BAU projects grid gross demand at 167.3 TWh in FY2035. This model at base assumptions yields grid gross (retail ÷ 0.80) of ~<span id="igcep-cmp">182</span> TWh — difference reflects 3.85% vs IGCEP's 2.6% TED growth assumption.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SECTION 3 — ASSUMPTIONS DETAIL                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<section>
+  <div class="sec-label">Section 3</div>
+  <div class="sec-title">Assumption register — all inputs with data lineage</div>
+
+  <div class="asm-grid">
+
+    <div class="asm-card">
+      <div class="asm-card-header"><div class="dot"></div>Layer 1: Total Electricity Demand</div>
+      <div class="asm-card-body">
+        <div class="asm-row"><span class="asm-key">Base year (FY2025) TED</span><span class="asm-val">143.5 TWh</span><span class="asm-source">EYB 2024-25 + BTM memo</span></div>
+        <div class="asm-row"><span class="asm-key">Grid retail sales FY2025</span><span class="asm-val">113.1 TWh</span><span class="asm-source">EYB 2024-25 (confirmed)</span></div>
+        <div class="asm-row"><span class="asm-key">BTM self-consumed FY2025</span><span class="asm-val">30.4 TWh</span><span class="asm-source">Dec 2025 BTM Solar Memo</span></div>
+        <div class="asm-row"><span class="asm-key">GDP growth (central)</span><span class="asm-val">3.5%/yr</span><span class="asm-source">IMF, GoP MTBF</span></div>
+        <div class="asm-row"><span class="asm-key">Electricity elasticity</span><span class="asm-val">1.10×</span><span class="asm-source">Historical pre-2021 avg</span></div>
+        <div class="asm-row"><span class="asm-key">Implied TED CAGR</span><span class="asm-val">3.85%</span><span class="asm-source">Computed: 3.5% × 1.1</span></div>
+        <div class="asm-row"><span class="asm-key">T&amp;D loss rate (assumed)</span><span class="asm-val">20%</span><span class="asm-source">NEPRA SoI 2024 (19.8%)</span></div>
+        <div class="asm-row"><span class="asm-key">Historical peak grid demand</span><span class="asm-val">154 TWh</span><span class="asm-source">FY2022, IGCEP 2025-35</span></div>
+      </div>
+    </div>
+
+    <div class="asm-card">
+      <div class="asm-card-header"><div class="dot" style="background:#C8923A"></div>Layer 2: BTM Solar Displacement (Daytime)</div>
+      <div class="asm-card-body">
+        <div class="asm-row"><span class="asm-key">BTM stock end-FY2025</span><span class="asm-val">26.8 GW</span><span class="asm-source">Dec 2025 Revised Memo</span></div>
+        <div class="asm-row"><span class="asm-key">Annual additions FY2026</span><span class="asm-val">~4.2 GW</span><span class="asm-source">Module import trend</span></div>
+        <div class="asm-row"><span class="asm-key">Annual additions FY2030+</span><span class="asm-val">~2.0 GW</span><span class="asm-source">Saturation assumption</span></div>
+        <div class="asm-row"><span class="asm-key">BTM stock FY2035</span><span class="asm-val">~47 GW</span><span class="asm-source">Cumulative additions</span></div>
+        <div class="asm-row"><span class="asm-key">Average capacity factor</span><span class="asm-val">19%</span><span class="asm-source">Tech Annex Annex B</span></div>
+        <div class="asm-row"><span class="asm-key">Self-consumption FY2025</span><span class="asm-val">68%</span><span class="asm-source">Weighted avg, 8 segments</span></div>
+        <div class="asm-row"><span class="asm-key">Self-consumption FY2035</span><span class="asm-val">60%</span><span class="asm-source">Declining due to over-panelling</span></div>
+        <div class="asm-row"><span class="asm-key">Daytime share of solar gen</span><span class="asm-val">~100%</span><span class="asm-source">Physical constraint</span></div>
+      </div>
+    </div>
+
+    <div class="asm-card">
+      <div class="asm-card-header"><div class="dot" style="background:#52B788"></div>Layer 3: Battery Displacement (Evening)</div>
+      <div class="asm-card-body">
+        <div class="asm-row"><span class="asm-key">Battery stock FY2025</span><span class="asm-val">3.38 GWh</span><span class="asm-source">Solar_Import_Projections.xlsx</span></div>
+        <div class="asm-row"><span class="asm-key">Battery stock FY2028</span><span class="asm-val">14.09 GWh</span><span class="asm-source">Bloomberg NEF calibrated</span></div>
+        <div class="asm-row"><span class="asm-key">Battery stock FY2030</span><span class="asm-val">23.89 GWh</span><span class="asm-source">Solar_Import_Projections.xlsx</span></div>
+        <div class="asm-row"><span class="asm-key">Battery stock FY2035</span><span class="asm-val">55.08 GWh</span><span class="asm-source">Solar_Import_Projections.xlsx</span></div>
+        <div class="asm-row"><span class="asm-key">Annual cycles assumption</span><span class="asm-val">300/yr</span><span class="asm-source">Dec 2025 BTM Solar Memo</span></div>
+        <div class="asm-row"><span class="asm-key">Annual throughput FY2035</span><span class="asm-val">16.5 TWh</span><span class="asm-source">55.08 × 300/1000</span></div>
+        <div class="asm-row"><span class="asm-key">Physical constraint</span><span class="asm-val">≤ solar surplus</span><span class="asm-source">Can only discharge what is stored</span></div>
+        <div class="asm-row"><span class="asm-key">Deployment: residential</span><span class="asm-val">70% share</span><span class="asm-source">PBS HS 85076010 customs</span></div>
+      </div>
+    </div>
+
+    <div class="asm-card">
+      <div class="asm-card-header"><div class="dot" style="background:#378ADD"></div>Layer 4: Day/Evening Load Structure</div>
+      <div class="asm-card-body">
+        <div class="asm-row"><span class="asm-key">Data source</span><span class="asm-val">ISMO FY2025</span><span class="asm-source">8,760 hourly observations</span></div>
+        <div class="asm-row"><span class="asm-key">Daytime (08:00–17:59)</span><span class="asm-val">40–44%</span><span class="asm-source">Higher in winter months</span></div>
+        <div class="asm-row"><span class="asm-key">Evening (18:00–07:59)</span><span class="asm-val">56–60%</span><span class="asm-source">Higher in summer months</span></div>
+        <div class="asm-row"><span class="asm-key">Weighted annual daytime</span><span class="asm-val">41%</span><span class="asm-source">FY2025 ISMO computed</span></div>
+        <div class="asm-row"><span class="asm-key">Peak demand hour</span><span class="asm-val">Hour 20 (20:00)</span><span class="asm-source">15,591 MW avg FY2025</span></div>
+        <div class="asm-row"><span class="asm-key">Solar trough hour</span><span class="asm-val">Hour 12 (midday)</span><span class="asm-source">12,670 MW — duck curve</span></div>
+        <div class="asm-row"><span class="asm-key">Day/eve split evolution</span><span class="asm-val">Stable</span><span class="asm-source">Underlying demand structure unchanged</span></div>
+        <div class="asm-row"><span class="asm-key">IGCEP note on solar</span><span class="asm-val">"Lowers energy, not peak"</span><span class="asm-source">IGCEP 2025-35 text</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BTM segment breakdown table -->
+  <div style="margin-top:2rem">
+    <div class="panel-title" style="margin-bottom:0.75rem">Exhibit 7 — BTM solar segment inventory (FY2025 calibration, Dec 2025 Memo)</div>
+    <div style="overflow-x:auto">
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th style="text-align:left">Segment</th>
+          <th>Capacity (GW)</th>
+          <th>CF (%)</th>
+          <th>Gen (TWh)</th>
+          <th>Self-C (%)</th>
+          <th>Consumed (TWh)</th>
+          <th>Surplus (TWh)</th>
+          <th>Grid?</th>
+          <th>Risk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Industrial BTM (non-NM)</td><td>13.50</td><td>19%</td><td>22.5</td><td>60%</td><td>13.5</td><td>9.0</td><td>No</td><td><span class="badge badge-red">High</span></td></tr>
+        <tr><td>Industrial NM</td><td>2.55</td><td>19%</td><td>4.2</td><td>90%</td><td>3.8</td><td>0.4</td><td>Yes</td><td><span class="badge badge-green">Low</span></td></tr>
+        <tr><td>Domestic NM</td><td>3.40</td><td>19%</td><td>5.7</td><td>65%</td><td>3.7</td><td>2.0</td><td>Yes</td><td><span class="badge badge-red">High</span></td></tr>
+        <tr><td>Domestic Off-Grid / UPS</td><td>3.50</td><td>18%</td><td>5.5</td><td>65%</td><td>3.6</td><td>1.9</td><td>No</td><td><span class="badge badge-red">High</span></td></tr>
+        <tr><td>Commercial NM</td><td>0.50</td><td>19%</td><td>0.8</td><td>65%</td><td>0.5</td><td>0.3</td><td>Yes</td><td><span class="badge badge-blue">Low</span></td></tr>
+        <tr><td>Agriculture NM</td><td>0.15</td><td>19%</td><td>0.2</td><td>65%</td><td>0.2</td><td>0.1</td><td>Yes</td><td><span class="badge badge-blue">Low</span></td></tr>
+        <tr><td>Rural SHS</td><td>0.35</td><td>18%</td><td>0.6</td><td>85%</td><td>0.5</td><td>0.1</td><td>No</td><td><span class="badge badge-blue">Low</span></td></tr>
+        <tr><td>Agriculture Tubewell BTM</td><td>2.80</td><td>20%</td><td>4.9</td><td>95%</td><td>4.7</td><td>0.2</td><td>No</td><td><span class="badge badge-blue">Low</span></td></tr>
+        <tr class="hl-row"><td>TOTAL</td><td>26.75</td><td>—</td><td>44.4</td><td>68%</td><td>30.4</td><td>14.0</td><td>—</td><td><span class="badge badge-amber">32% surplus</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div style="font-size:11px; color:var(--text3); margin-top:8px">Source: Pakistan Solar Battery Memo Dec 2025 · Technical Annex Annex B · Stranded BTM Solar Analysis v3 (Mar 2026)</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SECTION 4 — YEAR-BY-YEAR FORECAST TABLE                  -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<section>
+  <div class="sec-label">Section 4</div>
+  <div class="sec-title">Year-by-year projection table</div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('tab-full')">Full detail</button>
+    <button class="tab-btn" onclick="switchTab('tab-grid')">Grid demand</button>
+    <button class="tab-btn" onclick="switchTab('tab-solar')">Solar &amp; battery</button>
+  </div>
+
+  <div id="tab-full" class="tab-content active">
+    <div style="overflow-x:auto">
+      <table class="est-table" id="tbl-full"></table>
+    </div>
+  </div>
+  <div id="tab-grid" class="tab-content">
+    <div style="overflow-x:auto">
+      <table class="est-table" id="tbl-grid"></table>
+    </div>
+  </div>
+  <div id="tab-solar" class="tab-content">
+    <div style="overflow-x:auto">
+      <table class="est-table" id="tbl-solar"></table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SECTION 5 — HISTORICAL ANCHOR                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<section>
+  <div class="sec-label">Section 5</div>
+  <div class="sec-title">Historical calibration — the divergence since FY2022</div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Exhibit 8 — Grid generation vs. total demand: the opening wedge (GWh)</div>
+      <div class="chart-legend">
+        <span><span class="leg-sq" style="background:#0D3B5E"></span>Grid generation (actual, GWh)</span>
+        <span><span class="leg-sq" style="background:#C8923A;opacity:0.6"></span>BTM solar served (estimated)</span>
+        <span><span class="leg-sq" style="background:#E5E5E5;border:1px solid #ccc"></span>GDP index (right, 2019=100)</span>
+      </div>
+      <div class="chart-wrap" style="height:280px">
+        <canvas id="ch-hist" role="img" aria-label="Bar chart showing historical grid generation and BTM solar divergence since 2022"></canvas>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel" style="margin-bottom:1rem">
+        <div class="panel-title">Historical data anchors (GWh unless noted)</div>
+        <table class="est-table" style="font-size:11px">
+          <thead><tr><th style="text-align:left">FY</th><th>Grid gen</th><th>Grid retail</th><th>BTM (est.)</th><th>TED</th><th>GDP %</th></tr></thead>
+          <tbody>
+            <tr><td>FY2019</td><td>135,000</td><td>108,000</td><td>~500</td><td>108,500</td><td>1.9%</td></tr>
+            <tr><td>FY2020</td><td>127,000</td><td>101,600</td><td>~1,000</td><td>102,600</td><td>-0.5%</td></tr>
+            <tr><td>FY2021</td><td>135,000</td><td>108,000</td><td>~2,500</td><td>110,500</td><td>5.7%</td></tr>
+            <tr><td>FY2022</td><td>154,000</td><td>123,200</td><td>~6,000</td><td>129,200</td><td>6.0%</td></tr>
+            <tr><td>FY2023</td><td>138,539</td><td>110,831</td><td>~14,000</td><td>124,831</td><td>-0.2%</td></tr>
+            <tr><td>FY2024</td><td>136,760</td><td>109,709</td><td>~24,900</td><td>134,609</td><td>2.4%</td></tr>
+            <tr class="hl-row"><td>FY2025</td><td>140,420</td><td>113,139</td><td>30,400</td><td>143,539</td><td>~3.0%</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:10px;color:var(--text3);margin-top:8px">Sources: IGCEP 2025-35, EYB 2024-25, BTM Solar Memo (Dec 2025), NEPRA SoI. BTM estimates for FY2019-FY2024 are model-derived. FY2025 BTM confirmed from Dec 2025 memo.</div>
+      </div>
+
+      <div class="verdict verdict-blue">
+        <strong>Key observation:</strong> Grid generation peaked at 154,000 GWh in FY2022 and has since declined to 140,420 GWh in FY2025 despite 3% GDP growth — a 9% absolute fall. Over the same period, BTM solar stock grew from ~5 GW to 26.8 GW, absorbing an estimated 24 TWh of incremental demand that would otherwise have come from the grid. Without this BTM wedge, grid generation would have exceeded 165,000 GWh by FY2025.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SECTION 6 — SCENARIO COMPARISON                          -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<section>
+  <div class="sec-label">Section 6</div>
+  <div class="sec-title">Scenario comparison — FY2035 grid retail demand (TWh)</div>
+
+  <div class="panel" style="margin-bottom:1.5rem">
+    <div class="panel-title">Exhibit 9 — FY2035 grid demand under four scenarios</div>
+    <div class="chart-wrap" style="height:200px">
+      <canvas id="ch-scen" role="img" aria-label="Horizontal bar chart of four demand scenarios for FY2035"></canvas>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="panel">
+      <div class="panel-title" style="color:var(--green)">🌱 Low growth scenario</div>
+      <div style="font-size:12px; color:var(--text2); line-height:1.7">GDP 2.5%, elasticity 0.9×, high solar additions (5GW/yr), fast battery (400 cycles). Grid demand grows slowest — barely 1.5% CAGR. Grid share of TED falls to ~65% by FY2035.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title" style="color:var(--accent)">⚖ Base scenario</div>
+      <div style="font-size:12px; color:var(--text2); line-height:1.7">GDP 3.5%, elasticity 1.1×, moderate solar additions (4GW declining), base batteries (300 cycles). Grid share of TED falls from 79% to ~70% by FY2035. Broadly consistent with IGCEP Low BAU.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title" style="color:var(--red)">📈 High growth scenario</div>
+      <div style="font-size:12px; color:var(--text2); line-height:1.7">GDP 5%, elasticity 1.2×, slower solar (2.5GW/yr), shallow batteries (200 cycles). Grid demand CAGR 4.2% — approaches IGCEP High case. Grid share remains ~77% as TED grows faster than BTM additions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  FOOTER                                                   -->
+<!-- ══════════════════════════════════════════════════════════ -->
+</div><!-- end container -->
+
+<div class="footer">
+  <div class="container">
+    <div class="two-col" style="gap:3rem">
+      <div>
+        <strong>Methodology notes</strong><br>
+        This model operates in retail TWh throughout. T&D losses (assumed 20%, per NEPRA SoI FY2024 actual 19.8%) are applied when converting to generation-gross equivalents for IGCEP cross-checks only. The model is anchored to three independently verified FY2025 data points: grid retail sales 113.1 TWh (EYB 2024-25), BTM solar stock 26.8 GW and self-consumed energy 30.4 TWh (Dec 2025 BTM Solar Revised Memo). Battery projections are sourced directly from Solar_Import_Projections.xlsx (Bloomberg NEF–calibrated). The day/evening split (41%/59%) is computed from 8,760 ISMO hourly demand observations for FY2025. GDP growth assumption of 3.5% is the IGCEP Low BAU midpoint (3.52% CAGR). All estimates distinguished from confirmed data.
+      </div>
+      <div>
+        <strong>Sources</strong><br>
+        IGCEP 2025-35 (ISMO, May 2025) · EYB 2024-25 (HDIP) · NEPRA State of Industry Report 2024 · ISMO Marginal Cost Data Files (May 2024–May 2025) · ISMO System Demand Hourly Profile FY2025 · Pakistan Solar Battery Tariff &amp; Grid Reform Memo (Dec 2025) · Technical Annex (Dec 2025) · Stranded BTM Solar Analysis v3 (Mar 2026) · Solar_Import_Projections.xlsx · Pakistan Energy Yearbook 2024-25
+        <br><br>
+        <strong>Prepared by:</strong> Ammar H. Khan · NCGCL Product Development · May 2026
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+const YEARS = [2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035];
+const YLABS = YEARS.map(y=>'FY'+y);
+
+// BTM solar capacity base schedule (GW)
+const BTM_BASE = [26.8, 31.0, 34.5, 37.5, 40.0, 41.5, 43.0, 44.5, 45.5, 46.5, 47.0];
+
+// Battery cumulative GWh — sourced from Solar_Import_Projections.xlsx image
+const BAT_GWH = [3.38, 6.55, 10.09, 14.09, 18.64, 23.89, 29.56, 35.54, 41.87, 48.4, 55.08];
+
+// ISMO FY2025 hourly avg demand (MW) — computed from 8,760 obs
+const ISMO_HR = [14655,14335,14096,13917,13735,13769,13478,13086,
+                 13013,13102,12887,12789,12670,12845,13582,14217,
+                 14632,15138,15052,15413,15591,15546,15084,14966];
+
+// Historical grid generation (GWh) — IGCEP + EYB
+const HIST_YEAR  = ['FY2019','FY2020','FY2021','FY2022','FY2023','FY2024','FY2025'];
+const HIST_GRID  = [135000, 127000, 135000, 154000, 138539, 136760, 140420];
+const HIST_BTM   = [500, 1000, 2500, 6000, 14000, 24900, 30400];
+const HIST_GDP   = [1.9, -0.5, 5.7, 6.0, -0.17, 2.38, 3.0];
+
+// GDP index (2019=100)
+let gdpIdx = [100];
+for(let i=1;i<HIST_YEAR.length;i++){
+  gdpIdx.push(+(gdpIdx[i-1]*(1+HIST_GDP[i]/100)).toFixed(1));
+}
+
+const BASE_TED = 143.5; // FY2025 retail TWh
+
+// ══════════════════════════════════════════════
+//  COLOUR CONSTANTS
+// ══════════════════════════════════════════════
+const C = {
+  navy:   '#0D3B5E', blue:  '#1B5E96', lblue: '#378ADD',
+  amber:  '#C8923A', yamb:  '#F4C762', lamb:  '#FEE2A2',
+  green:  '#52B788', teal:  '#036B7A', dgrn:  '#0F6E56',
+  red:    '#9B2335', lred:  '#F5A8B4',
+  gray:   '#E5E5E5', gray2: '#999999',
+  purple: '#7C3AED'
+};
+const GRID_LINE = 'rgba(0,0,0,0.06)';
+const TICK = '#999';
+
+// ══════════════════════════════════════════════
+//  COMPUTE
+// ══════════════════════════════════════════════
+function getBTMCap(btmRate){
+  // btmRate = additions in GW for FY2026 (declining curve)
+  const cap = [26.8];
+  const declineRate = 0.88; // annual decay in additions
+  let add = btmRate;
+  for(let i=1;i<11;i++){
+    cap.push(Math.round((cap[i-1]+add)*10)/10);
+    if(i>=2) add = Math.max(add*declineRate, 1.2);
+  }
+  return cap;
+}
+
+function compute(gdp, ela, btmRate, cf, sc0, cy, dtShare){
+  const tedGrowth = gdp * ela;
+  const scEnd = Math.max(sc0 - 0.08, 0.52);
+  const evShare = 1 - dtShare;
+  const btmCap = getBTMCap(btmRate);
+
+  let out = {
+    TED:[], SOLAR_GEN:[], SOLAR_SC:[], SOLAR_TO_BAT:[],
+    BAT_DIS:[], GRID_RETAIL:[], DAY_GRID:[], EVE_GRID:[],
+    STRANDED:[], BTM_SHARE:[], BAT_SHARE:[], GRID_SHARE:[],
+    GROSS:[], BTM_CAP: btmCap
+  };
+  for(let i=0;i<11;i++){
+    const ted = BASE_TED * Math.pow(1+tedGrowth, i);
+    const sc = sc0 + (scEnd-sc0)*(i/10);
+    const sgen = btmCap[i] * cf * 8.76;
+    const ssc  = sgen * sc;
+    const excess = sgen - ssc;
+    const batCap = Math.min(excess, BAT_GWH[i]*cy/1000);
+    const stranded = excess - batCap;
+    const totalServed = ssc + batCap;
+    const grid = Math.max(0, ted - totalServed);
+    const dayTED = ted * dtShare;
+    const eveTED = ted * evShare;
+    const dayGrid = Math.max(0, dayTED - ssc);
+    const eveGrid = Math.max(0, eveTED - batCap);
+
+    out.TED.push(ted); out.SOLAR_GEN.push(sgen); out.SOLAR_SC.push(ssc);
+    out.SOLAR_TO_BAT.push(excess); out.BAT_DIS.push(batCap);
+    out.GRID_RETAIL.push(grid); out.DAY_GRID.push(dayGrid); out.EVE_GRID.push(eveGrid);
+    out.STRANDED.push(stranded);
+    out.GRID_SHARE.push(grid/ted*100);
+    out.BTM_SHARE.push(ssc/ted*100);
+    out.BAT_SHARE.push(batCap/ted*100);
+    out.GROSS.push(grid/0.80);
+  }
+  return out;
+}
+
+function rn(v,dp=1){ return +v.toFixed(dp); }
+function r0(v){ return Math.round(v); }
+
+// ══════════════════════════════════════════════
+//  CHART INSTANCES
+// ══════════════════════════════════════════════
+let CH = {};
+
+function makeOpts(extra={}){
+  return {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE}},
+      y:{ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE}}
+    },
+    ...extra
+  };
+}
+
+function initCharts(d){
+  // CH-MAIN: Area chart TED vs Grid
+  CH.main = new Chart(document.getElementById('ch-main'),{
+    type:'line',
+    data:{labels:YLABS, datasets:[
+      {label:'TED',data:d.TED.map(rn),fill:true,backgroundColor:C.navy+'22',borderColor:C.navy,borderWidth:2.5,tension:0.35,pointRadius:3},
+      {label:'Grid retail',data:d.GRID_RETAIL.map(rn),fill:true,backgroundColor:C.blue+'33',borderColor:C.blue,borderWidth:2.5,tension:0.35,pointRadius:3},
+      {label:'BTM solar served',data:d.SOLAR_SC.map(rn),fill:false,borderColor:C.amber,borderWidth:2,borderDash:[6,3],tension:0.35,pointRadius:2.5,pointStyle:'triangle'},
+      {label:'Battery discharge',data:d.BAT_DIS.map(rn),fill:false,borderColor:C.green,borderWidth:2,borderDash:[3,3],tension:0.35,pointRadius:2.5,pointStyle:'rect'},
+      {label:'Stranded',data:d.STRANDED.map(rn),fill:false,borderColor:C.red,borderWidth:1.5,borderDash:[2,4],tension:0.35,pointRadius:2}
+    ]},
+    options:makeOpts({scales:{
+      x:{ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE}},
+      y:{ticks:{color:TICK,font:{size:11},callback:v=>rn(v)+' TWh'},grid:{color:GRID_LINE},title:{display:true,text:'Retail TWh',color:TICK,font:{size:11}}}
+    }})
+  });
+
+  // CH-DAYEVE: Stacked bar
+  CH.dayeve = new Chart(document.getElementById('ch-dayeve'),{
+    type:'bar',
+    data:{labels:YLABS, datasets:[
+      {label:'Daytime grid',data:d.DAY_GRID.map(rn),backgroundColor:C.lblue+'CC',stack:'g'},
+      {label:'Evening grid',data:d.EVE_GRID.map(rn),backgroundColor:C.navy+'CC',stack:'g'}
+    ]},
+    options:makeOpts({scales:{
+      x:{ticks:{color:TICK,font:{size:10},maxRotation:45,autoSkip:false},grid:{color:GRID_LINE},stacked:true},
+      y:{ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE},stacked:true,title:{display:true,text:'TWh',color:TICK,font:{size:11}}}
+    }})
+  });
+
+  // CH-DUCK: Hourly profile FY2025 vs FY2035 estimated
+  const hrs = Array.from({length:24},(_,i)=>('0'+i).slice(-2)+':00');
+  const growthFactor35 = Math.pow(1+3.5*1.1/100, 10);
+  // FY2035 hours: nighttime grows more (grid still serves), daytime suppressed by solar
+  const ismo35 = ISMO_HR.map((v,i)=>{
+    const isSolar = i>=8 && i<=17;
+    const solarSuppression = isSolar ? 0.85 : 1.0; // solar reduces midday by ~15%
+    return Math.round(v * growthFactor35 * solarSuppression);
+  });
+  CH.duck = new Chart(document.getElementById('ch-duck'),{
+    type:'line',
+    data:{labels:hrs, datasets:[
+      {label:'FY2025',data:ISMO_HR,borderColor:C.lblue,borderWidth:2,fill:false,tension:0.4,pointRadius:0},
+      {label:'FY2035 est.',data:ismo35,borderColor:C.red,borderWidth:2,fill:false,tension:0.4,pointRadius:0,borderDash:[5,3]}
+    ]},
+    options:makeOpts({scales:{
+      x:{ticks:{color:TICK,font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:12},grid:{color:GRID_LINE}},
+      y:{ticks:{color:TICK,font:{size:11},callback:v=>r0(v/1000)+'k MW'},grid:{color:GRID_LINE}}
+    }})
+  });
+
+  // CH-SOLAR: BTM capacity + energy
+  CH.solar = new Chart(document.getElementById('ch-solar'),{
+    type:'bar',
+    data:{labels:YLABS, datasets:[
+      {label:'BTM cap (GW)',data:d.BTM_CAP,backgroundColor:C.amber+'55',borderColor:C.amber,borderWidth:1.5,yAxisID:'y'},
+      {label:'Solar gen (TWh)',data:d.SOLAR_GEN.map(rn),type:'line',borderColor:C.yamb,borderWidth:2,fill:false,tension:0.3,pointRadius:2.5,yAxisID:'y2'},
+      {label:'Self-consumed (TWh)',data:d.SOLAR_SC.map(rn),type:'line',borderColor:C.green,borderWidth:2,fill:false,tension:0.3,pointRadius:2.5,yAxisID:'y2'},
+      {label:'Stranded (TWh)',data:d.STRANDED.map(rn),type:'line',borderColor:C.red,borderWidth:1.5,fill:false,tension:0.3,pointRadius:2.5,borderDash:[4,3],yAxisID:'y2'}
+    ]},
+    options:makeOpts({scales:{
+      x:{ticks:{color:TICK,font:{size:10},maxRotation:45,autoSkip:false},grid:{color:GRID_LINE}},
+      y:{position:'left',ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE},title:{display:true,text:'GW (cap)',color:TICK,font:{size:11}}},
+      y2:{position:'right',ticks:{color:TICK,font:{size:11}},grid:{drawOnChartArea:false},title:{display:true,text:'TWh (energy)',color:TICK,font:{size:11}}}
+    }})
+  });
+
+  // CH-BATTERY: Battery stock + evening offset
+  CH.battery = new Chart(document.getElementById('ch-battery'),{
+    type:'bar',
+    data:{labels:YLABS, datasets:[
+      {label:'Battery stock (GWh)',data:BAT_GWH.map(rn),backgroundColor:C.green+'55',borderColor:C.green,borderWidth:1.5,yAxisID:'y'},
+      {label:'Evening displace (TWh)',data:d.BAT_DIS.map(rn),type:'line',borderColor:C.teal,borderWidth:2.5,fill:false,tension:0.4,pointRadius:3,yAxisID:'y2'},
+      {label:'% eve TED offset',data:d.BAT_DIS.map((v,i)=>rn(v/d.TED[i]*d.EVE_GRID[i]*0+v/(d.TED[i]*0.59)*100)),type:'line',borderColor:C.gray2,borderWidth:1.5,fill:false,tension:0.4,pointRadius:2.5,borderDash:[4,3],yAxisID:'y2'}
+    ]},
+    options:makeOpts({scales:{
+      x:{ticks:{color:TICK,font:{size:10},maxRotation:45,autoSkip:false},grid:{color:GRID_LINE}},
+      y:{position:'left',ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE},title:{display:true,text:'GWh (stock)',color:TICK,font:{size:11}}},
+      y2:{position:'right',ticks:{color:TICK,font:{size:11},callback:v=>rn(v)},grid:{drawOnChartArea:false},title:{display:true,text:'TWh / %',color:TICK,font:{size:11}}}
+    }})
+  });
+
+  // CH-SHARE: Grid share stacked
+  CH.share = new Chart(document.getElementById('ch-share'),{
+    type:'bar',
+    data:{labels:YLABS, datasets:[
+      {label:'Grid % of TED',data:d.GRID_SHARE.map(v=>rn(v)),backgroundColor:C.blue+'BB',stack:'s'},
+      {label:'BTM solar %',data:d.BTM_SHARE.map(v=>rn(v)),backgroundColor:C.amber+'BB',stack:'s'},
+      {label:'Battery %',data:d.BAT_SHARE.map(v=>rn(v)),backgroundColor:C.green+'BB',stack:'s'}
+    ]},
+    options:makeOpts({scales:{
+      x:{ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE},stacked:true},
+      y:{ticks:{color:TICK,font:{size:11},callback:v=>v+'%'},grid:{color:GRID_LINE},stacked:true,max:100,title:{display:true,text:'Share of TED (%)',color:TICK,font:{size:11}}}
+    }})
+  });
+
+  // CH-HIST: Historical
+  CH.hist = new Chart(document.getElementById('ch-hist'),{
+    type:'bar',
+    data:{labels:HIST_YEAR, datasets:[
+      {label:'Grid generation',data:HIST_GRID.map(v=>r0(v/1000)),backgroundColor:C.navy+'88',borderColor:C.navy,borderWidth:1.5,stack:'h'},
+      {label:'BTM solar served',data:HIST_BTM.map(v=>r0(v/1000)),backgroundColor:C.amber+'88',borderColor:C.amber,borderWidth:1.5,stack:'h'},
+      {label:'GDP index',data:gdpIdx,type:'line',borderColor:C.green,borderWidth:2,fill:false,tension:0.4,pointRadius:4,yAxisID:'y2'}
+    ]},
+    options:makeOpts({scales:{
+      x:{ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE},stacked:true},
+      y:{position:'left',ticks:{color:TICK,font:{size:11}},grid:{color:GRID_LINE},stacked:true,title:{display:true,text:'TWh',color:TICK,font:{size:11}}},
+      y2:{position:'right',ticks:{color:TICK,font:{size:11}},grid:{drawOnChartArea:false},title:{display:true,text:'GDP index (2019=100)',color:TICK,font:{size:11}},min:85,max:135}
+    }})
+  });
+
+  // CH-SCEN: Scenario horizontal bars
+  const scens = [
+    {label:'Low growth (GDP 2.5%, high solar)', val: (() => {
+      const d2=compute(0.025,0.9,5.0,0.19,0.70,350,0.41); return rn(d2.GRID_RETAIL[10]);
+    })(), color:C.green},
+    {label:'Base case (GDP 3.5%, 1.1× ela)', val: (() => {
+      const d2=compute(0.035,1.1,4.0,0.19,0.68,300,0.41); return rn(d2.GRID_RETAIL[10]);
+    })(), color:C.amber},
+    {label:'IGCEP Low BAU (NM-adjusted, gross ÷ 1.25)', val:167.3, color:C.teal},
+    {label:'High growth (GDP 5.0%, slow solar)', val: (() => {
+      const d2=compute(0.050,1.2,2.5,0.19,0.64,200,0.41); return rn(d2.GRID_RETAIL[10]);
+    })(), color:C.red}
+  ];
+  CH.scen = new Chart(document.getElementById('ch-scen'),{
+    type:'bar',
+    data:{
+      labels:scens.map(s=>s.label),
+      datasets:[{
+        label:'FY2035 grid retail demand (TWh)',
+        data:scens.map(s=>s.val),
+        backgroundColor:scens.map(s=>s.color+'BB'),
+        borderColor:scens.map(s=>s.color),
+        borderWidth:2,
+        borderRadius:4
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>ctx.raw+' TWh'}}},
+      scales:{
+        x:{ticks:{color:TICK,font:{size:11},callback:v=>v+' TWh'},grid:{color:GRID_LINE},min:100,max:200},
+        y:{ticks:{color:TICK,font:{size:12}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+function updateCharts(d){
+  CH.main.data.datasets[0].data = d.TED.map(rn);
+  CH.main.data.datasets[1].data = d.GRID_RETAIL.map(rn);
+  CH.main.data.datasets[2].data = d.SOLAR_SC.map(rn);
+  CH.main.data.datasets[3].data = d.BAT_DIS.map(rn);
+  CH.main.data.datasets[4].data = d.STRANDED.map(rn);
+  CH.main.update('none');
+
+  CH.dayeve.data.datasets[0].data = d.DAY_GRID.map(rn);
+  CH.dayeve.data.datasets[1].data = d.EVE_GRID.map(rn);
+  CH.dayeve.update('none');
+
+  CH.solar.data.datasets[0].data = d.BTM_CAP;
+  CH.solar.data.datasets[1].data = d.SOLAR_GEN.map(rn);
+  CH.solar.data.datasets[2].data = d.SOLAR_SC.map(rn);
+  CH.solar.data.datasets[3].data = d.STRANDED.map(rn);
+  CH.solar.update('none');
+
+  CH.battery.data.datasets[1].data = d.BAT_DIS.map(rn);
+  CH.battery.data.datasets[2].data = d.BAT_DIS.map((v,i)=>rn(v/(d.TED[i]*0.59)*100));
+  CH.battery.update('none');
+
+  CH.share.data.datasets[0].data = d.GRID_SHARE.map(v=>rn(v));
+  CH.share.data.datasets[1].data = d.BTM_SHARE.map(v=>rn(v));
+  CH.share.data.datasets[2].data = d.BAT_SHARE.map(v=>rn(v));
+  CH.share.update('none');
+}
+
+// ══════════════════════════════════════════════
+//  KPI STRIP
+// ══════════════════════════════════════════════
+function updateKPI(d){
+  const g0=rn(d.GRID_RETAIL[0]), g10=rn(d.GRID_RETAIL[10]);
+  const cagr = rn((Math.pow(g10/g0,1/10)-1)*100);
+  const gridShare35 = rn(d.GRID_SHARE[10]);
+  const solar35 = rn(d.SOLAR_SC[10]);
+  const bat35 = rn(d.BAT_DIS[10]);
+  const stranded35 = rn(d.STRANDED[10]);
+  const ted35 = rn(d.TED[10]);
+
+  const kpis = [
+    {n:`${g0} TWh`,  l:'FY2025 grid retail demand (base)',      d:'Anchored to EYB 2024-25',                  t:''},
+    {n:`${g10} TWh`, l:'FY2035 grid retail demand (projected)', d:`CAGR ${cagr}% — well below TED growth`,    t:'blue-top'},
+    {n:`${ted35} TWh`,l:'FY2035 total electricity demand',      d:'Grid + all BTM self-served',               t:''},
+    {n:`${solar35} TWh`,l:'Solar displaces daily (FY2035)',     d:`${rn(d.BTM_CAP[10])} GW BTM at ${rn(d.SOLAR_SC[10]/d.SOLAR_GEN[10]*100)}% self-cons.`, t:'green-top'},
+    {n:`${bat35} TWh`, l:'Batteries offset evening (FY2035)',   d:`${BAT_GWH[10]} GWh stock × 300 cycles`,   t:'teal-top'},
+    {n:`${gridShare35}%`,l:'Grid share of TED by FY2035',       d:`Down from 79% in FY2025 (−${rn(79-gridShare35)}pp)`, t:'red-top'},
+    {n:`${stranded35} TWh`,l:'Stranded/curtailed solar (FY2035)',d:'Cannot be absorbed — policy gap',         t:''},
+  ];
+  document.getElementById('kpi-strip').innerHTML = kpis.map(k=>
+    `<div class="kpi-card ${k.t}"><div class="kpi-num">${k.n}</div><div class="kpi-label">${k.l}</div><div class="kpi-delta">${k.d}</div></div>`
+  ).join('');
+}
+
+// ══════════════════════════════════════════════
+//  VERDICT
+// ══════════════════════════════════════════════
+function updateVerdict(d){
+  const cagr = rn((Math.pow(d.GRID_RETAIL[10]/d.GRID_RETAIL[0],0.1)-1)*100);
+  const tedCagr = rn((Math.pow(d.TED[10]/d.TED[0],0.1)-1)*100);
+  const wedge = rn(d.TED[10]-d.GRID_RETAIL[10]);
+  document.getElementById('verdict-main').innerHTML =
+    `<strong>Reading the chart:</strong> The gap between the navy TED line and the blue Grid Retail line is the BTM solar + battery wedge — energy that was consumed in Pakistan but never crossed the grid. By FY2035 this wedge reaches <strong>${wedge} TWh</strong>. TED grows at <strong>${tedCagr}%/yr</strong> (GDP × elasticity) while grid demand grows at only <strong>${cagr}%/yr</strong>. The IGCEP must plan for grid demand — if it plans for TED, it will massively over-procure capacity. Conversely, if it under-models TED growth, new industrial and residential load that cannot go BTM (heavy industry, EV charging) will strain the grid.`;
+}
+
+// ══════════════════════════════════════════════
+//  TABLE BUILDER
+// ══════════════════════════════════════════════
+function buildTables(d){
+  // FULL TABLE
+  const fHdr = ['FY','TED (TWh)','Day TED','Eve TED','BTM cap (GW)','BTM gen (TWh)','Solar served','Solar→Bat','Bat cap (GWh)','Bat discharge','Grid retail','Grid gross','Stranded','Grid share'];
+  let html = `<thead><tr>${fHdr.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  for(let i=0;i<11;i++){
+    const dtShare = parseFloat(document.getElementById('s-dt').value)/100;
+    const row = [
+      `FY${YEARS[i]}`,
+      rn(d.TED[i]), rn(d.TED[i]*dtShare), rn(d.TED[i]*(1-dtShare)),
+      rn(d.BTM_CAP[i]), rn(d.SOLAR_GEN[i]), rn(d.SOLAR_SC[i]),
+      rn(d.SOLAR_TO_BAT[i]), rn(BAT_GWH[i]), rn(d.BAT_DIS[i]),
+      rn(d.GRID_RETAIL[i]), rn(d.GRID_RETAIL[i]/0.80),
+      rn(d.STRANDED[i]), rn(d.GRID_SHARE[i])+'%'
+    ];
+    const cls = i===0||i===10 ? 'hl-row' : '';
+    html += `<tr class="${cls}">${row.map((v,j)=>`<td>${v}</td>`).join('')}</tr>`;
+  }
+  html += '</tbody>';
+  document.getElementById('tbl-full').innerHTML = html;
+
+  // GRID TABLE
+  const gHdr = ['FY','TED (TWh)','Grid retail','Grid gross (÷0.8)','Daytime grid','Evening grid','CAGR to yr'];
+  html = `<thead><tr>${gHdr.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  for(let i=0;i<11;i++){
+    const dtShare = parseFloat(document.getElementById('s-dt').value)/100;
+    const cagr = i===0 ? '—' : rn((Math.pow(d.GRID_RETAIL[i]/d.GRID_RETAIL[0],1/i)-1)*100)+'%';
+    const row = [`FY${YEARS[i]}`,rn(d.TED[i]),rn(d.GRID_RETAIL[i]),rn(d.GRID_RETAIL[i]/0.80),rn(d.DAY_GRID[i]),rn(d.EVE_GRID[i]),cagr];
+    const cls = i===0||i===10 ? 'hl-row' : '';
+    html += `<tr class="${cls}">${row.map(v=>`<td>${v}</td>`).join('')}</tr>`;
+  }
+  html += '</tbody>';
+  document.getElementById('tbl-grid').innerHTML = html;
+
+  // SOLAR & BAT TABLE
+  const sHdr = ['FY','BTM cap (GW)','Additions (GW)','BTM gen (TWh)','Self-C rate','Solar served','Surplus/Bat','Bat stock (GWh)','Bat discharge','Stranded','Grid share'];
+  html = `<thead><tr>${sHdr.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  for(let i=0;i<11;i++){
+    const sc0 = parseFloat(document.getElementById('s-sc').value)/100;
+    const scRate = rn(sc0+(Math.max(sc0-0.08,0.52)-sc0)*(i/10)*100)+'%';
+    const add = i===0 ? '—' : rn(d.BTM_CAP[i]-d.BTM_CAP[i-1]);
+    const row = [`FY${YEARS[i]}`,rn(d.BTM_CAP[i]),add,rn(d.SOLAR_GEN[i]),scRate,rn(d.SOLAR_SC[i]),rn(d.SOLAR_TO_BAT[i]),rn(BAT_GWH[i]),rn(d.BAT_DIS[i]),rn(d.STRANDED[i]),rn(d.GRID_SHARE[i])+'%'];
+    const cls = i===0||i===10 ? 'hl-row' : '';
+    html += `<tr class="${cls}">${row.map(v=>`<td>${v}</td>`).join('')}</tr>`;
+  }
+  html += '</tbody>';
+  document.getElementById('tbl-solar').innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+//  CONTROLS
+// ══════════════════════════════════════════════
+function getParams(){
+  return {
+    gdp:    parseFloat(document.getElementById('s-gdp').value)/100,
+    ela:    parseFloat(document.getElementById('s-ela').value),
+    btmRate:parseFloat(document.getElementById('s-btm').value),
+    cf:     parseFloat(document.getElementById('s-cf').value)/100,
+    sc:     parseFloat(document.getElementById('s-sc').value)/100,
+    cy:     parseFloat(document.getElementById('s-cy').value),
+    dtShare:parseFloat(document.getElementById('s-dt').value)/100
+  };
+}
+
+function updateLabels(){
+  document.getElementById('v-gdp').textContent = document.getElementById('s-gdp').value+'%';
+  document.getElementById('v-ela').textContent = parseFloat(document.getElementById('s-ela').value).toFixed(2)+'×';
+  document.getElementById('v-btm').textContent = parseFloat(document.getElementById('s-btm').value).toFixed(1)+' GW';
+  document.getElementById('v-cf').textContent  = document.getElementById('s-cf').value+'%';
+  const sc = parseFloat(document.getElementById('s-sc').value);
+  document.getElementById('v-sc').textContent  = sc+'%';
+  document.getElementById('v-cy').textContent  = r0(document.getElementById('s-cy').value);
+  document.getElementById('v-dt').textContent  = document.getElementById('s-dt').value+'%';
+}
+
+function updateAll(){
+  updateLabels();
+  const p = getParams();
+  const d = compute(p.gdp, p.ela, p.btmRate, p.cf, p.sc, p.cy, p.dtShare);
+  updateKPI(d);
+  updateVerdict(d);
+  updateCharts(d);
+  buildTables(d);
+  document.getElementById('igcep-cmp').textContent = rn(d.GRID_RETAIL[10]/0.80);
+}
+
+['s-gdp','s-ela','s-btm','s-cf','s-sc','s-cy','s-dt'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', updateAll);
+});
+
+// ══════════════════════════════════════════════
+//  SCENARIOS
+// ══════════════════════════════════════════════
+const SCENARIOS = {
+  base:   {gdp:3.5, ela:1.10, btm:4.0, cf:19, sc:68, cy:300, dt:41},
+  low:    {gdp:2.5, ela:0.90, btm:5.0, cf:20, sc:72, cy:350, dt:41},
+  high:   {gdp:5.0, ela:1.20, btm:2.5, cf:18, sc:64, cy:200, dt:41},
+  stress: {gdp:3.5, ela:1.10, btm:6.0, cf:21, sc:60, cy:400, dt:41}
+};
+
+function loadScenario(s){
+  const p = SCENARIOS[s];
+  document.getElementById('s-gdp').value = p.gdp;
+  document.getElementById('s-ela').value = p.ela;
+  document.getElementById('s-btm').value = p.btm;
+  document.getElementById('s-cf').value  = p.cf;
+  document.getElementById('s-sc').value  = p.sc;
+  document.getElementById('s-cy').value  = p.cy;
+  document.getElementById('s-dt').value  = p.dt;
+  document.querySelectorAll('.scen-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  updateAll();
+}
+
+// ══════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════
+function switchTab(id){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+window.addEventListener('load', ()=>{
+  const p = getParams();
+  const d = compute(p.gdp, p.ela, p.btmRate, p.cf, p.sc, p.cy, p.dtShare);
+  updateKPI(d);
+  updateVerdict(d);
+  initCharts(d);
+  buildTables(d);
+});
+</script>
+</body>
+</html>
