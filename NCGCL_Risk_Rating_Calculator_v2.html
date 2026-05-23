@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCGCL Risk Rating Calculator</title>
+<style>
+:root{
+  --white:#FFFFFF;
+  --bg:#FAFAFA;
+  --border:#E5E5E5;
+  --accent:#C8923A;
+  --cerulean:#035076;
+  --green:#39A949;
+  --text:#1A1A1A;
+  --muted:#666666;
+  --faint:#999999;
+  --red:#9B2335;
+  --warn-bg:#FEF6ED;
+  --warn-border:#F5CBA7;
+  --err-bg:#FDE8E8;
+  --err-border:#F5B7B1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--white);color:#2D2D2D;line-height:1.6;font-size:15px}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+
+/* Header */
+.site-header{border-bottom:1px solid var(--border);padding:1.25rem 0}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo-block{display:flex;align-items:center;gap:12px}
+.logo-box{width:40px;height:40px;background:var(--cerulean);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-box svg{width:22px;height:22px;fill:white}
+.logo-text{font-family:Georgia,serif;font-size:18px;color:var(--text);font-weight:400}
+.logo-sub{font-size:12px;color:var(--faint);letter-spacing:.04em}
+.badge{font-size:11px;color:var(--faint);border:1px solid var(--border);padding:3px 10px;border-radius:20px;white-space:nowrap}
+
+/* Page title */
+.page-hero{padding:2.5rem 0 1.5rem;border-bottom:1px solid var(--border)}
+.section-label{font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--faint);text-transform:uppercase;margin-bottom:.5rem}
+.page-title{font-family:Georgia,serif;font-size:34px;font-weight:400;color:var(--text);line-height:1.2;margin-bottom:.75rem}
+.page-desc{font-size:14px;color:var(--muted);line-height:1.7;max-width:720px}
+
+/* Mode toggle */
+.mode-bar{display:flex;align-items:center;gap:1rem;padding:1.25rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.mode-label{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--faint);text-transform:uppercase;white-space:nowrap}
+.mode-toggle{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.mode-btn{padding:7px 18px;font-size:13px;font-weight:500;background:none;border:none;cursor:pointer;color:var(--muted);transition:all .15s;white-space:nowrap}
+.mode-btn.active{background:var(--cerulean);color:white}
+.mode-hint{font-size:12px;color:var(--muted)}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-top:1.5rem;overflow-x:auto}
+.tab-btn{background:none;border:none;padding:.875rem 1.25rem;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s;text-transform:uppercase;letter-spacing:.06em}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--accent)}
+.tab-content{display:none;padding:2rem 0}.tab-content.active{display:block}
+
+/* Panels */
+.panel{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.panel-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.panel-title .wt{font-size:11px;color:var(--faint);background:var(--white);border:1px solid var(--border);padding:2px 8px;border-radius:12px;font-weight:400}
+
+/* Criterion rows */
+.crit-row{display:grid;grid-template-columns:1fr 260px;align-items:start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.crit-row:last-child{border-bottom:none}
+.crit-label{font-size:13px;color:var(--text);font-weight:500}
+.crit-sub{font-size:11px;color:var(--faint);margin-top:2px}
+select{font-size:13px;width:100%;border:1px solid var(--border);border-radius:6px;padding:7px 10px;background:white;color:var(--text);appearance:auto}
+select:focus{outline:1px solid var(--accent);border-color:var(--accent)}
+input[type=number],input[type=text],input[type=date],textarea{font-size:13px;width:100%;border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);background:white;font-family:inherit}
+input[type=number]:focus,input[type=text]:focus,input[type=date]:focus,textarea:focus{outline:1px solid var(--accent);border-color:var(--accent)}
+textarea{min-height:72px;resize:vertical;line-height:1.5}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+.req{color:var(--red);font-weight:700}
+.action-row{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
+.btn{border:1px solid var(--border);background:white;color:var(--text);border-radius:6px;padding:8px 13px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn:hover{border-color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.btn.primary{background:var(--cerulean);border-color:var(--cerulean);color:white}
+.btn.secondary{background:var(--bg)}
+.small-note{font-size:11px;color:var(--faint);line-height:1.5}
+.report-table{width:100%;border-collapse:collapse;font-size:11px;margin:.6rem 0 1rem}
+.report-table th{background:#F2F5F7;color:#123;text-align:left;padding:6px 7px;border:1px solid #D7DEE5;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+.report-table td{padding:6px 7px;border:1px solid #D7DEE5;vertical-align:top}
+.report-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.75rem 0 1rem}
+.report-kpi{border:1px solid #D7DEE5;border-top:3px solid var(--cerulean);padding:8px;border-radius:4px;background:#fff}
+.report-kpi-label{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#667;margin-bottom:2px}
+.report-kpi-val{font-family:Georgia,serif;font-size:17px;color:#111}
+.print-report{display:none}
+
+/* IRR stat cards */
+.irr-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:1.5rem}
+.irr-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1.25rem;transition:border-color .2s}
+.irr-card:hover{border-color:var(--accent)}
+.irr-card-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:.5rem}
+.irr-card-val{font-family:Georgia,serif;font-size:26px;color:var(--text)}
+.irr-card-sub{font-size:12px;color:var(--muted);margin-top:.25rem}
+
+/* Sector table */
+.sector-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:.5rem}
+.sector-table th{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);text-align:left;padding:.6rem .75rem;border-bottom:2px solid var(--border);background:var(--white)}
+.sector-table td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:#2D2D2D}
+.sector-table tr:hover td{background:var(--bg)}
+
+/* IRR scale bar */
+.scale-row{display:flex;gap:2px;margin-bottom:.5rem}
+.scale-cell{flex:1;height:28px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:white}
+
+/* Composite result box */
+.result-box{border-radius:8px;padding:1.5rem;margin-bottom:1rem;border:1px solid var(--cerulean)}
+.result-box-header{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cerulean);margin-bottom:1rem}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.result-cell{background:var(--bg);border-radius:6px;padding:.875rem 1rem}
+.result-cell-label{font-size:11px;color:var(--faint);margin-bottom:.25rem;font-weight:500}
+.result-cell-val{font-family:Georgia,serif;font-size:22px;color:var(--text)}
+.result-cell.primary{background:var(--cerulean)}
+.result-cell.primary .result-cell-label{color:rgba(255,255,255,.7)}
+.result-cell.primary .result-cell-val{color:white;font-size:26px}
+
+/* Approve matrix / fee card */
+.insight-box{background:var(--bg);border:1px solid var(--border);border-top:3px solid var(--green);padding:1.25rem;border-radius:4px}
+.insight-box.amber{border-top-color:var(--accent)}
+.insight-box.red{border-top-color:var(--red)}
+.insight-num{font-family:Georgia,serif;font-size:26px;color:var(--text)}
+.insight-text{font-size:12px;color:var(--muted);margin-top:.5rem;line-height:1.5}
+
+/* Alert boxes */
+.alert{border-radius:6px;padding:.875rem 1rem;font-size:13px;margin-bottom:.75rem;line-height:1.5}
+.alert.warn{background:var(--warn-bg);border:1px solid var(--warn-border);color:#7E5109}
+.alert.err{background:var(--err-bg);border:1px solid var(--err-border);color:#7B241C}
+.verdict{background:var(--bg);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.25rem;border-radius:4px;margin:.75rem 0}
+.verdict-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:.4rem}
+.verdict-text{font-size:13px;color:#2D2D2D;line-height:1.7}
+
+/* Overview table */
+.irr-table{width:100%;border-collapse:collapse;font-size:13px}
+.irr-table th{font-size:11px;font-weight:600;letter-spacing:.07em;color:var(--faint);text-align:left;padding:.65rem .75rem;border-bottom:2px solid var(--border);background:var(--white)}
+.irr-table td{padding:.65rem .75rem;border-bottom:1px solid var(--border)}
+.irr-table tr:hover td{background:var(--bg)}
+
+/* Composite bar */
+.comp-bar-wrap{margin:1rem 0 .25rem}
+.comp-bar{height:8px;border-radius:4px;background:linear-gradient(90deg,#39A949,#C8923A,#9B2335);position:relative}
+.comp-pin{position:absolute;top:-6px;width:20px;height:20px;border-radius:50%;background:var(--cerulean);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.2);transform:translateX(-50%);transition:left .4s}
+.comp-bar-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:.25rem}
+
+/* Weight row */
+.wt-row{display:flex;align-items:center;gap:12px;margin-bottom:.5rem;font-size:13px}
+.wt-label{min-width:140px;color:var(--muted)}
+.wt-row input[type=range]{flex:1;accent-color:var(--cerulean)}
+.wt-val{min-width:36px;text-align:right;font-weight:600;color:var(--text)}
+
+/* Two col layout */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* Print / PDF report */
+@page{size:A4;margin:13mm}
+@media print{
+  body{background:white;color:#111;font-size:12px;line-height:1.35}
+  .site-header, body > .container, footer{display:none!important}
+  .print-report{display:block!important}
+  .report-wrap{padding:0;max-width:none;margin:0}
+  .report-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--cerulean);padding-bottom:8px;margin-bottom:12px}
+  .report-title{font-family:Georgia,serif;font-size:22px;font-weight:400;color:#111;margin:0}
+  .report-sub{font-size:10px;color:#555;margin-top:3px}
+  .report-section{break-inside:avoid;margin-bottom:11px}
+  .report-section h2{font-family:Georgia,serif;font-size:15px;font-weight:400;margin:10px 0 6px;color:#111;border-bottom:1px solid #D7DEE5;padding-bottom:4px}
+  .report-table{page-break-inside:auto}
+  .report-table tr{page-break-inside:avoid;page-break-after:auto}
+  .no-print{display:none!important}
+}
+@media(max-width:768px){
+  .two-col,.three-col{grid-template-columns:1fr}
+  .irr-strip{grid-template-columns:1fr 1fr}
+  .crit-row{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <div class="logo-block">
+        <div class="logo-box">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+        </div>
+        <div>
+          <div class="logo-text">NCGCL</div>
+          <div class="logo-sub">National Credit Guarantee Company Limited</div>
+        </div>
+      </div>
+      <div class="badge">Risk Rating Framework v1.0 — Internal Use</div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="page-hero">
+    <div class="section-label">Credit Risk Assessment Tool</div>
+    <h1 class="page-title">Transaction Risk Rating Calculator</h1>
+    <p class="page-desc">Four-layer scorecard framework producing a composite Internal Risk Rating (IRR 1–9) mapped to Probability of Default and Expected Credit Loss. Calibrated from SBP sector NPL data 2015–2024 and aligned with NCGCL's Guarantee Policy and CR&CM Policy.</p>
+  </div>
+
+  <div class="panel no-print" id="deal-panel" style="margin-top:1.5rem">
+    <div class="panel-title">Transaction identification <span class="wt">captured in PDF report</span></div>
+    <div class="meta-grid">
+      <div class="field"><label>FI / PFI name <span class="req">*</span></label><input type="text" id="fi-name" placeholder="e.g., Bank / NBFC / MFI name" oninput="calcECL()"></div>
+      <div class="field"><label id="obligor-label">Obligor name <span class="req">*</span></label><input type="text" id="obligor-name" placeholder="e.g., borrower / anchor / pool representative" oninput="calcECL()"></div>
+      <div class="field"><label>Facility / programme name</label><input type="text" id="facility-name" placeholder="e.g., SME Working Capital Guarantee" oninput="calcECL()"></div>
+      <div class="field"><label>Reference #</label><input type="text" id="ref-no" placeholder="Internal appraisal / memo reference" oninput="calcECL()"></div>
+    </div>
+    <div class="meta-grid">
+      <div class="field"><label>Assessment date</label><input type="date" id="assess-date" oninput="calcECL()"></div>
+      <div class="field"><label>Prepared by</label><input type="text" id="prepared-by" placeholder="Risk officer / analyst" oninput="calcECL()"></div>
+      <div class="field"><label>Obligor NTN / CNIC / ID</label><input type="text" id="obligor-id" placeholder="Optional" oninput="calcECL()"></div>
+      <div class="field"><label>FI relationship manager</label><input type="text" id="fi-rm" placeholder="Optional" oninput="calcECL()"></div>
+    </div>
+    <div class="field"><label>Risk mitigants, conditions precedent, or notes</label><textarea id="risk-notes" placeholder="Document key mitigants, collateral caveats, approval conditions, sector-specific considerations, and any manual judgement applied." oninput="calcECL()"></textarea></div>
+  </div>
+
+  <div class="mode-bar">
+    <span class="mode-label">Guarantee type</span>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-indiv" onclick="setMode('individual')">Individual transaction</button>
+      <button class="mode-btn" id="btn-port" onclick="setMode('portfolio')">Portfolio / programme</button>
+    </div>
+    <span class="mode-hint" id="mode-hint">Weights: FI 20% · Obligor 50% · Sector 20% · Product 10%</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('overview', this)">Rating scale</button>
+    <button class="tab-btn" onclick="switchTab('fi', this)">FI risk</button>
+    <button class="tab-btn" onclick="switchTab('obligor', this)">Obligor risk</button>
+    <button class="tab-btn" onclick="switchTab('sector', this)">Sector risk</button>
+    <button class="tab-btn" onclick="switchTab('product', this)">Product risk</button>
+    <button class="tab-btn" onclick="switchTab('composite', this)">Transaction ECL</button>
+  </div>
+
+  <!-- OVERVIEW TAB -->
+  <div id="tab-overview" class="tab-content active">
+    <div class="section-label">Reference</div>
+    <h2 style="font-family:Georgia,serif;font-size:22px;font-weight:400;margin-bottom:1rem">Uniform 9-point internal risk rating scale</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.25rem;max-width:680px">PD mid-points calibrated from SBP sector NPL data 2015–2024. Sector coverage ceilings are automatic policy constraints — not overrideable by strong obligor scores.</p>
+
+    <div style="overflow-x:auto;margin-bottom:1.5rem">
+    <table class="irr-table">
+      <thead><tr>
+        <th>IRR</th><th>Grade</th><th>Ext. equiv.</th><th>PD range</th><th>Mid-point PD</th><th>Max coverage</th><th>Approval</th><th>IFRS 9</th>
+      </tr></thead>
+      <tbody id="irr-table-body"></tbody>
+    </table>
+    </div>
+
+    <div class="two-col" style="margin-top:1.5rem">
+      <div class="panel">
+        <div class="panel-title">Individual transaction weights</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:.75rem">Obligor-specific creditworthiness is the primary risk driver. Obligor scorecard weighted at 50%.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="insight-box amber"><div class="insight-num">20%</div><div class="insight-text">FI risk</div></div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-top:3px solid var(--cerulean);padding:1.25rem;border-radius:4px"><div class="insight-num">50%</div><div class="insight-text">Obligor risk</div></div>
+          <div class="insight-box amber"><div class="insight-num">20%</div><div class="insight-text">Sector risk</div></div>
+          <div class="insight-box"><div class="insight-num">10%</div><div class="insight-text">Product risk</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Portfolio / programme weights</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:.75rem">PFI underwriting quality and sector composition are the primary controls. FI and sector weighted at 70% combined.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:var(--bg);border:1px solid var(--border);border-top:3px solid var(--cerulean);padding:1.25rem;border-radius:4px"><div class="insight-num">40%</div><div class="insight-text">FI risk</div></div>
+          <div class="insight-box amber"><div class="insight-num">20%</div><div class="insight-text">Obligor risk</div></div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-top:3px solid var(--cerulean);padding:1.25rem;border-radius:4px"><div class="insight-num">30%</div><div class="insight-text">Sector risk</div></div>
+          <div class="insight-box"><div class="insight-num">10%</div><div class="insight-text">Product risk</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FI TAB -->
+  <div id="tab-fi" class="tab-content">
+    <div class="irr-strip">
+      <div class="irr-card"><div class="irr-card-label">FI composite IRR</div><div class="irr-card-val" id="fi-irr-val">—</div><div class="irr-card-sub" id="fi-irr-sub">Enter scores below</div></div>
+      <div class="irr-card"><div class="irr-card-label">Raw score</div><div class="irr-card-val" id="fi-raw-val">—</div><div class="irr-card-sub">Weighted avg (1–9 scale)</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">A — Financial strength <span class="wt">40% of FI score</span></div>
+      <div id="fi-cat-A"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">B — Management, governance & regulatory standing <span class="wt">30%</span></div>
+      <div id="fi-cat-B"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">C — Operational capacity & SME track record <span class="wt">30%</span></div>
+      <div id="fi-cat-C"></div>
+    </div>
+  </div>
+
+  <!-- OBLIGOR TAB -->
+  <div id="tab-obligor" class="tab-content">
+    <div class="irr-strip">
+      <div class="irr-card"><div class="irr-card-label">Obligor composite IRR</div><div class="irr-card-val" id="ob-irr-val">—</div><div class="irr-card-sub" id="ob-irr-sub">Enter scores below</div></div>
+      <div class="irr-card"><div class="irr-card-label">Raw score</div><div class="irr-card-val" id="ob-raw-val">—</div><div class="irr-card-sub">Weighted avg (1–9 scale)</div></div>
+    </div>
+    <div id="ob-alert-box"></div>
+    <div class="panel"><div class="panel-title">A — Financial health <span class="wt">35%</span></div><div id="ob-cat-A"></div></div>
+    <div class="panel"><div class="panel-title">B — Cash flow quality <span class="wt">20%</span></div><div id="ob-cat-B"></div></div>
+    <div class="panel"><div class="panel-title">C — Value chain position <span class="wt">15%</span></div><div id="ob-cat-C"></div></div>
+    <div class="panel"><div class="panel-title">D — Business stability & management <span class="wt">20%</span></div><div id="ob-cat-D"></div></div>
+    <div class="panel"><div class="panel-title">E — Collateral & security <span class="wt">10%</span></div><div id="ob-cat-E"></div></div>
+  </div>
+
+  <!-- SECTOR TAB -->
+  <div id="tab-sector" class="tab-content">
+    <div class="irr-strip">
+      <div class="irr-card"><div class="irr-card-label">Sector IRR</div><div class="irr-card-val" id="sec-irr-val">—</div><div class="irr-card-sub" id="sec-irr-sub">Select sector</div></div>
+      <div class="irr-card"><div class="irr-card-label">Empirical base PD</div><div class="irr-card-val" id="sec-pd-val">—</div><div class="irr-card-sub">SBP NPL-derived, annualised</div></div>
+      <div class="irr-card"><div class="irr-card-label">Coverage ceiling</div><div class="irr-card-val" id="sec-ceil-val">—</div><div class="irr-card-sub" id="sec-ceil-sub">Based on sector IRR</div></div>
+    </div>
+    <div id="sec-alert-box"></div>
+    <div class="panel">
+      <div class="panel-title">Select sector</div>
+      <div class="crit-row">
+        <div><div class="crit-label">Sector (NCGCL Annexure A)</div><div class="crit-sub">Pre-populated with SBP NPL data 2019–2024 · Base PD shown in brackets</div></div>
+        <select id="sector-select" onchange="updateSector()" style="width:100%">
+          <option value="">— select sector —</option>
+        </select>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Qualitative overlay adjustments</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem">Applied on top of the empirical base IRR. Maximum cumulative upward adjustment: +4 notches. Maximum downward: −1 notch.</p>
+      <div id="sec-overlays"></div>
+    </div>
+    <div id="sec-summary-panel" style="display:none">
+      <div class="verdict"><div class="verdict-label">Sector summary</div><div id="sec-summary-text" class="verdict-text"></div></div>
+    </div>
+    <div class="panel" style="margin-top:1rem">
+      <div class="panel-title">Sector reference table — all approved sectors</div>
+      <div style="overflow-x:auto">
+        <table class="sector-table"><thead><tr><th>Sector</th><th>Base PD</th><th>Base IRR</th><th>Max exp.</th></tr></thead><tbody id="sector-ref-body"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT TAB -->
+  <div id="tab-product" class="tab-content">
+    <div class="irr-strip">
+      <div class="irr-card"><div class="irr-card-label">Product IRR</div><div class="irr-card-val" id="prod-irr-val">—</div><div class="irr-card-sub" id="prod-irr-sub">Configure below</div></div>
+      <div class="irr-card"><div class="irr-card-label">Capital multiplier λ</div><div class="irr-card-val" id="prod-lambda-val">—</div><div class="irr-card-sub">Per CR&CM Policy Annex IV</div></div>
+    </div>
+    <div class="panel"><div class="panel-title">Guarantee structure & terms</div><div id="prod-cat-A"></div></div>
+    <div class="panel"><div class="panel-title">Loan characteristics</div><div id="prod-cat-B"></div></div>
+  </div>
+
+  <!-- COMPOSITE TAB -->
+  <div id="tab-composite" class="tab-content">
+
+    <div class="panel">
+      <div class="panel-title">Module weights <span class="wt">fine-tune — mode defaults are policy anchors</span></div>
+      <div id="weight-rows"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:.25rem">Total assigned weight: <span id="wt-total" style="font-weight:600">100%</span>. Mechanical score uses: Σ(module IRR × assigned weight) ÷ Σ(assigned weights for completed modules).</div>
+      <div class="action-row"><button class="btn secondary" onclick="resetPolicyWeights()">Reset policy weights</button><span class="small-note">Weights should normally remain at the Board-approved defaults unless a documented override is approved.</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Transaction parameters</div>
+      <div class="crit-row">
+        <div><div class="crit-label">Loan / facility amount (PKR million)</div></div>
+        <input type="number" id="loan-amt" value="100" min="1" oninput="calcECL()" style="width:160px">
+      </div>
+      <div class="crit-row">
+        <div><div class="crit-label">Requested guarantee coverage %</div><div class="crit-sub" id="ceil-note" style="color:var(--accent)"></div></div>
+        <input type="number" id="gtee-pct" value="50" min="0" max="75" oninput="syncLinkedProductInputs()" style="width:100px">
+      </div>
+      <div class="crit-row">
+        <div><div class="crit-label">Collateral type</div><div class="crit-sub">LGD per Guarantee Policy Annexure B</div></div>
+        <select id="lgd-sel" onchange="calcECL()">
+          <option value="5">Lien on cash — LGD 5%</option>
+          <option value="5">SBLC from AA+ FI — LGD 5%</option>
+          <option value="15">Motor vehicle — LGD 15%</option>
+          <option value="25" selected>Urban property / land — LGD 25%</option>
+          <option value="35">Rural property / land — LGD 35%</option>
+          <option value="45">Stocks / receivables / current assets — LGD 45%</option>
+          <option value="45">Other fixed assets — LGD 45%</option>
+          <option value="45">Unsecured / clean lending — LGD 45%+</option>
+        </select>
+      </div>
+      <div class="crit-row">
+        <div><div class="crit-label">Effective loan tenor (years)</div><div class="crit-sub">Auto-links to Product Risk loan-tenor score</div></div>
+        <input type="number" id="tenor" value="3" min="0.1" max="15" step="0.1" oninput="syncLinkedProductInputs()" style="width:100px">
+      </div>
+      <div class="crit-row">
+        <div><div class="crit-label">Current total contingent liabilities / portfolio base (PKR M)</div><div class="crit-sub">Optional concentration denominator for post-transaction sector exposure check</div></div>
+        <input type="number" id="portfolio-cl" min="0" placeholder="optional" oninput="calcECL()" style="width:160px">
+      </div>
+      <div class="crit-row">
+        <div><div class="crit-label">Current exposure to selected sector (PKR M)</div><div class="crit-sub">Optional; used to test sector exposure limit after adding this guarantee</div></div>
+        <input type="number" id="sector-exposure" min="0" placeholder="optional" oninput="calcECL()" style="width:160px">
+      </div>
+      <div class="crit-row">
+        <div><div class="crit-label">Current exposure to this FI / PFI (PKR M)</div><div class="crit-sub">Optional documentation field for concentration review</div></div>
+        <input type="number" id="fi-exposure" min="0" placeholder="optional" oninput="calcECL()" style="width:160px">
+      </div>
+      <div class="crit-row">
+        <div><div class="crit-label">Current exposure to this obligor / group (PKR M)</div><div class="crit-sub">Optional documentation field for group exposure review</div></div>
+        <input type="number" id="obligor-exposure" min="0" placeholder="optional" oninput="calcECL()" style="width:160px">
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Assessor override <span class="wt">documented single-notch override only</span></div>
+      <div class="crit-row">
+        <div><div class="crit-label">Override to mechanical composite IRR</div><div class="crit-sub">Positive override lowers IRR by one notch; negative override raises IRR by one notch. Rationale required.</div></div>
+        <select id="override-notch" onchange="calcECL()">
+          <option value="0">No override</option>
+          <option value="-1">Positive override: improve by 1 notch</option>
+          <option value="1">Negative override: worsen by 1 notch</option>
+        </select>
+      </div>
+      <div class="field" style="margin-top:.75rem"><label>Override rationale / mitigating factors</label><textarea id="override-reason" placeholder="Required if any override is applied. Capture mitigants, authority, and approval conditions." oninput="calcECL()"></textarea></div>
+    </div>
+
+    <div id="ecl-alert"></div>
+
+    <div class="result-box">
+      <div class="result-box-header">Composite rating &amp; ECL estimate</div>
+      <div class="result-grid">
+        <div class="result-cell primary"><div class="result-cell-label">Final composite IRR</div><div class="result-cell-val" id="c-irr">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">Composite score</div><div class="result-cell-val" id="c-score">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">Mechanical IRR</div><div class="result-cell-val" id="c-mech">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">Effective coverage</div><div class="result-cell-val" id="c-cov">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">Composite PD</div><div class="result-cell-val" id="c-pd">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">LGD</div><div class="result-cell-val" id="c-lgd">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">EAD (PKR M)</div><div class="result-cell-val" id="c-ead">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">Annual ECL (PKR M)</div><div class="result-cell-val" id="c-ecl">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">Lifetime ECL (PKR M)</div><div class="result-cell-val" id="c-lecl">—</div></div>
+        <div class="result-cell"><div class="result-cell-label">Post-sector exposure</div><div class="result-cell-val" id="c-postsec">—</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Module score summary</div>
+      <div id="module-rows"></div>
+      <div class="comp-bar-wrap">
+        <div style="font-size:11px;color:var(--faint);margin-bottom:.35rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Composite position on scale</div>
+        <div class="comp-bar"><div class="comp-pin" id="comp-pin" style="left:0%"></div></div>
+        <div class="comp-bar-labels"><span>IRR 1 — minimal risk</span><span>IRR 9 — default</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Indicative guarantee fee (RAROC 15% hurdle · 30 bps admin load)</div>
+      <div id="fee-panel"><p style="font-size:13px;color:var(--muted)">Complete scorecards above to calculate fee.</p></div>
+    </div>
+
+    <div class="panel no-print">
+      <div class="panel-title">PDF report output <span class="wt">print-ready summary sheet</span></div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.6">The report includes transaction identity, module ratings, criterion-level scorecard selections, weight contribution, ECL, pricing breakdown, sector ceiling, and policy flags. Use your browser's “Save as PDF” option when prompted.</p>
+      <div class="action-row"><button class="btn primary" onclick="savePDFReport()">Save / Print PDF Report</button><button class="btn secondary" onclick="preparePrintReport(); switchTab('composite', document.querySelector('[onclick*=composite]'))">Refresh report data</button></div>
+    </div>
+
+  </div>
+</div>
+
+<footer style="margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--border)">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem">
+    <span style="font-size:12px;color:var(--faint)">NCGCL Risk Rating Framework v1.0 · For internal use only · Calibrated from SBP data 2015–2024</span>
+    <span style="font-size:12px;color:var(--faint)">Regulatory authority: SBP · Rating: PACRA AAA</span>
+  </div>
+</footer>
+
+<section id="print-report" class="print-report"></section>
+
+<script>
+const IRR=[
+  {irr:1,grade:"Minimal risk",ext:"AAA/AA",pdLow:0,pdHigh:.005,pd:.0025,color:"#1a7a3c",ceil:75,appr:"CEO"},
+  {irr:2,grade:"Very low risk",ext:"A+",pdLow:.005,pdHigh:.01,pd:.0075,color:"#2d9e50",ceil:75,appr:"CEO"},
+  {irr:3,grade:"Low risk",ext:"A/A-",pdLow:.01,pdHigh:.02,pd:.015,color:"#5abe7a",ceil:75,appr:"CEO/GC"},
+  {irr:4,grade:"Acceptable risk",ext:"BBB",pdLow:.02,pdHigh:.04,pd:.03,color:"#c9a000",ceil:75,appr:"GC"},
+  {irr:5,grade:"Moderate risk",ext:"BB+",pdLow:.04,pdHigh:.06,pd:.05,color:"#e8850a",ceil:60,appr:"GC"},
+  {irr:6,grade:"Elevated risk",ext:"BB/BB-",pdLow:.06,pdHigh:.10,pd:.08,color:"#c05000",ceil:50,appr:"GC + Senior Mgmt."},
+  {irr:7,grade:"High risk",ext:"B+/B",pdLow:.10,pdHigh:.15,pd:.12,color:"#9b2335",ceil:40,appr:"Board"},
+  {irr:8,grade:"Very high risk",ext:"B-/CCC",pdLow:.15,pdHigh:.25,pd:.18,color:"#7a1010",ceil:0,appr:"Hard decline"},
+  {irr:9,grade:"Near/in default",ext:"CC/D",pdLow:.25,pdHigh:1,pd:.30,color:"#580000",ceil:0,appr:"Hard decline"}
+];
+
+const SECTORS=[
+  {n:"Agriculture — Services & Processing",pd:.0407,irr0:5,exp:10},
+  {n:"Agriculture — Production",pd:.0407,irr0:5,exp:10},
+  {n:"Auto & Allied",pd:.0126,irr0:3,exp:10},
+  {n:"Carpets & Rugs",pd:.0222,irr0:4,exp:5},
+  {n:"Cement",pd:.0090,irr0:2,exp:10},
+  {n:"Chemicals & Allied Products",pd:.0062,irr0:2,exp:10},
+  {n:"Construction (excl. cement)",pd:.0222,irr0:4,exp:5},
+  {n:"Construction / Real Estate Services",pd:.0222,irr0:4,exp:5},
+  {n:"Consumer Products",pd:.0222,irr0:4,exp:10},
+  {n:"Electronics & Allied",pd:.0347,irr0:5,exp:10},
+  {n:"Fertilizer",pd:.0222,irr0:4,exp:10},
+  {n:"Food & Beverages",pd:.0180,irr0:3,exp:10},
+  {n:"Home & Lifestyle",pd:.0222,irr0:4,exp:10},
+  {n:"Leather Products",pd:.0159,irr0:3,exp:5},
+  {n:"Livestock & Fisheries",pd:.0407,irr0:5,exp:5},
+  {n:"Metal & Steel Products",pd:.0222,irr0:4,exp:10},
+  {n:"Mining & Quarrying",pd:.0222,irr0:4,exp:5},
+  {n:"Oil & Gas",pd:.0106,irr0:3,exp:5},
+  {n:"Paper & Board",pd:.0222,irr0:4,exp:10},
+  {n:"Professional Services",pd:.0222,irr0:4,exp:10},
+  {n:"Renewable Energy (Solar/Biomass/etc.)",pd:.0222,irr0:4,exp:15},
+  {n:"Sports Goods",pd:.0222,irr0:4,exp:10},
+  {n:"Sugar (high-NPL, seasonal)",pd:.0620,irr0:6,exp:5},
+  {n:"Telecom & IT Services",pd:.0222,irr0:4,exp:10},
+  {n:"Textile & Garments",pd:.0294,irr0:4,exp:15},
+  {n:"Transportation & Logistics",pd:.0126,irr0:3,exp:10},
+  {n:"Warehouse & Storage",pd:.0222,irr0:4,exp:10}
+];
+
+const SEC_OV=[
+  {id:'ov_cyc',lbl:'Cyclicality / price volatility',sub:'commodity exposure, export dependence',
+   opts:[[0,'Non-cyclical — stable demand'],[1,'Mildly cyclical (+1 notch)'],[2,'Highly cyclical / commodity-linked (+2 notches)']]},
+  {id:'ov_reg',lbl:'Regulatory risk',sub:'government pricing controls, frequent policy changes',
+   opts:[[0,'Low regulatory exposure'],[1,'Moderate — periodic changes (+1)'],[2,'High — controlled pricing or frequent structural shifts (+2)']]},
+  {id:'ov_env',lbl:'Environmental & social risk',sub:'climate, ESG, community impact',
+   opts:[[0,'Low / positive ESG'],[1,'Moderate ESG considerations (+1)'],[2,'High — material environmental or social concerns (+2)']]},
+  {id:'ov_out',lbl:'Current sector outlook',sub:'macro and sector conditions as of today',
+   opts:[[-1,'Improving — tailwinds, policy support (−1 notch)'],[0,'Neutral'],[1,'Deteriorating — headwinds, visible stress (+1)'],[2,'Severe stress or downturn (+2)']]}
+];
+
+const FI_DEF={
+  A:[
+    {id:'fi_car',lbl:'Capital adequacy ratio (CAR)',sub:'vs. SBP regulatory minimum',
+     opts:[[1,'≥15% — more than 5pp above minimum'],[2,'13–15% — 3–5pp above'],[4,'11–13% — 1–3pp above'],[6,'At regulatory minimum'],[8,'Below regulatory minimum']]},
+    {id:'fi_npl',lbl:'NPL ratio',sub:'gross NPLs / gross advances',
+     opts:[[1,'<3.0%'],[3,'3.0–5.0%'],[5,'5.0–7.0%'],[7,'7.0–12.0%'],[9,'>12.0% or under SBP direction']]},
+    {id:'fi_roa',lbl:'Return on assets (ROA)',sub:'latest full financial year',
+     opts:[[1,'>2.0%'],[2,'1.5–2.0%'],[4,'1.0–1.5%'],[6,'0.5–1.0%'],[8,'0–0.5%'],[9,'<0 (loss-making)']]},
+    {id:'fi_lcr',lbl:'Liquidity coverage ratio (LCR)',sub:'or equivalent metric',
+     opts:[[1,'>150%'],[2,'120–150%'],[4,'100–120%'],[7,'80–100%'],[9,'<80%']]},
+    {id:'fi_pcr',lbl:'Provisioning coverage ratio',sub:'provisions / gross NPLs',
+     opts:[[1,'>90%'],[3,'75–90%'],[5,'60–75%'],[7,'50–60%'],[9,'<50%']]}
+  ],
+  B:[
+    {id:'fi_ext',lbl:'External credit rating',sub:'PACRA / VIS current rating',
+     opts:[[1,'AAA'],[2,'AA+ / AA'],[3,'AA- / A+'],[4,'A / A-'],[5,'BBB'],[6,'BB+ / BB or Unrated NBFC/MFI'],[8,'B or below']]},
+    {id:'fi_reg',lbl:'SBP / regulatory standing',sub:'compliance record, inspection outcomes',
+     opts:[[1,'Clean — no adverse actions'],[4,'Minor violations, rectified'],[6,'Show-cause or SBP directives pending'],[9,'Licence risk or sanctions']]},
+    {id:'fi_gov',lbl:'Corporate governance quality',sub:'board independence, audit, risk committees',
+     opts:[[1,'Strong — listed, independent board, full committees'],[3,'Good — substantial compliance'],[5,'Adequate — basic structures in place'],[8,'Weak — closely held, material gaps']]},
+    {id:'fi_exp',lbl:'Track record in target segment',sub:'years lending to SME / agriculture',
+     opts:[[1,'>10 years — excellent NPL performance'],[3,'5–10 years — good'],[5,'3–5 years — fair'],[7,'2–3 years — limited'],[9,'<2 years or no track record']]}
+  ],
+  C:[
+    {id:'fi_uw',lbl:'Credit underwriting quality',sub:'scoring models, cash-flow analysis, MIS',
+     opts:[[1,'Advanced — proprietary scoring + cash flow + digital origination'],[3,'Good — structured with quantitative tools'],[5,'Adequate — basic financial analysis'],[8,'Weak — relationship-based, minimal process']]},
+    {id:'fi_rec',lbl:'Loan recovery rate',sub:'historic collections on NPLs',
+     opts:[[1,'>80%'],[3,'70–80%'],[5,'60–70%'],[7,'50–60%'],[9,'<50%']]},
+    {id:'fi_it',lbl:'IT systems & reporting capability',sub:'data quality, automation, API readiness',
+     opts:[[1,'Core banking + digital origination + API-ready MIS'],[3,'Core banking, adequate MIS'],[5,'Partial digitisation'],[8,'Manual or legacy systems']]},
+    {id:'fi_div',lbl:'SME portfolio diversification',sub:'sector and geographic spread of SME/agri book',
+     opts:[[1,'Well diversified — no sector >20%, ≥3 provinces'],[3,'Moderately diversified'],[5,'Some concentration'],[8,'Heavily concentrated in 1–2 sectors or regions']]}
+  ]
+};
+const FI_CW={A:{fi_car:.25,fi_npl:.25,fi_roa:.20,fi_lcr:.15,fi_pcr:.15},B:{fi_ext:.35,fi_reg:.25,fi_gov:.25,fi_exp:.15},C:{fi_uw:.30,fi_rec:.25,fi_it:.20,fi_div:.25}};
+const FI_CatW={A:.40,B:.30,C:.30};
+
+const OB_DEF={
+  A:[
+    {id:'ob_dscr',lbl:'Debt service coverage ratio (DSCR)',sub:'Prospective; ≥1.2x required per Guarantee Policy',
+     opts:[[1,'>2.0x'],[2,'1.75–2.0x'],[3,'1.5–1.75x'],[5,'1.2–1.5x'],[7,'1.0–1.2x'],[9,'<1.0x — triggers approval floor']]},
+    {id:'ob_de',lbl:'Total debt / equity ratio',sub:'',
+     opts:[[1,'<0.75x'],[2,'0.75–1.5x'],[4,'1.5–2.5x'],[6,'2.5–3.5x'],[8,'>3.5x']]},
+    {id:'ob_cr',lbl:'Current ratio',sub:'current assets / current liabilities',
+     opts:[[1,'>2.5x'],[2,'2.0–2.5x'],[4,'1.5–2.0x'],[5,'1.2–1.5x'],[7,'1.0–1.2x'],[9,'<1.0x']]},
+    {id:'ob_rev',lbl:'Revenue CAGR (3-year)',sub:'',
+     opts:[[1,'>20%'],[2,'15–20%'],[3,'10–15%'],[5,'5–10%'],[7,'0–5%'],[9,'<0% — declining']]},
+    {id:'ob_nm',lbl:'Net profit margin (2-year avg.)',sub:'',
+     opts:[[1,'>15%'],[2,'10–15%'],[4,'5–10%'],[6,'2–5%'],[8,'0–2%'],[9,'<0% — loss-making']]},
+    {id:'ob_fs',lbl:'Financial statement quality',sub:'',
+     opts:[[1,'Big-4 audit, 2 years'],[3,'Reputable local firm, 2 years'],[5,'Unqualified, 1 year'],[7,'Management accounts only'],[9,'No financials — caps composite at IRR 7']]}
+  ],
+  B:[
+    {id:'ob_cfs',lbl:'Cash flow stability',sub:'consistency of operating cash flows',
+     opts:[[1,'Very stable — recurring, non-cyclical'],[3,'Stable — minor seasonality'],[5,'Moderate — seasonal, recoverable within year'],[7,'Variable — material cycles'],[9,'Highly volatile or unpredictable']]},
+    {id:'ob_wc',lbl:'Working capital cycle (days)',sub:'inventory + AR days minus AP days',
+     opts:[[1,'<30 days'],[2,'30–60 days'],[4,'60–90 days'],[6,'90–150 days'],[8,'>150 days']]},
+    {id:'ob_ar',lbl:'Accounts receivable days',sub:'vs. sector benchmark',
+     opts:[[1,'<30 days or below sector average'],[3,'30–45 days / at benchmark'],[5,'45–60 days / slightly elevated'],[7,'60–90 days / above average'],[9,'>90 days / severely extended']]}
+  ],
+  C:[
+    {id:'ob_cc',lbl:'Customer concentration',sub:'% revenue from top 3 buyers',
+     opts:[[1,'<20% — highly diversified'],[3,'20–35%'],[5,'35–50%'],[7,'50–70%'],[9,'>70% — single dominant buyer']]},
+    {id:'ob_sd',lbl:'Supplier dependency',sub:'% sourcing from top 2 suppliers',
+     opts:[[1,'Diversified — no single >20%'],[3,'Moderate — 20–40%'],[5,'40–60%'],[8,'>60% — highly dependent']]},
+    {id:'ob_cp',lbl:'Competitive position',sub:'market share and pricing power',
+     opts:[[1,'Market leader or niche dominance'],[3,'Strong — top quartile'],[5,'Average — competitive market'],[7,'Weak — price-taker'],[9,'Marginal — survival at risk']]},
+    {id:'ob_vc',lbl:'Value chain trajectory',sub:'upstream / downstream dynamics and structural outlook',
+     opts:[[1,'Essential / growing segment'],[3,'Stable, well-integrated'],[5,'Average positioning'],[7,'Declining or substitutable'],[9,'Structural contraction — disintermediation risk']]}
+  ],
+  D:[
+    {id:'ob_hist',lbl:'Operational history',sub:'years in continuous operation (min 2yr required)',
+     opts:[[1,'>10 years'],[2,'7–10 years'],[4,'5–7 years'],[6,'3–5 years'],[8,'2–3 years'],[9,'<2 years — disqualified for standard products']]},
+    {id:'ob_rd',lbl:'Revenue diversification',sub:'number of products or business segments',
+     opts:[[1,'3 or more distinct segments'],[3,'2 segments'],[6,'Single product'],[8,'Single product in niche market']]},
+    {id:'ob_geo',lbl:'Geographic reach',sub:'markets served',
+     opts:[[1,'Export + multi-province'],[3,'Multi-province domestic'],[5,'Single province'],[7,'City or district only']]},
+    {id:'ob_mgmt',lbl:'Management quality',sub:'experience, succession planning, integrity',
+     opts:[[1,'Deep, proven, documented succession'],[3,'Experienced leadership'],[5,'Adequate — founder-led, limited succession'],[7,'Limited or unproven experience'],[9,'Integrity concerns or adverse media']]}
+  ],
+  E:[
+    {id:'ob_coll',lbl:'Primary collateral type',sub:'LGD per Guarantee Policy Annexure B',
+     opts:[[1,'Cash lien / SBLC from AA+ — LGD 5%'],[3,'Motor vehicle — LGD 15%'],[4,'Urban property — LGD 25%'],[5,'Rural property — LGD 35%'],[7,'Receivables / stock / current assets — LGD 45%'],[7,'Other fixed assets — LGD 45%'],[9,'Unsecured / clean lending']]},
+    {id:'ob_cov',lbl:'Collateral coverage ratio',sub:'collateral value / loan amount',
+     opts:[[1,'>200%'],[2,'150–200%'],[3,'120–150%'],[5,'100–120%'],[7,'75–100%'],[9,'<75%']]}
+  ]
+};
+const OB_CW={A:{ob_dscr:.25,ob_de:.20,ob_cr:.15,ob_rev:.15,ob_nm:.15,ob_fs:.10},B:{ob_cfs:.40,ob_wc:.35,ob_ar:.25},C:{ob_cc:.30,ob_sd:.25,ob_cp:.25,ob_vc:.20},D:{ob_hist:.25,ob_rd:.25,ob_geo:.25,ob_mgmt:.25},E:{ob_coll:.55,ob_cov:.45}};
+const OB_CatW={A:.35,B:.20,C:.15,D:.20,E:.10};
+
+const PROD_A=[
+  {id:'pr_str',lbl:'Guarantee structure',sub:'Determines capital multiplier λ per CR&CM Policy Annex IV',
+   opts:[[2,'Second-loss (mezzanine) — PFI absorbs first losses — λ=1.0, capital-efficient'],[4,'Pari passu (pro-rata) — standard risk sharing — λ=1.5'],[7,'First-loss — NCGCL absorbs initial losses up to cap — λ=2.0, capital-intensive']]},
+  {id:'pr_cov',lbl:'Requested coverage %',sub:'Guarantee Policy §3.1 — auto-linked to requested guarantee coverage input',
+   opts:[[1,'5–20% (low-risk bracket)'],[3,'20–35% (moderate-risk bracket)'],[5,'35–50%'],[7,'50–65%'],[9,'65–75% (maximum permitted)']]}
+];
+const PROD_B=[
+  {id:'pr_ten',lbl:'Loan tenor',sub:'Auto-linked to effective loan tenor input',
+   opts:[[1,'<6 months (self-liquidating)'],[2,'6–12 months'],[3,'1–3 years'],[5,'3–5 years'],[7,'5–7 years'],[9,'>7 years']]},
+  {id:'pr_type',lbl:'Loan type / use of proceeds',sub:'',
+   opts:[[1,'Self-liquidating trade / commodity finance'],[3,'Working capital'],[4,'Supply chain / revenue financing'],[5,'Short-term capex (≤3 years)'],[7,'Long-term capex or greenfield']]},
+  {id:'pr_sl',lbl:'Self-liquidating mechanism',sub:'supplemental documentation only; not part of framework-weighted product score',
+   opts:[[1,'Fully self-liquidating'],[3,'Partially self-liquidating'],[5,'No self-liquidating mechanism']]},
+  {id:'pr_vint',lbl:'Programme vintage',sub:'availability of performance data',
+   opts:[[1,'Seasoned — 2+ years data'],[4,'Early — <12 months data'],[7,'Pilot — no performance track record']]}
+];
+const LAMBDA={2:1.0,4:1.5,7:2.0};
+const PROD_W={pr_str:.30,pr_cov:.25,pr_ten:.20,pr_type:.15,pr_vint:.10};
+
+const MODE_W={individual:{fi:20,ob:50,sec:20,prod:10},portfolio:{fi:40,ob:20,sec:30,prod:10}};
+let mode='individual';
+let weights={fi:20,ob:50,sec:20,prod:10};
+let fiS={},obS={},secS=null,prodS={},currentResult=null;
+
+function fp(v,d=2){return(v*100).toFixed(d)+'%'}
+function toIRR(s){return Math.min(9,Math.max(1,Math.round(s)))}
+
+function buildCrits(def,onChange){
+  return def.map(c=>`
+    <div class="crit-row">
+      <div><div class="crit-label">${c.lbl}</div>${c.sub?`<div class="crit-sub">${c.sub}</div>`:''}
+      </div>
+      <select id="${c.id}" onchange="${onChange}()">
+        <option value="">— select —</option>
+        ${c.opts.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join('')}
+      </select>
+    </div>`).join('');
+}
+
+function calcCat(cat,def,catW,critW){
+  let s=0,w=0;
+  def[cat].forEach(c=>{
+    const v=parseFloat(document.getElementById(c.id)?.value);
+    if(!isNaN(v)){const cw=critW[cat][c.id]||0;s+=v*cw;w+=cw;}
+  });
+  return w>0?s/w:null;
+}
+
+function updateFI(){
+  let s=0,w=0,catScores={};
+  ['A','B','C'].forEach(cat=>{
+    const cs=calcCat(cat,FI_DEF,FI_CatW,FI_CW);
+    catScores[cat]=cs;
+    if(cs!==null){s+=cs*FI_CatW[cat];w+=FI_CatW[cat];}
+  });
+  if(w>0){
+    const raw=s/w,irr=toIRR(raw),row=IRR[irr-1];
+    fiS={raw,irr,pd:row.pd,catScores,flags:[]};
+    el('fi-irr-val').textContent='IRR '+irr;el('fi-irr-val').style.color=row.color;
+    el('fi-irr-sub').textContent=row.grade+' — PD '+fp(row.pd);
+    el('fi-raw-val').textContent=raw.toFixed(2);
+  }else{fiS={};el('fi-irr-val').textContent='—';el('fi-irr-val').style.color='';el('fi-raw-val').textContent='—';}
+  calcECL();
+}
+
+function updateOB(){
+  let s=0,w=0,catScores={},flags=[];
+  ['A','B','C','D','E'].forEach(cat=>{
+    const cs=calcCat(cat,OB_DEF,OB_CatW,OB_CW);
+    catScores[cat]=cs;
+    if(cs!==null){s+=cs*OB_CatW[cat];w+=OB_CatW[cat];}
+  });
+  if(w>0){
+    const raw=s/w;
+    let irr=toIRR(raw);
+    const fs=parseFloat(el('ob_fs')?.value);
+    const dscr=parseFloat(el('ob_dscr')?.value);
+    const hist=parseFloat(el('ob_hist')?.value);
+    if(fs===9 && irr<7){irr=7;flags.push('No financial statements selected: Obligor IRR cannot be better than 7.');}
+    if(dscr===9 && irr<7){irr=7;flags.push('DSCR below 1.0x selected: minimum Obligor IRR of 7 and Board-level approval warning.');}
+    if(hist===9){flags.push('Operational history below 2 years: disqualified from standard guarantee products unless an approved inclusion programme applies.');}
+    const row=IRR[irr-1];
+    obS={raw,irr,pd:row.pd,catScores,flags,disqualify:hist===9};
+    el('ob-irr-val').textContent='IRR '+irr;el('ob-irr-val').style.color=row.color;
+    el('ob-irr-sub').textContent=row.grade+' — PD '+fp(row.pd)+(flags.length?' · policy floor/flag applied':'');
+    el('ob-raw-val').textContent=raw.toFixed(2);
+    const obAlert=el('ob-alert-box');
+    if(obAlert)obAlert.innerHTML=flags.length?flags.map(f=>`<div class="alert warn"><strong>Obligor policy flag:</strong> ${f}</div>`).join(''):'';
+  }else{obS={};el('ob-irr-val').textContent='—';el('ob-irr-val').style.color='';el('ob-raw-val').textContent='—';const obAlert=el('ob-alert-box');if(obAlert)obAlert.innerHTML='';}
+  calcECL();
+}
+
+function updateSector(){
+  const idx=parseInt(el('sector-select').value);
+  const ab=el('sec-alert-box');
+  if(isNaN(idx)){secS=null;['sec-irr-val','sec-pd-val','sec-ceil-val'].forEach(i=>el(i).textContent='—');ab.innerHTML='';el('sec-summary-panel').style.display='none';calcECL();return;}
+  const s=SECTORS[idx];
+  el('sec-pd-val').textContent=fp(s.pd);
+  const baseIRR=s.irr0;
+  let rawAdj=0;
+  SEC_OV.forEach(o=>{const v=el(o.id)?.value;if(v!==undefined&&v!=='')rawAdj+=parseInt(v)||0;});
+  const adj=Math.max(-1,Math.min(4,rawAdj));
+  const finalIRR=Math.min(9,Math.max(1,baseIRR+adj));
+  const row=IRR[finalIRR-1];
+  secS={irr:finalIRR,pd:row.pd,maxCov:row.ceil,sector:s,baseIRR,adj,rawAdj,flags:[]};
+  if(rawAdj!==adj)secS.flags.push(`Sector overlay adjustment capped from ${rawAdj>=0?'+':''}${rawAdj} to ${adj>=0?'+':''}${adj} notch(es).`);
+  el('sec-irr-val').textContent='IRR '+finalIRR;el('sec-irr-val').style.color=row.color;
+  const ceilTxt=row.ceil===0?'Decline':row.ceil+'%';
+  el('sec-ceil-val').textContent=ceilTxt;el('sec-ceil-val').style.color=row.ceil===0?'#9B2335':row.ceil<75?'#C8923A':'#39A949';
+  el('sec-ceil-sub').textContent=row.ceil===0?'Hard decline — §4.2':row.appr+' approval required';
+  const capMsg=rawAdj!==adj?` Overlay cap applied: raw ${rawAdj>=0?'+':''}${rawAdj}, capped ${adj>=0?'+':''}${adj}.`:'';
+  if(finalIRR>=8){ab.innerHTML=`<div class="alert err"><strong>Hard decline — Sector IRR ${finalIRR}.</strong> Per the sector ceiling matrix, this sector-IRR bracket triggers an automatic decline. No guarantee can be issued without documented exception escalation.${capMsg}</div>`;}
+  else if(finalIRR>=6){ab.innerHTML=`<div class="alert warn"><strong>Elevated sector risk — IRR ${finalIRR}.</strong> Coverage automatically capped at ${row.ceil}%. Requires ${row.appr} approval. Enhanced monitoring, funded first-loss reserves, and documented mitigants required.${capMsg}</div>`;}
+  else{ab.innerHTML=rawAdj!==adj?`<div class="alert warn"><strong>Overlay cap applied.</strong>${capMsg}</div>`:'';}
+  el('sec-summary-panel').style.display='';
+  el('sec-summary-text').innerHTML=`Sector: <strong>${s.n}</strong> &nbsp;|&nbsp; Empirical base PD: <strong>${fp(s.pd)}</strong> &nbsp;|&nbsp; Base IRR: <strong>IRR ${baseIRR}</strong> &nbsp;|&nbsp; Qualitative adjustment: <strong>${adj>=0?'+':''}${adj} notch(es)</strong> &nbsp;|&nbsp; Final sector IRR: <strong style="color:${row.color}">IRR ${finalIRR} — ${row.grade}</strong> &nbsp;|&nbsp; Max exposure: <strong>${s.exp}% of total contingent liabilities</strong>`;
+  calcECL();
+}
+
+function updateProduct(recalc=true){
+  let s=0,w=0,struct=null,critScores={};
+  Object.keys(PROD_W).forEach(id=>{
+    const v=el(id)?.value;
+    if(v!==''&&v!==undefined){const num=parseInt(v)||0;critScores[id]=num;s+=num*PROD_W[id];w+=PROD_W[id];if(id==='pr_str')struct=num;}
+  });
+  // Supplemental self-liquidating mechanism is captured in the PDF report but not used in the framework-weighted product score.
+  if(w>0){
+    const raw=s/w,irr=toIRR(raw),row=IRR[irr-1];
+    const lam=struct!==null?(LAMBDA[struct]||1.5):1.5;
+    prodS={raw,irr,pd:row.pd,lambda:lam,critScores,flags:[]};
+    el('prod-irr-val').textContent='IRR '+irr;el('prod-irr-val').style.color=row.color;
+    el('prod-irr-sub').textContent=row.grade+' — weighted product score';
+    el('prod-lambda-val').textContent='λ = '+lam.toFixed(1);
+  }else{prodS={};el('prod-irr-val').textContent='—';el('prod-irr-val').style.color='';el('prod-lambda-val').textContent='—';}
+  if(recalc)calcECL();
+}
+
+function setMode(m){
+  mode=m;weights={...MODE_W[m]};
+  el('btn-indiv').classList.toggle('active',m==='individual');
+  el('btn-port').classList.toggle('active',m==='portfolio');
+  const w=weights;
+  el('mode-hint').textContent=`Weights: FI ${w.fi}% · Obligor ${w.ob}% · Sector ${w.sec}% · Product ${w.prod}%`;
+  const lab=el('obligor-label');
+  if(lab)lab.innerHTML=m==='individual'?'Obligor name <span class="req">*</span>':'Representative obligor / pool name <span class="req">*</span>';
+  buildWeightRows();calcECL();
+}
+
+function buildWeightRows(){
+  const mods=[{k:'fi',l:'FI risk',c:'#035076'},{k:'ob',l:'Obligor risk',c:'#39A949'},{k:'sec',l:'Sector risk',c:'#C8923A'},{k:'prod',l:'Product risk',c:'#9B2335'}];
+  el('weight-rows').innerHTML=mods.map(m=>`
+    <div class="wt-row">
+      <span class="wt-label" style="color:${m.c};font-weight:600">${m.l}</span>
+      <input type="range" min="0" max="100" step="5" value="${weights[m.k]}" id="wr_${m.k}" oninput="updW('${m.k}',this.value)">
+      <span class="wt-val" id="wv_${m.k}">${weights[m.k]}%</span>
+    </div>`).join('');
+}
+
+function updW(k,v){
+  weights[k]=parseInt(v);el('wv_'+k).textContent=v+'%';
+  const tot=Object.values(weights).reduce((a,b)=>a+b,0);
+  el('wt-total').textContent=tot+'%';el('wt-total').style.color=tot===100?'#39A949':'#9B2335';
+  calcECL();
+}
+
+function clamp(v,min,max){return Math.min(max,Math.max(min,v))}
+function num(id,def=0){const v=parseFloat(el(id)?.value);return isNaN(v)?def:v}
+function textVal(id){return (el(id)?.value||'').trim()}
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function selText(id){const e=el(id);return e&&e.selectedIndex>=0?e.options[e.selectedIndex].text:'—'}
+function scoreForCoverage(pct){pct=clamp(pct,0,75);if(pct<=20)return 1;if(pct<=35)return 3;if(pct<=50)return 5;if(pct<=65)return 7;return 9}
+function scoreForTenor(y){if(y<0.5)return 1;if(y<=1)return 2;if(y<=3)return 3;if(y<=5)return 5;if(y<=7)return 7;return 9}
+function syncLinkedProductInputs(){
+  const gp=el('gtee-pct'); if(gp){let v=num('gtee-pct',50); if(v>75){gp.value=75;v=75;} if(v<0){gp.value=0;v=0;} if(el('pr_cov'))el('pr_cov').value=scoreForCoverage(v);}
+  const tn=el('tenor'); if(tn){let t=num('tenor',3); if(t>15){tn.value=15;t=15;} if(t<0.1){tn.value=0.1;t=0.1;} if(el('pr_ten'))el('pr_ten').value=scoreForTenor(t);}
+  updateProduct();
+}
+function resetPolicyWeights(){weights={...MODE_W[mode]};buildWeightRows();calcECL();}
+function totalAssignedWeight(){return Object.values(weights).reduce((a,b)=>a+b,0)}
+function getModuleArray(){
+  return [
+    {key:'fi',nm:'FI risk',col:'#035076',sc:fiS,assigned:weights.fi},
+    {key:'ob',nm:'Obligor risk',col:'#39A949',sc:obS,assigned:weights.ob},
+    {key:'sec',nm:'Sector risk',col:'#C8923A',sc:secS||{},assigned:weights.sec},
+    {key:'prod',nm:'Product risk',col:'#9B2335',sc:prodS,assigned:weights.prod}
+  ];
+}
+function getRequiredWarnings(){
+  const warnings=[];
+  if(!textVal('fi-name'))warnings.push({type:'warn',txt:'FI / PFI name has not been entered; the PDF report will identify this as incomplete.'});
+  if(!textVal('obligor-name'))warnings.push({type:'warn',txt:(mode==='individual'?'Obligor name':'Representative obligor / pool name')+' has not been entered.'});
+  if(totalAssignedWeight()!==100)warnings.push({type:'warn',txt:`Assigned module weights total ${totalAssignedWeight()}%, not 100%. The calculator normalizes completed-module weights for the mechanical score, but approval packs should normally use a 100% policy-weight set.`});
+  const ov=parseInt(el('override-notch')?.value||'0');
+  if(ov!==0 && !textVal('override-reason'))warnings.push({type:'warn',txt:'A one-notch override has been applied but no override rationale has been documented.'});
+  if(obS?.flags)obS.flags.forEach(f=>warnings.push({type:'warn',txt:f}));
+  if(secS?.flags)secS.flags.forEach(f=>warnings.push({type:'warn',txt:f}));
+  return warnings;
+}
+function renderAlerts(warnings){
+  return warnings.map(w=>`<div class="alert ${w.type==='err'?'err':'warn'}"><strong>${w.type==='err'?'Stop':'Review'}:</strong> ${w.txt}</div>`).join('');
+}
+
+function calcECL(){
+  const mods=getModuleArray();
+  const completed=mods.filter(m=>m.sc&&m.sc.irr);
+  const enteredWeight=completed.reduce((a,m)=>a+m.assigned,0);
+  const weightedSum=completed.reduce((a,m)=>a+(m.sc.irr*m.assigned),0);
+  const mechanicalScore=enteredWeight>0?weightedSum/enteredWeight:null;
+  const mr=el('module-rows');
+  if(mr)mr.innerHTML=mods.map(m=>{
+    const done=m.sc&&m.sc.irr;
+    const norm=done&&enteredWeight>0?m.assigned/enteredWeight*100:0;
+    const contrib=done&&enteredWeight>0?m.sc.irr*m.assigned/enteredWeight:null;
+    return `<div class="crit-row">
+      <div><div class="crit-label" style="color:${m.col}">${m.nm}</div>
+      <div class="crit-sub">${done?'IRR '+m.sc.irr+' — PD '+fp(m.sc.pd||0)+' · raw '+(m.sc.raw!==undefined?m.sc.raw.toFixed(2):m.sc.irr):'Not entered — excluded until scored'}</div></div>
+      <div style="text-align:right">
+        <div style="font-size:16px;font-weight:600;color:${done?m.col:'#999'}">${done?'IRR '+m.sc.irr:'—'}</div>
+        <div style="font-size:11px;color:#999">Assigned ${m.assigned}%${done?` · used ${norm.toFixed(1)}% · contribution ${contrib.toFixed(2)}`:''}</div>
+      </div>
+    </div>`}).join('');
+
+  const alert=el('ecl-alert');
+  const clearIds=['c-irr','c-score','c-mech','c-cov','c-pd','c-lgd','c-ead','c-ecl','c-lecl','c-postsec'];
+  if(enteredWeight<=0||mechanicalScore===null){clearIds.forEach(i=>{const e=el(i);if(e)e.textContent='—';});if(alert)alert.innerHTML=renderAlerts(getRequiredWarnings());currentResult=null;return;}
+
+  const mechanicalIRR=toIRR(mechanicalScore);
+  const override=parseInt(el('override-notch')?.value||'0');
+  const finalIRR=clamp(mechanicalIRR+override,1,9);
+  const row=IRR[finalIRR-1], mechRow=IRR[mechanicalIRR-1];
+  const loan=Math.max(0,num('loan-amt',100));
+  const reqPct=clamp(num('gtee-pct',50),0,75)/100;
+  const lgd=clamp(num('lgd-sel',25),0,100)/100;
+  const tenor=Math.max(0.1,num('tenor',3));
+  const secCeil=secS?secS.maxCov/100:.75;
+  const compositeCeil=row.ceil/100;
+  const policyCeil=Math.min(.75,secCeil,compositeCeil);
+  const warnings=getRequiredWarnings();
+  if(completed.length<mods.length)warnings.push({type:'warn',txt:'Composite score is interim because one or more scorecard modules are incomplete; denominator has been adjusted to completed modules only.'});
+  if(override!==0)warnings.push({type:'warn',txt:`Final IRR includes a ${override<0?'positive':'negative'} one-notch assessor override from mechanical IRR ${mechanicalIRR} to final IRR ${finalIRR}.`});
+  if(secS&&secS.irr===6&&obS?.irr&&obS.irr<=2)warnings.push({type:'warn',txt:'Sector IRR 6 with very strong obligor IRR may be eligible for Guarantee Committee review for up to +5pp coverage above the sector ceiling; this calculator does not auto-apply the exception.'});
+
+  if(row.ceil===0||policyCeil<=0){
+    const reason=row.ceil===0?`Final composite IRR ${finalIRR} is in a decline bracket.`:`Sector IRR ${secS?.irr} is in a hard-decline bracket.`;
+    warnings.unshift({type:'err',txt:reason+' No guarantee coverage should be issued without formal exception escalation.'});
+    if(alert)alert.innerHTML=renderAlerts(warnings);
+    const e=id=>el(id);
+    if(e('c-irr')){e('c-irr').textContent='IRR '+finalIRR;e('c-irr').style.color=row.color;}
+    if(e('c-score'))e('c-score').textContent=mechanicalScore.toFixed(2);
+    if(e('c-mech'))e('c-mech').textContent='IRR '+mechanicalIRR;
+    ['c-cov','c-pd','c-lgd','c-ead','c-ecl','c-lecl','c-postsec'].forEach(i=>{const x=e(i);if(x)x.textContent=i==='c-cov'?'Decline':'N/A';});
+    const pin=el('comp-pin');if(pin)pin.style.left=((finalIRR-1)/8*100)+'%';
+    const fp2=el('fee-panel');if(fp2)fp2.innerHTML='<div class="alert err"><strong>No indicative fee calculated.</strong> The transaction is in a decline bracket unless an approved exception process is followed.</div>';
+    currentResult={decline:true,mechanicalScore,mechanicalIRR,finalIRR,row,mechRow,mods,completed,enteredWeight,warnings,loan,reqPct,effPct:0,lgd,tenor,ead:0,pd:row.pd,ecl:0,lecl:0,annFee:0,feeBps:0,policyCeil};
+    preparePrintReport(false);
+    return;
+  }
+
+  const effPct=Math.min(reqPct,policyCeil);
+  const cn=el('ceil-note');
+  if(cn){
+    const pieces=[];
+    if(secS)pieces.push(`sector ceiling ${(secCeil*100).toFixed(0)}%`);
+    pieces.push(`composite ceiling ${(compositeCeil*100).toFixed(0)}%`);
+    cn.textContent=reqPct>policyCeil?`Policy ceiling applied (${pieces.join(' · ')}): requested ${(reqPct*100).toFixed(0)}% reduced to ${(effPct*100).toFixed(0)}%.`:'';
+  }
+  const ead=loan*effPct,pd=row.pd,ecl=pd*lgd*ead,lecl=ecl*tenor;
+  const totalCL=num('portfolio-cl',NaN),curSec=num('sector-exposure',NaN);
+  let postSecPct=null;
+  if(!isNaN(totalCL)&&totalCL>0&&!isNaN(curSec)&&secS){
+    postSecPct=(curSec+ead)/(totalCL+ead)*100;
+    if(postSecPct>secS.sector.exp)warnings.push({type:'warn',txt:`Post-transaction sector exposure is ${postSecPct.toFixed(1)}%, above the reference maximum exposure of ${secS.sector.exp}% for ${secS.sector.n}.`});
+  }
+  if(reqPct>policyCeil)warnings.push({type:'warn',txt:`Requested coverage exceeds the applicable policy ceiling; effective coverage reduced to ${(effPct*100).toFixed(0)}%.`});
+
+  const e=id=>el(id);
+  if(e('c-irr')){e('c-irr').textContent='IRR '+finalIRR;e('c-irr').style.color=row.color;}
+  if(e('c-score'))e('c-score').textContent=mechanicalScore.toFixed(2);
+  if(e('c-mech'))e('c-mech').textContent='IRR '+mechanicalIRR+(override!==0?' → override':'');
+  if(e('c-cov'))e('c-cov').textContent=(effPct*100).toFixed(0)+'%'+(effPct<reqPct?' ↓':'');
+  if(e('c-pd'))e('c-pd').textContent=fp(pd);
+  if(e('c-lgd'))e('c-lgd').textContent=fp(lgd,0);
+  if(e('c-ead'))e('c-ead').textContent=ead.toFixed(2);
+  if(e('c-ecl'))e('c-ecl').textContent=ecl.toFixed(3);
+  if(e('c-lecl'))e('c-lecl').textContent=lecl.toFixed(2);
+  if(e('c-postsec'))e('c-postsec').textContent=postSecPct===null?'—':postSecPct.toFixed(1)+'%';
+  const pin=el('comp-pin');if(pin)pin.style.left=((finalIRR-1)/8*100)+'%';
+  if(alert)alert.innerHTML=renderAlerts(warnings);
+
+  const lam=prodS.lambda||1.5;
+  const ec=ecl*lam,capChg=ec*.15,adminL=.003*ead,annFee=ecl+capChg+adminL,feeBps=ead>0?(annFee/ead)*10000:0;
+  const fp2=el('fee-panel');
+  if(fp2)fp2.innerHTML=`
+    <div class="three-col" style="margin-bottom:.75rem">
+      <div class="insight-box amber"><div class="insight-num">PKR ${ecl.toFixed(3)}M</div><div class="insight-text">Expected loss (EL) per year</div></div>
+      <div class="insight-box amber"><div class="insight-num">PKR ${capChg.toFixed(3)}M</div><div class="insight-text">Capital charge (λ=${lam}, 15% RAROC)</div></div>
+      <div class="insight-box"><div class="insight-num">PKR ${adminL.toFixed(3)}M</div><div class="insight-text">Admin cost load (30 bps of EAD)</div></div>
+    </div>
+    <div class="verdict" style="border-left-color:var(--cerulean)">
+      <div class="verdict-label">Indicative annual guarantee fee</div>
+      <div class="verdict-text">PKR ${annFee.toFixed(3)}M — <strong>${feeBps.toFixed(0)} basis points</strong> (${ead>0?(annFee/ead*100).toFixed(3):'0.000'}% of guaranteed amount) &nbsp;·&nbsp; Approval authority: <strong>${row.appr}</strong> &nbsp;·&nbsp; Structure: ${lam===2?'First-loss (λ=2.0)':lam===1?'Second-loss (λ=1.0)':'Pari passu (λ=1.5)'}</div>
+    </div>
+    <p style="font-size:11px;color:var(--faint);margin-top:.25rem">Illustrative only. Assumes 15% RAROC hurdle and 30 bps administrative cost load. First-loss structures will be substantially more expensive. All fees subject to Board-approved pricing policy.</p>`;
+  currentResult={decline:false,mechanicalScore,mechanicalIRR,finalIRR,row,mechRow,mods,completed,enteredWeight,warnings,loan,reqPct,effPct,lgd,tenor,ead,pd,ecl,lecl,lam,ec,capChg,adminL,annFee,feeBps,policyCeil,postSecPct,override};
+  preparePrintReport(false);
+}
+
+function el(id){return document.getElementById(id)}
+
+function criterionRowsFromObject(defObj,critWObj){
+  let rows='';
+  Object.keys(defObj).forEach(cat=>{
+    defObj[cat].forEach(c=>{
+      const val=el(c.id)?.value||'';
+      const selected=val?selText(c.id):'—';
+      const wt=critWObj?.[cat]?.[c.id]!==undefined?(critWObj[cat][c.id]*100).toFixed(0)+'%':'—';
+      rows+=`<tr><td>${esc(cat)}</td><td>${esc(c.lbl)}</td><td>${wt}</td><td>${val?esc(val):'—'}</td><td>${esc(selected)}</td></tr>`;
+    });
+  });
+  return rows;
+}
+function productCriterionRows(){
+  const all=[...PROD_A,...PROD_B];
+  return all.map(c=>{
+    const val=el(c.id)?.value||'';
+    const fw=PROD_W[c.id]!==undefined?(PROD_W[c.id]*100).toFixed(0)+'%':'Supplemental';
+    return `<tr><td>Product</td><td>${esc(c.lbl)}</td><td>${fw}</td><td>${val?esc(val):'—'}</td><td>${esc(val?selText(c.id):'—')}</td></tr>`;
+  }).join('');
+}
+function sectorOverlayRows(){
+  return SEC_OV.map(o=>`<tr><td>Sector overlay</td><td>${esc(o.lbl)}</td><td>Overlay</td><td>${esc(el(o.id)?.value||'0')}</td><td>${esc(selText(o.id))}</td></tr>`).join('');
+}
+function moduleReportRows(res){
+  const completedWeight=res.enteredWeight||0;
+  return res.mods.map(m=>{
+    const done=m.sc&&m.sc.irr;
+    const used=done&&completedWeight>0?m.assigned/completedWeight*100:0;
+    const contrib=done&&completedWeight>0?m.sc.irr*m.assigned/completedWeight:null;
+    return `<tr><td>${esc(m.nm)}</td><td>${m.assigned}%</td><td>${done?used.toFixed(1)+'%':'—'}</td><td>${done&&m.sc.raw!==undefined?m.sc.raw.toFixed(2):done?m.sc.irr:'—'}</td><td>${done?'IRR '+m.sc.irr:'—'}</td><td>${done?fp(m.sc.pd||0):'—'}</td><td>${contrib===null?'—':contrib.toFixed(2)}</td></tr>`;
+  }).join('');
+}
+function metaRows(){
+  const meta=[
+    ['FI / PFI name',textVal('fi-name')||'—'],['Obligor / pool',textVal('obligor-name')||'—'],['Obligor ID',textVal('obligor-id')||'—'],['Facility / programme',textVal('facility-name')||'—'],
+    ['Reference #',textVal('ref-no')||'—'],['Assessment date',textVal('assess-date')||'—'],['Prepared by',textVal('prepared-by')||'—'],['FI RM',textVal('fi-rm')||'—'],['Guarantee type',mode==='individual'?'Individual transaction':'Portfolio / programme']
+  ];
+  return meta.map(r=>`<tr><th>${esc(r[0])}</th><td>${esc(r[1])}</td></tr>`).join('');
+}
+function preparePrintReport(force=true){
+  const res=currentResult;
+  const pr=el('print-report');
+  if(!pr)return;
+  if(!res){pr.innerHTML='<div class="report-wrap"><div class="report-header"><h1 class="report-title">NCGCL Risk Rating Report</h1></div><p>No rating has been calculated yet.</p></div>';return;}
+  const generated=new Date().toLocaleString();
+  const flags=res.warnings&&res.warnings.length?res.warnings.map(w=>`<li><strong>${w.type==='err'?'Stop':'Review'}:</strong> ${esc(w.txt)}</li>`).join(''):'<li>No policy flags generated by the calculator.</li>';
+  const notes=esc(textVal('risk-notes')||'—').replace(/\n/g,'<br>');
+  const overrideReason=esc(textVal('override-reason')||'—').replace(/\n/g,'<br>');
+  pr.innerHTML=`<div class="report-wrap">
+    <div class="report-header">
+      <div><h1 class="report-title">NCGCL Risk Rating Report</h1><div class="report-sub">Risk Rating Framework v1.0 · Generated ${esc(generated)} · Internal use only</div></div>
+      <div style="text-align:right;font-size:10px;color:#555">National Credit Guarantee Company Limited<br>Restricted — Board and Senior Management Use</div>
+    </div>
+
+    <div class="report-kpi-grid">
+      <div class="report-kpi"><div class="report-kpi-label">Final IRR</div><div class="report-kpi-val">IRR ${res.finalIRR}</div></div>
+      <div class="report-kpi"><div class="report-kpi-label">Composite score</div><div class="report-kpi-val">${res.mechanicalScore.toFixed(2)}</div></div>
+      <div class="report-kpi"><div class="report-kpi-label">Effective coverage</div><div class="report-kpi-val">${res.decline?'Decline':(res.effPct*100).toFixed(0)+'%'}</div></div>
+      <div class="report-kpi"><div class="report-kpi-label">Annual ECL</div><div class="report-kpi-val">${res.decline?'N/A':'PKR '+res.ecl.toFixed(3)+'M'}</div></div>
+    </div>
+
+    <div class="report-section"><h2>1. Transaction identity</h2><table class="report-table"><tbody>${metaRows()}</tbody></table></div>
+    <div class="report-section"><h2>2. Composite rating and ECL</h2><table class="report-table"><tbody>
+      <tr><th>Mechanical IRR</th><td>IRR ${res.mechanicalIRR} (${esc(res.mechRow.grade)})</td><th>Final IRR</th><td>IRR ${res.finalIRR} (${esc(res.row.grade)})</td></tr>
+      <tr><th>Override</th><td>${parseInt(el('override-notch')?.value||'0')===0?'None':esc(selText('override-notch'))}</td><th>Override rationale</th><td>${overrideReason}</td></tr>
+      <tr><th>Facility amount</th><td>PKR ${res.loan.toFixed(2)}M</td><th>Requested / effective coverage</th><td>${(res.reqPct*100).toFixed(0)}% / ${res.decline?'Decline':(res.effPct*100).toFixed(0)+'%'}</td></tr>
+      <tr><th>PD / LGD / EAD</th><td>${fp(res.pd)} / ${fp(res.lgd,0)} / ${res.decline?'N/A':'PKR '+res.ead.toFixed(2)+'M'}</td><th>Annual / lifetime ECL</th><td>${res.decline?'N/A':'PKR '+res.ecl.toFixed(3)+'M / PKR '+res.lecl.toFixed(2)+'M'}</td></tr>
+      <tr><th>Post-sector exposure</th><td>${res.postSecPct===null||res.postSecPct===undefined?'—':res.postSecPct.toFixed(1)+'%'}</td><th>Approval authority</th><td>${esc(res.row.appr)}</td></tr>
+    </tbody></table></div>
+
+    <div class="report-section"><h2>3. Module weight contribution</h2><table class="report-table"><thead><tr><th>Module</th><th>Assigned weight</th><th>Normalized used weight</th><th>Raw score</th><th>IRR</th><th>PD</th><th>Contribution</th></tr></thead><tbody>${moduleReportRows(res)}</tbody></table></div>
+
+    <div class="report-section"><h2>4. Product / pricing breakdown</h2><table class="report-table"><tbody>
+      <tr><th>Guarantee structure</th><td>${esc(selText('pr_str'))}</td><th>Capital multiplier λ</th><td>${res.lam?res.lam.toFixed(1):'—'}</td></tr>
+      <tr><th>Expected loss</th><td>${res.decline?'N/A':'PKR '+res.ecl.toFixed(3)+'M'}</td><th>Capital charge</th><td>${res.decline?'N/A':'PKR '+res.capChg.toFixed(3)+'M'}</td></tr>
+      <tr><th>Admin load</th><td>${res.decline?'N/A':'PKR '+res.adminL.toFixed(3)+'M'}</td><th>Indicative annual fee</th><td>${res.decline?'N/A':'PKR '+res.annFee.toFixed(3)+'M / '+res.feeBps.toFixed(0)+' bps'}</td></tr>
+    </tbody></table></div>
+
+    <div class="report-section"><h2>5. Policy flags and documentation notes</h2><ul style="margin-left:16px;font-size:11px">${flags}</ul><table class="report-table"><tbody><tr><th>Risk mitigants / CPs / notes</th><td>${notes}</td></tr></tbody></table></div>
+
+    <div class="report-section"><h2>6. Criterion-level scorecard selections — FI</h2><table class="report-table"><thead><tr><th>Category</th><th>Criterion</th><th>Weight</th><th>Score</th><th>Selected definition</th></tr></thead><tbody>${criterionRowsFromObject(FI_DEF,FI_CW)}</tbody></table></div>
+    <div class="report-section"><h2>7. Criterion-level scorecard selections — Obligor</h2><table class="report-table"><thead><tr><th>Category</th><th>Criterion</th><th>Weight</th><th>Score</th><th>Selected definition</th></tr></thead><tbody>${criterionRowsFromObject(OB_DEF,OB_CW)}</tbody></table></div>
+    <div class="report-section"><h2>8. Sector and product selections</h2><table class="report-table"><thead><tr><th>Category</th><th>Criterion</th><th>Weight / type</th><th>Score</th><th>Selected definition</th></tr></thead><tbody>
+      <tr><td>Sector</td><td>Selected sector</td><td>Base data</td><td>${secS?'IRR '+secS.baseIRR:'—'}</td><td>${secS?esc(secS.sector.n)+' · base PD '+fp(secS.sector.pd):'—'}</td></tr>
+      ${sectorOverlayRows()}${productCriterionRows()}
+    </tbody></table></div>
+  </div>`;
+}
+function savePDFReport(){preparePrintReport(true);window.print();}
+
+function switchTab(t,btn=null){
+  document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+  el('tab-'+t).classList.add('active');
+  if(btn)btn.classList.add('active');
+  else{const b=[...document.querySelectorAll('.tab-btn')].find(x=>x.getAttribute('onclick')?.includes("'"+t+"'"));if(b)b.classList.add('active');}
+}
+
+function initAll(){
+  // IRR table
+  el('irr-table-body').innerHTML=IRR.map(r=>`
+    <tr>
+      <td style="font-weight:600;color:${r.color}">IRR ${r.irr}</td>
+      <td>${r.grade}</td>
+      <td style="color:var(--muted)">${r.ext}</td>
+      <td>${fp(r.pdLow,2)}–${r.irr<9?fp(r.pdHigh,1):'25%+'}</td>
+      <td style="font-weight:600;color:${r.color}">${fp(r.pd)}</td>
+      <td style="font-weight:600;color:${r.ceil===0?'#9B2335':r.ceil<75?'#C8923A':'#39A949'}">${r.ceil===0?'Decline':r.ceil+'%'}</td>
+      <td style="font-size:12px;color:var(--muted)">${r.appr}</td>
+      <td style="font-size:12px;color:var(--muted)">${r.irr<=4?'Stage 1':r.irr<=7?'Stage 2':'Stage 3'}</td>
+    </tr>`).join('');
+
+  // FI scorecards
+  ['A','B','C'].forEach(cat=>el('fi-cat-'+cat).innerHTML=buildCrits(FI_DEF[cat],'updateFI'));
+  // OB scorecards
+  ['A','B','C','D','E'].forEach(cat=>el('ob-cat-'+cat).innerHTML=buildCrits(OB_DEF[cat],'updateOB'));
+  // Sector select
+  const ss=el('sector-select');
+  ss.innerHTML='<option value="">— select sector —</option>'+SECTORS.map((s,i)=>`<option value="${i}">${s.n} (base PD ${fp(s.pd,1)})</option>`).join('');
+  // Sector overlays
+  el('sec-overlays').innerHTML=buildCrits(SEC_OV,'updateSector');
+  SEC_OV.forEach(o=>{const e=el(o.id);if(e)e.value='0';});
+  // Sector ref table
+  el('sector-ref-body').innerHTML=SECTORS.map((s,i)=>`<tr><td>${s.n}</td><td style="color:${IRR[s.irr0-1].color};font-weight:600">${fp(s.pd,1)}</td><td style="color:${IRR[s.irr0-1].color};font-weight:600">IRR ${s.irr0}</td><td>${s.exp}% of CL</td></tr>`).join('');
+  // Product
+  el('prod-cat-A').innerHTML=buildCrits(PROD_A,'updateProduct');
+  el('prod-cat-B').innerHTML=buildCrits(PROD_B,'updateProduct');
+  // Weights and defaults
+  buildWeightRows();
+  if(el('assess-date') && !el('assess-date').value)el('assess-date').value=new Date().toISOString().slice(0,10);
+  syncLinkedProductInputs();
+  calcECL();
+}
+
+window.updateFI=updateFI;window.updateOB=updateOB;window.updateSector=updateSector;
+window.updateProduct=updateProduct;window.setMode=setMode;window.updW=updW;
+window.calcECL=calcECL;window.switchTab=switchTab;window.syncLinkedProductInputs=syncLinkedProductInputs;
+window.resetPolicyWeights=resetPolicyWeights;window.preparePrintReport=preparePrintReport;window.savePDFReport=savePDFReport;
+initAll();
+</script>
+</body>
+</html>
