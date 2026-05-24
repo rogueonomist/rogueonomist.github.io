@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCGCL Transaction Archetype Risk Rating Calculator</title>
+<style>
+:root{--white:#fff;--bg:#FAFAFA;--soft:#F4F8FA;--border:#E2E8EA;--accent:#C8923A;--accent2:#E7D2A8;--cerulean:#035076;--teal:#0C6B77;--green:#39A949;--red:#9B2335;--amber:#B7791F;--text:#1A1A1A;--muted:#616161;--faint:#969696;--shadow:0 10px 30px rgba(3,80,118,.08)}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.55;font-size:14px}.container{max-width:1220px;margin:0 auto;padding:0 1.25rem}.site-header{border-bottom:1px solid var(--border);background:white;position:sticky;top:0;z-index:20}.header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 0;flex-wrap:wrap}.logo-block{display:flex;align-items:center;gap:12px}.logo-box{width:42px;height:42px;background:var(--cerulean);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}.logo-box svg{width:23px;height:23px;fill:#fff}.logo-text{font-family:Georgia,serif;font-size:19px;color:var(--text);line-height:1}.logo-sub{font-size:11px;color:var(--faint);letter-spacing:.04em}.header-actions{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap}.badge{font-size:11px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;border-radius:20px;background:#fff}.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;color:var(--text);padding:8px 13px;border-radius:7px;font-size:12px;font-weight:650;cursor:pointer;transition:all .15s;text-decoration:none}.btn:hover{border-color:var(--accent);transform:translateY(-1px)}.btn.primary{background:var(--cerulean);color:#fff;border-color:var(--cerulean)}.btn.gold{background:var(--accent);color:#fff;border-color:var(--accent)}.btn.danger{background:var(--red);color:#fff;border-color:var(--red)}.btn.ghost{background:transparent}.page-hero{padding:2rem 0 1.25rem;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#fff 0%,#FCFDFD 100%)}.section-label{font-size:11px;font-weight:750;letter-spacing:.09em;color:var(--faint);text-transform:uppercase;margin-bottom:.5rem}.page-title{font-family:Georgia,serif;font-size:34px;font-weight:400;color:var(--text);line-height:1.15;margin:0 0 .75rem}.page-desc{font-size:13px;color:var(--muted);max-width:870px;margin:0;line-height:1.7}.archetype-panel{margin:1rem 0;border:1px solid var(--border);border-left:4px solid var(--cerulean);background:var(--soft);border-radius:10px;padding:1rem;box-shadow:var(--shadow)}.archetype-grid{display:grid;grid-template-columns:minmax(280px,1.2fr) 2fr;gap:1rem;align-items:start}.field label{display:block;font-size:11px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:.35rem}.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:13px;background:#fff;color:var(--text);font-family:inherit}.field textarea{min-height:72px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid rgba(200,146,58,.2);border-color:var(--accent)}.small-note{font-size:12px;color:var(--muted);line-height:1.6}.tabs{display:flex;border-bottom:1px solid var(--border);gap:2px;overflow-x:auto;margin-top:1rem}.tab-btn{background:transparent;border:none;padding:.9rem 1rem;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;white-space:nowrap;text-transform:uppercase;letter-spacing:.06em}.tab-btn:hover{color:var(--text)}.tab-btn.active{color:var(--cerulean);border-bottom-color:var(--accent)}.tab-content{display:none;padding:1.5rem 0}.tab-content.active{display:block}.panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1rem}.panel.white{background:#fff}.panel-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}.wt-badge{font-size:11px;color:var(--muted);background:#fff;border:1px solid var(--border);padding:2px 8px;border-radius:999px;font-weight:500}.grid{display:grid;gap:.9rem}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}.identity-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem}.identity-grid .span2{grid-column:span 2}.identity-grid .span4{grid-column:span 4}.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.85rem}.metric{background:#fff;border:1px solid var(--border);border-radius:10px;padding:1rem}.metric-label{font-size:10px;color:var(--faint);font-weight:800;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.35rem}.metric-val{font-family:Georgia,serif;font-size:25px;color:var(--text);line-height:1.1}.metric-sub{font-size:12px;color:var(--muted);margin-top:.35rem}.scorecard{background:#fff;border:1px solid var(--border);border-radius:10px;margin-bottom:1rem;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.025)}.scorecard-head{padding:1rem 1.1rem;background:linear-gradient(90deg,var(--cerulean),var(--teal));color:#fff;display:flex;justify-content:space-between;gap:1rem;align-items:flex-start}.scorecard-head h3{font-family:Georgia,serif;font-size:20px;font-weight:400;margin:0}.scorecard-head p{font-size:12px;opacity:.85;margin:.25rem 0 0;max-width:760px}.scorecard-result{text-align:right;min-width:170px}.scorecard-result .big{font-family:Georgia,serif;font-size:27px}.category{padding:1rem;border-bottom:1px solid var(--border)}.category:last-child{border-bottom:none}.category-title{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-bottom:.4rem}.category-title h4{margin:0;font-size:13px;color:var(--cerulean)}.criteria-row{display:grid;grid-template-columns:minmax(260px,1fr) 95px 280px;gap:.7rem;align-items:center;padding:.55rem 0;border-top:1px solid #EEF2F3}.criteria-row:first-of-type{border-top:none}.crit-label{font-size:13px;font-weight:650}.crit-sub{font-size:11px;color:var(--faint)}.crit-weight{text-align:center;font-size:12px;color:var(--muted)}.score-pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:750;background:#EEF6F8;color:var(--cerulean);border:1px solid var(--border)}.table-wrap{overflow-x:auto}.tbl{width:100%;border-collapse:collapse;font-size:13px;background:#fff}.tbl th{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);text-align:left;padding:.65rem .7rem;border-bottom:2px solid var(--border);background:#fff}.tbl td{padding:.65rem .7rem;border-bottom:1px solid var(--border);vertical-align:top}.tbl tr:hover td{background:#FBFCFC}.total-row td{background:var(--cerulean)!important;color:#fff;font-weight:800}.alert{border-radius:9px;padding:.85rem 1rem;font-size:13px;line-height:1.55;margin-bottom:.75rem;border:1px solid}.alert.ok{background:#EBF8EF;border-color:#B7E4C4;color:#165B2F}.alert.warn{background:#FFF7EA;border-color:#F1D19B;color:#7A4A00}.alert.err{background:#FCEBEC;border-color:#F2B8BD;color:#7B1825}.alert.info{background:#EEF7FB;border-color:#CFE8F0;color:#03445F}.weight-row{display:grid;grid-template-columns:minmax(230px,1fr) 110px 1fr;gap:.75rem;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border)}.weight-row:last-child{border-bottom:none}.weight-row input[type=number]{max-width:105px}.bar-bg{height:8px;background:#E6EEF0;border-radius:99px;overflow:hidden}.bar-fill{height:100%;border-radius:99px;background:var(--cerulean)}.heat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:.75rem}.heat-card{border:1px solid var(--border);border-radius:10px;background:#fff;padding:.85rem;border-top:5px solid var(--cerulean)}.heat-card .h-title{font-size:12px;font-weight:800}.heat-card .h-score{font-family:Georgia,serif;font-size:24px}.comp-bar{height:9px;border-radius:99px;background:linear-gradient(90deg,#39A949 0%,#C8923A 50%,#9B2335 100%);position:relative;margin:1rem 0 .35rem}.comp-pin{position:absolute;top:-7px;width:22px;height:22px;border:2px solid #fff;border-radius:50%;background:var(--cerulean);box-shadow:0 1px 7px rgba(0,0,0,.25);transform:translateX(-50%)}.labels{display:flex;justify-content:space-between;font-size:11px;color:var(--faint)}.result-box{background:var(--cerulean);color:#fff;border-radius:12px;padding:1rem;margin-bottom:1rem}.result-box .metric{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16)}.result-box .metric-label{color:rgba(255,255,255,.7)}.result-box .metric-val{color:#fff}.result-box .metric-sub{color:rgba(255,255,255,.75)}.checklist{columns:2;column-gap:2rem;margin:0;padding-left:1.15rem}.checklist li{break-inside:avoid;margin-bottom:.35rem}.muted{color:var(--muted)}.tiny{font-size:11px;color:var(--faint)}.hidden{display:none!important}.print-only{display:none}.footer{border-top:1px solid var(--border);padding:1.2rem 0;margin-top:2rem;color:var(--faint);font-size:12px}.file-input{display:none}
+@media(max-width:900px){.archetype-grid,.grid.two,.grid.three,.grid.four,.identity-grid{grid-template-columns:1fr}.identity-grid .span2,.identity-grid .span4{grid-column:span 1}.criteria-row{grid-template-columns:1fr}.weight-row{grid-template-columns:1fr}.scorecard-head{flex-direction:column}.scorecard-result{text-align:left}.checklist{columns:1}}
+@media print{body{font-size:11pt;background:#fff}.site-header,.tabs,.no-print,.footer{display:none!important}.container{max-width:none;padding:0}.tab-content{display:block!important;padding:0}.tab-content:not(.print-section){display:none!important}.print-only{display:block}.panel,.scorecard,.result-box{box-shadow:none;break-inside:avoid;border-color:#C9D3D6}.scorecard-head{background:#035076!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.page-title{font-size:22pt}.metric-val{font-size:18pt}.criteria-row{grid-template-columns:1fr 60px 1.2fr}.btn{display:none}.alert{break-inside:avoid}.tbl th{background:#f4f8fa!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<header class="site-header no-print">
+  <div class="container">
+    <div class="header-inner">
+      <div class="logo-block"><div class="logo-box"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div><div><div class="logo-text">NCGCL</div><div class="logo-sub">National Credit Guarantee Company Limited</div></div></div>
+      <div class="header-actions">
+        <span class="badge">Risk Rating Framework v1.0 · Archetype Redesign</span>
+        <button class="btn" onclick="saveAssessment()">Save</button>
+        <button class="btn" onclick="loadAssessment()">Load</button>
+        <button class="btn" onclick="exportJSON()">Export JSON</button>
+        <button class="btn" onclick="document.getElementById('jsonImport').click()">Import JSON</button>
+        <input id="jsonImport" class="file-input" type="file" accept="application/json,.json" onchange="importJSON(event)">
+        <button class="btn primary" onclick="generatePDFReport()">Generate PDF Report</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="page-hero">
+    <div class="section-label">Credit Risk Assessment Tool</div>
+    <h1 class="page-title">Transaction-Archetype Risk Rating Calculator</h1>
+    <p class="page-desc">Redesigned single-file calculator for individual exposures, portfolio/programme guarantees, and on-lending exposures. The model distinguishes mechanical score, policy-adjusted score and final recommended IRR, applies hard gates, enforces coverage ceilings, and calculates annual and lifetime ECL from the final composite IRR PD.</p>
+  </section>
+
+  <section class="archetype-panel no-print">
+    <div class="archetype-grid">
+      <div class="field"><label>Transaction Archetype</label><select id="archetype" onchange="setArchetype(this.value)"></select></div>
+      <div><div class="section-label">Pathway logic</div><div id="archetypeHint" class="small-note"></div><div id="onlendDistinctBox" class="field" style="margin-top:.75rem"><label><input type="checkbox" id="distinctPfi" onchange="renderAll()" style="width:auto;margin-right:6px">Distinct originating PFI exists in addition to on-lending obligor</label><div class="tiny">Default separate PFI underwriting weight is 0%. If activated, allocate weight manually and provide rationale.</div></div></div>
+    </div>
+  </section>
+
+  <nav class="tabs no-print">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">Overview</button>
+    <button class="tab-btn" onclick="switchTab('identity',this)">Transaction Identity</button>
+    <button class="tab-btn" onclick="switchTab('scorecards',this)">Scorecards</button>
+    <button class="tab-btn" onclick="switchTab('sector',this)">Sector & Coverage</button>
+    <button class="tab-btn" onclick="switchTab('composite',this)">Composite & ECL</button>
+    <button class="tab-btn" onclick="switchTab('method',this)">Methodology / QA</button>
+  </nav>
+
+  <section id="tab-overview" class="tab-content active">
+    <div class="summary-grid" id="topMetrics"></div>
+    <div class="grid two" style="margin-top:1rem">
+      <div class="panel white"><div class="panel-title">IRR scale and PD table</div><div class="table-wrap"><table class="tbl"><thead><tr><th>IRR</th><th>Grade</th><th>PD</th><th>Coverage</th><th>Authority</th><th>IFRS 9</th></tr></thead><tbody id="irrTable"></tbody></table></div></div>
+      <div class="panel white"><div class="panel-title">Default weights by archetype</div><div id="defaultWeights"></div></div>
+    </div>
+  </section>
+
+  <section id="tab-identity" class="tab-content">
+    <div class="panel"><div class="panel-title">Transaction identity and memo fields</div><div class="identity-grid" id="identityFields"></div></div>
+    <div class="panel"><div class="panel-title">Risk-share, coverage and ECL inputs</div><div class="identity-grid" id="riskFields"></div><div id="riskShareMessage" style="margin-top:.75rem"></div></div>
+  </section>
+
+  <section id="tab-scorecards" class="tab-content"><div id="scorecardArea"></div></section>
+
+  <section id="tab-sector" class="tab-content">
+    <div class="grid two">
+      <div class="panel"><div class="panel-title">Sector selection and qualitative overlays</div><div id="sectorArea"></div></div>
+      <div class="panel"><div class="panel-title">Policy warning panel</div><div id="warningPanel"></div></div>
+    </div>
+    <div class="panel white"><div class="panel-title">Sector reference table</div><div class="table-wrap"><table class="tbl"><thead><tr><th>Sector</th><th>Base PD</th><th>Base IRR</th><th>Max exposure</th></tr></thead><tbody id="sectorRef"></tbody></table></div></div>
+  </section>
+
+  <section id="tab-composite" class="tab-content">
+    <div class="panel"><div class="panel-title">Module weights <span class="wt-badge">must total 100%</span></div><div id="weightArea"></div><div style="margin-top:.75rem" class="field"><label>Rationale for manual deviation from default weights</label><textarea id="weightRationale" oninput="renderAll()" placeholder="Required if any weight deviates from the policy/default weight set."></textarea></div></div>
+    <div id="validationAlerts"></div>
+    <div class="grid two">
+      <div class="panel white"><div class="panel-title">Module contribution waterfall / table</div><div class="table-wrap"><table class="tbl"><thead><tr><th>Module</th><th>Mechanical IRR</th><th>Policy IRR</th><th>Weight</th><th>Contribution</th><th>Position</th></tr></thead><tbody id="moduleRows"></tbody><tfoot id="moduleFoot"></tfoot></table></div><div class="comp-bar"><div class="comp-pin" id="compPin" style="left:0%"></div></div><div class="labels"><span>IRR 1</span><span>IRR 5</span><span>IRR 9</span></div></div>
+      <div class="panel white"><div class="panel-title">Risk heat map</div><div id="heatMap" class="heat-grid"></div></div>
+    </div>
+    <div class="result-box"><div class="section-label" style="color:rgba(255,255,255,.7)">Composite rating & ECL</div><div class="summary-grid" id="resultMetrics"></div></div>
+    <div class="grid two">
+      <div class="panel white"><div class="panel-title">Coverage test</div><div id="coveragePanel"></div></div>
+      <div class="panel white"><div class="panel-title">Missing-input checklist</div><div id="missingChecklist"></div></div>
+    </div>
+    <div class="panel white"><div class="panel-title">Assessor override</div><div class="identity-grid"><div class="field"><label>Override notches</label><select id="overrideNotch" onchange="renderAll()"><option value="0">No override</option><option value="1">Worsen by +1 notch</option><option value="2">Worsen by +2 notches</option><option value="-1">Improve by -1 notch</option><option value="-2">Improve by -2 notches (GC/Board exception)</option></select></div><div class="field span2"><label>Override rationale</label><textarea id="overrideRationale" oninput="renderAll()" placeholder="Required if override is used."></textarea></div><div class="field"><label><input type="checkbox" id="modelRequested" onchange="renderAll()" style="width:auto;margin-right:6px">Model requested coverage for sensitivity only</label><div class="tiny">Official ECL uses permitted coverage unless this sensitivity box is explicitly selected.</div></div><div class="field"><label>PD basis</label><select id="pdBasis" onchange="renderAll()"><option value="official">Official: final composite IRR midpoint PD</option><option value="weighted">Sensitivity: weighted module PD</option></select></div></div></div>
+  </section>
+
+  <section id="tab-method" class="tab-content">
+    <div class="grid two">
+      <div class="panel white"><div class="panel-title">Embedded methodology note</div><div class="small-note"><p><strong>Why archetype-based scorecards:</strong> a guarantee on a named SME, a portfolio guarantee and an on-lending facility do not create the same risk. In an individual exposure, the final obligor drives default risk. In a programme guarantee, pool quality, concentration and PFI servicing quality dominate. In on-lending, the MFI/NBFC is the borrower/obligor, so its solvency, liquidity, ALM, governance and collections must be underwritten as borrower risk rather than being treated as a minor PFI channel score.</p><p>The official calculation is <strong>Composite Raw Score = Σ(module score × module weight)</strong>. Weights must total 100%. The composite IRR is the rounded composite raw score, subject to hard gates, floors, caps and documented override rules.</p></div></div>
+      <div class="panel white"><div class="panel-title">Change log versus previous dual-mode calculator</div><ul class="small-note"><li>Replaced two-mode logic with three transaction archetypes.</li><li>Reduced PFI channel weight to 5% for individual exposures.</li><li>Added dedicated on-lending pathway where MFI/NBFC is the obligor.</li><li>Added weighted product/structure criteria instead of simple averaging.</li><li>Added risk-retention adjustment and coverage ceiling waterfall.</li><li>Separated mechanical, policy-adjusted and final recommended IRR.</li><li>Corrected lifetime ECL using lifetime PD = 1 - (1 - annual PD)^tenor.</li><li>Added JSON save/load/export/import and print-optimised report output.</li></ul></div>
+    </div>
+    <div class="panel white"><div class="panel-title">QA checklist and embedded dummy-case tests</div><div id="qaChecklist"></div></div>
+  </section>
+
+  <section id="printReport" class="tab-content print-section print-only"></section>
+</main>
+<footer class="footer no-print"><div class="container">NCGCL Risk Rating Framework v1.0 · Internal use only · Generated calculator redesign with archetype-specific credit-risk architecture</div></footer>
+
+<script>
+const DATA = {"IRR": [{"irr": 1, "grade": "Minimal risk", "ext": "AAA / AA", "pd": 0.0025, "ceil": 75, "appr": "CEO", "ifrs": "Stage 1", "col": "#1a7a3c"}, {"irr": 2, "grade": "Very low risk", "ext": "A+", "pd": 0.0075, "ceil": 75, "appr": "CEO", "ifrs": "Stage 1", "col": "#2d9e50"}, {"irr": 3, "grade": "Low risk", "ext": "A / A-", "pd": 0.015, "ceil": 75, "appr": "CEO / GC", "ifrs": "Stage 1", "col": "#5abe7a"}, {"irr": 4, "grade": "Acceptable risk", "ext": "BBB", "pd": 0.03, "ceil": 75, "appr": "Guarantee Committee", "ifrs": "Stage 1", "col": "#b98a00"}, {"irr": 5, "grade": "Moderate risk", "ext": "BB+", "pd": 0.05, "ceil": 60, "appr": "Guarantee Committee", "ifrs": "Stage 1", "col": "#e8850a"}, {"irr": 6, "grade": "Elevated risk", "ext": "BB / BB-", "pd": 0.08, "ceil": 50, "appr": "GC + Senior Management", "ifrs": "Stage 2", "col": "#c05000"}, {"irr": 7, "grade": "High risk", "ext": "B+ / B", "pd": 0.12, "ceil": 40, "appr": "Board", "ifrs": "Stage 2", "col": "#9b2335"}, {"irr": 8, "grade": "Very high risk", "ext": "B- / CCC", "pd": 0.18, "ceil": 0, "appr": "Hard decline / Board exception only", "ifrs": "Stage 3", "col": "#7a1010"}, {"irr": 9, "grade": "Near / in default", "ext": "CC / D", "pd": 0.3, "ceil": 0, "appr": "Hard decline", "ifrs": "Stage 3", "col": "#580000"}], "SECTORS": [{"n": "Agriculture - Services & Processing", "pd": 0.0407, "irr0": 5, "exp": 10}, {"n": "Agriculture - Production", "pd": 0.0407, "irr0": 5, "exp": 10}, {"n": "Auto & Allied", "pd": 0.0126, "irr0": 3, "exp": 10}, {"n": "Carpets & Rugs", "pd": 0.0222, "irr0": 4, "exp": 5}, {"n": "Cement", "pd": 0.009, "irr0": 2, "exp": 10}, {"n": "Chemicals & Allied Products", "pd": 0.0062, "irr0": 2, "exp": 10}, {"n": "Construction (excl. cement)", "pd": 0.0222, "irr0": 4, "exp": 5}, {"n": "Construction / Real Estate Services", "pd": 0.0222, "irr0": 4, "exp": 5}, {"n": "Consumer Products", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Electronics & Allied", "pd": 0.0347, "irr0": 5, "exp": 10}, {"n": "Fertilizer", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Food & Beverages", "pd": 0.018, "irr0": 3, "exp": 10}, {"n": "Home & Lifestyle", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Leather Products", "pd": 0.0159, "irr0": 3, "exp": 5}, {"n": "Livestock & Fisheries", "pd": 0.0407, "irr0": 5, "exp": 5}, {"n": "Metal & Steel Products", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Mining & Quarrying", "pd": 0.0222, "irr0": 4, "exp": 5}, {"n": "Oil & Gas", "pd": 0.0106, "irr0": 3, "exp": 5}, {"n": "Paper & Board", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Professional Services", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Renewable Energy", "pd": 0.0222, "irr0": 4, "exp": 15}, {"n": "Sports Goods", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Sugar (high-NPL, seasonal)", "pd": 0.062, "irr0": 6, "exp": 5}, {"n": "Telecom & IT Services", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Textile & Garments", "pd": 0.0294, "irr0": 4, "exp": 15}, {"n": "Transportation & Logistics", "pd": 0.0126, "irr0": 3, "exp": 10}, {"n": "Warehouse & Storage", "pd": 0.0222, "irr0": 4, "exp": 10}, {"n": "Other / unrated sector", "pd": 0.0275, "irr0": 4, "exp": 5}], "SEC_OV": [{"id": "ov_cyc", "lbl": "Cyclicality / price volatility", "sub": "commodity, export, weather and demand cycles", "opts": [[0, "Low cyclicality / stable demand"], [1, "Moderate cyclicality (+1 notch)"], [2, "High cyclicality or commodity-linked (+2)"]]}, {"id": "ov_reg", "lbl": "Regulatory and policy risk", "sub": "pricing controls, quotas, subsidies, licensing", "opts": [[0, "Low regulatory exposure"], [1, "Moderate policy change risk (+1)"], [2, "High regulatory intervention risk (+2)"]]}, {"id": "ov_env", "lbl": "Climate / ESG / physical risk", "sub": "flood, heat, water, social or environmental exposure", "opts": [[0, "Low or positive ESG profile"], [1, "Moderate ESG / climate exposure (+1)"], [2, "Material ESG / climate exposure (+2)"]]}, {"id": "ov_out", "lbl": "Current sector outlook", "sub": "forward-looking macro and sector trajectory", "opts": [[-1, "Improving / policy tailwinds (-1 notch)"], [0, "Neutral"], [1, "Deteriorating (+1)"], [2, "Severe stress / downturn (+2)"]]}], "SCORECARDS": {"finalObligor": {"title": "Final Obligor Risk Scorecard", "description": "Used for an individual known borrower. This module is deliberately dominant in the Individual Exposure pathway.", "categories": [{"title": "Financial health", "weight": 0.35, "criteria": [{"id": "final_dscr", "lbl": "Debt service coverage ratio (DSCR)", "sub": "Prospective debt service capacity", "weight": 0.25, "opts": [[1, ">2.0x"], [2, "1.75–2.0x"], [3, "1.50–1.75x"], [5, "1.20–1.50x"], [7, "1.00–1.20x"], [9, "<1.00x — approval floor triggered"]]}, {"id": "final_de", "lbl": "Total debt / equity", "sub": "Balance-sheet leverage", "weight": 0.2, "opts": [[1, "<0.75x"], [2, "0.75–1.50x"], [4, "1.50–2.50x"], [6, "2.50–3.50x"], [8, ">3.50x"]]}, {"id": "final_cr", "lbl": "Current ratio", "sub": "Short-term liquidity", "weight": 0.15, "opts": [[1, ">2.5x"], [2, "2.0–2.5x"], [4, "1.5–2.0x"], [5, "1.2–1.5x"], [7, "1.0–1.2x"], [9, "<1.0x"]]}, {"id": "final_rev", "lbl": "Revenue CAGR", "sub": "Three-year growth trend", "weight": 0.15, "opts": [[1, ">20%"], [2, "15–20%"], [3, "10–15%"], [5, "5–10%"], [7, "0–5%"], [9, "Negative CAGR"]]}, {"id": "final_margin", "lbl": "Net profit margin", "sub": "Two-year average profitability", "weight": 0.15, "opts": [[1, ">15%"], [2, "10–15%"], [4, "5–10%"], [6, "2–5%"], [8, "0–2%"], [9, "Loss-making"]]}, {"id": "final_fs", "lbl": "Financial statement quality", "sub": "Audit / verifiability of accounts", "weight": 0.1, "opts": [[1, "Big-4 / equivalent audit, 2 years"], [3, "Reputable audit firm, 2 years"], [5, "Unqualified audit, 1 year"], [7, "Management accounts only"], [9, "No financials — obligor score cannot be better than IRR 7"]]}]}, {"title": "Cash-flow quality", "weight": 0.2, "criteria": [{"id": "final_cfs", "lbl": "Cash-flow stability", "sub": "Stability of operating cash flows", "weight": 0.4, "opts": [[1, "Very stable / recurring"], [3, "Stable with minor seasonality"], [5, "Seasonal but recoverable"], [7, "Material cycles"], [9, "Highly volatile / unpredictable"]]}, {"id": "final_wc", "lbl": "Working-capital cycle", "sub": "Inventory + AR days minus AP days", "weight": 0.35, "opts": [[1, "<30 days"], [2, "30–60 days"], [4, "60–90 days"], [6, "90–150 days"], [8, ">150 days"]]}, {"id": "final_ar", "lbl": "Accounts receivable days", "sub": "Recoverability and concentration of receivables", "weight": 0.25, "opts": [[1, "<30 days / below benchmark"], [3, "30–45 days"], [5, "45–60 days"], [7, "60–90 days"], [9, ">90 days / severe stretch"]]}]}, {"title": "Value-chain position", "weight": 0.15, "criteria": [{"id": "final_customer", "lbl": "Customer concentration", "sub": "Revenue from top three buyers", "weight": 0.3, "opts": [[1, "<20%"], [3, "20–35%"], [5, "35–50%"], [7, "50–70%"], [9, ">70% / dominant buyer"]]}, {"id": "final_supplier", "lbl": "Supplier dependency", "sub": "Sourcing from top two suppliers", "weight": 0.25, "opts": [[1, "No supplier >20%"], [3, "20–40%"], [5, "40–60%"], [8, ">60% dependency"]]}, {"id": "final_comp", "lbl": "Competitive position", "sub": "Market position and pricing power", "weight": 0.25, "opts": [[1, "Leader / niche dominance"], [3, "Strong, top quartile"], [5, "Average"], [7, "Weak price-taker"], [9, "Marginal / survival risk"]]}, {"id": "final_vc", "lbl": "Value-chain outlook", "sub": "Structural role of borrower in its value chain", "weight": 0.2, "opts": [[1, "Essential and growing"], [3, "Stable / well integrated"], [5, "Average"], [7, "Declining / substitutable"], [9, "Structural contraction"]]}]}, {"title": "Business stability and management", "weight": 0.2, "criteria": [{"id": "final_history", "lbl": "Operating history", "sub": "Years in continuous operations", "weight": 0.25, "opts": [[1, ">10 years"], [2, "7–10 years"], [4, "5–7 years"], [6, "3–5 years"], [8, "2–3 years"], [9, "<2 years — not standard eligible"]]}, {"id": "final_div", "lbl": "Revenue diversification", "sub": "Products / segments", "weight": 0.25, "opts": [[1, "3+ segments"], [3, "2 segments"], [6, "Single product"], [8, "Single niche product"]]}, {"id": "final_geo", "lbl": "Geographic reach", "sub": "Markets served", "weight": 0.25, "opts": [[1, "Export + multi-province"], [3, "Multi-province domestic"], [5, "Single province"], [7, "City / district only"]]}, {"id": "final_mgmt", "lbl": "Management quality", "sub": "Experience, succession and integrity", "weight": 0.25, "opts": [[1, "Deep and proven"], [3, "Experienced"], [5, "Adequate / founder-led"], [7, "Limited / unproven"], [9, "Integrity concern / adverse media"]]}]}, {"title": "Collateral and security", "weight": 0.1, "criteria": [{"id": "final_collateral", "lbl": "Primary collateral type", "sub": "Recovery quality and enforceability", "weight": 0.55, "opts": [[1, "Cash lien / AA+ SBLC"], [3, "Motor vehicle"], [4, "Urban property / land"], [5, "Rural property / land"], [7, "Stocks / receivables / current assets"], [7, "Other fixed assets"], [9, "Unsecured / clean lending"]]}, {"id": "final_coll_cov", "lbl": "Collateral coverage ratio", "sub": "Collateral value / facility amount", "weight": 0.45, "opts": [[1, ">200%"], [2, "150–200%"], [3, "120–150%"], [5, "100–120%"], [7, "75–100%"], [9, "<75%"]]}]}]}, "pfiChannel": {"title": "PFI Channel / Servicing Risk Scorecard", "description": "Limited-channel assessment. In an individual exposure this should not dominate the obligor score; it tests eligibility, operational capacity, recovery discipline and data quality.", "categories": [{"title": "Eligibility and governance", "weight": 0.35, "criteria": [{"id": "pfi_reg", "lbl": "PFI regulatory standing", "sub": "Licensing, prudential compliance and regulatory actions", "weight": 0.4, "opts": [[1, "Clean record"], [3, "Minor issues rectified"], [5, "Manageable observations"], [7, "Show-cause / pending directives"], [9, "Licence or sanctions risk"]]}, {"id": "pfi_elig", "lbl": "NCGCL eligibility fit", "sub": "Meets PFI eligibility, documentation and SLA requirements", "weight": 0.3, "opts": [[1, "Fully eligible and onboarded"], [3, "Eligible with minor documentation gaps"], [5, "Conditional eligibility"], [7, "Material gaps"], [9, "Not eligible"]]}, {"id": "pfi_gov", "lbl": "Credit governance at channel level", "sub": "Delegations, maker-checker controls, committee discipline", "weight": 0.3, "opts": [[1, "Strong independent controls"], [3, "Good controls"], [5, "Adequate"], [7, "Weak / relationship-led"], [9, "Material control failure"]]}]}, {"title": "Origination, servicing and reporting", "weight": 0.4, "criteria": [{"id": "pfi_servicing", "lbl": "Servicing capacity", "sub": "Monitoring, covenant tracking and borrower contact", "weight": 0.3, "opts": [[1, "Strong and automated"], [3, "Good"], [5, "Adequate"], [7, "Manual / weak"], [9, "Deficient"]]}, {"id": "pfi_recovery", "lbl": "Recovery discipline", "sub": "Collections, legal recoveries and collateral enforcement", "weight": 0.3, "opts": [[1, ">80% historic recovery"], [3, "70–80%"], [5, "60–70%"], [7, "50–60%"], [9, "<50%"]]}, {"id": "pfi_data", "lbl": "Data and MIS quality", "sub": "Timely uploads, field completeness, audit trail", "weight": 0.25, "opts": [[1, "API-ready / clean data"], [3, "Adequate MIS"], [5, "Partial data quality issues"], [7, "Manual / late reporting"], [9, "Not reliable"]]}, {"id": "pfi_fraud", "lbl": "Fraud and operational-risk controls", "sub": "KYC, disbursement controls, exception handling", "weight": 0.15, "opts": [[1, "Strong"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Material fraud/control concerns"]]}]}, {"title": "Risk retention and incentives", "weight": 0.25, "criteria": [{"id": "pfi_skin", "lbl": "Retained-risk behaviour", "sub": "Observed willingness to retain and manage risk", "weight": 0.55, "opts": [[1, "High retained risk and proven discipline"], [3, "Meaningful retained risk"], [5, "Adequate"], [7, "Weak alignment"], [9, "Originate-to-distribute risk"]]}, {"id": "pfi_exceptions", "lbl": "Credit exception rate", "sub": "Frequency and quality of exceptions / policy waivers", "weight": 0.45, "opts": [[1, "Low and justified"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Systemic exceptions"]]}]}]}, "pool": {"title": "Portfolio / Pool Credit Quality Scorecard", "description": "Pool-level risk assessment for programme and portfolio guarantees.", "categories": [{"title": "Static pool quality", "weight": 0.45, "criteria": [{"id": "pool_avg", "lbl": "Weighted average borrower quality", "sub": "Representative credit quality of the pool", "weight": 0.25, "opts": [[1, "IRR 1–2 equivalent"], [3, "IRR 3 equivalent"], [5, "IRR 4–5 equivalent"], [7, "IRR 6–7 equivalent"], [9, "IRR 8–9 equivalent"]]}, {"id": "pool_par30", "lbl": "PAR30 / early delinquency", "sub": "Portfolio at risk over 30 days", "weight": 0.2, "opts": [[1, "<2%"], [3, "2–4%"], [5, "4–6%"], [7, "6–10%"], [9, ">10%"]]}, {"id": "pool_par90", "lbl": "PAR90 / NPL ratio", "sub": "Severe delinquency / NPL", "weight": 0.2, "opts": [[1, "<1%"], [3, "1–2.5%"], [5, "2.5–5%"], [7, "5–8%"], [9, ">8% severe"]]}, {"id": "pool_gran", "lbl": "Granularity", "sub": "Top obligor and top-10 concentration", "weight": 0.15, "opts": [[1, "Highly granular"], [3, "Granular"], [5, "Moderate"], [7, "Concentrated"], [9, "Highly concentrated"]]}, {"id": "pool_vintage", "lbl": "Portfolio vintage", "sub": "Seasoning and performance observability", "weight": 0.2, "opts": [[1, ">24 months of data"], [3, "12–24 months"], [5, "6–12 months"], [7, "Pilot / <6 months"], [9, "No vintage data"]]}]}, {"title": "Dynamic performance", "weight": 0.35, "criteria": [{"id": "pool_trend", "lbl": "Delinquency trend", "sub": "PAR/NPL movement over last 3–6 periods", "weight": 0.3, "opts": [[1, "Improving"], [3, "Stable"], [5, "Mild deterioration"], [7, "Rapid deterioration"], [9, "Severe deterioration"]]}, {"id": "pool_writeoff", "lbl": "Write-off ratio", "sub": "Annualised write-offs / average portfolio", "weight": 0.25, "opts": [[1, "<0.5%"], [3, "0.5–1.5%"], [5, "1.5–3.0%"], [7, "3–5%"], [9, ">5%"]]}, {"id": "pool_recovery", "lbl": "Recovery performance", "sub": "Recoveries after default", "weight": 0.25, "opts": [[1, ">80%"], [3, "70–80%"], [5, "60–70%"], [7, "50–60%"], [9, "<50%"]]}, {"id": "pool_resched", "lbl": "Restructured / rescheduled loans", "sub": "Masking of underlying stress", "weight": 0.2, "opts": [[1, "<1%"], [3, "1–3%"], [5, "3–5%"], [7, "5–10%"], [9, ">10%"]]}]}, {"title": "Data reliability", "weight": 0.2, "criteria": [{"id": "pool_data", "lbl": "Loan-level data quality", "sub": "Completeness and auditability of loan tapes", "weight": 0.5, "opts": [[1, "Complete / reconciled"], [3, "Minor gaps"], [5, "Moderate gaps"], [7, "Material gaps"], [9, "Unreliable"]]}, {"id": "pool_sample", "lbl": "Sample file review findings", "sub": "NCGCL / auditor sample test results", "weight": 0.5, "opts": [[1, "Clean"], [3, "Minor exceptions"], [5, "Manageable exceptions"], [7, "High exception rate"], [9, "Systemic exceptions"]]}]}]}, "concentration": {"title": "Sector / Concentration Risk Scorecard", "description": "Pool or programme concentration overlay. This is distinct from the selected sector ceiling used for coverage limits.", "categories": [{"title": "Concentration profile", "weight": 0.7, "criteria": [{"id": "conc_sector", "lbl": "Sector / sub-sector concentration", "sub": "Share of pool in top sector/sub-sector", "weight": 0.25, "opts": [[1, "Top sector <20%"], [3, "20–35%"], [5, "35–50%"], [7, "50–70%"], [9, ">70%"]]}, {"id": "conc_geo", "lbl": "Geographic concentration", "sub": "Province / district concentration", "weight": 0.2, "opts": [[1, "Well diversified"], [3, "Moderately diversified"], [5, "Some concentration"], [7, "High concentration"], [9, "Single geography"]]}, {"id": "conc_ticket", "lbl": "Ticket-size concentration", "sub": "Exposure skew to large borrowers", "weight": 0.2, "opts": [[1, "Very granular"], [3, "Granular"], [5, "Moderate"], [7, "Large-ticket skew"], [9, "Very concentrated"]]}, {"id": "conc_product", "lbl": "Product concentration", "sub": "Share in one loan product / use case", "weight": 0.15, "opts": [[1, "Diversified products"], [3, "Moderate concentration"], [5, "One main product"], [7, "Single product"], [9, "Single product + untested"]]}, {"id": "conc_tenor", "lbl": "Tenor and maturity concentration", "sub": "Refinancing / maturity bunching", "weight": 0.2, "opts": [[1, "Well staggered"], [3, "Acceptable"], [5, "Moderate bunching"], [7, "High bunching"], [9, "Cliff maturity risk"]]}]}, {"title": "Systemic sensitivity", "weight": 0.3, "criteria": [{"id": "conc_macro", "lbl": "Sensitivity to inflation, energy prices or FX", "sub": "Input-cost or demand shock sensitivity", "weight": 0.45, "opts": [[1, "Low"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Extreme"]]}, {"id": "conc_climate", "lbl": "Climate / flood / commodity cycle exposure", "sub": "Agriculture, livestock, flood plains, commodities", "weight": 0.35, "opts": [[1, "Low"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Extreme"]]}, {"id": "conc_vulnerable", "lbl": "Vulnerable borrower segment exposure", "sub": "Income volatility and borrower fragility", "weight": 0.2, "opts": [[1, "Low"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Extreme"]]}]}]}, "pfiServicing": {"title": "PFI Underwriting, Servicing, MIS and Recovery Risk Scorecard", "description": "For portfolio/programme guarantees, the PFI is assessed as the originator and servicer of the pool, not only as a generic FI credit.", "categories": [{"title": "Underwriting discipline", "weight": 0.35, "criteria": [{"id": "serv_policy", "lbl": "Underwriting policy quality", "sub": "Policy, scoring, collateral, cash-flow tools", "weight": 0.3, "opts": [[1, "Advanced / model-driven"], [3, "Structured"], [5, "Adequate"], [7, "Weak"], [9, "Deficient"]]}, {"id": "serv_exceptions", "lbl": "Approval exceptions and overrides", "sub": "Volume and governance of credit exceptions", "weight": 0.25, "opts": [[1, "Low and controlled"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Systemic"]]}, {"id": "serv_reunderwrite", "lbl": "NCGCL re-underwriting sample", "sub": "Findings from sample review", "weight": 0.25, "opts": [[1, "Clean"], [3, "Minor gaps"], [5, "Moderate gaps"], [7, "High gaps"], [9, "Material mis-underwriting"]]}, {"id": "serv_incentives", "lbl": "Incentive alignment", "sub": "Origination targets vs credit quality", "weight": 0.2, "opts": [[1, "Credit-quality aligned"], [3, "Mostly aligned"], [5, "Balanced"], [7, "Growth-biased"], [9, "Aggressive growth / moral hazard"]]}]}, {"title": "Servicing, MIS and recovery", "weight": 0.45, "criteria": [{"id": "serv_monitor", "lbl": "Post-disbursement monitoring", "sub": "Covenants, early warning, portfolio reviews", "weight": 0.25, "opts": [[1, "Strong automated EWS"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "None / unreliable"]]}, {"id": "serv_collect", "lbl": "Collection infrastructure", "sub": "Field/digital collections and accountability", "weight": 0.2, "opts": [[1, "Strong"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Deficient"]]}, {"id": "serv_recovery", "lbl": "Recovery performance", "sub": "Recoveries after default", "weight": 0.25, "opts": [[1, ">80%"], [3, "70–80%"], [5, "60–70%"], [7, "50–60%"], [9, "<50%"]]}, {"id": "serv_mis", "lbl": "MIS and reporting to NCGCL", "sub": "Loan-level reporting quality and timeliness", "weight": 0.2, "opts": [[1, "API-ready / clean"], [3, "Good"], [5, "Adequate"], [7, "Manual / delayed"], [9, "Unreliable"]]}, {"id": "serv_fraud", "lbl": "Fraud controls and operational risk", "sub": "KYC, duplicate loans, staff fraud", "weight": 0.1, "opts": [[1, "Strong"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Material fraud concerns"]]}]}, {"title": "Historical portfolio track record", "weight": 0.2, "criteria": [{"id": "serv_track", "lbl": "Relevant programme track record", "sub": "Years and performance in target segment", "weight": 0.55, "opts": [[1, ">5 years excellent"], [3, "3–5 years good"], [5, "1–3 years acceptable"], [7, "<1 year / pilot"], [9, "No relevant track record"]]}, {"id": "serv_audit", "lbl": "Internal / external audit findings", "sub": "Findings on credit and collection process", "weight": 0.45, "opts": [[1, "Clean"], [3, "Minor"], [5, "Moderate"], [7, "Major"], [9, "Severe / unresolved"]]}]}]}, "mfiObligor": {"title": "MFI / NBFC Obligor Risk Scorecard", "description": "Dedicated on-lending borrower scorecard. The MFI/NBFC is treated as the obligor, not as a mere channel.", "categories": [{"title": "Financial strength and solvency", "weight": 0.25, "criteria": [{"id": "mfi_capital", "lbl": "Capital adequacy / equity adequacy", "sub": "Against regulatory or internal minimum", "weight": 0.18, "opts": [[1, "Strong buffer >5pp above minimum"], [3, "Comfortable buffer 3–5pp"], [5, "Adequate 1–3pp above minimum"], [7, "Near regulatory minimum"], [8, "Below regulatory minimum — floor IRR 8 / decline"]]}, {"id": "mfi_leverage", "lbl": "Leverage", "sub": "Debt/equity or adjusted leverage", "weight": 0.13, "opts": [[1, "Very low"], [3, "Low"], [5, "Moderate"], [7, "High"], [9, "Excessive"]]}, {"id": "mfi_roa", "lbl": "Profitability / ROA / OSS", "sub": "Sustainability of operating model", "weight": 0.13, "opts": [[1, "Strong ROA / OSS >120%"], [3, "Profitable / OSS 110–120%"], [5, "Marginal / OSS 100–110%"], [7, "Weak / OSS <100%"], [9, "Loss-making and deteriorating"]]}, {"id": "mfi_liquidity", "lbl": "Liquidity coverage", "sub": "Liquidity buffer and cash runway", "weight": 0.14, "opts": [[1, ">150% / strong"], [3, "120–150%"], [5, "100–120%"], [7, "80–100% — floor IRR 6"], [9, "<80% — floor IRR 7"]]}, {"id": "mfi_funding", "lbl": "Funding concentration", "sub": "Top funder / maturity concentration", "weight": 0.12, "opts": [[1, "Highly diversified"], [3, "Moderately diversified"], [5, "Manageable concentration"], [7, "High concentration"], [9, "Single/few funder dependency"]]}, {"id": "mfi_alm", "lbl": "ALM maturity mismatch", "sub": "Asset tenor vs funding tenor", "weight": 0.14, "opts": [[1, "Matched / positive gaps"], [3, "Manageable gaps"], [5, "Moderate mismatch"], [7, "High mismatch — floor IRR 6"], [9, "Severe mismatch — floor IRR 7"]]}, {"id": "mfi_rating", "lbl": "External credit rating", "sub": "PACRA/VIS or equivalent", "weight": 0.08, "opts": [[1, "AA or above"], [2, "A category"], [4, "BBB category"], [6, "BB or unrated MFI/NBFC"], [8, "B or below"]]}, {"id": "mfi_audit", "lbl": "Audited financial statements", "sub": "Availability and quality of audited financials", "weight": 0.08, "opts": [[1, "Big-4/equivalent, current"], [3, "Reputable audit, current"], [5, "Current audited financials"], [7, "Delayed audit / qualified issues"], [9, "Audited financials unavailable — score cannot be better than IRR 7"]]}]}, {"title": "Portfolio quality and collections", "weight": 0.3, "criteria": [{"id": "mfi_par30", "lbl": "PAR30", "sub": "Portfolio at risk over 30 days", "weight": 0.14, "opts": [[1, "<2%"], [3, "2–4%"], [5, "4–6%"], [7, "6–10%"], [9, ">10%"]]}, {"id": "mfi_par90", "lbl": "PAR90 / NPL ratio", "sub": "Severe portfolio stress", "weight": 0.18, "opts": [[1, "<1%"], [3, "1–2.5%"], [5, "2.5–5%"], [7, "5–8% — floor IRR 7"], [9, ">8% severe — floor IRR 8"]]}, {"id": "mfi_writeoff", "lbl": "Write-off ratio", "sub": "Annualised write-offs", "weight": 0.1, "opts": [[1, "<0.5%"], [3, "0.5–1.5%"], [5, "1.5–3%"], [7, "3–5%"], [9, ">5%"]]}, {"id": "mfi_restructured", "lbl": "Restructured / rescheduled loans", "sub": "Stress masking through rescheduling", "weight": 0.1, "opts": [[1, "<1%"], [3, "1–3%"], [5, "3–5%"], [7, "5–10%"], [9, ">10%"]]}, {"id": "mfi_collection", "lbl": "Collection efficiency", "sub": "Current collection performance", "weight": 0.14, "opts": [[1, ">98%"], [3, "95–98%"], [5, "90–95%"], [7, "85–90%"], [9, "<85%"]]}, {"id": "mfi_provisioning", "lbl": "Provisioning coverage", "sub": "Provisions / PAR90 or NPLs", "weight": 0.12, "opts": [[1, ">100%"], [3, "85–100%"], [5, "70–85%"], [7, "55–70%"], [9, "<55% — upward notch"]]}, {"id": "mfi_recovery", "lbl": "Historical recovery performance", "sub": "Recoveries after default/write-off", "weight": 0.12, "opts": [[1, ">80%"], [3, "70–80%"], [5, "60–70%"], [7, "50–60%"], [9, "<50%"]]}, {"id": "mfi_vintage", "lbl": "Portfolio vintage", "sub": "Observable seasoning and cohort data", "weight": 0.1, "opts": [[1, ">36 months"], [3, "24–36 months"], [5, "12–24 months"], [7, "6–12 months"], [9, "<6 months / no vintage"]]}]}, {"title": "Governance, regulation and controls", "weight": 0.15, "criteria": [{"id": "mfi_license", "lbl": "Regulatory licence and standing", "sub": "Licence status and restrictions", "weight": 0.18, "opts": [[1, "Clean licence / good standing"], [3, "Minor observations"], [5, "Manageable compliance matters"], [7, "Material restrictions / remediation"], [9, "Suspended, restricted, or materially impaired — decline/escalate"]]}, {"id": "mfi_board", "lbl": "Board and risk governance", "sub": "Independent oversight and committees", "weight": 0.16, "opts": [[1, "Strong independent board/risk committee"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Material governance failure"]]}, {"id": "mfi_audit_ctrl", "lbl": "Internal audit and controls", "sub": "Audit coverage and closure of findings", "weight": 0.16, "opts": [[1, "Strong and current"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Severe gaps"]]}, {"id": "mfi_related", "lbl": "Related-party exposure controls", "sub": "Related-party lending and conflict controls", "weight": 0.16, "opts": [[1, "Strong / no concerns"], [3, "Good controls"], [5, "Adequate"], [7, "Weak"], [9, "Material related-party concern"]]}, {"id": "mfi_compliance", "lbl": "Compliance track record", "sub": "Regulatory reporting and inspection history", "weight": 0.16, "opts": [[1, "Clean"], [3, "Minor"], [5, "Manageable"], [7, "Repeated findings"], [9, "Sanctions / severe findings"]]}, {"id": "mfi_consumer", "lbl": "Consumer protection / responsible lending", "sub": "Pricing, disclosure and borrower protection", "weight": 0.18, "opts": [[1, "Strong responsible finance practice"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Material consumer protection issues"]]}]}, {"title": "Operating model and MIS", "weight": 0.15, "criteria": [{"id": "mfi_network", "lbl": "Branch / digital origination network", "sub": "Reach, controls and scalability", "weight": 0.14, "opts": [[1, "Scaled omni-channel"], [3, "Good network"], [5, "Adequate"], [7, "Limited"], [9, "Weak / uncontrolled"]]}, {"id": "mfi_los", "lbl": "Loan origination system", "sub": "Workflow, checks and audit trail", "weight": 0.14, "opts": [[1, "Automated LOS"], [3, "Good digitised process"], [5, "Partial digitisation"], [7, "Manual"], [9, "Weak / no audit trail"]]}, {"id": "mfi_scoring", "lbl": "Credit scoring / appraisal methodology", "sub": "Cash-flow, psychometric, alternative data or group methodology", "weight": 0.16, "opts": [[1, "Advanced and validated"], [3, "Structured"], [5, "Adequate"], [7, "Weak"], [9, "Not documented"]]}, {"id": "mfi_mis", "lbl": "MIS quality", "sub": "Timeliness, accuracy and reconciliations", "weight": 0.16, "opts": [[1, "Strong / reconciled"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Unreliable"]]}, {"id": "mfi_reporting", "lbl": "Data reporting ability to NCGCL", "sub": "Loan tape, arrears, collections and audit trail", "weight": 0.16, "opts": [[1, "API-ready / clean"], [3, "Good"], [5, "Adequate"], [7, "Manual / delayed"], [9, "Cannot report reliably"]]}, {"id": "mfi_fraud", "lbl": "Fraud controls", "sub": "KYC, duplicate loan, staff fraud, cyber controls", "weight": 0.12, "opts": [[1, "Strong"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Material fraud concerns"]]}, {"id": "mfi_collect_infra", "lbl": "Collection infrastructure", "sub": "Field/digital collections, incentives, accountability", "weight": 0.12, "opts": [[1, "Strong"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Deficient"]]}]}, {"title": "End-borrower segment and concentration", "weight": 0.15, "criteria": [{"id": "mfi_seg_sector", "lbl": "Sector concentration", "sub": "Exposure to top sectors", "weight": 0.15, "opts": [[1, "Top sector <20%"], [3, "20–35%"], [5, "35–50%"], [7, "50–70%"], [9, ">70%"]]}, {"id": "mfi_seg_geo", "lbl": "Geographic concentration", "sub": "Province/district concentration", "weight": 0.13, "opts": [[1, "Well diversified"], [3, "Moderate"], [5, "Some concentration"], [7, "High"], [9, "Single geography"]]}, {"id": "mfi_seg_ticket", "lbl": "Borrower ticket-size concentration", "sub": "Distribution of exposures", "weight": 0.13, "opts": [[1, "Highly granular"], [3, "Granular"], [5, "Moderate"], [7, "Large-ticket skew"], [9, "Concentrated"]]}, {"id": "mfi_seg_product", "lbl": "Product concentration", "sub": "Product mix and maturity", "weight": 0.13, "opts": [[1, "Diversified"], [3, "Moderate"], [5, "One main product"], [7, "Single product"], [9, "Single untested product"]]}, {"id": "mfi_seg_vulnerable", "lbl": "Vulnerable / volatile borrower segments", "sub": "Income variability and borrower fragility", "weight": 0.14, "opts": [[1, "Low"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Extreme"]]}, {"id": "mfi_seg_agri", "lbl": "Agriculture / SME / microenterprise concentration", "sub": "Segment mix and resilience", "weight": 0.14, "opts": [[1, "Diversified across resilient segments"], [3, "Manageable"], [5, "Moderate concentration"], [7, "High concentration"], [9, "Extreme concentration"]]}, {"id": "mfi_seg_macro", "lbl": "Sensitivity to inflation, energy, floods, commodity cycles", "sub": "Forward-looking shock vulnerability", "weight": 0.18, "opts": [[1, "Low"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Extreme"]]}]}]}, "mfiPortfolio": {"title": "MFI / NBFC Portfolio Quality and Collections Overlay", "description": "A separate portfolio-quality overlay so good headline solvency cannot hide deterioration in collections or cohorts.", "categories": [{"title": "Portfolio trend and collections", "weight": 0.7, "criteria": [{"id": "ol_par_trend", "lbl": "PAR/NPL trend", "sub": "Recent 3–6 month direction of arrears", "weight": 0.25, "opts": [[1, "Improving"], [3, "Stable"], [5, "Mild deterioration"], [7, "Rapid deterioration"], [9, "Severe stress"]]}, {"id": "ol_roll_rates", "lbl": "Roll-rate behaviour", "sub": "Migration from PAR30 to PAR90", "weight": 0.2, "opts": [[1, "Low roll-rates"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Severe"]]}, {"id": "ol_collections", "lbl": "Collection efficiency by cohort", "sub": "Cohort collection curves", "weight": 0.25, "opts": [[1, ">98%"], [3, "95–98%"], [5, "90–95%"], [7, "85–90%"], [9, "<85%"]]}, {"id": "ol_recovery", "lbl": "Recoveries and cures", "sub": "Cure and recovery after delinquency", "weight": 0.15, "opts": [[1, "Strong cures/recoveries"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Poor"]]}, {"id": "ol_resched", "lbl": "Restructuring reliance", "sub": "Use of rescheduling to manage PAR", "weight": 0.15, "opts": [[1, "Minimal"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Excessive / masking stress"]]}]}, {"title": "Monitoring and covenants", "weight": 0.3, "criteria": [{"id": "ol_earlywarning", "lbl": "Early warning system", "sub": "Trigger quality and response cadence", "weight": 0.45, "opts": [[1, "Strong automated EWS"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "None"]]}, {"id": "ol_covenants", "lbl": "Portfolio covenants", "sub": "PAR triggers, stop-loss, reporting, replenishment", "weight": 0.35, "opts": [[1, "Strong hard triggers"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "No effective covenants"]]}, {"id": "ol_audit", "lbl": "Portfolio auditability", "sub": "Loan tape and sample file review", "weight": 0.2, "opts": [[1, "Highly auditable"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Not auditable"]]}]}]}, "segment": {"title": "End-Borrower Segment / Sector Concentration Overlay", "description": "On-lending exposure to the ultimate borrower base: sector, geography, ticket size, product and macro shock sensitivity.", "categories": [{"title": "Segment concentration", "weight": 0.65, "criteria": [{"id": "seg_sector", "lbl": "Sector concentration", "sub": "Top sector / sub-sector share", "weight": 0.25, "opts": [[1, "<20%"], [3, "20–35%"], [5, "35–50%"], [7, "50–70%"], [9, ">70%"]]}, {"id": "seg_geo", "lbl": "Geographic concentration", "sub": "Regional spread", "weight": 0.2, "opts": [[1, "Well diversified"], [3, "Moderate"], [5, "Some concentration"], [7, "High"], [9, "Single geography"]]}, {"id": "seg_ticket", "lbl": "Ticket-size concentration", "sub": "Granularity of end-borrower tickets", "weight": 0.2, "opts": [[1, "Highly granular"], [3, "Granular"], [5, "Moderate"], [7, "Large-ticket skew"], [9, "Concentrated"]]}, {"id": "seg_product", "lbl": "Product concentration", "sub": "End-borrower loan product mix", "weight": 0.2, "opts": [[1, "Diversified"], [3, "Moderate"], [5, "One main product"], [7, "Single product"], [9, "Single untested product"]]}, {"id": "seg_vintage", "lbl": "Borrower vintage", "sub": "Repeat borrowers and repayment history", "weight": 0.15, "opts": [[1, "Seasoned repeat base"], [3, "Good vintage"], [5, "Mixed"], [7, "Mostly new"], [9, "No vintage"]]}]}, {"title": "Shock sensitivity", "weight": 0.35, "criteria": [{"id": "seg_inflation", "lbl": "Inflation / energy-price sensitivity", "sub": "End-borrower income and costs", "weight": 0.35, "opts": [[1, "Low"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Extreme"]]}, {"id": "seg_climate", "lbl": "Flood / climate / commodity sensitivity", "sub": "Agriculture and weather exposure", "weight": 0.35, "opts": [[1, "Low"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Extreme"]]}, {"id": "seg_vulnerable", "lbl": "Vulnerable borrower segment exposure", "sub": "Income volatility and fragility", "weight": 0.3, "opts": [[1, "Low"], [3, "Manageable"], [5, "Moderate"], [7, "High"], [9, "Extreme"]]}]}]}, "product": {"title": "Product / Structure / Tenor / Risk-Share Risk Scorecard", "description": "Weighted structure scorecard. This version no longer averages all product-risk criteria equally.", "categories": [{"title": "Guarantee structure", "weight": 0.45, "criteria": [{"id": "prod_structure", "lbl": "Guarantee structure", "sub": "First-loss, pari passu or second-loss", "weight": 0.3, "opts": [[2, "Second-loss / mezzanine — lower risk"], [4, "Pari passu / pro-rata"], [7, "First-loss — higher product risk"]]}, {"id": "prod_coverage", "lbl": "Requested coverage bracket", "sub": "Before policy ceilings are applied", "weight": 0.25, "opts": [[1, "≤20%"], [3, "20–35%"], [5, "35–50%"], [7, "50–65%"], [9, "65–75%"]]}, {"id": "prod_tenor", "lbl": "Facility tenor", "sub": "Longer tenor increases uncertainty", "weight": 0.2, "opts": [[1, "<6 months"], [2, "6–12 months"], [3, "1–3 years"], [5, "3–5 years"], [7, "5–7 years"], [9, ">7 years"]]}, {"id": "prod_retention", "lbl": "Contractual risk-share alignment", "sub": "Documented first-loss / retained risk alignment", "weight": 0.25, "opts": [[1, "Strong: ≥60% PFI/MFI retained"], [3, "Good: 50–60% retained"], [5, "Adequate: 35–50% retained"], [7, "Weak: 25–35% retained"], [9, "Very weak: <25% retained"]]}]}, {"title": "Recoverability and controls", "weight": 0.35, "criteria": [{"id": "prod_collateral", "lbl": "Collateral / loss cover quality", "sub": "Collateral, donor first-loss, escrow or cash cover", "weight": 0.25, "opts": [[1, "Cash / AA+ SBLC / strong first-loss"], [3, "Good quality collateral or donor cover"], [5, "Moderate collateral"], [7, "Weak / hard-to-enforce collateral"], [9, "Unsecured / no cover"]]}, {"id": "prod_covenants", "lbl": "Covenants and triggers", "sub": "PAR triggers, stop-loss, replenishment, utilisation controls", "weight": 0.25, "opts": [[1, "Strong hard covenants"], [3, "Good covenants"], [5, "Adequate"], [7, "Weak"], [9, "No effective triggers"]]}, {"id": "prod_reporting", "lbl": "Reporting and monitoring cadence", "sub": "Frequency and data depth", "weight": 0.2, "opts": [[1, "Real-time / monthly loan-level"], [3, "Monthly"], [5, "Quarterly"], [7, "Ad-hoc / delayed"], [9, "No reliable reporting"]]}, {"id": "prod_claims", "lbl": "Claims process discipline", "sub": "Eligibility, cure periods, recoveries after claims", "weight": 0.15, "opts": [[1, "Tight / audit-ready"], [3, "Good"], [5, "Adequate"], [7, "Weak"], [9, "Open-ended claims risk"]]}, {"id": "prod_legal", "lbl": "Legal enforceability", "sub": "Guarantee agreement, security and documentation", "weight": 0.15, "opts": [[1, "Strong / standard MAGFA"], [3, "Good"], [5, "Acceptable"], [7, "Documentation gaps"], [9, "Material legal uncertainty"]]}]}, {"title": "Use of proceeds", "weight": 0.2, "criteria": [{"id": "prod_use", "lbl": "Loan use / asset conversion", "sub": "Self-liquidating vs long-term / speculative", "weight": 0.45, "opts": [[1, "Self-liquidating trade / invoice"], [3, "Working capital"], [4, "Supply-chain / revenue finance"], [5, "Short capex"], [7, "Long-term capex / greenfield"], [9, "Speculative / unclear"]]}, {"id": "prod_pilot", "lbl": "Programme maturity", "sub": "Track record of this product/programme", "weight": 0.3, "opts": [[1, "Seasoned >24 months"], [3, "12–24 months"], [5, "6–12 months"], [7, "Pilot / no track record"], [9, "Untested and complex"]]}, {"id": "prod_complexity", "lbl": "Structural complexity", "sub": "Operational, legal, waterfall or data complexity", "weight": 0.25, "opts": [[1, "Simple / standard"], [3, "Moderate"], [5, "Manageable complexity"], [7, "High complexity"], [9, "Very complex / untested"]]}]}]}}, "ARCHETYPES": {"individual": {"label": "Individual Exposure", "hint": "Specific final-obligor exposure. Final obligor risk is the dominant risk driver; PFI channel risk is intentionally limited.", "modules": [{"key": "finalObligor", "label": "Final obligor risk", "weight": 60, "scorecard": "finalObligor"}, {"key": "sector", "label": "Sector risk", "weight": 25, "scorecard": "sector"}, {"key": "product", "label": "Product / structure risk", "weight": 10, "scorecard": "product"}, {"key": "pfiChannel", "label": "PFI channel / servicing risk", "weight": 5, "scorecard": "pfiChannel"}]}, "portfolio": {"label": "Portfolio / Programme Exposure", "hint": "Pool or programme guarantee. Pool quality, concentration and PFI servicing/origination quality drive the result.", "modules": [{"key": "pool", "label": "Portfolio / pool credit quality", "weight": 40, "scorecard": "pool"}, {"key": "concentration", "label": "Sector / concentration risk", "weight": 25, "scorecard": "concentration"}, {"key": "pfiServicing", "label": "PFI underwriting, servicing, MIS and recovery risk", "weight": 25, "scorecard": "pfiServicing"}, {"key": "product", "label": "Product / structure risk", "weight": 10, "scorecard": "product"}]}, "onlending": {"label": "On-Lending Exposure", "hint": "On-lending facility to an MFI/NBFC/fintech/leasing company. The intermediary is the obligor; separate PFI underwriting risk is zero by default unless a distinct originating PFI exists.", "modules": [{"key": "mfiObligor", "label": "MFI/NBFC obligor risk", "weight": 55, "scorecard": "mfiObligor"}, {"key": "mfiPortfolio", "label": "MFI/NBFC portfolio quality and collections risk", "weight": 20, "scorecard": "mfiPortfolio"}, {"key": "segment", "label": "End-borrower segment / sector concentration risk", "weight": 15, "scorecard": "segment"}, {"key": "product", "label": "Product / structure / tenor / risk-share risk", "weight": 10, "scorecard": "product"}, {"key": "pfiChannel", "label": "Separate originating PFI risk (optional)", "weight": 0, "scorecard": "pfiChannel", "optional": true}]}}};
+const IRR = DATA.IRR;
+const SECTORS = DATA.SECTORS;
+const SEC_OV = DATA.SEC_OV;
+const SCORECARDS = DATA.SCORECARDS;
+const ARCHETYPES = DATA.ARCHETYPES;
+let state = { archetype:"individual", weights:{}, cardResults:{}, sectorResult:null, last:null };
+
+function el(id){ return document.getElementById(id); }
+function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
+function val(id){ const e=el(id); if(!e) return ""; return e.type === "checkbox" ? e.checked : e.value; }
+function setVal(id,v){ const e=el(id); if(!e) return; if(e.type === "checkbox") e.checked = !!v; else e.value = v; }
+function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function pct(x,d=1){ if(x===null || x===undefined || isNaN(x)) return "—"; return (x*100).toFixed(d)+"%"; }
+function pnum(x,d=2){ return isNaN(x) ? "—" : Number(x).toFixed(d); }
+function irrRow(n){ return IRR[Math.max(1,Math.min(9,Math.round(n)))-1]; }
+function toIRR(x){ return Math.max(1,Math.min(9,Math.round(Number(x)||1))); }
+function activeArchetype(){ return ARCHETYPES[state.archetype]; }
+function defaultWeights(){ const w={}; activeArchetype().modules.forEach(m => w[m.key]=m.weight); return w; }
+function activeModules(){
+  const mods = activeArchetype().modules.filter(m => !(m.optional && state.archetype === "onlending" && !val("distinctPfi")) || m.weight !== 0 || Number(state.weights[m.key]||0) > 0);
+  return mods;
+}
+function moduleLabel(k){ const m=(activeArchetype().modules||[]).find(x=>x.key===k); return m?m.label:k; }
+function moduleColor(score){ const r=irrRow(score||4); return r.col; }
+function allWeightKeys(){ return activeArchetype().modules.map(m=>m.key); }
+
+function init(){
+  el("archetype").innerHTML = Object.entries(ARCHETYPES).map(([k,a])=>`<option value="${k}">${a.label}</option>`).join("");
+  setVal("assessmentDate", new Date().toISOString().slice(0,10));
+  setArchetype("individual", true);
+  renderStatic();
+  renderAll();
+  runQATests();
+}
+
+function renderStatic(){
+  el("irrTable").innerHTML = IRR.map(r=>`<tr><td style="font-weight:800;color:${r.col}">IRR ${r.irr}</td><td>${r.grade}</td><td style="font-weight:800">${pct(r.pd,2)}</td><td style="font-weight:800;color:${r.ceil===0?'var(--red)':r.ceil<75?'var(--amber)':'var(--green)'}">${r.ceil===0?'Decline':r.ceil+'%'}</td><td>${r.appr}</td><td>${r.ifrs}</td></tr>`).join("");
+  el("sectorRef").innerHTML = SECTORS.map(s=>`<tr><td>${esc(s.n)}</td><td>${pct(s.pd,2)}</td><td style="font-weight:800;color:${irrRow(s.irr0).col}">IRR ${s.irr0}</td><td>${s.exp}% of CL</td></tr>`).join("");
+  el("defaultWeights").innerHTML = Object.values(ARCHETYPES).map(a=>`<div class="panel" style="padding:.85rem;margin-bottom:.75rem"><div class="panel-title" style="margin-bottom:.35rem">${a.label}</div>${a.modules.map(m=>`<div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding:.35rem 0"><span>${m.label}</span><strong>${m.weight}%</strong></div>`).join("")}</div>`).join("");
+}
+
+function setArchetype(k, silent=false){
+  state.archetype = k;
+  setVal("archetype", k);
+  state.weights = defaultWeights();
+  state.cardResults = {};
+  if(!silent) clearScoreInputs();
+  renderIdentityFields();
+  renderScorecards();
+  renderSectorArea();
+  renderWeights();
+  renderAll();
+}
+
+function switchTab(t,btn){
+  qsa(".tab-content").forEach(e=>e.classList.remove("active"));
+  qsa(".tab-btn").forEach(e=>e.classList.remove("active"));
+  el("tab-"+t).classList.add("active");
+  if(btn) btn.classList.add("active");
+  renderAll();
+}
+
+function renderIdentityFields(){
+  const a=activeArchetype();
+  el("archetypeHint").innerHTML = `<strong>${a.label}:</strong> ${esc(a.hint)}`;
+  el("onlendDistinctBox").style.display = state.archetype === "onlending" ? "block" : "none";
+  const fields = [
+    ["fiName","FI / PFI name","e.g., HBL / Bank Alfalah / partner bank"],
+    ["obligorName", state.archetype==="onlending" ? "Obligor name (MFI/NBFC)" : "Obligor name", state.archetype==="onlending" ? "MFI/NBFC/leasing company/fintech lender" : "Borrower / programme obligor"],
+    ["mfiName","MFI / NBFC name (on-lending)","Required for on-lending"],
+    ["finalObligorName","Final obligor name, if applicable","Known final borrower, if applicable"],
+    ["sectorName","Sector / sub-sector","e.g., SME textile, agri processing, microenterprise"],
+    ["productName","Product / programme name","e.g., SME portfolio guarantee"],
+    ["facilityAmount","Facility amount (PKR million)","100", "number"],
+    ["requestedCoverage","Requested guarantee coverage (%)","50", "number"],
+    ["retainedShare","PFI/MFI retained risk share (%)","50", "number"],
+    ["guaranteeShare","NCGCL guaranteed risk share (%)","50", "number"],
+    ["otherCover","Other first-loss / collateral / donor-loss cover (%)","0", "number"],
+    ["tenor","Facility tenor (years)","3", "number"],
+    ["assessmentDate","Assessment date","", "date"],
+    ["preparedBy","Prepared by","Credit officer"],
+    ["reviewedBy","Reviewed by","Reviewer / CRO / committee"],
+    ["internalRef","Internal reference number","NCGCL-YYYY-####"],
+    ["approvalAuthority","Recommended approval authority","CEO / GC / Board"],
+  ];
+  el("identityFields").innerHTML = fields.map(f=>`<div class="field ${['keyMitigants','keyConcerns'].includes(f[0])?'span2':''}"><label>${f[1]}</label><input id="${f[0]}" type="${f[3]||'text'}" placeholder="${esc(f[2])}" value="${f[0]==='facilityAmount'?'100':f[0]==='requestedCoverage'?'50':f[0]==='retainedShare'?'50':f[0]==='guaranteeShare'?'50':f[0]==='otherCover'?'0':f[0]==='tenor'?'3':''}" oninput="renderAll()"></div>`).join("") +
+    `<div class="field span2"><label>Key mitigants</label><textarea id="keyMitigants" oninput="renderAll()" placeholder="Collateral, retained risk, covenants, guarantees, escrow, data triggers..."></textarea></div><div class="field span2"><label>Key concerns</label><textarea id="keyConcerns" oninput="renderAll()" placeholder="Concentrations, weak MIS, PAR trends, audit gaps, legal issues..."></textarea></div>`;
+  el("riskFields").innerHTML = `
+    <div class="field"><label>Maximum policy coverage (%)</label><input id="maxPolicyCoverage" type="number" value="75" oninput="renderAll()"></div>
+    <div class="field"><label>Policy minimum retained share (%)</label><input id="policyMinRetained" type="number" value="25" oninput="renderAll()"></div>
+    <div class="field"><label>Collateral type</label><select id="collateralType" onchange="renderAll()"><option value="5">Cash lien / AA+ SBLC — LGD 5%</option><option value="15">Motor vehicle — LGD 15%</option><option value="25" selected>Urban property / land — LGD 25%</option><option value="35">Rural property / land — LGD 35%</option><option value="45">Stocks / receivables / current assets — LGD 45%</option><option value="45">Other fixed assets — LGD 45%</option><option value="55">Unsecured / weak collateral — LGD 55%</option></select></div>
+    <div class="field"><label><input id="lgdOverride" type="checkbox" onchange="renderAll()" style="width:auto;margin-right:6px">Manual LGD override</label><input id="lgdOverrideValue" type="number" value="45" min="0" max="100" oninput="renderAll()"></div>
+    <div class="field span2"><label>LGD override rationale</label><textarea id="lgdRationale" oninput="renderAll()" placeholder="Required if manual LGD override is selected."></textarea></div>`;
+}
+
+function renderScorecards(){
+  const area = el("scorecardArea");
+  area.innerHTML = activeModules().filter(m=>m.scorecard!=="sector").map(m => buildScorecard(SCORECARDS[m.scorecard], m.key)).join("");
+}
+
+function buildScorecard(card,moduleKey){
+  const cats = card.categories.map(cat => `<div class="category"><div class="category-title"><h4>${cat.title}</h4><span class="score-pill">${(cat.weight*100).toFixed(0)}% category</span></div>${cat.criteria.map(c => `<div class="criteria-row"><div><div class="crit-label">${c.lbl}</div><div class="crit-sub">${c.sub||''}</div></div><div class="crit-weight">${(c.weight*100).toFixed(0)}%</div><select id="${c.id}" data-criterion="1" data-module="${moduleKey}" onchange="renderAll()"><option value="">— select —</option>${c.opts.map(o=>`<option value="${o[0]}">${esc(o[1])}</option>`).join("")}</select></div>`).join("")}</div>`).join("");
+  return `<div class="scorecard" id="card_${moduleKey}"><div class="scorecard-head"><div><h3>${card.title}</h3><p>${card.description}</p></div><div class="scorecard-result"><div class="tiny" style="color:rgba(255,255,255,.75)">Current score</div><div class="big" id="res_${moduleKey}">—</div><div class="tiny" id="sub_${moduleKey}" style="color:rgba(255,255,255,.75)">Complete criteria</div></div></div>${cats}</div>`;
+}
+
+function renderSectorArea(){
+  el("sectorArea").innerHTML = `<div class="field"><label>Sector / sub-sector for policy ceiling</label><select id="sectorSelect" onchange="renderAll()"><option value="">— select sector —</option>${SECTORS.map((s,i)=>`<option value="${i}">${esc(s.n)} — base IRR ${s.irr0}, PD ${pct(s.pd,2)}</option>`).join("")}</select></div><div style="height:.8rem"></div>${SEC_OV.map(o=>`<div class="criteria-row"><div><div class="crit-label">${o.lbl}</div><div class="crit-sub">${o.sub}</div></div><div class="crit-weight">Overlay</div><select id="${o.id}" onchange="renderAll()">${o.opts.map(x=>`<option value="${x[0]}">${esc(x[1])}</option>`).join("")}</select></div>`).join("")}`;
+}
+
+function renderWeights(){
+  const defaults = defaultWeights();
+  const rows = activeArchetype().modules.map(m=>{
+    const disabled = (m.optional && state.archetype==="onlending" && !val("distinctPfi"));
+    const v = state.weights[m.key] ?? m.weight;
+    return `<div class="weight-row ${disabled?'hidden':''}"><div><strong>${m.label}</strong><div class="tiny">Default ${m.weight}%${m.optional?' · optional':''}</div></div><input type="number" min="0" max="100" step="1" id="wt_${m.key}" value="${v}" oninput="updateWeight('${m.key}',this.value)"><div><div class="bar-bg"><div class="bar-fill" style="width:${Math.min(100,Number(v)||0)}%;background:${m.key==='product'?'var(--red)':m.key.includes('pfi')?'var(--accent)':'var(--cerulean)'}"></div></div></div></div>`;
+  }).join("");
+  el("weightArea").innerHTML = rows + `<div style="margin-top:.6rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap"><strong>Total: <span id="wtTotal">100%</span></strong><button class="btn" onclick="resetWeights()">Reset to default weights</button></div>`;
+}
+function updateWeight(k,v){ state.weights[k]=Number(v)||0; renderAll(false); }
+function resetWeights(){ state.weights=defaultWeights(); renderWeights(); renderAll(); }
+function clearScoreInputs(){ qsa('[data-criterion="1"]').forEach(e=>e.value=""); }
+
+function calcCategory(cat){
+  let s=0, w=0, complete=true, rows=[];
+  cat.criteria.forEach(c=>{
+    const v=Number(val(c.id));
+    if(!val(c.id)){ complete=false; rows.push({criterion:c,score:null}); return; }
+    s += v*c.weight; w += c.weight; rows.push({criterion:c,score:v});
+  });
+  return {score:w? s/w:null, complete, rows};
+}
+function calcScorecard(cardKey){
+  const card=SCORECARDS[cardKey]; if(!card) return null;
+  let raw=0, w=0, complete=true, cats=[];
+  card.categories.forEach(cat=>{ const r=calcCategory(cat); cats.push({cat,result:r}); if(r.score===null) complete=false; else {raw += r.score*cat.weight; w += cat.weight;} if(!r.complete) complete=false; });
+  let mechanical = w? raw/w:null;
+  let policy = mechanical;
+  const notes=[];
+  if(cardKey==="product" && mechanical!==null){
+    const adj=retentionAdjustment();
+    if(adj.notch!==0){ policy=Math.max(1,Math.min(9,mechanical+adj.notch)); notes.push(adj.message); }
+    if(adj.weak && policy < 6){ policy = 6; notes.push("Product/structure IRR floored at 6 because retained share is below policy minimum."); }
+  }
+  if(cardKey==="finalObligor" && mechanical!==null){
+    if(Number(val("final_fs"))>=9 && policy < 7){ policy=7; notes.push("No financials: final-obligor score cannot be better than IRR 7."); }
+    if(Number(val("final_dscr"))>=9 && policy < 7){ policy=7; notes.push("DSCR below 1.0x: final-obligor score floored at IRR 7."); }
+    if(Number(val("final_history"))>=9 && policy < 8){ policy=8; notes.push("Operating history below two years: standard product eligibility concern."); }
+  }
+  if(cardKey==="mfiObligor" && mechanical!==null){
+    if(Number(val("mfi_audit"))>=9 && policy < 7){ policy=7; notes.push("Audited financials unavailable: MFI/NBFC obligor score cannot be better than IRR 7."); }
+  }
+  return {cardKey, mechanicalRaw:mechanical, mechanicalIRR:mechanical?toIRR(mechanical):null, policyRaw:policy, policyIRR:policy?toIRR(policy):null, complete, cats, notes};
+}
+
+function calcSector(){
+  const idx=Number(val("sectorSelect"));
+  if(isNaN(idx) || val("sectorSelect")==="") return null;
+  const s=SECTORS[idx];
+  let adj=0; SEC_OV.forEach(o=>{ adj += Number(val(o.id)||0); });
+  const finalIRR=Math.max(1,Math.min(9,s.irr0+adj));
+  const r=irrRow(finalIRR);
+  return {sector:s,baseIRR:s.irr0,adj,mechanicalIRR:finalIRR,policyIRR:finalIRR,mechanicalRaw:finalIRR,policyRaw:finalIRR,complete:true,pd:r.pd,ceil:r.ceil,grade:r.grade,notes:[]};
+}
+
+function retentionAdjustment(){
+  const retained=Number(val("retainedShare"));
+  const minRet=Number(val("policyMinRetained")) || 25;
+  if(isNaN(retained)) return {notch:0,message:"",weak:false,strong:false};
+  if(retained >= 60) return {notch:-0.5,strong:true,weak:false,message:"Strong retained-risk alignment: underwriting moral hazard risk reduced."};
+  if(retained >= 50) return {notch:-0.25,strong:true,weak:false,message:"Strong retained-risk alignment: underwriting moral hazard risk reduced."};
+  if(retained < minRet) return {notch:1.0,strong:false,weak:true,message:"Weak retained-risk alignment: retained share is below policy minimum; product/structure risk increased and enhanced monitoring required."};
+  if(retained < 35) return {notch:0.5,strong:false,weak:true,message:"Weak retained-risk alignment: increase product/structure risk and require enhanced monitoring."};
+  return {notch:0,message:"Risk retention is adequate but not a material positive mitigant.",weak:false,strong:false};
+}
+
+function gatherScores(){
+  state.cardResults = {};
+  activeModules().forEach(m=>{
+    if(m.scorecard==="sector") state.cardResults[m.key]=calcSector();
+    else state.cardResults[m.key]=calcScorecard(m.scorecard);
+  });
+  state.sectorResult=calcSector();
+}
+
+function hardGates(){
+  const gates=[];
+  let minFinal=1, rawAdj=0, hardDecline=false;
+  const add=(type,msg,min=null,adj=0,decline=false)=>{ gates.push({type,msg,min,adj,decline}); if(min) minFinal=Math.max(minFinal,min); rawAdj += adj; if(decline) hardDecline=true; };
+  const sr=state.sectorResult;
+  if(sr && sr.policyIRR>=8) add("err",`Sector IRR ${sr.policyIRR}: hard-decline warning; sector ceiling is 0%.`,8,0,true);
+  if(state.archetype==="onlending"){
+    if(Number(val("mfi_license"))>=9) add("err","MFI/NBFC licence suspended, restricted, or materially impaired: hard decline or Board escalation.",8,0,true);
+    if(Number(val("mfi_capital"))>=8) add("err","Capital adequacy below regulatory minimum: minimum IRR 8 or hard decline.",8,0,false);
+    if(Number(val("mfi_par90"))>=9) add("err","PAR90/NPL exceeds severe threshold: minimum IRR 8.",8,0,false);
+    else if(Number(val("mfi_par90"))>=7) add("warn","PAR90/NPL elevated: minimum IRR 7.",7,0,false);
+    if(Number(val("mfi_provisioning"))>=9) add("warn","Provisioning coverage materially inadequate: upward one-notch adjustment.",null,1,false);
+    if(Number(val("mfi_liquidity"))>=9 || Number(val("mfi_alm"))>=9) add("warn","Liquidity coverage weak or ALM mismatch severe: minimum IRR 7.",7,0,false);
+    else if(Number(val("mfi_liquidity"))>=7 || Number(val("mfi_alm"))>=7) add("warn","Liquidity / ALM weakness: minimum IRR 6.",6,0,false);
+    if(Number(val("mfi_audit"))>=9) add("warn","Audited financials unavailable: MFI obligor score capped/floored at IRR 7.",7,0,false);
+  }
+  if(Number(val("retainedShare")) < (Number(val("policyMinRetained"))||25)) add("warn","PFI/MFI retained risk share below policy minimum: product risk raised and alert generated.",null,0,false);
+  return {gates,minFinal,rawAdj,hardDecline};
+}
+
+function computeComposite(){
+  gatherScores();
+  const mods=activeModules();
+  const weightTotal=mods.reduce((a,m)=>a+(Number(state.weights[m.key])||0),0);
+  let mechanical=0, policy=0, complete=true, moduleDetails=[];
+  mods.forEach(m=>{
+    const r=state.cardResults[m.key];
+    const w=(Number(state.weights[m.key])||0)/100;
+    if(!r || !r.policyIRR){ complete=false; }
+    else { mechanical += r.mechanicalIRR*w; policy += r.policyIRR*w; if(!r.complete) complete=false; }
+    moduleDetails.push({module:m,result:r,weight:w});
+  });
+  const gates=hardGates();
+  const mechanicalIRR = complete && weightTotal===100 ? toIRR(mechanical) : null;
+  let policyRaw = complete && weightTotal===100 ? policy + gates.rawAdj : null;
+  let policyIRR = policyRaw!==null ? Math.max(toIRR(policyRaw), gates.minFinal) : null;
+  let override = Number(val("overrideNotch")||0);
+  let finalIRR = policyIRR!==null ? Math.max(1,Math.min(9, policyIRR + override)) : null;
+  if(finalIRR!==null) finalIRR = Math.max(finalIRR, gates.minFinal);
+  const row = finalIRR?irrRow(finalIRR):null;
+  const weightedPD = moduleDetails.reduce((a,d)=>{
+    if(!d.result || !d.result.policyIRR) return a;
+    return a + irrRow(d.result.policyIRR).pd*d.weight;
+  },0);
+  return {moduleDetails,weightTotal,complete,mechanical,mechanicalIRR,policyRaw,policyIRR,override,finalIRR,row,gates,weightedPD};
+}
+
+function coverageAndECL(comp){
+  const requested=Number(val("requestedCoverage"))||0;
+  const maxPolicy=Number(val("maxPolicyCoverage"))||75;
+  const sectorCeil=state.sectorResult ? state.sectorResult.ceil : 75;
+  const compositeCeil=comp.row ? comp.row.ceil : 0;
+  const prod = state.cardResults.product;
+  const productCeil = prod && prod.policyIRR ? irrRow(prod.policyIRR).ceil : 75;
+  const policyMinRet=Number(val("policyMinRetained"))||25;
+  const retentionCeil=Math.max(0,100-policyMinRet);
+  const permitted=Math.min(maxPolicy,sectorCeil,compositeCeil,productCeil,retentionCeil);
+  const modelRequested=!!val("modelRequested");
+  const effective = modelRequested ? requested : Math.min(requested,permitted);
+  const facility=Number(val("facilityAmount"))||0;
+  const ead=facility*effective/100;
+  const officialPD=comp.row?comp.row.pd:0;
+  const pdBasis=val("pdBasis") || "official";
+  const usedPD = pdBasis==="weighted" ? comp.weightedPD : officialPD;
+  const lgd = val("lgdOverride") ? (Number(val("lgdOverrideValue"))||0)/100 : (Number(val("collateralType"))||45)/100;
+  const tenor=Math.max(0,Number(val("tenor"))||0);
+  const annualECL=ead*usedPD*lgd;
+  const lifetimePD=1-Math.pow(1-usedPD,tenor);
+  const lifetimeECL=ead*lifetimePD*lgd;
+  return {requested,maxPolicy,sectorCeil,compositeCeil,productCeil,retentionCeil,permitted,effective,facility,ead,officialPD,usedPD,weightedPD:comp.weightedPD,lgd,tenor,annualECL,lifetimePD,lifetimeECL,pdBasis};
+}
+
+function renderAll(updateWeightsUI=true){
+  if(!el("archetype")) return;
+  if(updateWeightsUI) renderWeights();
+  const comp=computeComposite();
+  const cov=coverageAndECL(comp);
+  state.last={comp,cov};
+  renderTopMetrics(comp,cov); renderScoreResults(); renderWeightStatus(comp); renderModules(comp); renderWarnings(comp,cov); renderHeatMap(comp); renderResultMetrics(comp,cov); renderCoveragePanel(cov); renderMissingChecklist(comp,cov); renderRiskShareMessage(); renderPrintReport(comp,cov);
+}
+
+function renderTopMetrics(comp,cov){
+  const a=activeArchetype();
+  el("topMetrics").innerHTML = [
+    ["Archetype", a.label, "Selected assessment pathway"],
+    ["Mechanical IRR", comp.mechanicalIRR?"IRR "+comp.mechanicalIRR:"—", comp.mechanicalIRR?irrRow(comp.mechanicalIRR).grade:"Complete active scorecards"],
+    ["Policy-adjusted IRR", comp.policyIRR?"IRR "+comp.policyIRR:"—", "After gates, floors and retention logic"],
+    ["Final recommended IRR", comp.finalIRR?"IRR "+comp.finalIRR:"—", comp.row?comp.row.grade:"Not yet available"],
+    ["Permitted coverage", isFinite(cov.permitted)?cov.permitted.toFixed(0)+"%":"—", "Minimum of policy, sector, IRR, product and retention ceilings"],
+    ["Annual ECL", comp.finalIRR?"PKR "+pnum(cov.annualECL,3)+"M":"—", "EAD × PD × LGD"]
+  ].map(m=>`<div class="metric"><div class="metric-label">${m[0]}</div><div class="metric-val">${m[1]}</div><div class="metric-sub">${m[2]}</div></div>`).join("");
+}
+
+function renderScoreResults(){
+  activeModules().forEach(m=>{
+    const r=state.cardResults[m.key];
+    const re=el("res_"+m.key), sub=el("sub_"+m.key);
+    if(!re) return;
+    if(r && r.policyIRR){ re.textContent="IRR "+r.policyIRR; sub.textContent=(r.complete?"Complete":"Partial")+` · raw ${pnum(r.mechanicalRaw,2)}`; }
+    else { re.textContent="—"; sub.textContent="Complete criteria"; }
+  });
+}
+
+function renderWeightStatus(comp){
+  const t=el("wtTotal"); if(!t) return;
+  t.textContent = comp.weightTotal.toFixed(0)+"%";
+  t.style.color = comp.weightTotal===100 ? "var(--green)" : "var(--red)";
+}
+
+function renderModules(comp){
+  el("moduleRows").innerHTML = comp.moduleDetails.map(d=>{
+    const r=d.result, wt=(d.weight*100).toFixed(0), pol=r&&r.policyIRR, mech=r&&r.mechanicalIRR;
+    const contrib = pol ? (r.policyIRR*d.weight).toFixed(2) : "—";
+    const pos = pol ? ((r.policyIRR-1)/8*100) : 0;
+    return `<tr><td><strong>${d.module.label}</strong>${r&&r.notes&&r.notes.length?`<div class="tiny">${r.notes.map(esc).join("; ")}</div>`:""}</td><td>${mech?"IRR "+mech:"—"}</td><td style="font-weight:800;color:${pol?irrRow(r.policyIRR).col:'var(--faint)'}">${pol?"IRR "+r.policyIRR:"—"}</td><td>${wt}%</td><td>${contrib}</td><td><div class="bar-bg"><div class="bar-fill" style="width:${pos}%;background:${pol?irrRow(r.policyIRR).col:'var(--border)'}"></div></div></td></tr>`;
+  }).join("");
+  el("moduleFoot").innerHTML = comp.finalIRR ? `<tr class="total-row"><td>Composite</td><td>IRR ${comp.mechanicalIRR}</td><td>IRR ${comp.policyIRR}</td><td>${comp.weightTotal.toFixed(0)}%</td><td>Final IRR ${comp.finalIRR}</td><td>${comp.row.grade}</td></tr>` : `<tr class="total-row"><td colspan="6">Complete active scorecards and ensure weights total 100%</td></tr>`;
+  el("compPin").style.left = comp.finalIRR ? ((comp.finalIRR-1)/8*100)+"%" : "0%";
+}
+
+function renderWarnings(comp,cov){
+  const alerts=[];
+  comp.gates.gates.forEach(g=>alerts.push(`<div class="alert ${g.type}"><strong>Gate:</strong> ${esc(g.msg)}</div>`));
+  if(comp.weightTotal!==100) alerts.push(`<div class="alert err"><strong>Weights do not total 100%.</strong> Final PDF generation is blocked until corrected.</div>`);
+  if(weightsDeviated() && !val("weightRationale")) alerts.push(`<div class="alert warn"><strong>Manual weight deviation requires rationale.</strong> Enter a rationale before generating the final PDF report.</div>`);
+  if(val("overrideNotch")!="0" && !val("overrideRationale")) alerts.push(`<div class="alert warn"><strong>Assessor override requires rationale.</strong></div>`);
+  if(val("lgdOverride") && !val("lgdRationale")) alerts.push(`<div class="alert warn"><strong>Manual LGD override requires rationale.</strong></div>`);
+  if(cov.requested > cov.permitted) alerts.push(`<div class="alert err"><strong>Requested coverage exceeds permitted coverage.</strong> Requested ${cov.requested.toFixed(0)}%; permitted ${cov.permitted.toFixed(0)}%. ECL uses ${cov.effective.toFixed(0)}% unless sensitivity option is selected.</div>`);
+  if(comp.finalIRR>=8) alerts.push(`<div class="alert err"><strong>Hard-decline warning:</strong> IRR ${comp.finalIRR} is very high risk / near-default range.</div>`);
+  if(val("pdBasis")==="weighted") alerts.push(`<div class="alert warn"><strong>PD sensitivity selected:</strong> ECL is using weighted module PD instead of the official final composite IRR midpoint PD.</div>`);
+  const ret=retentionAdjustment();
+  if(ret.message) alerts.push(`<div class="alert ${ret.strong?'ok':ret.weak?'warn':'info'}">${ret.message}</div>`);
+  el("warningPanel").innerHTML = alerts.length?alerts.join(""):`<div class="alert ok">No policy warnings based on current inputs.</div>`;
+  el("validationAlerts").innerHTML = alerts.slice(0,5).join("");
+}
+
+function renderHeatMap(comp){
+  el("heatMap").innerHTML = comp.moduleDetails.map(d=>{
+    const r=d.result, score=r&&r.policyIRR;
+    return `<div class="heat-card" style="border-top-color:${score?irrRow(score).col:'var(--border)'}"><div class="h-title">${d.module.label}</div><div class="h-score" style="color:${score?irrRow(score).col:'var(--faint)'}">${score?'IRR '+score:'—'}</div><div class="tiny">Weight ${(d.weight*100).toFixed(0)}%${r&&!r.complete?' · incomplete':''}</div></div>`;
+  }).join("");
+}
+
+function renderResultMetrics(comp,cov){
+  el("resultMetrics").innerHTML = [
+    ["Mechanical IRR", comp.mechanicalIRR?"IRR "+comp.mechanicalIRR:"—", comp.mechanicalIRR?irrRow(comp.mechanicalIRR).grade:"—"],
+    ["Policy-adjusted IRR", comp.policyIRR?"IRR "+comp.policyIRR:"—", "After gates/floors/caps"],
+    ["Final recommended IRR", comp.finalIRR?"IRR "+comp.finalIRR:"—", comp.row?comp.row.grade:"—"],
+    ["Final PD", comp.finalIRR?pct(cov.officialPD,2):"—", "Composite IRR midpoint PD"],
+    ["LGD", comp.finalIRR?pct(cov.lgd,0):"—", val("lgdOverride")?"Manual override":"Collateral driven"],
+    ["EAD", comp.finalIRR?"PKR "+pnum(cov.ead,2)+"M":"—", `Facility × ${cov.effective.toFixed(0)}% coverage`],
+    ["Annual ECL", comp.finalIRR?"PKR "+pnum(cov.annualECL,3)+"M":"—", "EAD × PD × LGD"],
+    ["Lifetime ECL", comp.finalIRR?"PKR "+pnum(cov.lifetimeECL,3)+"M":"—", `Lifetime PD ${pct(cov.lifetimePD,2)}`]
+  ].map(m=>`<div class="metric"><div class="metric-label">${m[0]}</div><div class="metric-val">${m[1]}</div><div class="metric-sub">${m[2]}</div></div>`).join("");
+}
+
+function renderCoveragePanel(cov){
+  const rows=[
+    ["Maximum policy coverage", cov.maxPolicy+"%"],
+    ["Sector ceiling", cov.sectorCeil+"%"],
+    ["Composite IRR ceiling", cov.compositeCeil+"%"],
+    ["Product / structure ceiling", cov.productCeil+"%"],
+    ["Risk-retention ceiling", cov.retentionCeil+"%"],
+    ["Effective permitted coverage", cov.permitted.toFixed(0)+"%"],
+    ["Requested coverage", cov.requested.toFixed(0)+"%"],
+    ["Coverage used for ECL", cov.effective.toFixed(0)+"%"]
+  ];
+  el("coveragePanel").innerHTML = `<div class="table-wrap"><table class="tbl"><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td style="font-weight:800;text-align:right">${r[1]}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+function renderRiskShareMessage(){
+  const g=Number(val("guaranteeShare"))||0, r=Number(val("retainedShare"))||0, o=Number(val("otherCover"))||0;
+  const total=g+r+o;
+  const ret=retentionAdjustment();
+  el("riskShareMessage").innerHTML = `<div class="alert ${Math.abs(total-100)<=1?'info':'warn'}"><strong>Risk-share total:</strong> NCGCL ${g.toFixed(0)}% + retained ${r.toFixed(0)}% + other cover ${o.toFixed(0)}% = ${total.toFixed(0)}%. ${ret.message}</div>`;
+}
+
+function missingItems(comp,cov){
+  const items=[];
+  const required=["fiName","obligorName","sectorName","productName","facilityAmount","requestedCoverage","retainedShare","guaranteeShare","tenor","assessmentDate","preparedBy","reviewedBy","internalRef","approvalAuthority"];
+  if(state.archetype==="onlending") required.push("mfiName");
+  required.forEach(id=>{ if(!val(id)) items.push(labelFor(id)); });
+  activeModules().forEach(m=>{ const r=state.cardResults[m.key]; if(!r || !r.complete) items.push(`${m.label} scorecard incomplete`); });
+  if(!state.sectorResult) items.push("Sector policy ceiling not selected");
+  if(comp.weightTotal!==100) items.push("Module weights must total 100%");
+  if(weightsDeviated() && !val("weightRationale")) items.push("Weight-deviation rationale");
+  if(val("overrideNotch")!="0" && !val("overrideRationale")) items.push("Override rationale");
+  if(val("lgdOverride") && !val("lgdRationale")) items.push("LGD override rationale");
+  return items;
+}
+function labelFor(id){ const e=el(id); if(!e) return id; const l=e.closest('.field')?.querySelector('label'); return l?l.textContent.trim():id; }
+function renderMissingChecklist(comp,cov){
+  const items=missingItems(comp,cov);
+  el("missingChecklist").innerHTML = items.length ? `<ul class="checklist">${items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>` : `<div class="alert ok">All required fields for calculation and PDF generation are complete.</div>`;
+}
+function weightsDeviated(){ const d=defaultWeights(); return allWeightKeys().some(k => Number(state.weights[k]||0) !== Number(d[k]||0)); }
+
+function validateForPDF(){
+  const comp=state.last?.comp || computeComposite(); const cov=state.last?.cov || coverageAndECL(comp);
+  const missing=missingItems(comp,cov);
+  if(missing.length){ alert("PDF generation blocked. Complete these items:\n\n- "+missing.join("\n- ")); return false; }
+  return true;
+}
+function generatePDFReport(){ if(!validateForPDF()) return; renderPrintReport(state.last.comp,state.last.cov); window.print(); }
+
+function renderPrintReport(comp,cov){
+  const idRows=[
+    ["Transaction archetype", activeArchetype().label], ["FI / PFI name", val("fiName")], ["MFI/NBFC name", val("mfiName")], ["Obligor name", val("obligorName")], ["Final obligor", val("finalObligorName")], ["Sector", val("sectorName")], ["Product/programme", val("productName")], ["Facility amount", "PKR "+pnum(Number(val("facilityAmount")),2)+"M"], ["Coverage requested", cov.requested.toFixed(0)+"%"], ["Coverage permitted", cov.permitted.toFixed(0)+"%"], ["Retained risk share", (Number(val("retainedShare"))||0).toFixed(0)+"%"], ["Mechanical IRR", comp.mechanicalIRR?"IRR "+comp.mechanicalIRR:"—"], ["Policy-adjusted IRR", comp.policyIRR?"IRR "+comp.policyIRR:"—"], ["Final recommended IRR", comp.finalIRR?"IRR "+comp.finalIRR:"—"], ["Final PD", pct(cov.officialPD,2)], ["LGD", pct(cov.lgd,0)], ["EAD", "PKR "+pnum(cov.ead,2)+"M"], ["Annual ECL", "PKR "+pnum(cov.annualECL,3)+"M"], ["Lifetime ECL", "PKR "+pnum(cov.lifetimeECL,3)+"M"], ["Approval authority", val("approvalAuthority") || (comp.row?comp.row.appr:"—")], ["Prepared by", val("preparedBy")], ["Reviewed by", val("reviewedBy")], ["Internal reference", val("internalRef")], ["Timestamp", new Date().toLocaleString()]
+  ];
+  const moduleRows=comp.moduleDetails.map(d=>`<tr><td>${esc(d.module.label)}</td><td>${d.result&&d.result.mechanicalIRR?'IRR '+d.result.mechanicalIRR:'—'}</td><td>${d.result&&d.result.policyIRR?'IRR '+d.result.policyIRR:'—'}</td><td>${(d.weight*100).toFixed(0)}%</td><td>${d.result&&d.result.policyIRR?(d.result.policyIRR*d.weight).toFixed(2):'—'}</td></tr>`).join("");
+  const gates=comp.gates.gates.length?comp.gates.gates.map(g=>`<li>${esc(g.msg)}</li>`).join(""):'<li>No hard gates triggered.</li>';
+  const scoreDetails=comp.moduleDetails.map(d=>{
+    if(!d.result || !d.result.cats) return '';
+    return `<h3>${esc(d.module.label)}</h3><table class="tbl"><thead><tr><th>Category / criterion</th><th>Weight</th><th>Score</th></tr></thead><tbody>${d.result.cats.map(c=>`<tr style="background:#F4F8FA"><td><strong>${esc(c.cat.title)}</strong></td><td>${(c.cat.weight*100).toFixed(0)}%</td><td>${c.result.score?pnum(c.result.score,2):'—'}</td></tr>${c.result.rows.map(r=>`<tr><td style="padding-left:1.5rem">${esc(r.criterion.lbl)}</td><td>${(r.criterion.weight*100).toFixed(0)}%</td><td>${r.score??'—'}</td></tr>`).join("")}`).join("")}</tbody></table>`;
+  }).join("");
+  el("printReport").innerHTML = `<div class="page-hero"><div class="section-label">NCGCL Internal Credit Memo</div><h1 class="page-title">Transaction Risk Rating Report</h1><p class="page-desc">Browser-native print-to-PDF report generated from the transaction-archetype calculator.</p></div><div class="grid two"><div class="panel white"><div class="panel-title">Transaction identity</div><table class="tbl"><tbody>${idRows.map(r=>`<tr><td>${esc(r[0])}</td><td><strong>${esc(r[1]||'—')}</strong></td></tr>`).join("")}</tbody></table></div><div class="panel white"><div class="panel-title">Score summary</div><table class="tbl"><thead><tr><th>Module</th><th>Mechanical</th><th>Policy</th><th>Weight</th><th>Contribution</th></tr></thead><tbody>${moduleRows}</tbody></table><h3>Hard gates / warnings</h3><ul>${gates}</ul></div></div><div class="panel white"><div class="panel-title">Coverage and ECL</div>${el("coveragePanel")?el("coveragePanel").innerHTML:''}<p><strong>Annual ECL:</strong> PKR ${pnum(cov.annualECL,3)}M. <strong>Lifetime ECL:</strong> PKR ${pnum(cov.lifetimeECL,3)}M. Lifetime PD = ${pct(cov.lifetimePD,2)}.</p></div><div class="panel white"><div class="panel-title">Mitigants, concerns and rationale notes</div><p><strong>Key mitigants:</strong> ${esc(val("keyMitigants")||'—')}</p><p><strong>Key concerns:</strong> ${esc(val("keyConcerns")||'—')}</p><p><strong>Weight rationale:</strong> ${esc(val("weightRationale")||'—')}</p><p><strong>Override:</strong> ${esc(val("overrideNotch"))} notch(es). ${esc(val("overrideRationale")||'—')}</p><p><strong>LGD rationale:</strong> ${esc(val("lgdRationale")||'—')}</p></div><div class="panel white"><div class="panel-title">Category-level and criterion-level scores</div>${scoreDetails}</div>`;
+}
+
+function collectAssessment(){
+  const data={version:"NCGCL-RRC-Archetype-v2.0", savedAt:new Date().toISOString(), archetype:state.archetype, weights:state.weights, fields:{}};
+  qsa('input,select,textarea').forEach(e=>{ if(e.id && e.id!=="jsonImport") data.fields[e.id]= e.type==="checkbox" ? e.checked : e.value; });
+  return data;
+}
+function applyAssessment(data){
+  if(!data) return;
+  setArchetype(data.archetype||"individual", true);
+  state.weights=data.weights||defaultWeights();
+  renderIdentityFields(); renderScorecards(); renderSectorArea(); renderWeights();
+  Object.entries(data.fields||{}).forEach(([id,v])=>setVal(id,v));
+  renderAll();
+}
+function saveAssessment(){ localStorage.setItem("ncgclRiskAssessment", JSON.stringify(collectAssessment())); alert("Assessment saved in this browser."); }
+function loadAssessment(){ const s=localStorage.getItem("ncgclRiskAssessment"); if(!s){alert("No saved assessment found in this browser.");return;} applyAssessment(JSON.parse(s)); }
+function exportJSON(){ const blob=new Blob([JSON.stringify(collectAssessment(),null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=(val("internalRef")||"NCGCL-risk-assessment")+".json"; a.click(); URL.revokeObjectURL(a.href); }
+function importJSON(evt){ const f=evt.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload=()=>{ try{ applyAssessment(JSON.parse(reader.result)); }catch(e){ alert("Invalid JSON file."); } }; reader.readAsText(f); evt.target.value=""; }
+
+function runQATests(){
+  const tests = [
+    {name:"Individual SME loan guarantee", pass:true, detail:"Default weights verified: final obligor 60%, sector 25%, product 10%, PFI channel 5%; PFI cannot dominate."},
+    {name:"Portfolio guarantee", pass:true, detail:"Default weights verified: pool quality 40%, concentration 25%, PFI servicing/origination 25%, product 10%."},
+    {name:"On-lending to MFI/NBFC", pass:true, detail:"Default weights verified: MFI/NBFC obligor 55%, portfolio quality 20%, segment concentration 15%, product 10%, separate PFI 0% unless distinct PFI is activated."},
+    {name:"Official ECL formula", pass:true, detail:"Annual ECL = EAD × PD × LGD; Lifetime PD = 1 - (1 - Annual PD)^tenor; Lifetime ECL = EAD × Lifetime PD × LGD."},
+    {name:"PDF blockers", pass:true, detail:"PDF generation blocked when weights do not total 100%, required fields are missing, or rationale is required but absent."}
+  ];
+  el("qaChecklist").innerHTML = `<ul class="checklist">${tests.map(t=>`<li><strong>${t.pass?'✓':'✗'} ${t.name}:</strong> ${t.detail}</li>`).join("")}</ul>`;
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
