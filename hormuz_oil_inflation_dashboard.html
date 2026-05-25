@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strait of Hormuz Crisis — Oil Prices, Pump Prices & Inflation</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #FFFFFF;
+      --secondary: #FAFAFA;
+      --border: #E5E5E5;
+      --accent: #C8923A;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --success: #52B788;
+      --warning: #9B2335;
+      --crisis: #D63B3B;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #2D2D2D; line-height: 1.6; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+    h1, h2, h3 { font-family: Georgia, serif; font-weight: 400; }
+
+    /* HEADER */
+    .page-header { border-bottom: 1px solid var(--border); padding: 2.5rem 0 2rem; }
+    .header-meta { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.75rem; }
+    .page-title { font-size: 32px; color: var(--text-primary); line-height: 1.15; margin-bottom: 0.75rem; }
+    .page-sub { font-size: 14px; color: var(--text-secondary); max-width: 780px; line-height: 1.7; }
+    .crisis-badge { display: inline-block; background: var(--crisis); color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 3px; margin-left: 10px; vertical-align: middle; }
+
+    /* KPI ROW */
+    .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin: 2rem 0; }
+    .kpi-card { border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem 1rem; text-align: left; }
+    .kpi-card.red { border-top: 3px solid var(--warning); }
+    .kpi-card.amber { border-top: 3px solid var(--accent); }
+    .kpi-card.green { border-top: 3px solid var(--success); }
+    .kpi-num { font-family: Georgia, serif; font-size: 28px; color: var(--text-primary); line-height: 1; }
+    .kpi-num.red { color: var(--warning); }
+    .kpi-num.amber { color: var(--accent); }
+    .kpi-num.green { color: var(--success); }
+    .kpi-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.5rem; }
+    .kpi-change { font-size: 12px; font-weight: 600; margin-top: 0.25rem; }
+    .kpi-change.up { color: var(--warning); }
+    .kpi-change.dn { color: var(--success); }
+
+    /* TABS */
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-top: 0; }
+    .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; padding: 0.85rem 1.5rem; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: #888; cursor: pointer; margin-bottom: -1px; transition: all 0.2s; text-transform: uppercase; }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+    .tab-content { display: none; padding: 2rem 0; }
+    .tab-content.active { display: block; }
+
+    /* PANELS */
+    .panel { background: #FAFAFA; border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; }
+    .panel-title { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 1rem; }
+    .panel-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 1.25rem; line-height: 1.5; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .full-panel { margin-bottom: 1.5rem; }
+    .chart-wrap { position: relative; height: 280px; }
+    .chart-wrap-sm { position: relative; height: 220px; }
+    .chart-wrap-lg { position: relative; height: 340px; }
+
+    /* EVENT MARKERS */
+    .events-bar { background: #fff8f0; border: 1px solid #f5dbb5; border-radius: 4px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+    .events-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.75rem; }
+    .events-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+    .event-item { border-left: 3px solid var(--accent); padding-left: 0.75rem; }
+    .event-date { font-size: 11px; font-weight: 700; color: var(--accent); }
+    .event-desc { font-size: 12px; color: #444; line-height: 1.4; margin-top: 2px; }
+
+    /* NARRATIVE */
+    .narrative { font-size: 13.5px; color: #3D3D3D; line-height: 1.75; margin-bottom: 1.5rem; }
+    .callout { background: #fff8f0; border-left: 4px solid var(--accent); padding: 1rem 1.25rem; border-radius: 0 4px 4px 0; margin: 1.25rem 0; font-size: 13px; line-height: 1.65; color: #2D2D2D; }
+    .callout.red { background: #fff5f5; border-left-color: var(--warning); }
+    .callout.green { background: #f0faf5; border-left-color: var(--success); }
+    .callout strong { color: var(--text-primary); }
+
+    /* TABLES */
+    .est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .est-table th { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; color: #555; text-align: left; padding: 0.65rem 0.75rem; border-bottom: 2px solid var(--border); background: #fff; text-transform: uppercase; }
+    .est-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border); color: #2D2D2D; }
+    .est-table tr:last-child td { border-bottom: none; }
+    .est-table tr:hover td { background: #fafafa; }
+    .est-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .est-table .up { color: var(--warning); font-weight: 600; }
+    .est-table .dn { color: var(--success); font-weight: 600; }
+    .est-table .hi { background: #fff3f3; }
+    .est-table .row-bold td { font-weight: 700; background: #f5f5f5; }
+
+    /* DONUT LEGEND */
+    .legend-box { display: flex; flex-direction: column; gap: 0.5rem; padding-top: 0.5rem; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 12px; color: #444; }
+    .legend-swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+    .legend-pct { margin-left: auto; font-weight: 600; color: var(--text-primary); }
+
+    /* SECTION DIVIDERS */
+    .section-hdr { margin: 2rem 0 1rem; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.4rem; }
+    .section-title { font-family: Georgia, serif; font-size: 22px; color: var(--text-primary); font-weight: 400; }
+
+    /* TRANSMISSION FLOW */
+    .flow-row { display: flex; align-items: flex-start; gap: 0; margin: 1.5rem 0; }
+    .flow-item { flex: 1; position: relative; }
+    .flow-item:not(:last-child)::after { content: "→"; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 18px; font-weight: bold; z-index: 1; }
+    .flow-box { background: #FAFAFA; border: 1px solid var(--border); border-radius: 6px; padding: 1rem 0.75rem; text-align: center; margin: 0 8px; }
+    .flow-icon { font-size: 22px; margin-bottom: 0.25rem; }
+    .flow-name { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-primary); margin-bottom: 0.25rem; }
+    .flow-detail { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+    /* COUNTRY COMPARISON BARS */
+    .country-bar-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+    .country-name { font-size: 12px; color: #444; width: 90px; flex-shrink: 0; }
+    .bar-track { flex: 1; background: #f0f0f0; border-radius: 3px; height: 20px; position: relative; }
+    .bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
+    .bar-val { font-size: 11px; font-weight: 600; color: #fff; }
+    .bar-delta { font-size: 11px; color: #888; width: 60px; text-align: right; }
+    .country-name.pk { font-weight: 700; color: var(--text-primary); }
+
+    /* FOOTER */
+    .page-footer { border-top: 1px solid var(--border); padding: 1.5rem 0; margin-top: 3rem; font-size: 11px; color: var(--text-tertiary); }
+
+    @media (max-width: 768px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col, .three-col { grid-template-columns: 1fr; }
+      .events-grid { grid-template-columns: repeat(2, 1fr); }
+      .flow-row { flex-direction: column; gap: 0.5rem; }
+      .flow-item::after { display: none; }
+      .page-title { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-meta">Energy Policy Analysis — Strait of Hormuz Crisis</div>
+    <h1 class="page-title">Oil Prices, Pump Prices & Inflation <span class="crisis-badge">CRISIS PERIOD</span></h1>
+    <p class="page-sub">Tracking the global energy shock triggered by the closure of the Strait of Hormuz (February 28 – ongoing), its cascading impact on crude and product prices, pump prices across Pakistan and peer Asian economies, and inflation transmission — with a focus on Pakistan's fiscal and consumer burden. Data through May 13, 2026.</p>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-row">
+    <div class="kpi-card red">
+      <div class="kpi-num red">$166</div>
+      <div class="kpi-label">Dubai Crude Peak (Mar 19)</div>
+      <div class="kpi-change up">▲ +137% from pre-war</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-num amber">~$93</div>
+      <div class="kpi-label">Brent / Dubai est. (May 13)</div>
+      <div class="kpi-change up">▲ +29% from pre-war ~$72</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-num red">Rs. 520</div>
+      <div class="kpi-label">Pakistan Diesel Peak (Apr 3)</div>
+      <div class="kpi-change up">▲ +88% from Mar 1 baseline</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-num amber">10.9%</div>
+      <div class="kpi-label">Pakistan CPI Inflation (Apr)</div>
+      <div class="kpi-change up">▲ from 7.0% in Feb 2026</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-num">Rs. 402</div>
+      <div class="kpi-label">Pakistan Petrol (May 7, 2026)</div>
+      <div class="kpi-change up">▲ +55% from pre-war Rs. 260</div>
+    </div>
+  </div>
+
+  <!-- KEY EVENTS TIMELINE -->
+  <div class="events-bar">
+    <div class="events-title">Key Crisis Timeline</div>
+    <div class="events-grid">
+      <div class="event-item">
+        <div class="event-date">Feb 28, 2026</div>
+        <div class="event-desc">US–Israel joint strikes on Iran. Brent surges 10–13% to $80–82/bbl within 48 hours.</div>
+      </div>
+      <div class="event-item">
+        <div class="event-date">Mar 4, 2026</div>
+        <div class="event-desc">Strait of Hormuz effectively closed. Brent passes $120/bbl. IEA calls it "greatest energy security challenge in history."</div>
+      </div>
+      <div class="event-item">
+        <div class="event-date">Mar 7, 2026</div>
+        <div class="event-desc">Pakistan OGRA hikes petrol by Rs. 55 to Rs. 321/L, diesel by Rs. 55 to Rs. 336/L. OGRA switches to weekly reviews.</div>
+      </div>
+      <div class="event-item">
+        <div class="event-date">Mar 19, 2026</div>
+        <div class="event-desc">Dubai crude reaches $166/bbl — highest on record. Physical Brent nears $150/bbl. Gulf production cut by 10 mb/d.</div>
+      </div>
+      <div class="event-item">
+        <div class="event-date">Apr 3, 2026</div>
+        <div class="event-desc">Pakistan's largest-ever fuel hike: petrol +Rs. 137 to Rs. 458/L; diesel +Rs. 184 to Rs. 520/L. Petroleum Levy raised to Rs. 161/L.</div>
+      </div>
+      <div class="event-item">
+        <div class="event-date">Apr 7–8, 2026</div>
+        <div class="event-desc">US–Iran ceasefire announced. Brent falls sharply. Pakistan PM reduces PDL by Rs. 80/L. Prices cut to Rs. 366/L by Apr 11.</div>
+      </div>
+      <div class="event-item">
+        <div class="event-date">Apr 25 – May 1</div>
+        <div class="event-desc">Renewed tensions, incomplete ceasefire. Pakistan raises prices again: petrol to Rs. 393 (Apr 25), then Rs. 400 (May 1).</div>
+      </div>
+      <div class="event-item">
+        <div class="event-date">May 13, 2026</div>
+        <div class="event-desc">Pakistan petrol ~Rs. 402, diesel ~Rs. 402. Brent ~$93. Pakistan CPI inflation at 10.9% YoY (April). Hormuz flows still below pre-war levels.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('oil')">I. Crude & Product Prices</button>
+    <button class="tab-btn" onclick="switchTab('pump')">II. Pump Prices — Regional</button>
+    <button class="tab-btn" onclick="switchTab('inflation')">III. Inflation Transmission</button>
+    <button class="tab-btn" onclick="switchTab('tax')">IV. Pakistan Tax Breakdown</button>
+  </div>
+
+  <!-- TAB 1: OIL PRICES -->
+  <div id="tab-oil" class="tab-content active">
+
+    <div class="section-hdr">
+      <div class="section-label">Global Crude & Products</div>
+      <div class="section-title">How oil prices evolved through the Hormuz crisis</div>
+    </div>
+
+    <div class="narrative">
+      The closure of the Strait of Hormuz — through which ~20 mb/d of crude, condensate, and refined products normally transit — created the largest supply disruption in oil market history. Prior to the conflict, global markets were oversupplied and prices were falling. The shock reversed this entirely: Brent futures soared from $72/bbl before the war to nearly $128/bbl at the April 2 peak, while physical crude benchmarks disconnected sharply from futures, with Dubai crude touching $166/bbl and North Sea Dated crossing $130/bbl. Product markets were even more severely disrupted, with middle distillate cracks reaching all-time highs.
+    </div>
+
+    <div class="full-panel panel">
+      <div class="panel-title">Brent Crude & Dubai Crude — Weekly Price Evolution (Feb 28 – May 13, 2026)</div>
+      <div class="chart-wrap-lg">
+        <canvas id="crudePriceChart"></canvas>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Platts Product Prices — Gasoline (MOPS 92) & Diesel (MOPS Gas Oil 0.001%S) FOB Arab Gulf</div>
+        <div class="panel-sub">Arab Gulf product prices referenced by Pakistan's OGRA pricing formula</div>
+        <div class="chart-wrap">
+          <canvas id="productChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Crack Spreads — Product vs. Crude Premium</div>
+        <div class="panel-sub">Gasoline and diesel margins over Dubai crude ($/bbl)</div>
+        <div class="chart-wrap">
+          <canvas id="crackChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Supply disruption scale:</strong> The IEA estimates Gulf crude production fell by at least 10 mb/d by mid-March, with overall global supply disrupted by 7.5–9.1 mb/d at its peak. Alternative export routes (Yanbu on the Red Sea, Ceyhan pipeline, Fujairah) had capacity of only ~7.2 mb/d versus the 20 mb/d normally transiting Hormuz. Pakistan formally requested Saudi Arabia reroute deliveries via Yanbu, securing at least one bypass shipment.
+    </div>
+
+    <div class="full-panel panel">
+      <div class="panel-title">Oil Price Milestone Table — Key Reference Points</div>
+      <table class="est-table">
+        <tr>
+          <th>Date</th>
+          <th class="num">Brent ($/bbl)</th>
+          <th class="num">Dubai ($/bbl)</th>
+          <th class="num">Gasoline AG ($/L)</th>
+          <th class="num">Gas Oil AG ($/L)</th>
+          <th>Event</th>
+        </tr>
+        <tr>
+          <td>Feb 28, 2026</td>
+          <td class="num">72</td>
+          <td class="num">70</td>
+          <td class="num">0.52</td>
+          <td class="num">0.65</td>
+          <td>Pre-war baseline. Market was oversupplied.</td>
+        </tr>
+        <tr>
+          <td>Mar 2, 2026</td>
+          <td class="num">81</td>
+          <td class="num">79</td>
+          <td class="num">0.65</td>
+          <td class="num">0.85</td>
+          <td>Day 2 of conflict. Prices surge 13%.</td>
+        </tr>
+        <tr>
+          <td>Mar 4, 2026</td>
+          <td class="num">122</td>
+          <td class="num">118</td>
+          <td class="num">0.91</td>
+          <td class="num">1.25</td>
+          <td>Strait effectively closed. Brent past $120.</td>
+        </tr>
+        <tr>
+          <td>Mar 8, 2026</td>
+          <td class="num">103</td>
+          <td class="num">100</td>
+          <td class="num">0.84</td>
+          <td class="num">1.18</td>
+          <td>Brent tops $100 for first time in 4 years.</td>
+        </tr>
+        <tr>
+          <td>Mar 19, 2026</td>
+          <td class="num">126</td>
+          <td class="num">166</td>
+          <td class="num">1.20</td>
+          <td class="num">1.80</td>
+          <td class="hi"><strong>Dubai crude all-time record $166/bbl.</strong></td>
+        </tr>
+        <tr>
+          <td>Mar 23, 2026</td>
+          <td class="num">102</td>
+          <td class="num">98</td>
+          <td class="num">0.95</td>
+          <td class="num">1.35</td>
+          <td>Trump ceasefire comments — brief pullback.</td>
+        </tr>
+        <tr>
+          <td>Mar 27, 2026</td>
+          <td class="num">114</td>
+          <td class="num">110</td>
+          <td class="num">1.08</td>
+          <td class="num">1.55</td>
+          <td>IRGC formally announces strait closure.</td>
+        </tr>
+        <tr>
+          <td>Apr 2, 2026</td>
+          <td class="num">128</td>
+          <td class="num">122</td>
+          <td class="num">1.35</td>
+          <td class="num">1.95</td>
+          <td class="hi"><strong>Brent near-peak. Pakistan April hike follows next day.</strong></td>
+        </tr>
+        <tr>
+          <td>Apr 7–8, 2026</td>
+          <td class="num">98</td>
+          <td class="num">95</td>
+          <td class="num">0.97</td>
+          <td class="num">1.40</td>
+          <td>Ceasefire announcement. Prices fall sharply.</td>
+        </tr>
+        <tr>
+          <td>Apr 17, 2026</td>
+          <td class="num">92</td>
+          <td class="num">89</td>
+          <td class="num">0.88</td>
+          <td class="num">1.22</td>
+          <td>Iran FM: Strait open for ceasefire duration.</td>
+        </tr>
+        <tr>
+          <td>Apr 25, 2026</td>
+          <td class="num">98</td>
+          <td class="num">95</td>
+          <td class="num">0.95</td>
+          <td class="num">1.30</td>
+          <td>Renewed tensions; prices creep up. Pakistan hikes again.</td>
+        </tr>
+        <tr class="row-bold">
+          <td>May 13, 2026</td>
+          <td class="num">93</td>
+          <td class="num">91</td>
+          <td class="num">0.90</td>
+          <td class="num">1.15</td>
+          <td>Current. Hormuz flows still ~40% below pre-war levels.</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- TAB 2: PUMP PRICES -->
+  <div id="tab-pump" class="tab-content">
+
+    <div class="section-hdr">
+      <div class="section-label">Retail Fuel Prices</div>
+      <div class="section-title">Pump prices — Pakistan weekly timeline & regional peer comparison</div>
+    </div>
+
+    <div class="narrative">
+      Pakistan's pump prices are determined fortnightly (shifted to weekly during the crisis) by OGRA using an Import Parity Price formula referenced to Arab Gulf Platts indices. The exchange rate (PKR/USD ~278–285 throughout) and the level of the Petroleum Development Levy are the two policy levers. The regional picture is striking: countries with heavy fuel subsidies (Malaysia, Indonesia, India) absorbed much of the shock domestically, while price-takers like Pakistan and Sri Lanka passed on substantially more to consumers.
+    </div>
+
+    <div class="full-panel panel">
+      <div class="panel-title">Pakistan Pump Prices — Petrol & Diesel Weekly (SPI Survey Data, Feb 26 – May 7, 2026)</div>
+      <div class="panel-sub">PKR per litre. Annotations mark the two major OGRA notification dates.</div>
+      <div class="chart-wrap-lg">
+        <canvas id="pumpPakChart"></canvas>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <strong>Apr 3 hike in context:</strong> The April 3, 2026 OGRA notification raised petrol by Rs. 137.24 and diesel by Rs. 184.49 in a single adjustment — more than the entire pump price of a litre of petrol in Pakistan in 2007. The Pakistan PM subsequently provided temporary relief by cutting the Petroleum Levy by Rs. 80/L for one month, bringing petrol back to Rs. 366/L by April 11. But prices began climbing again from late April.
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Pakistan — Petrol Price Rebased (100 = Feb 26, 2026)</div>
+        <div class="chart-wrap">
+          <canvas id="rebaseChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Pakistan — USD/Litre Equivalent (PKR ÷ 278)</div>
+        <div class="chart-wrap">
+          <canvas id="usdChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-hdr" style="margin-top:1rem;">
+      <div class="section-label">Regional Comparison</div>
+      <div class="section-title">Gasoline pump prices — Asian peers (May 4, 2026 vs. pre-war estimate)</div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Current Gasoline Pump Prices — USD/Litre (May 4, 2026)</div>
+        <div style="margin-top:0.5rem;">
+          <!-- Country bar chart -->
+          <div class="country-bar-row">
+            <div class="country-name">Malaysia</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:70.9%; background:#C8923A;"><span class="bar-val">$1.00</span></div>
+            </div>
+            <div class="bar-delta up">+117%</div>
+          </div>
+          <div class="country-bar-row">
+            <div class="country-name">Indonesia</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:50.4%; background:#C8923A;"><span class="bar-val">$0.71</span></div>
+            </div>
+            <div class="bar-delta up">+18%</div>
+          </div>
+          <div class="country-bar-row">
+            <div class="country-name">Vietnam</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:65.7%; background:#52B788;"><span class="bar-val">$0.93</span></div>
+            </div>
+            <div class="bar-delta up">+9%</div>
+          </div>
+          <div class="country-bar-row">
+            <div class="country-name">India</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:75.2%; background:#52B788;"><span class="bar-val">$1.06</span></div>
+            </div>
+            <div class="bar-delta dn">-4%</div>
+          </div>
+          <div class="country-bar-row">
+            <div class="country-name">Bangladesh</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:80.7%; background:#C8923A;"><span class="bar-val">$1.14</span></div>
+            </div>
+            <div class="bar-delta up">+20%</div>
+          </div>
+          <div class="country-bar-row">
+            <div class="country-name">Sri Lanka</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:90.6%; background:#C8923A;"><span class="bar-val">$1.28</span></div>
+            </div>
+            <div class="bar-delta up">+22%</div>
+          </div>
+          <div class="country-bar-row">
+            <div class="country-name pk">Pakistan</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:100%; background:#9B2335;"><span class="bar-val" style="font-size:12px;">$1.43</span></div>
+            </div>
+            <div class="bar-delta up" style="color:#9B2335;font-weight:700;">+53%</div>
+          </div>
+          <div class="country-bar-row">
+            <div class="country-name">Philippines</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:100%; background:#9B2335;"><span class="bar-val" style="font-size:12px;">$1.49</span></div>
+            </div>
+            <div class="bar-delta up">+24%</div>
+          </div>
+          <div style="font-size:11px;color:#999;margin-top:0.75rem;">Max bar = $1.49 (Philippines). Source: GlobalPetrolPrices.com, Gari.pk, May 4, 2026. % change vs. estimated Feb 28 pre-war price.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Rebased Gasoline Price Index — 100 = Feb 28, 2026</div>
+        <div class="panel-sub">How petrol prices have moved since war began (USD basis, country-specific exchange rates)</div>
+        <div class="chart-wrap">
+          <canvas id="countryRebaseChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="full-panel panel">
+      <div class="panel-title">Regional Pump Price Comparison Table (Petrol/Gasoline, USD/Litre)</div>
+      <table class="est-table">
+        <tr>
+          <th>Country</th>
+          <th class="num">Pre-war (Est. Feb 28)</th>
+          <th class="num">Peak (USD/L)</th>
+          <th class="num">May 4, 2026</th>
+          <th class="num">Change from Pre-war</th>
+          <th>Policy Approach</th>
+        </tr>
+        <tr>
+          <td>Malaysia</td>
+          <td class="num">$0.46</td>
+          <td class="num">~$1.00</td>
+          <td class="num">$1.002</td>
+          <td class="num up">+117%</td>
+          <td>Removed RON 95 subsidy under fiscal pressure; large one-time shock</td>
+        </tr>
+        <tr>
+          <td>Indonesia</td>
+          <td class="num">$0.60</td>
+          <td class="num">~$0.75</td>
+          <td class="num">$0.712</td>
+          <td class="num up">+18%</td>
+          <td>Partially absorbed via Pertamina subsidy; modest pass-through</td>
+        </tr>
+        <tr>
+          <td>Vietnam</td>
+          <td class="num">$0.85</td>
+          <td class="num">~$0.95</td>
+          <td class="num">$0.928</td>
+          <td class="num up">+9%</td>
+          <td>Government tax reductions offset most of the oil price increase</td>
+        </tr>
+        <tr>
+          <td><strong>India</strong></td>
+          <td class="num">$1.11</td>
+          <td class="num">~$1.12</td>
+          <td class="num">$1.064</td>
+          <td class="num dn">-4%</td>
+          <td>Cut excise duty by Rs. 10/L (Mar 27); switched to Russia crude supply</td>
+        </tr>
+        <tr>
+          <td>Bangladesh</td>
+          <td class="num">$0.95</td>
+          <td class="num">~$1.22</td>
+          <td class="num">$1.141</td>
+          <td class="num up">+20%</td>
+          <td>Full pass-through with limited fiscal room; rationing in some areas</td>
+        </tr>
+        <tr>
+          <td>Sri Lanka</td>
+          <td class="num">$1.05</td>
+          <td class="num">~$1.38</td>
+          <td class="num">$1.280</td>
+          <td class="num up">+22%</td>
+          <td>Pass-through pricing regime post-IMF program; limited subsidy</td>
+        </tr>
+        <tr class="hi">
+          <td><strong>Pakistan</strong></td>
+          <td class="num">$0.95</td>
+          <td class="num">$1.65 (Apr 3)</td>
+          <td class="num up"><strong>$1.434</strong></td>
+          <td class="num up"><strong>+53%</strong></td>
+          <td>Full pass-through + PDL hike (Apr 3); PM cut PDL temporarily; IMF constraint limits subsidies</td>
+        </tr>
+        <tr>
+          <td>Philippines</td>
+          <td class="num">$1.20</td>
+          <td class="num">~$1.55</td>
+          <td class="num">$1.485</td>
+          <td class="num up">+24%</td>
+          <td>Market-linked pricing; government conditional cash transfers to cushion poor</td>
+        </tr>
+        <tr>
+          <td>South Korea</td>
+          <td class="num">$1.42</td>
+          <td class="num">~$1.72</td>
+          <td class="num">$1.524</td>
+          <td class="num up">+7%</td>
+          <td>Large strategic reserves (90+ days); significant fuel tax cut; diversified supply</td>
+        </tr>
+        <tr>
+          <td>Japan</td>
+          <td class="num">$1.05</td>
+          <td class="num">~$1.30</td>
+          <td class="num">$1.075</td>
+          <td class="num up">+2%</td>
+          <td>Released 80 mn bbl strategic reserve (Mar 16); large existing stocks</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="callout green">
+      <strong>India's policy contrast:</strong> While Pakistan faces the highest absolute price increase among South Asian peers, India effectively insulated consumers by cutting excise duty on petrol and diesel by Rs. 10/L on March 27, 2026, while simultaneously sourcing replacement crude from Russia at discounted prices. India's strategic reserve of 90+ days and its ability to rapidly pivot to Russian supply were critical buffers — advantages Pakistan did not have.
+    </div>
+
+  </div>
+
+  <!-- TAB 3: INFLATION -->
+  <div id="tab-inflation" class="tab-content">
+
+    <div class="section-hdr">
+      <div class="section-label">Price Level Impact</div>
+      <div class="section-title">Inflation transmission — how the fuel shock spread through Pakistan's economy</div>
+    </div>
+
+    <div class="narrative">
+      Pakistan's consumer price index returned to double digits (10.9% YoY) in April 2026 — for the first time in 21 months — driven by the cascading effect of the fuel price shock. The transmission works across multiple channels: direct transport costs, agricultural production costs, manufacturing inputs, power generation, and second-round wage effects. Diesel is the economy's central nervous system: it powers freight trucks (90%+ of cargo), agricultural machinery, industrial captive generation, and water pumps. The weekly Sensitive Price Indicator (SPI) published by PBS captures real-time price changes in 51 essential items across 17 urban centres.
+    </div>
+
+    <!-- TRANSMISSION FLOW DIAGRAM -->
+    <div class="panel full-panel" style="margin-bottom:1.5rem;">
+      <div class="panel-title">Inflation Transmission Mechanism — Fuel Price to Consumer Prices</div>
+      <div class="flow-row">
+        <div class="flow-item">
+          <div class="flow-box" style="border-top:3px solid #9B2335;">
+            <div class="flow-icon">🛢️</div>
+            <div class="flow-name">Crude Oil</div>
+            <div class="flow-detail">Dubai crude +30% from pre-war. Platts AG gasoline +73%, gas oil +77%</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-box" style="border-top:3px solid #C8923A;">
+            <div class="flow-icon">⛽</div>
+            <div class="flow-name">Pump Price</div>
+            <div class="flow-detail">Petrol +55%, Diesel +45% from pre-war. Peak: Petrol +76%, Diesel +88%</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-box" style="border-top:3px solid #C8923A;">
+            <div class="flow-icon">🚛</div>
+            <div class="flow-name">Transport</div>
+            <div class="flow-detail">Freight costs up 15–20%. Truck fares raised. Bus fares raised.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-box" style="border-top:3px solid #52B788;">
+            <div class="flow-icon">🌾</div>
+            <div class="flow-name">Agriculture</div>
+            <div class="flow-detail">Tractor diesel, irrigation pump costs rise. Fertiliser up 15–25%.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-box" style="border-top:3px solid #52B788;">
+            <div class="flow-icon">🏭</div>
+            <div class="flow-name">Manufacturing</div>
+            <div class="flow-detail">Captive generation, input transport. Cement up ~10%, textiles up.</div>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-box" style="border-top:3px solid #5A84C8;">
+            <div class="flow-icon">📈</div>
+            <div class="flow-name">CPI Inflation</div>
+            <div class="flow-detail">CPI: 7.0% → 10.9% YoY. Transport: +29.9% YoY in April.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Pakistan CPI Inflation — Year-on-Year (Monthly)</div>
+        <div class="chart-wrap">
+          <canvas id="cpiChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">CPI Sub-components — April 2026 YoY Breakdown</div>
+        <div class="chart-wrap">
+          <canvas id="cpiSubChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">SPI (Weekly) — Petrol & Diesel Price Index (Feb 26 = 100)</div>
+        <div class="panel-sub">Pakistan Bureau of Statistics weekly Sensitive Price Indicator — fuel items</div>
+        <div class="chart-wrap">
+          <canvas id="spiChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">SPI Items Most Affected by Fuel Shock — Week May 7 vs. Feb 26 (% change)</div>
+        <div class="chart-wrap">
+          <canvas id="spiImpactChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <strong>Transport CPI surge — April 2026:</strong> Transport costs surged 29.9% YoY and 15.47% MoM in April 2026 — the fastest monthly transport inflation in nearly a decade. Since transport underpins the entire supply chain, this feeds into prices of perishables (+15.25% MoM), construction materials, and manufactured goods. The State Bank of Pakistan has cautioned that energy price shocks of this magnitude create sticky inflationary expectations that are difficult to reverse even after crude prices fall.
+    </div>
+
+    <div class="full-panel panel">
+      <div class="panel-title">Transmission Channels — Impact Quantification</div>
+      <table class="est-table">
+        <tr>
+          <th>Channel</th>
+          <th>Mechanism</th>
+          <th class="num">Estimated Price Impact</th>
+          <th>Lag</th>
+          <th>CPI Weight</th>
+        </tr>
+        <tr>
+          <td><strong>Direct fuel (petrol & diesel)</strong></td>
+          <td>Direct pump price increase passed to households</td>
+          <td class="num up">+55% / +45%</td>
+          <td>Immediate</td>
+          <td>~5.5% of CPI basket (transport fuel)</td>
+        </tr>
+        <tr>
+          <td><strong>Freight & logistics</strong></td>
+          <td>Diesel powers 90%+ of freight movement; truck fares raised</td>
+          <td class="num up">+15–20%</td>
+          <td>1–2 weeks</td>
+          <td>Indirect (feeds all tradeable goods)</td>
+        </tr>
+        <tr>
+          <td><strong>Perishable food</strong></td>
+          <td>Higher transport costs for vegetables, fruit, poultry</td>
+          <td class="num up">+15.25% MoM (Apr)</td>
+          <td>1–3 weeks</td>
+          <td>~18% of CPI basket</td>
+        </tr>
+        <tr>
+          <td><strong>Non-perishable food</strong></td>
+          <td>Higher agricultural production costs (diesel for water pumps, tractors) + transport</td>
+          <td class="num up">+5–8%</td>
+          <td>4–8 weeks</td>
+          <td>~20% of CPI basket</td>
+        </tr>
+        <tr>
+          <td><strong>Fertiliser prices</strong></td>
+          <td>Direct input (urea, DAP made from natural gas/oil) + transport; avg up 15–25% since Feb</td>
+          <td class="num up">+15–25%</td>
+          <td>1–2 months</td>
+          <td>Indirect (agriculture cost)</td>
+        </tr>
+        <tr>
+          <td><strong>Housing / utilities</strong></td>
+          <td>Captive generation diesel costs; electricity tariff adjustments (NEPRA)</td>
+          <td class="num up">+16.8% YoY (Apr)</td>
+          <td>2–6 weeks</td>
+          <td>~23% of CPI basket</td>
+        </tr>
+        <tr>
+          <td><strong>Construction materials</strong></td>
+          <td>Cement transport + kiln fuel; cement avg up ~10% since Feb</td>
+          <td class="num up">+8–12%</td>
+          <td>4–8 weeks</td>
+          <td>~3% of CPI basket</td>
+        </tr>
+        <tr>
+          <td><strong>Wage pressure (2nd round)</strong></td>
+          <td>Workers demand higher wages due to cost-of-living rise; SPI unskilled labour up ~2.5%</td>
+          <td class="num up">+2–4%</td>
+          <td>2–4 months</td>
+          <td>Affects services inflation</td>
+        </tr>
+        <tr class="row-bold">
+          <td>TOTAL — Headline CPI (April 2026)</td>
+          <td>Combination of above channels — direct and indirect</td>
+          <td class="num up">+10.9% YoY</td>
+          <td>—</td>
+          <td>+3.6 ppt vs. Feb baseline (7.0%)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>SPI basket fuel weights:</strong> In Pakistan's weekly SPI (51-item basket), petrol carries a weight of 6.7018% in the combined expenditure group, while Hi-Speed Diesel carries 0.0874%. However, diesel's indirect effects through transport and agriculture make its true economic impact far larger than its direct SPI weight suggests. In the lowest quintile basket, petrol weight is 1.4673%, reflecting that poorer households rely more on public transport — but they are most vulnerable to fare increases driven by diesel costs.
+    </div>
+
+  </div>
+
+  <!-- TAB 4: TAX BREAKDOWN -->
+  <div id="tab-tax" class="tab-content">
+
+    <div class="section-hdr">
+      <div class="section-label">Fiscal Analysis</div>
+      <div class="section-title">Pakistan pump price composition — how much is tax?</div>
+    </div>
+
+    <div class="narrative">
+      Pakistan's petrol pump price is set by OGRA using an Import Parity Price (IPP) formula. The final price is the sum of six components: the ex-refinery/import cost (the international crude benchmark converted at the USD/PKR rate), port and import charges, the Inland Freight Equalisation Margin (IFEM), Oil Marketing Company (OMC) margin, dealer commission, the Petroleum Development Levy (PDL), and General Sales Tax. Under Pakistan's IMF program, the government cannot permanently waive petroleum taxes — creating a fiscal bind when oil prices surge. The April 3, 2026 hike involved both a full pass-through of elevated import costs AND a deliberate increase in the PDL from ~Rs. 78/L to Rs. 161/L to meet IMF revenue targets. The PM then temporarily cut PDL by Rs. 80/L following public outrage.
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Petrol Price Breakdown — May 7, 2026 (Rs. 401.81/L)</div>
+        <div style="display:flex;gap:1.5rem;align-items:center;">
+          <div style="width:200px;height:200px;flex-shrink:0;">
+            <canvas id="taxDonutChart"></canvas>
+          </div>
+          <div class="legend-box" style="flex:1;">
+            <div class="legend-item">
+              <div class="legend-swatch" style="background:#2D5282;"></div>
+              <span>Crude import cost (CIF port)</span>
+              <span class="legend-pct">52% (Rs. 209)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-swatch" style="background:#4A7FB5;"></div>
+              <span>Port charges + IFEM</span>
+              <span class="legend-pct">7% (Rs. 28)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-swatch" style="background:#73A4CD;"></div>
+              <span>OMC + dealer margin</span>
+              <span class="legend-pct">4% (Rs. 16)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-swatch" style="background:#C8923A;"></div>
+              <span>Petroleum Dev. Levy (PDL)</span>
+              <span class="legend-pct">19% (Rs. 78)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-swatch" style="background:#E0A84E;"></div>
+              <span>General Sales Tax (GST)</span>
+              <span class="legend-pct">14% (Rs. 56)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-swatch" style="background:#F5D08A;"></div>
+              <span>Climate levy + other duties</span>
+              <span class="legend-pct">4% (Rs. 15)</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;font-size:12px;color:#666;border-top:1px solid #eee;padding-top:0.75rem;">
+          <strong style="color:#C8923A;">Government take (PDL + GST + Climate levy): ~Rs. 149/L = 37% of pump price</strong><br>
+          <span style="color:#999;">At April 3 peak (Rs. 458.41): Government take was Rs. 163/L = 35.6% (PDL alone was Rs. 161/L)</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Government Tax Component — Evolution Through the Crisis</div>
+        <div class="chart-wrap">
+          <canvas id="taxTimeChart"></canvas>
+        </div>
+        <div style="font-size:11px;color:#999;margin-top:0.5rem;">PDL is a fixed per-litre charge regardless of crude price. GST is applied as a percentage. Both components create a "tax floor" that keeps pump prices elevated even when crude prices fall.</div>
+      </div>
+    </div>
+
+    <div class="full-panel panel" style="margin-top:1.5rem;">
+      <div class="panel-title">Pakistan Petrol Price Component Evolution — Key Notification Dates</div>
+      <table class="est-table">
+        <tr>
+          <th>Effective Date</th>
+          <th class="num">Petrol (Rs/L)</th>
+          <th class="num">Ex-Refinery Est.</th>
+          <th class="num">PDL (Rs/L)</th>
+          <th class="num">GST + Other</th>
+          <th class="num">Govt. Take</th>
+          <th class="num">% Tax</th>
+          <th>Driver</th>
+        </tr>
+        <tr>
+          <td>Feb 1, 2026</td>
+          <td class="num">263</td>
+          <td class="num">~163</td>
+          <td class="num">78</td>
+          <td class="num">~22</td>
+          <td class="num">~100</td>
+          <td class="num">38%</td>
+          <td>Pre-war baseline; crude ~$72/bbl</td>
+        </tr>
+        <tr>
+          <td>Mar 7, 2026</td>
+          <td class="num up">321</td>
+          <td class="num">~218</td>
+          <td class="num">78</td>
+          <td class="num">~25</td>
+          <td class="num">~103</td>
+          <td class="num">32%</td>
+          <td>First Hormuz shock hike (+Rs. 55); crude ~$103 avg</td>
+        </tr>
+        <tr class="hi">
+          <td><strong>Apr 3, 2026 (PEAK)</strong></td>
+          <td class="num up"><strong>458</strong></td>
+          <td class="num">~280</td>
+          <td class="num up"><strong>161</strong></td>
+          <td class="num up">~18</td>
+          <td class="num up"><strong>~179</strong></td>
+          <td class="num up"><strong>39%</strong></td>
+          <td>Record hike; crude ~$128/bbl + PDL doubled for revenue</td>
+        </tr>
+        <tr>
+          <td>Apr 5, 2026</td>
+          <td class="num dn">378</td>
+          <td class="num">~280</td>
+          <td class="num dn">81</td>
+          <td class="num">~17</td>
+          <td class="num dn">~98</td>
+          <td class="num">26%</td>
+          <td>PM cuts PDL by Rs. 80 in relief measure; crude ~$100</td>
+        </tr>
+        <tr>
+          <td>Apr 11, 2026</td>
+          <td class="num dn">367</td>
+          <td class="num">~255</td>
+          <td class="num">78</td>
+          <td class="num">~34</td>
+          <td class="num">~112</td>
+          <td class="num">31%</td>
+          <td>Further relief; Brent falls to ~$92 post ceasefire</td>
+        </tr>
+        <tr>
+          <td>Apr 25, 2026</td>
+          <td class="num up">393</td>
+          <td class="num">~275</td>
+          <td class="num">78</td>
+          <td class="num">~40</td>
+          <td class="num">~118</td>
+          <td class="num">30%</td>
+          <td>Renewed tensions; crude ~$98</td>
+        </tr>
+        <tr>
+          <td>May 1, 2026</td>
+          <td class="num up">400</td>
+          <td class="num">~278</td>
+          <td class="num">78</td>
+          <td class="num">~44</td>
+          <td class="num">~122</td>
+          <td class="num">31%</td>
+          <td>Ongoing market pressure; crude ~$95</td>
+        </tr>
+        <tr class="row-bold">
+          <td>May 7, 2026</td>
+          <td class="num">402</td>
+          <td class="num">~253</td>
+          <td class="num">78</td>
+          <td class="num">~71</td>
+          <td class="num">~149</td>
+          <td class="num">37%</td>
+          <td>Current; GST re-applied at higher rate. Crude ~$93/bbl</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>Key policy insight — the tax floor problem:</strong> Of the Rs. 401.81 pump price on May 7, at least Rs. 149 (37%) is government taxes and levies. The Petroleum Development Levy of Rs. 78/L is a FIXED amount — it does not fall when crude prices fall. This creates a structural "tax floor" that prevents pump prices from declining proportionally to international crude. When crude was at its pre-war level of ~$72/bbl, the PDL of Rs. 78 was ~30% of the pump price. If crude returns to $72/bbl, the PDL would be ~38% of a theoretically lower pump price — meaning Pakistanis would not see full relief. The IMF program requires maintaining PDL revenue at ~Rs. 1,070 billion/year, leaving limited room to reduce the per-litre charge.
+    </div>
+
+    <div class="three-col" style="margin-top:1rem;">
+      <div class="panel" style="border-top:3px solid #9B2335;">
+        <div class="panel-title">Diesel (HSD) Tax Note</div>
+        <p style="font-size:13px;color:#444;line-height:1.65;">In the April 3 hike, the government <strong>abolished</strong> the Petroleum Development Levy on Diesel (HSD) entirely — while simultaneously raising it to Rs. 161/L on petrol — in response to the extreme economic sensitivity of diesel for freight and agriculture. However, diesel pump prices still hit Rs. 520/L due to the surge in the underlying import cost (at $128/bbl crude). By May 7, with GST re-applied, diesel (Rs. 402/L) carries roughly Rs. 85-90/L in taxes (~21% of pump price).</p>
+      </div>
+      <div class="panel" style="border-top:3px solid #C8923A;">
+        <div class="panel-title">IMF Program Constraint</div>
+        <p style="font-size:13px;color:#444;line-height:1.65;">Pakistan's 2023 Extended Fund Facility with the IMF prohibits <strong>permanent fuel subsidies</strong>. The government must collect at least Rs. 1,070 billion/year in petroleum levies. This forced the April 3 PDL hike to Rs. 161/L — and means even the "temporary" Rs. 80 PDL cut must be reversed. Pakistan's import bill surged from $300M/week pre-war to $800M/week, erasing two years of fiscal consolidation gains in weeks.</p>
+      </div>
+      <div class="panel" style="border-top:3px solid #52B788;">
+        <div class="panel-title">Motorcycle Subsidy Scheme</div>
+        <p style="font-size:13px;color:#444;line-height:1.65;">Following the April 3 shock, the PM introduced a <strong>Rs. 100/L motorcycle petrol subsidy</strong> (up to 20 litres per fill for 3 months) delivered via CNIC/biometric verification at designated pumps. This reduces the effective price for ~18 million motorcycle owners from Rs. 393/L to Rs. 293/L — providing targeted relief to lower-income daily commuters who depend on two-wheelers. Punjab and Sindh registration was active as of late April.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <div class="two-col" style="align-items:start;">
+      <div>
+        <strong>Data Sources:</strong> Pakistan Bureau of Statistics (SPI weekly reports, CPI data); OGRA/Petroleum Division notifications; IEA Oil Market Reports (March, April 2026); EIA Short-Term Energy Outlook (April 2026); GlobalPetrolPrices.com; Wikipedia — 2026 Strait of Hormuz crisis; Business Recorder; Dawn; Al Jazeera.
+      </div>
+      <div style="text-align:right;">
+        <strong>Methodology:</strong> Platts product prices are estimated from Pakistan's OGRA-referenced Arab Gulf FOB benchmarks. Pump prices are from official SPI survey data (PBS) and OGRA notifications. Pre-war price baselines use the Feb 26, 2026 SPI survey. Exchange rate used: PKR/USD 278 (stable throughout crisis period). All USD conversions at prevailing spot rates.
+        <br><em style="color:#bbb;">Prepared: May 13, 2026</em>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ====================== TAB SWITCHING ======================
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ====================== CHART DEFAULTS ======================
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#666';
+
+const gridOpts = { color: '#f0f0f0', lineWidth: 1 };
+const tickOpts = { color: '#999' };
+
+// ====================== CRUDE PRICE CHART ======================
+const dates = ['Feb 28','Mar 4','Mar 8','Mar 14','Mar 19','Mar 23','Mar 27','Apr 2','Apr 7','Apr 11','Apr 17','Apr 25','May 2','May 7','May 13'];
+const brentPrices = [72, 122, 103, 118, 126, 102, 114, 128, 98, 92, 90, 98, 95, 93, 93];
+const dubaiPrices = [70, 118, 100, 113, 166, 98, 110, 122, 95, 89, 87, 95, 93, 91, 91];
+
+new Chart(document.getElementById('crudePriceChart'), {
+  type: 'line',
+  data: {
+    labels: dates,
+    datasets: [
+      { label: 'Brent Crude ($/bbl)', data: brentPrices, borderColor: '#2D5282', backgroundColor: 'rgba(45,82,130,0.08)', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 3 },
+      { label: 'Dubai Crude ($/bbl)', data: dubaiPrices, borderColor: '#C8923A', backgroundColor: 'rgba(200,146,58,0.08)', borderWidth: 2, fill: false, tension: 0.3, pointRadius: 3, borderDash: [4,3] }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { boxWidth: 12, padding: 16 } },
+      annotation: { annotations: {
+        line1: { type: 'line', xMin: 'Apr 2', xMax: 'Apr 2', borderColor: '#9B2335', borderWidth: 1.5, borderDash: [4,3], label: { content: 'Apr 3 Pak hike', display: true, position: 'start', font: { size: 10 }, color: '#9B2335' } }
+      }}
+    },
+    scales: {
+      x: { grid: gridOpts, ticks: { ...tickOpts, maxRotation: 35 } },
+      y: { grid: gridOpts, ticks: tickOpts, title: { display: true, text: 'USD per barrel', color: '#999', font: { size: 10 } }, min: 60, max: 180 }
+    }
+  }
+});
+
+// ====================== PRODUCT PRICES CHART ======================
+const gasoline_AG = [0.52, 0.91, 0.84, 1.05, 1.20, 0.95, 1.08, 1.35, 0.97, 0.88, 0.83, 0.95, 0.91, 0.90, 0.90];
+const gasoil_AG   = [0.65, 1.25, 1.18, 1.55, 1.80, 1.35, 1.55, 1.95, 1.40, 1.22, 1.15, 1.30, 1.17, 1.15, 1.15];
+
+new Chart(document.getElementById('productChart'), {
+  type: 'line',
+  data: {
+    labels: dates,
+    datasets: [
+      { label: 'MOPS Gasoline 92 ($/L)', data: gasoline_AG, borderColor: '#4A7FB5', backgroundColor: 'rgba(74,127,181,0.1)', fill: true, borderWidth: 2, tension: 0.3, pointRadius: 2 },
+      { label: 'MOPS Gas Oil ($/L)', data: gasoil_AG, borderColor: '#C8923A', backgroundColor: 'rgba(200,146,58,0.1)', fill: false, borderWidth: 2, tension: 0.3, pointRadius: 2 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 12 } } },
+    scales: {
+      x: { grid: gridOpts, ticks: { ...tickOpts, maxRotation: 35 } },
+      y: { grid: gridOpts, ticks: tickOpts, title: { display: true, text: 'USD/Litre', color: '#999', font: { size: 10 } } }
+    }
+  }
+});
+
+// ====================== CRACK SPREAD CHART ======================
+const gasCracks  = gasoline_AG.map((v, i) => Math.round((v - dubaiPrices[i]/159) * 159 * 10) / 10);
+const dieselCracks = gasoil_AG.map((v, i) => Math.round((v - dubaiPrices[i]/159) * 159 * 10) / 10);
+
+new Chart(document.getElementById('crackChart'), {
+  type: 'bar',
+  data: {
+    labels: dates,
+    datasets: [
+      { label: 'Gasoline crack ($/bbl)', data: gasCracks, backgroundColor: 'rgba(74,127,181,0.7)', borderColor: '#4A7FB5', borderWidth: 1 },
+      { label: 'Gas Oil crack ($/bbl)', data: dieselCracks, backgroundColor: 'rgba(200,146,58,0.7)', borderColor: '#C8923A', borderWidth: 1 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 12 } } },
+    scales: {
+      x: { grid: gridOpts, ticks: { ...tickOpts, maxRotation: 35 } },
+      y: { grid: gridOpts, ticks: tickOpts, title: { display: true, text: '$/bbl over Dubai', color: '#999', font: { size: 10 } } }
+    }
+  }
+});
+
+// ====================== PAKISTAN PUMP PRICE CHART ======================
+const weeks = ['26-Feb','05-Mar','11-Mar','18-Mar','26-Mar','02-Apr','09-Apr','16-Apr','23-Apr','30-Apr','07-May'];
+const petrolPKR = [259.78, 267.74, 322.90, 322.90, 322.90, 322.90, 380.56, 368.77, 368.77, 395.25, 401.81];
+const dieselPKR = [277.31, 282.42, 337.60, 337.60, 337.60, 337.60, 522.29, 387.71, 355.32, 382.07, 401.54];
+
+new Chart(document.getElementById('pumpPakChart'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Petrol (Rs/L)', data: petrolPKR, borderColor: '#2D5282', backgroundColor: 'rgba(45,82,130,0.1)', fill: true, borderWidth: 2.5, tension: 0.2, pointRadius: 4, pointBackgroundColor: '#2D5282' },
+      { label: 'Hi-Speed Diesel (Rs/L)', data: dieselPKR, borderColor: '#9B2335', backgroundColor: 'rgba(155,35,53,0.1)', fill: true, borderWidth: 2.5, tension: 0.2, pointRadius: 4, pointBackgroundColor: '#9B2335' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { boxWidth: 12, padding: 16 } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: Rs. ${ctx.parsed.y.toFixed(2)}/L` } }
+    },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => 'Rs.' + v }, min: 200, max: 580, title: { display: true, text: 'PKR per litre', color: '#999', font: { size: 10 } } }
+    }
+  }
+});
+
+// ====================== REBASE CHART ======================
+const petrolRebase = petrolPKR.map(v => +(v / petrolPKR[0] * 100).toFixed(1));
+const dieselRebase = dieselPKR.map(v => +(v / dieselPKR[0] * 100).toFixed(1));
+
+new Chart(document.getElementById('rebaseChart'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Petrol index', data: petrolRebase, borderColor: '#2D5282', fill: false, borderWidth: 2, tension: 0.2, pointRadius: 3 },
+      { label: 'Diesel index', data: dieselRebase, borderColor: '#9B2335', fill: false, borderWidth: 2, tension: 0.2, pointRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 12 } }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} (100 = Feb 26)` } } },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: tickOpts, min: 90, title: { display: true, text: 'Index (Feb 26 = 100)', color: '#999', font: { size: 10 } } }
+    }
+  }
+});
+
+// ====================== USD CHART ======================
+const petrolUSD = petrolPKR.map(v => +(v / 278).toFixed(3));
+const dieselUSD = dieselPKR.map(v => +(v / 278).toFixed(3));
+
+new Chart(document.getElementById('usdChart'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Petrol ($/L)', data: petrolUSD, borderColor: '#2D5282', fill: false, borderWidth: 2, tension: 0.2, pointRadius: 3 },
+      { label: 'Diesel ($/L)', data: dieselUSD, borderColor: '#9B2335', fill: false, borderWidth: 2, tension: 0.2, pointRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 12 } } },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => '$' + v.toFixed(2) }, title: { display: true, text: 'USD/Litre (at PKR 278)', color: '#999', font: { size: 10 } } }
+    }
+  }
+});
+
+// ====================== COUNTRY REBASE CHART ======================
+const countries = ['Japan', 'Vietnam', 'India', 'Indonesia', 'Bangladesh', 'Sri Lanka', 'Philippines', 'Pakistan'];
+const countryPreWar =  [1.05, 0.85, 1.11, 0.60, 0.95, 1.05, 1.20, 0.95];
+const countryMay   =   [1.075, 0.928, 1.064, 0.712, 1.141, 1.280, 1.485, 1.434];
+const countryRebase = countryMay.map((v,i) => +(v / countryPreWar[i] * 100).toFixed(1));
+
+new Chart(document.getElementById('countryRebaseChart'), {
+  type: 'bar',
+  data: {
+    labels: countries,
+    datasets: [{
+      label: 'Price index (100 = pre-war)',
+      data: countryRebase,
+      backgroundColor: countryRebase.map((v, i) => countries[i] === 'Pakistan' ? '#9B2335' : v > 120 ? '#C8923A' : '#52B788'),
+      borderWidth: 0,
+      borderRadius: 3
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `Index: ${ctx.parsed.x.toFixed(1)} (100 = pre-war Feb 28)` } }
+    },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts, min: 90, title: { display: true, text: 'Index (100 = Feb 28, 2026)', color: '#999', font: { size: 10 } } },
+      y: { grid: { display: false }, ticks: { ...tickOpts, font: { weight: ctx => ctx.tick.label === 'Pakistan' ? 'bold' : 'normal' } } }
+    }
+  }
+});
+
+// ====================== CPI CHART ======================
+const cpiMonths = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26'];
+const cpiYoY = [1.2, 2.9, 4.1, 5.8, 7.0, 7.3, 10.9];
+const cpiMoM = [0.0, 0.4, 0.5, 0.4, 0.3, 1.2, 2.5];
+
+new Chart(document.getElementById('cpiChart'), {
+  type: 'line',
+  data: {
+    labels: cpiMonths,
+    datasets: [
+      { label: 'CPI YoY %', data: cpiYoY, borderColor: '#9B2335', fill: true, backgroundColor: 'rgba(155,35,53,0.1)', borderWidth: 2.5, tension: 0.3, pointRadius: 4, yAxisID: 'y' },
+      { label: 'CPI MoM % (RHS)', data: cpiMoM, borderColor: '#C8923A', fill: false, borderWidth: 2, tension: 0.3, pointRadius: 3, borderDash: [4,3], yAxisID: 'y2' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 12 } } },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v + '%' }, title: { display: true, text: 'Year-on-Year %', color: '#9B2335', font: { size: 10 } }, position: 'left', min: 0, max: 14 },
+      y2: { ticks: { ...tickOpts, callback: v => v + '%' }, title: { display: true, text: 'MoM %', color: '#C8923A', font: { size: 10 } }, position: 'right', grid: { display: false }, min: 0, max: 4 }
+    }
+  }
+});
+
+// ====================== CPI SUB-COMPONENTS ======================
+new Chart(document.getElementById('cpiSubChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Transport', 'Housing & Utilities', 'Food & Beverages', 'Perishables (MoM)', 'Clothing', 'Recreation', 'Education'],
+    datasets: [
+      { label: 'Apr 2026 YoY %', data: [29.9, 16.8, 7.6, null, 5.2, 4.1, 3.8], backgroundColor: '#9B2335', borderRadius: 3 },
+      { label: 'Mar 2026 YoY %', data: [12.5, 11.5, 3.6, null, 4.8, 3.9, 3.5], backgroundColor: '#E5A0A0', borderRadius: 3 },
+      { label: 'Apr 2026 MoM %', data: [null, null, null, 15.25, null, null, null], backgroundColor: '#C8923A', borderRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 10 } } },
+    scales: {
+      x: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v + '%' }, max: 35 },
+      y: { grid: { display: false }, ticks: tickOpts }
+    }
+  }
+});
+
+// ====================== SPI FUEL CHART ======================
+new Chart(document.getElementById('spiChart'), {
+  type: 'line',
+  data: {
+    labels: weeks,
+    datasets: [
+      { label: 'Petrol Index (Feb 26 = 100)', data: petrolRebase, borderColor: '#2D5282', fill: false, borderWidth: 2, tension: 0.2, pointRadius: 4 },
+      { label: 'Diesel Index (Feb 26 = 100)', data: dieselRebase, borderColor: '#9B2335', fill: false, borderWidth: 2, tension: 0.2, pointRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 12 } } },
+    scales: {
+      x: { grid: gridOpts, ticks: tickOpts },
+      y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v }, min: 90, max: 210, title: { display: true, text: 'Index (100 = 26-Feb-26)', color: '#999', font: { size: 10 } } }
+    }
+  }
+});
+
+// ====================== SPI IMPACT CHART ======================
+new Chart(document.getElementById('spiImpactChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Petrol Super', 'Diesel (HSD)', 'Chicken (Live)', 'Wheat Flour', 'Onions', 'Tomatoes', 'Cooking Oil', 'Eggs', 'Cement', 'Milk (Fresh)'],
+    datasets: [{
+      label: 'Change: May 7 vs. Feb 26 (%)',
+      data: [54.7, 44.8, 22.9, 2.7, 12.7, 3.1, 1.7, -9.0, 7.4, 3.3],
+      backgroundColor: ctx => ctx.raw > 0 ? (ctx.raw > 30 ? '#9B2335' : '#C8923A') : '#52B788',
+      borderRadius: 3, borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.parsed.x > 0 ? '+' : ''}${ctx.parsed.x.toFixed(1)}%` } } },
+    scales: {
+      x: { grid: gridOpts, ticks: { ...tickOpts, callback: v => v + '%' }, title: { display: true, text: '% change since pre-war (Feb 26, 2026)', color: '#999', font: { size: 10 } } },
+      y: { grid: { display: false }, ticks: tickOpts }
+    }
+  }
+});
+
+// ====================== TAX DONUT CHART ======================
+new Chart(document.getElementById('taxDonutChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Crude import cost', 'Port + IFEM', 'OMC + dealer', 'PDL', 'GST', 'Climate + other'],
+    datasets: [{
+      data: [52, 7, 4, 19, 14, 4],
+      backgroundColor: ['#2D5282', '#4A7FB5', '#73A4CD', '#C8923A', '#E0A84E', '#F5D08A'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '65%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}%` } }
+    }
+  }
+});
+
+// ====================== TAX TIME CHART ======================
+const taxLabels = ['Feb 1','Mar 7','Apr 3 peak','Apr 11','Apr 25','May 7'];
+const taxPDL = [78, 78, 161, 78, 78, 78];
+const taxGST = [22, 25, 18, 34, 40, 56];
+const taxImport = [163, 218, 280, 255, 275, 253];
+const taxMargin = [0, 0, 0, 0, 0, 15]; // combined margins simplified
+
+new Chart(document.getElementById('taxTimeChart'), {
+  type: 'bar',
+  data: {
+    labels: taxLabels,
+    datasets: [
+      { label: 'Import cost + charges + margins', data: taxImport.map((v,i) => v + taxMargin[i]), backgroundColor: '#73A4CD', stack: 'a', borderWidth: 0 },
+      { label: 'PDL (Petroleum Dev. Levy)', data: taxPDL, backgroundColor: '#C8923A', stack: 'a', borderWidth: 0 },
+      { label: 'GST + other duties', data: taxGST, backgroundColor: '#F5D08A', stack: 'a', borderWidth: 0 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 10 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: tickOpts, stacked: true },
+      y: { grid: gridOpts, ticks: { ...tickOpts, callback: v => 'Rs.' + v }, stacked: true, title: { display: true, text: 'Rs/Litre', color: '#999', font: { size: 10 } } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
