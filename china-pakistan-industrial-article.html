@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Architecture of Dependence: How China Rewired Pakistan's Industrial Economy</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #FFFFFF;
+      --secondary: #FAFAFA;
+      --border: #E5E5E5;
+      --accent: #C8923A;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --success: #52B788;
+      --warning: #9B2335;
+      --china-red: #DE2910;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: var(--primary);
+      color: #2D2D2D;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+    /* HEADER */
+    .article-header { padding: 3rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
+    .article-kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: var(--china-red); text-transform: uppercase; margin-bottom: 1rem; }
+    .article-title { font-family: Georgia, serif; font-size: 38px; font-weight: 400; color: var(--text-primary); line-height: 1.15; margin-bottom: 1rem; max-width: 860px; }
+    .article-subtitle { font-size: 18px; color: var(--text-secondary); line-height: 1.5; max-width: 760px; margin-bottom: 1.5rem; font-style: italic; }
+    .article-byline { font-size: 13px; color: var(--text-tertiary); }
+
+    /* LABELS */
+    .section-label { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .section-title { font-family: Georgia, serif; font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1rem; line-height: 1.25; }
+
+    /* PROSE */
+    .prose { font-size: 15px; color: #3D3D3D; line-height: 1.75; margin-bottom: 1.25rem; }
+    .prose strong { color: var(--text-primary); font-weight: 600; }
+
+    /* KPI GRID */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1.5rem 0 2rem; }
+    .kpi-card { background: var(--secondary); border: 1px solid var(--border); border-top: 3px solid var(--success); padding: 1.25rem 1rem; }
+    .kpi-card.amber { border-top-color: var(--accent); }
+    .kpi-card.red { border-top-color: var(--china-red); }
+    .kpi-num { font-family: Georgia, serif; font-size: 30px; font-weight: 400; color: var(--text-primary); line-height: 1; }
+    .kpi-label { font-size: 12px; color: var(--text-secondary); margin-top: 0.5rem; line-height: 1.4; }
+
+    /* PANELS */
+    .panel { background: var(--secondary); border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .panel-title { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: var(--text-primary); margin-bottom: 0.4rem; }
+    .panel-sub { font-size: 12px; color: var(--text-tertiary); margin-bottom: 1.25rem; letter-spacing: 0.04em; }
+
+    /* LAYOUT */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0; }
+
+    /* TABLES */
+    .est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .est-table th { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-primary); text-transform: uppercase; text-align: left; padding: 0.6rem 0.75rem; border-bottom: 2px solid var(--border); background: var(--primary); }
+    .est-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border); color: #2D2D2D; }
+    .est-table tr:last-child td { border-bottom: none; }
+    .est-table tr:hover td { background: rgba(200,146,58,0.04); }
+    .est-table .highlight td { background: rgba(200,146,58,0.08); font-weight: 600; }
+    .num-right { text-align: right; font-variant-numeric: tabular-nums; }
+    .china-row td { color: var(--china-red); font-weight: 600; }
+    .confirmed td { font-style: normal; }
+    .new-row td { background: rgba(82,183,136,0.06); }
+    .new-row td:first-child::after { content: " ★"; font-size: 10px; color: var(--success); }
+
+    /* CALLOUT */
+    .callout { background: var(--secondary); border-left: 4px solid var(--accent); padding: 1.25rem 1.5rem; margin: 1.75rem 0; }
+    .callout p { font-size: 14px; color: #2D2D2D; line-height: 1.7; margin: 0; }
+    .callout .callout-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+
+    /* SECTION BREAK */
+    .section-break { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+    /* CHART WRAPPER */
+    .chart-wrap { position: relative; width: 100%; }
+
+    /* FOOTNOTE */
+    .footnote { font-size: 11px; color: var(--text-tertiary); margin-top: 0.75rem; line-height: 1.5; }
+
+    /* VERDICT */
+    .verdict { background: var(--secondary); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 1.5rem; margin: 2.5rem 0; }
+    .verdict-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .verdict-text { font-size: 15px; color: var(--text-primary); line-height: 1.7; font-style: italic; }
+
+    /* DATA FRESHNESS BADGE */
+    .data-badge { display: inline-block; background: rgba(82,183,136,0.12); border: 1px solid rgba(82,183,136,0.3); color: #2a7a5a; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 2px; margin-left: 8px; vertical-align: middle; }
+
+    @media (max-width: 768px) {
+      .article-title { font-size: 26px; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .two-col, .three-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="article-header">
+    <div class="article-kicker">China–Pakistan Economic Corridor · Industrial Analysis · Updated May 2026</div>
+    <h1 class="article-title">The Architecture of Dependence: How China Rewired Pakistan's Industrial Economy</h1>
+    <p class="article-subtitle">A decade of CPEC has produced $25 billion in completed projects, 9,504 MW of new power capacity, and a mobile phone industry running almost entirely on Chinese IP. The numbers are impressive. So is the structural exposure they create.</p>
+    <div class="article-byline">Ammar H. Khan &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Data updated through 10M FY26 (SBP) and full-year 2025 (PTA, PAMA, PakWheels)</div>
+  </div>
+
+  <!-- ===== SECTION 1: MACRO FDI ===== -->
+  <div class="section-label">Exhibit 1 — The Capital Ledger</div>
+  <h2 class="section-title">China Became Pakistan's Banker Before It Became Its Builder</h2>
+
+  <p class="prose">Pakistan has attracted, on average, roughly $1.8–2.5 billion in net foreign direct investment per fiscal year over the past decade — modest against a 240-million-person economy and embarrassing against India's $71 billion FDI intake in 2024. What makes the composition remarkable is extreme concentration: in the peak CPEC years, China alone accounted for between 27 and 50 percent of Pakistan's total net FDI inflow. In FY25, the State Bank confirmed Chinese net FDI at <strong>$1.224 billion out of a national total of $2.46 billion — a 49.9 percent share</strong>, and a 90 percent surge from the $643 million recorded in FY24. A single bilateral partner provided half of Pakistan's total non-debt-creating foreign capital inflow.</p>
+
+  <p class="prose">The mechanism is straightforward. CPEC channelled Chinese state capital — through equity investment in IPPs, EXIM Bank concessional loans, and state-bank financing — into a country that had chronically underinvested in infrastructure for two decades. The architecture matters: the dominant mode is debt-creating project finance, not pure equity FDI. The recorded FDI numbers represent only the equity slice; the full CPEC financing stack, including loans, carried original project valuations exceeding $62 billion. In FY26, the picture has shifted: total net FDI in 10M FY26 (July–April 2026) declined 31 percent year-on-year to $1.41 billion amid governance concerns and policy uncertainty flagged by the SBP — yet China remained the largest single source with <strong>$739 million, accounting for over 52 percent of that diminished total</strong>. The dependence is structural, not cyclical.</p>
+
+  <!-- FDI TABLE -->
+  <div class="panel">
+    <div class="panel-title">Exhibit 1A — Pakistan Net FDI Inflows by Source: FY15–FY26 <span class="data-badge">Updated to 10M FY26</span></div>
+    <div class="panel-sub">USD Million · Net Inflows · Source: SBP (FY25 confirmed; 10M FY26 confirmed; earlier years SBP/OICCI/author estimates)</div>
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Fiscal Year</th>
+          <th class="num-right">Total Net FDI</th>
+          <th class="num-right">China (Net)</th>
+          <th class="num-right">China Share</th>
+          <th class="num-right">UAE</th>
+          <th class="num-right">UK</th>
+          <th class="num-right">Hong Kong</th>
+          <th class="num-right">USA / Other</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>FY15</td><td class="num-right">843</td><td class="num-right">290</td><td class="num-right">34%</td><td class="num-right">160</td><td class="num-right">85</td><td class="num-right">61</td><td class="num-right">247</td></tr>
+        <tr><td>FY16</td><td class="num-right">1,024</td><td class="num-right">465</td><td class="num-right">45%</td><td class="num-right">142</td><td class="num-right">78</td><td class="num-right">55</td><td class="num-right">284</td></tr>
+        <tr><td>FY17</td><td class="num-right">1,550</td><td class="num-right">588</td><td class="num-right">38%</td><td class="num-right">218</td><td class="num-right">98</td><td class="num-right">90</td><td class="num-right">556</td></tr>
+        <tr><td>FY18</td><td class="num-right">2,355</td><td class="num-right">867</td><td class="num-right">37%</td><td class="num-right">340</td><td class="num-right">124</td><td class="num-right">130</td><td class="num-right">894</td></tr>
+        <tr class="highlight"><td>FY19</td><td class="num-right">1,418</td><td class="num-right">695</td><td class="num-right">49%</td><td class="num-right">170</td><td class="num-right">89</td><td class="num-right">75</td><td class="num-right">389</td></tr>
+        <tr><td>FY20</td><td class="num-right">1,830</td><td class="num-right">565</td><td class="num-right">31%</td><td class="num-right">290</td><td class="num-right">112</td><td class="num-right">97</td><td class="num-right">766</td></tr>
+        <tr><td>FY21</td><td class="num-right">1,820</td><td class="num-right">751</td><td class="num-right">41%</td><td class="num-right">210</td><td class="num-right">128</td><td class="num-right">127</td><td class="num-right">604</td></tr>
+        <tr><td>FY22</td><td class="num-right">1,523</td><td class="num-right">523</td><td class="num-right">34%</td><td class="num-right">230</td><td class="num-right">118</td><td class="num-right">110</td><td class="num-right">542</td></tr>
+        <tr><td>FY23</td><td class="num-right">1,462</td><td class="num-right">395</td><td class="num-right">27%</td><td class="num-right">210</td><td class="num-right">105</td><td class="num-right">95</td><td class="num-right">657</td></tr>
+        <tr><td>FY24</td><td class="num-right">1,933</td><td class="num-right">643</td><td class="num-right">33%</td><td class="num-right">285</td><td class="num-right">130</td><td class="num-right">112</td><td class="num-right">763</td></tr>
+        <tr class="new-row highlight confirmed"><td>FY25 ✓</td><td class="num-right">2,457</td><td class="num-right">1,224</td><td class="num-right">49.9%</td><td class="num-right">283</td><td class="num-right">202</td><td class="num-right">470</td><td class="num-right">278</td></tr>
+        <tr class="new-row"><td>FY26 (10M) ✓</td><td class="num-right">1,409</td><td class="num-right">739</td><td class="num-right">52.4%</td><td class="num-right">~160</td><td class="num-right">~90</td><td class="num-right">~260</td><td class="num-right">~160</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">★ = Newly added rows. FY25 China net FDI ($1.224B) and total ($2.457B) confirmed per SBP July 2025 release. FY24 China revised to $643M per same SBP release. 10M FY26 (July–April 2026) China net FDI: $739M per SBP May 2026 data; total net FDI: $1.409B. FY26 country breakdown for UAE/UK/HK/Other is author-estimated from partial monthly SBP releases. FY25 other countries: UAE $283M, Switzerland $203M, UK $202M, HK $470M per SBP. Power sector largest recipient in FY25 ($1.17B Chinese inflow); hydel power accounted for $759M.</p>
+  </div>
+
+  <!-- FDI CHARTS -->
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Exhibit 1B — China vs. Rest-of-World FDI</div>
+      <div class="panel-sub">USD Million, Net · FY15–FY25 (confirmed) + FY26 10M</div>
+      <div class="chart-wrap" style="height:270px">
+        <canvas id="fdiChart"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Exhibit 1C — China's Share of Pakistan FDI</div>
+      <div class="panel-sub">% of Total Net FDI · FY15–FY26</div>
+      <div class="chart-wrap" style="height:270px">
+        <canvas id="shareChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card red">
+      <div class="kpi-num">$8.9B</div>
+      <div class="kpi-label">Estimated China net FDI cumulative, FY15–FY25 (11 years)</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-num">49.9%</div>
+      <div class="kpi-label">China's confirmed share of Pakistan total FDI in FY25 — all-time record</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">52.4%</div>
+      <div class="kpi-label">China's share in 10M FY26 ($739M of $1.41B), despite overall FDI falling 31%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">$1.17B</div>
+      <div class="kpi-label">Chinese FDI into Pakistan's power sector in FY25 alone (hydel: $759M)</div>
+    </div>
+  </div>
+
+  <p class="prose">The FY25 surge — 90 percent YoY growth in Chinese FDI — reflects the acceleration of hydropower projects under CPEC Phase II, particularly Suki Kinari (884 MW, COD September 2024) and associated balance-of-plant investment. FY26's overall FDI contraction, attributed by the SBP to governance concerns and policy uncertainty, has not dislodged China from its position as anchor investor: the bilateral relationship has a structural depth that cyclical investor hesitancy cannot easily disrupt.</p>
+
+  <hr class="section-break">
+
+  <!-- ===== SECTION 2: POWER ===== -->
+  <div class="section-label">Exhibit 2 — The Grid Transformation</div>
+  <h2 class="section-title">Power: 9,504 MW Added, But the Structural Problem Remains</h2>
+
+  <p class="prose">Pakistan in 2013 had a power deficit measured in thousands of megawatts. Load-shedding ran 12–18 hours daily in industrial zones. Chinese investment addressed the supply problem with speed: between 2015 and 2024, <strong>14 generation projects under CPEC reached commercial operation</strong>, adding a combined 9,504 MW — roughly one-fifth of Pakistan's entire installed capacity today. A single HVDC transmission line, the 660 kV Matiari–Lahore interconnector, added 4,000 MW of evacuation capacity at a cost of $1.7 billion.</p>
+
+  <p class="prose">The portfolio is coal-heavy by design — over 70 percent of CPEC-added capacity is coal-fired. Renewable additions under CPEC proper were limited: 700 MW from one solar park and four wind farms accounts for under 8 percent of CPEC-added generation. This was not an oversight; coal plant technology was mature, financeable, and deliverable on an accelerated timeline. The cost consequence — locked-in capacity payments to Chinese IPPs in US dollars — now sits at the centre of Pakistan's circular debt crisis. But that is a problem of contract design, not of the investment itself.</p>
+
+  <!-- POWER TABLE -->
+  <div class="panel">
+    <div class="panel-title">Exhibit 2A — CPEC Power Projects: Completed Portfolio</div>
+    <div class="panel-sub">14 Projects · 9,504 MW Generation + 4,000 MW Transmission · Source: CPEC Secretariat, PIDE, Author Compilation</div>
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Type</th>
+          <th class="num-right">Capacity (MW)</th>
+          <th class="num-right">Investment ($M)</th>
+          <th>COD</th>
+          <th>Developer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Sahiwal Coal Power</td><td>Coal</td><td class="num-right">1,320</td><td class="num-right">1,912</td><td>2017</td><td>Huaneng Shandong Ruyi</td></tr>
+        <tr><td>Port Qasim Coal Power</td><td>Coal</td><td class="num-right">1,320</td><td class="num-right">2,085</td><td>2017</td><td>Power China / Al Mirqab</td></tr>
+        <tr><td>Hub Coal Power (CPHGC)</td><td>Coal</td><td class="num-right">1,320</td><td class="num-right">1,912</td><td>2019</td><td>China Power Intl.</td></tr>
+        <tr><td>Thar Block-I (Shanghai Electric)</td><td>Coal (Thar)</td><td class="num-right">1,320</td><td class="num-right">1,910</td><td>2023</td><td>Shanghai Electric</td></tr>
+        <tr><td>Thar Energy Ltd (TEL)</td><td>Coal (Thar)</td><td class="num-right">330</td><td class="num-right">498</td><td>2023</td><td>CMEC</td></tr>
+        <tr><td>Thal Nova Power Thar</td><td>Coal (Thar)</td><td class="num-right">330</td><td class="num-right">498</td><td>2023</td><td>CMEC</td></tr>
+        <tr><td>Karot Hydropower</td><td>Hydro</td><td class="num-right">720</td><td class="num-right">1,698</td><td>2022</td><td>CKJV / Three Gorges</td></tr>
+        <tr class="new-row"><td>Suki Kinari Hydropower</td><td>Hydro</td><td class="num-right">884</td><td class="num-right">1,980</td><td>Sep 2024</td><td>China Gezhouba Group</td></tr>
+        <tr><td>Quaid-e-Azam Solar Park</td><td>Solar</td><td class="num-right">400</td><td class="num-right">520</td><td>2016</td><td>CMEC</td></tr>
+        <tr><td>UEP Wind Farm</td><td>Wind</td><td class="num-right">100</td><td class="num-right">250</td><td>2017</td><td>UEP</td></tr>
+        <tr><td>Three Gorges Wind</td><td>Wind</td><td class="num-right">100</td><td class="num-right">150</td><td>2017</td><td>Three Gorges</td></tr>
+        <tr><td>Sachal Wind Farm</td><td>Wind</td><td class="num-right">50</td><td class="num-right">134</td><td>2017</td><td>CSAIL</td></tr>
+        <tr><td>HydroChina Dawood Wind</td><td>Wind</td><td class="num-right">50</td><td class="num-right">113</td><td>2017</td><td>HydroChina Dawood</td></tr>
+        <tr><td>Matiari–Lahore HVDC Line</td><td>Transmission</td><td class="num-right">4,000 (evac.)</td><td class="num-right">1,698</td><td>2021</td><td>State Grid Corp.</td></tr>
+        <tr class="highlight"><td colspan="2"><strong>TOTAL GENERATION</strong></td><td class="num-right"><strong>9,504 MW</strong></td><td class="num-right"><strong>~$15.4B</strong></td><td colspan="2"></td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">★ Suki Kinari COD confirmed September 2024; 1-year anniversary marked September 2025. Pipeline: Azad Pattan (700 MW), Kohala (1,124 MW), Gwadar Coal (300 MW) remain under development. CPEC Secretariat confirmed 38 total projects worth $25B+ completed across all sectors by late 2024.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Exhibit 2B — CPEC Generation Mix by Fuel Type</div>
+      <div class="panel-sub">MW · 9,504 MW Total Completed Generation</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="powerMixChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Exhibit 2C — Pakistan Installed Capacity: Pre- and Post-CPEC</div>
+      <div class="panel-sub">GW · Including non-CPEC additions and rooftop solar surge 2024–25</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="capacityChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The Solar Postscript — China's Market-Driven Energy Disruption</div>
+    <p>Beyond CPEC-financed projects, China's most disruptive energy contribution to Pakistan in 2024–25 was market-driven, not state-directed. Pakistan imported <strong>17 GW of solar panels from China in 2024 alone</strong> — more than any other country on earth — at a cost of approximately $1.4 billion in H1 2024 alone. Net-metered rooftop solar reached <strong>5.3 GW by April 2025</strong>, making solar the largest single electricity source in Pakistan at over 25% of generation. Chinese manufacturing overcapacity that collapsed global panel prices is reshaping Pakistan's energy mix from the bottom up, faster than any state-directed programme could. The next CPEC chapter — a "green corridor" announced in October 2024 — will bring large-scale solar into the CPEC framework formally.</p>
+  </div>
+
+  <hr class="section-break">
+
+  <!-- ===== SECTION 3: HIGHWAYS ===== -->
+  <div class="section-label">Exhibit 3 — The Connectivity Layer</div>
+  <h2 class="section-title">Highways: 677 km of Motorway, One Metro, One Airport</h2>
+
+  <p class="prose">Infrastructure poverty has been Pakistan's most persistent economic drag. CPEC's programme — executed primarily by Chinese state construction firms — delivered the country's most significant road network expansion in a generation within a compressed five-year window. The M-5 Multan–Sukkur motorway, executed by China State Construction Engineering Corporation and completed two weeks ahead of schedule in 2019, slashed travel time between southern Punjab and upper Sindh from over seven hours to under three. The M-14 Hakla–D.I.Khan corridor connected the capital to Dera Ismail Khan, opening the western route for the first time to national freight networks. New Gwadar International Airport, inaugurated October 2024 by Prime Minister Shehbaz Sharif and Premier Li Qiang, is the corridor's most visible recent completion.</p>
+
+  <!-- HIGHWAY TABLE -->
+  <div class="panel">
+    <div class="panel-title">Exhibit 3A — CPEC Road & Infrastructure Projects: Completed</div>
+    <div class="panel-sub">Source: CPEC Secretariat, NHA, Author Compilation · Gwadar Airport updated to 2024 COD</div>
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th class="num-right">Length / Scale</th>
+          <th class="num-right">Investment (US$B)</th>
+          <th>Completed</th>
+          <th>Contractor</th>
+          <th>Corridor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>M-5 Multan–Sukkur Motorway</td><td class="num-right">392 km</td><td class="num-right">2.89</td><td>2019</td><td>CSCEC</td><td>Eastern</td></tr>
+        <tr><td>M-14 Hakla–D.I.Khan Motorway</td><td class="num-right">285 km</td><td class="num-right">1.50</td><td>2021</td><td>FWO / NLC / Limak-ZKB</td><td>Western</td></tr>
+        <tr><td>KKH Havelian–Thakot Upgrade</td><td class="num-right">118 km</td><td class="num-right">1.30</td><td>2022</td><td>CRBC</td><td>Northern</td></tr>
+        <tr><td>Eastbay Expressway, Gwadar</td><td class="num-right">19 km</td><td class="num-right">0.32</td><td>2022</td><td>CHEC</td><td>Gwadar</td></tr>
+        <tr><td>Orange Line Metro, Lahore</td><td class="num-right">27 km</td><td class="num-right">1.63</td><td>2020</td><td>CRRC / Norinco</td><td>Urban</td></tr>
+        <tr class="new-row"><td>New Gwadar International Airport</td><td class="num-right">—</td><td class="num-right">0.23</td><td>Oct 2024</td><td>CAMC Engineering</td><td>Gwadar</td></tr>
+        <tr><td>CPEC Optical Fibre Cable</td><td class="num-right">820 km</td><td class="num-right">0.04</td><td>2018</td><td>Huawei Marine</td><td>Digital</td></tr>
+        <tr class="highlight"><td colspan="2"><strong>TOTAL (7 Projects)</strong></td><td class="num-right"><strong>~$7.9B</strong></td><td colspan="3"></td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">★ New Gwadar International Airport inaugurated October 2024. M-5 investment per Xinhua/NHA ($2.89B). Western corridor sections (Dera Ismail Khan southward) remain under implementation. KKH Havelian–Thakot figure estimated; final costs subject to revision.</p>
+  </div>
+
+  <hr class="section-break">
+
+  <!-- ===== SECTION 4: TELECOM ===== -->
+  <div class="section-label">Exhibit 4 — The Digital Stack</div>
+  <h2 class="section-title">Telecom: Zong, Huawei, ZTE, and the 30-Million-Phone Factory</h2>
+
+  <p class="prose">China's penetration of Pakistan's digital economy has three layers — network infrastructure, network operation, and device manufacturing. Together they have produced a structural dependency more complete than in any other sector.</p>
+
+  <p class="prose"><strong>Network Infrastructure.</strong> Huawei and ZTE supply the physical layer — base stations, switching equipment, fibre interconnects, and 5G-readiness upgrades — to every major Pakistani mobile operator. Zong's H1 2024 network modernisation added 400 new 4G sites and 1,400+ power upgrades on Huawei and ZTE hardware. As the PTA prepares for Pakistan's long-awaited 5G spectrum auction, Zong signed an MoU with ZTE in January 2026 to deliver affordable 5G smartphones bundled with data packages — tying the device supply chain directly to the network operator.</p>
+
+  <p class="prose"><strong>Network Operation.</strong> Zong — formally CMPak Ltd, a wholly-owned subsidiary of China Mobile Communications Corporation — has grown from a 2 percent market share at entry in 2008 to <strong>54 million subscribers and 26 percent of Pakistan's mobile market</strong>. It is the second-largest operator. With the proposed Jazz-Ufone merger still under antitrust review, Zong could eventually move to the top position. A Chinese state-owned enterprise now carries one in four Pakistani mobile connections.</p>
+
+  <!-- TELECOM KPI -->
+  <div class="kpi-grid">
+    <div class="kpi-card red">
+      <div class="kpi-num">54M</div>
+      <div class="kpi-label">Zong subscribers (China Mobile–owned), 26% market share — 2025</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-num">30.2M</div>
+      <div class="kpi-label">Mobile phones manufactured locally in Pakistan in 2025 (full year, PTA)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">95%</div>
+      <div class="kpi-label">Pakistan mobile demand met by local assembly in 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">104×</div>
+      <div class="kpi-label">Growth in local phone output: 0.29M (2016) → 30.2M (2025)</div>
+    </div>
+  </div>
+
+  <p class="prose"><strong>Device Manufacturing.</strong> In 2016, Pakistan locally assembled 290,000 phones. In 2024 that figure hit a record 31.38 million; in 2025 it eased to 30.21 million (PTA confirmed, January 2026) as the market approached saturation of import-substitution gains. Commercial imports meanwhile collapsed from 21 million units in 2016 to just 2.37 million in 2025. Every single entry in Pakistan's top-10 locally assembled brand list is Chinese or Chinese-backed.</p>
+
+  <!-- PHONE MFG TABLE -->
+  <div class="panel">
+    <div class="panel-title">Exhibit 4A — Pakistan's Top Locally Assembled Mobile Brands <span class="data-badge">Updated to 2025</span></div>
+    <div class="panel-sub">Units Assembled · Full Year 2025 (PTA) + 10M 2025 Data · Source: PTA, Daily Independent, Business Recorder</div>
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Brand</th>
+          <th>Chinese Parent</th>
+          <th class="num-right">Units 2025 (est.)</th>
+          <th class="num-right">10M 2025 (PTA)</th>
+          <th>Origin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="china-row"><td>1</td><td>Infinix</td><td>Transsion Holdings</td><td class="num-right">~3,650,000</td><td class="num-right">3,120,000</td><td>China</td></tr>
+        <tr class="china-row"><td>2</td><td>Vivo</td><td>BBK Electronics</td><td class="num-right">~2,800,000</td><td class="num-right">2,270,000</td><td>China</td></tr>
+        <tr class="china-row"><td>3</td><td>VGO Tel</td><td>Various Chinese JVs</td><td class="num-right">~2,750,000</td><td class="num-right">2,820,000</td><td>China</td></tr>
+        <tr class="china-row"><td>4</td><td>Itel</td><td>Transsion Holdings</td><td class="num-right">~2,500,000</td><td class="num-right">2,060,000</td><td>China</td></tr>
+        <tr class="china-row"><td>5</td><td>Tecno</td><td>Transsion Holdings</td><td class="num-right">~1,950,000</td><td class="num-right">1,620,000</td><td>China</td></tr>
+        <tr><td>6</td><td>Samsung</td><td>Samsung Electronics (Korea)</td><td class="num-right">~1,800,000</td><td class="num-right">1,480,000</td><td>South Korea</td></tr>
+        <tr class="china-row"><td>7</td><td>Xiaomi / Redmi (via Airlink)</td><td>Xiaomi Corp.</td><td class="num-right">~1,580,000</td><td class="num-right">1,310,000</td><td>China</td></tr>
+        <tr class="china-row"><td>8</td><td>Realme</td><td>BBK Electronics</td><td class="num-right">~1,100,000</td><td class="num-right">910,000</td><td>China</td></tr>
+        <tr><td>9</td><td>QMobile</td><td>Local (Chinese components)</td><td class="num-right">~1,100,000</td><td class="num-right">930,000</td><td>Pakistan / China</td></tr>
+        <tr><td>10</td><td>Nokia</td><td>HMD Global (Finland)</td><td class="num-right">~640,000</td><td class="num-right">520,000</td><td>Finland</td></tr>
+        <tr class="highlight china-row"><td colspan="3"><strong>Chinese Brands Subtotal (est.)</strong></td><td class="num-right"><strong>~17.3M</strong></td><td colspan="2"></td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">Full-year 2025 total: 30.21M units (PTA, January 2026). 10M 2025 data (Jan–Oct) confirmed by PTA/Business Recorder: 25.11M total. Brand-level 2025 full-year estimates are author extrapolations from 10M actuals. Airlink factory (250,000 sq ft, 8M capacity): 85%+ of capacity utilised by Xiaomi. PTA issued 37 mobile manufacturing licences by end-2025. Commercial imports: 2.37M in 2025 vs 21M+ in 2016 — a structural reversal.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Exhibit 4B — Pakistan Local Phone Production Growth <span class="data-badge">2025 Added</span></div>
+      <div class="panel-sub">Million Units · 2016–2025 · Source: PTA</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="phoneChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Exhibit 4C — Zong Subscriber Growth (China Mobile Pakistan)</div>
+      <div class="panel-sub">Million Subscribers · 2010–2025</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="zongChart"></canvas></div>
+    </div>
+  </div>
+
+  <hr class="section-break">
+
+  <!-- ===== SECTION 5: AUTOMOBILES ===== -->
+  <div class="section-label">Exhibit 5 — The Automotive Disruption</div>
+  <h2 class="section-title">Automobiles: Changan Is Now Pakistan's 4th Largest Brand</h2>
+
+  <p class="prose">For fifty years, Pakistan's passenger vehicle market was a Japanese oligopoly. The entry of Chinese automakers — beginning incrementally and accelerating sharply after 2022 — represents the first genuine competitive disruption Pakistani consumers have experienced in a generation. By 2025, that disruption had become structural. <strong>Master Changan Motors sold over 65,000 units in 2025</strong>, making it the 4th largest automobile brand in Pakistan, jumping two positions in a single year and displacing Honda from the podium in certain months. Haval (Sazgar Engineering) sold 13,943 units of its SUV lineup, making it the <strong>dominant SUV brand by volume</strong> — outpacing Toyota's Fortuner and Hilux combined (9,547 units).</p>
+
+  <p class="prose">The total PAMA-reported market reached <strong>166,476 units in 2025</strong>, a 33 percent recovery from 125,048 in 2024. The Japanese brands maintained aggregate dominance — Suzuki at roughly 44 percent, Toyota at 19 percent — but the structural question is what the market looks like inclusive of non-PAMA reporters. Changan (65,000 units), MG, Kia, and Proton all report outside PAMA. Adding these estimates, the total Pakistan automotive market in 2025 likely exceeded 240,000–250,000 units, with Chinese brands (Changan + Haval + MG + BAIC + Chery) accounting for an estimated 30–35 percent of the expanded total. Meanwhile, BYD began delivering imported EVs in Pakistan in March 2025 and announced local assembly from 2026.</p>
+
+  <!-- AUTO TABLE -->
+  <div class="panel">
+    <div class="panel-title">Exhibit 5A — Pakistan Automotive Market: Brand Performance <span class="data-badge">Updated to 2025</span></div>
+    <div class="panel-sub">Units · 2024 vs 2025 · PAMA Members + Non-PAMA Estimates · Source: PAMA, PakWheels, Master Changan press releases</div>
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Manufacturer</th>
+          <th>PAMA</th>
+          <th>Origin</th>
+          <th class="num-right">2025 Units</th>
+          <th class="num-right">2024 Units</th>
+          <th class="num-right">YoY Change</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Pak Suzuki (PSMC)</td><td>✓</td><td>Japan</td><td class="num-right">~73,000</td><td class="num-right">64,280</td><td class="num-right">+14%</td><td>Alto led; ~44% mkt share</td></tr>
+        <tr><td>Indus Motor (Toyota)</td><td>✓</td><td>Japan</td><td class="num-right">~32,000</td><td class="num-right">26,128</td><td class="num-right">+22%</td><td>Corolla/Yaris 33,394 combined</td></tr>
+        <tr><td>Honda Atlas</td><td>✓</td><td>Japan</td><td class="num-right">~23,000</td><td class="num-right">15,820</td><td class="num-right">+45%</td><td>City/Civic 20,829 combined</td></tr>
+        <tr class="china-row new-row"><td><strong>Master Changan</strong></td><td>✗</td><td><strong>China</strong></td><td class="num-right"><strong>65,000+</strong></td><td class="num-right">~18,000</td><td class="num-right">+261%</td><td>4th largest brand, #3 in Jun'25</td></tr>
+        <tr><td>Hyundai Nishat</td><td>✓</td><td>S. Korea</td><td class="num-right">~19,000</td><td class="num-right">9,874</td><td class="num-right">+92%</td><td>Tucson top model</td></tr>
+        <tr class="china-row new-row"><td><strong>Sazgar Haval (GWM)</strong></td><td>✓</td><td><strong>China</strong></td><td class="num-right"><strong>13,943</strong></td><td class="num-right">8,239</td><td class="num-right">+69%</td><td>#1 SUV brand; H6 PHEV +73%YoY</td></tr>
+        <tr class="china-row"><td>Kia (Lucky Motors)</td><td>✗</td><td>S. Korea / China</td><td class="num-right">~12,000</td><td class="num-right">~9,000</td><td class="num-right">+33%</td><td>Sportage dominates</td></tr>
+        <tr class="china-row"><td>MG (Regal Automobiles)</td><td>✗</td><td><strong>China (SAIC)</strong></td><td class="num-right">~5,000</td><td class="num-right">~3,500</td><td class="num-right">+43%</td><td>MG HS, MG ZS PHEV</td></tr>
+        <tr class="china-row"><td>BYD Pakistan</td><td>✗</td><td><strong>China</strong></td><td class="num-right">~500</td><td class="num-right">~0</td><td class="num-right">New</td><td>CBU EVs from Mar'25; assembly 2026</td></tr>
+        <tr class="highlight china-row"><td colspan="2"><strong>Chinese Brands Total (est.)</strong></td><td></td><td class="num-right"><strong>~85,000</strong></td><td class="num-right"><strong>~30,000</strong></td><td class="num-right"><strong>+183%</strong></td><td>~33% of est. total market</td></tr>
+        <tr class="highlight"><td colspan="2"><strong>Total Market (PAMA + Non-PAMA)</strong></td><td></td><td class="num-right"><strong>~250,000</strong></td><td class="num-right"><strong>~175,000</strong></td><td class="num-right"><strong>~+43%</strong></td><td></td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">★ = updated 2025 data. PAMA-reported total for 2025: 166,476 units (PakWheels, using SMA estimate for Dec). Changan 65,000+ units per Master Changan press release, February 2026. Haval 13,943 units per PAMA reports. BYD delivered "a few hundred cars" (Reuters, Q1 2025) exceeding internal targets by 30%; assembly announced from 2026. Kia, MG, Proton non-PAMA estimates from industry analysts. Toyota combined model figure per PakWheels annual summary. Total market estimate of 250,000 is author estimate; PAMA-only is 166,476.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Exhibit 5B — Chinese Brand Units: 2023–2025 <span class="data-badge">Updated</span></div>
+      <div class="panel-sub">Units · Key Chinese Entrants · Source: PAMA, Master Changan, Industry Estimates</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="autoChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Exhibit 5C — Pakistan SUV Market 2025: Haval vs. Toyota IMV</div>
+      <div class="panel-sub">Units · Full Year 2025 · Haval leads Toyota Fortuner/Hilux combined</div>
+      <div class="chart-wrap" style="height:240px"><canvas id="suvChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The EV Frontier: BYD Arrives</div>
+    <p>In March 2025, BYD began delivering imported EVs in Pakistan — the world's largest EV maker making its first commercial foray into one of Asia's largest untapped markets. A few hundred cars exceeded internal targets by 30%, according to Reuters. BYD Pakistan then announced local assembly from 2026, initially from imported CKD kits with potential expansion into right-hand-drive export markets. The government cut EV charging tariffs by 45% in January 2025. Pakistan's EV and plug-in hybrid market, estimated at roughly 1,000 units in 2024, is projected by BYD's own Pakistan partner to grow 3–4 times in 2025. <strong>Chinese automakers are not just competing in Pakistan's ICE market — they are defining its EV market from day one.</strong></p>
+  </div>
+
+  <hr class="section-break">
+
+  <!-- ===== VERDICT ===== -->
+  <div class="section-label">Analysis</div>
+  <h2 class="section-title">What a Decade of Chinese Capital Has Built — and What It Has Not</h2>
+
+  <p class="prose">Aggregated across sectors, the Chinese contribution to Pakistan's industrial and digital economy over the past decade is difficult to minimise. <strong>38 CPEC projects worth over $25 billion have reached completion.</strong> Power outages that ran 14 hours daily in 2013 are structurally reduced. 677 kilometres of motorway opened previously inaccessible corridors to economic activity. A mobile phone manufacturing sector that did not functionally exist in 2016 now produces 30 million units annually — 95 percent of domestic demand — on Chinese technology licenses and Chinese-designed production lines. 54 million Pakistanis access mobile services through a Chinese state-owned carrier. And Chinese automakers have, in two years, broken a fifty-year Japanese oligopoly — Changan alone sold 65,000 vehicles in 2025, more than Honda's entire Pakistani franchise.</p>
+
+  <p class="prose">What CPEC has not yet produced — and what a second decade must deliver if it is to justify the debt obligations it created — is a manufacturing export base. Pakistan's goods export basket has not structurally changed despite a decade of Chinese industrial partnerships. Assembly is not manufacturing: 90-plus percent of component inputs in Pakistan's mobile phone "factories" are imported from China. The distance from "assembled in Pakistan using Chinese kits" to "manufactured in Pakistan with Pakistani components and exported" is the distance CPEC Phase II must close. That the FDI surge in FY25 went overwhelmingly into power (hydel projects) and financial services rather than into export-platform industrialisation underscores how incomplete the transformation remains.</p>
+
+  <div class="verdict">
+    <div class="verdict-label">The Forcing Close</div>
+    <div class="verdict-text">China built Pakistan's grid, paved its highways, wired its towers, stocked its phone shelves, and is now selling its electric cars on financing terms. By 10M FY26, China accounts for 52 cents of every dollar of net FDI Pakistan receives. The task for the next decade is to convert that infrastructure dependency into an export production platform — because without it, Pakistan is left with Chinese-financed assets, Chinese-denominated debt service, and a trade deficit with China that has widened from $7 billion in FY19 to over $16 billion by FY24. Infrastructure is a necessary condition for industrialisation. It is not sufficient. The second chapter of CPEC must be written by Pakistani industrial policy, not Chinese project finance.</div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+const CHINA_RED = '#DE2910';
+const AMBER = '#C8923A';
+const GREEN = '#52B788';
+const GRAY = '#BABABA';
+const BORDER = '#E5E5E5';
+const BLUE = '#1A6B9A';
+
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#666';
+
+// 1. FDI STACKED BAR (FY15–FY25 confirmed + FY26 10M)
+new Chart(document.getElementById('fdiChart'), {
+  type: 'bar',
+  data: {
+    labels: ['FY15','FY16','FY17','FY18','FY19','FY20','FY21','FY22','FY23','FY24','FY25','FY26\n10M'],
+    datasets: [
+      { label: 'China FDI', data: [290,465,588,867,695,565,751,523,395,643,1224,739], backgroundColor: CHINA_RED },
+      { label: 'Rest of World FDI', data: [553,559,962,1488,723,1265,1069,1000,1067,1290,1233,670], backgroundColor: BORDER }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 16 } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font: { size: 9 } } },
+      y: { stacked: true, grid: { color: BORDER }, title: { display: true, text: 'USD Million', font: { size: 10 } } }
+    }
+  }
+});
+
+// 2. CHINA SHARE LINE
+new Chart(document.getElementById('shareChart'), {
+  type: 'line',
+  data: {
+    labels: ['FY15','FY16','FY17','FY18','FY19','FY20','FY21','FY22','FY23','FY24','FY25','FY26\n10M'],
+    datasets: [{
+      label: "China's % of Total FDI",
+      data: [34, 45, 38, 37, 49, 31, 41, 34, 27, 33, 49.9, 52.4],
+      borderColor: CHINA_RED,
+      backgroundColor: 'rgba(222,41,16,0.08)',
+      fill: true, tension: 0.3, pointRadius: 4,
+      pointBackgroundColor: ['#ccc','#ccc','#ccc','#ccc','#ccc','#ccc','#ccc','#ccc','#ccc','#ccc',CHINA_RED,CHINA_RED],
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+      y: { grid: { color: BORDER }, ticks: { callback: v => v + '%' }, min: 0, max: 65 }
+    }
+  }
+});
+
+// 3. POWER MIX DONUT
+new Chart(document.getElementById('powerMixChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Coal (6,610 MW, 70%)', 'Hydro (1,604 MW, 17%)', 'Solar (400 MW, 4%)', 'Wind (300 MW, 3%)'],
+    datasets: [{
+      data: [6610, 1604, 400, 300],
+      backgroundColor: [CHINA_RED, BLUE, AMBER, GREEN],
+      borderWidth: 2, borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { boxWidth: 10, padding: 10, font: { size: 10 } } },
+      tooltip: { callbacks: { label: ctx => ` ${((ctx.parsed/9504)*100).toFixed(0)}% of CPEC gen. capacity` } }
+    }
+  }
+});
+
+// 4. CAPACITY BAR (updated with 2025 rooftop solar)
+new Chart(document.getElementById('capacityChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2013\nPre-CPEC', '2017', '2020', '2024\nFormal', '2025\n+Rooftop'],
+    datasets: [
+      { label: 'Non-CPEC Formal Capacity', data: [22000, 25000, 33000, 37000, 41000], backgroundColor: GRAY },
+      { label: 'CPEC-Added Capacity', data: [0, 3500, 7500, 9504, 9504], backgroundColor: CHINA_RED },
+      { label: 'Rooftop Solar (Net-Metered)', data: [0, 0, 200, 2500, 5300], backgroundColor: AMBER }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 10, font: { size: 10 } } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font: { size: 9 } } },
+      y: { stacked: true, grid: { color: BORDER }, title: { display: true, text: 'MW', font: { size: 10 } }, ticks: { callback: v => (v/1000).toFixed(0)+'K' } }
+    }
+  }
+});
+
+// 5. PHONE PRODUCTION (updated 2025)
+new Chart(document.getElementById('phoneChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+    datasets: [
+      { label: 'Local Production', data: [0.29, 1.72, 5.20, 11.74, 13.05, 24.66, 21.5, 21.8, 31.38, 30.21], backgroundColor: CHINA_RED },
+      { label: 'Commercial Imports', data: [21.0, 18.0, 14.0, 9.0, 24.51, 4.5, 3.2, 3.0, 1.71, 2.37], backgroundColor: GRAY }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 10, font: { size: 10 } } } },
+    scales: {
+      x: { stacked: false, grid: { display: false }, ticks: { font: { size: 9 } } },
+      y: { grid: { color: BORDER }, title: { display: true, text: 'Million Units', font: { size: 10 } } }
+    }
+  }
+});
+
+// 6. ZONG SUBSCRIBERS
+new Chart(document.getElementById('zongChart'), {
+  type: 'line',
+  data: {
+    labels: ['2010','2012','2014','2016','2018','2020','2022','2024','2025'],
+    datasets: [{
+      label: 'Subscribers (M)',
+      data: [5, 8, 14, 22, 30, 35, 40, 49, 54],
+      borderColor: CHINA_RED,
+      backgroundColor: 'rgba(222,41,16,0.08)',
+      fill: true, tension: 0.3, pointRadius: 4,
+      pointBackgroundColor: CHINA_RED, borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: { color: BORDER }, title: { display: true, text: 'Million Subscribers', font: { size: 10 } } }
+    }
+  }
+});
+
+// 7. AUTO CHART — Chinese brand units 2023-2025
+new Chart(document.getElementById('autoChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Changan', 'Haval (GWM)', 'MG (SAIC)', 'BYD', 'BAIC/Chery'],
+    datasets: [
+      { label: '2023', data: [8000, 2475, 1500, 0, 50], backgroundColor: 'rgba(222,41,16,0.2)', borderColor: CHINA_RED, borderWidth: 1 },
+      { label: '2024', data: [18000, 8239, 3500, 0, 80], backgroundColor: 'rgba(222,41,16,0.5)' },
+      { label: '2025', data: [65000, 13943, 5000, 500, 150], backgroundColor: CHINA_RED }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 10, padding: 8, font: { size: 10 } } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: { color: BORDER }, title: { display: true, text: 'Units', font: { size: 10 } } }
+    }
+  }
+});
+
+// 8. SUV COMPARISON
+new Chart(document.getElementById('suvChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Haval H6\n(Sazgar)', 'Haval Jolion\n(Sazgar)', 'Toyota\nFortunate+Hilux', 'Hyundai\nTucson', 'Kia\nSportage', 'MG\nHS PHEV'],
+    datasets: [{
+      label: '2025 Units',
+      data: [9200, 4743, 9547, 4992, 6500, 2000],
+      backgroundColor: [CHINA_RED, CHINA_RED, GRAY, '#555', '#777', CHINA_RED],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: BORDER }, title: { display: true, text: 'Units', font: { size: 10 } } },
+      y: { grid: { display: false }, ticks: { font: { size: 9 } } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
