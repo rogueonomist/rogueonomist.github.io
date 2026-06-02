@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pakistan Diesel Leakage & Reform Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --white: #FFFFFF;
+      --bg: #FAFAFA;
+      --border: #E5E5E5;
+      --amber: #C8923A;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --green: #52B788;
+      --red: #9B2335;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: var(--white);
+      color: #2D2D2D;
+      line-height: 1.6;
+    }
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0 0;
+      background: var(--white);
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .pub-line {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .main-title {
+      font-family: Georgia, serif;
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+    .main-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 720px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .meta-line {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.06em;
+      padding-bottom: 1.5rem;
+    }
+    .meta-line span { margin-right: 1.5rem; }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+    .kpi-card {
+      background: var(--white);
+      padding: 1.5rem;
+      position: relative;
+    }
+    .kpi-card.accent-red { border-top: 3px solid var(--red); }
+    .kpi-card.accent-amber { border-top: 3px solid var(--amber); }
+    .kpi-card.accent-green { border-top: 3px solid var(--green); }
+    .kpi-card.accent-dark { border-top: 3px solid var(--text-primary); }
+    .kpi-num {
+      font-family: Georgia, serif;
+      font-size: 30px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .kpi-num.red { color: var(--red); }
+    .kpi-num.amber { color: var(--amber); }
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 0.25rem;
+    }
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* VERDICT */
+    .verdict-box {
+      background: var(--bg);
+      border-left: 4px solid var(--amber);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--amber);
+      padding: 1.5rem;
+      margin: 1.5rem 0 0;
+    }
+    .verdict-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 0.5rem;
+    }
+    .verdict-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+    .verdict-text strong { color: var(--text-primary); }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin: 2.5rem 0 0;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 0.875rem 1.25rem;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--text-primary);
+    }
+    .tab-content { display: none; padding: 2.5rem 0 3rem; }
+    .tab-content.active { display: block; }
+
+    /* SECTION LABELS */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .section-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      max-width: 820px;
+    }
+
+    /* PANELS */
+    .panel {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.03em;
+    }
+    .panel-sub {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-bottom: 1.25rem;
+      letter-spacing: 0.05em;
+    }
+    .chart-wrap {
+      position: relative;
+      height: 300px;
+    }
+    .chart-wrap-sm {
+      position: relative;
+      height: 240px;
+    }
+    .chart-wrap-lg {
+      position: relative;
+      height: 340px;
+    }
+
+    /* GRID LAYOUTS */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+    .col-6040 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; }
+
+    /* TABLES */
+    .est-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .est-table th {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-align: left;
+      padding: 0.75rem 0.875rem;
+      border-bottom: 2px solid var(--border);
+      background: var(--white);
+    }
+    .est-table td {
+      padding: 0.625rem 0.875rem;
+      border-bottom: 1px solid var(--border);
+      color: #2D2D2D;
+      vertical-align: middle;
+    }
+    .est-table tr:last-child td { border-bottom: none; }
+    .est-table tr:hover td { background: var(--bg); }
+    .est-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .est-table .rank {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .badge-red { background: rgba(155,35,53,0.1); color: var(--red); }
+    .badge-amber { background: rgba(200,146,58,0.1); color: var(--amber); }
+    .badge-green { background: rgba(82,183,136,0.1); color: var(--green); }
+    .badge-dark { background: rgba(26,26,26,0.07); color: var(--text-secondary); }
+
+    /* INLINE BAR */
+    .inline-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .inline-bar {
+      height: 6px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    /* NARRATIVE BOXES */
+    .narrative {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding: 1rem 0;
+    }
+    .callout {
+      background: var(--bg);
+      border-left: 3px solid var(--amber);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      font-size: 13px;
+      color: #3D3D3D;
+      line-height: 1.6;
+    }
+    .callout.red { border-left-color: var(--red); }
+    .callout.green { border-left-color: var(--green); }
+
+    /* REFORM CARDS */
+    .reform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+    .reform-card {
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      background: var(--white);
+    }
+    .reform-card.full-width { grid-column: 1 / -1; }
+    .reform-number {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.4rem;
+    }
+    .reform-title {
+      font-family: Georgia, serif;
+      font-size: 17px;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      line-height: 1.25;
+    }
+    .reform-body {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .reform-impact {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .reform-impact-item {
+      text-align: center;
+      flex: 1;
+      min-width: 80px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 0.75rem 0.5rem;
+    }
+    .reform-impact-val {
+      font-family: Georgia, serif;
+      font-size: 16px;
+      color: var(--text-primary);
+      display: block;
+    }
+    .reform-impact-lbl {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+      display: block;
+    }
+    .reform-steps {
+      list-style: none;
+      margin-top: 0.75rem;
+    }
+    .reform-steps li {
+      font-size: 12px;
+      color: var(--text-secondary);
+      padding: 0.3rem 0 0.3rem 1.2rem;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+    .reform-steps li:last-child { border-bottom: none; }
+    .reform-steps li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--amber);
+      font-size: 11px;
+    }
+
+    /* DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    /* METHODOLOGY TABLE */
+    .corr-table { width: auto; }
+    .corr-table td { min-width: 140px; }
+
+    /* LEGEND */
+    .chart-legend {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .legend-line {
+      width: 18px;
+      height: 2px;
+      display: inline-block;
+    }
+
+    /* ROADMAP */
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 1.5rem;
+    }
+    .roadmap-phase {
+      background: var(--white);
+      padding: 1rem 0.875rem;
+    }
+    .roadmap-phase-num {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .roadmap-phase-time {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .roadmap-phase-body {
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .two-col, .three-col, .col-6040 { grid-template-columns: 1fr; }
+      .reform-grid { grid-template-columns: 1fr; }
+      .roadmap { grid-template-columns: 1fr 1fr; }
+      .main-title { font-size: 24px; }
+    }
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+
+    /* FORMULA */
+    .formula-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--text-primary);
+      line-height: 1.6;
+      margin: 0.75rem 0;
+    }
+
+    /* ZONE TABLE */
+    .zone-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 2px;
+      letter-spacing: 0.04em;
+    }
+    .z1 { background: #e8f5e9; color: #2e7d32; }
+    .z2 { background: #e3f2fd; color: #1565c0; }
+    .z3 { background: #fff8e1; color: #f57f17; }
+    .z4 { background: #fce4ec; color: #880e4f; }
+    .z5 { background: #f3e5f5; color: #6a1b9a; }
+
+    .footer-bar {
+      border-top: 1px solid var(--border);
+      padding: 1.25rem 0;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="site-header">
+  <div class="container">
+    <div class="pub-line">Policy Analysis · Pakistan Petroleum Market · June 2026</div>
+    <h1 class="main-title">Pakistan's Diesel Leakage Crisis<br>Formal Market Breakdown, Fiscal Losses & Reform Roadmap</h1>
+    <p class="main-subtitle">An econometric counterfactual using OMC HSD sales data (OGRA/Mettis) and the Quantum Index of Large-Scale Manufacturing establishes the scale of Pakistan's diesel displacement — 4.88 billion litres over 41 flagged months — and maps downstream reform actions to address the structural failure.</p>
+    <div class="meta-line">
+      <span>Data: OGRA OMC Sales | PBS LSMI | PSO Price Archive</span>
+      <span>Model: Log-linear HSD-LSM with month fixed effects, 2021–22 baseline</span>
+      <span>Updated through May 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPI STRIP -->
+  <div class="kpi-grid">
+    <div class="kpi-card accent-red">
+      <div class="kpi-label">Cumulative Displaced Volume</div>
+      <div class="kpi-num red">4,882M L</div>
+      <div class="kpi-sub">Formal diesel missing from OMC channels (2021–May 2026, 41 flagged months)</div>
+    </div>
+    <div class="kpi-card accent-red">
+      <div class="kpi-label">State Revenue Loss (PDL)</div>
+      <div class="kpi-num red">Rs 229bn</div>
+      <div class="kpi-sub">Petroleum Development Levy foregone on displaced volume</div>
+    </div>
+    <div class="kpi-card accent-amber">
+      <div class="kpi-label">Informal Diesel Economy</div>
+      <div class="kpi-num amber">Rs 1,286bn</div>
+      <div class="kpi-sub">Market value of displaced volume at 10% discount to formal HSD prices</div>
+    </div>
+    <div class="kpi-card accent-amber">
+      <div class="kpi-label">Pump / Dealer Windfall</div>
+      <div class="kpi-num amber">Rs 42.2bn</div>
+      <div class="kpi-sub">Indicative dealer margin captured on informal volume (Rs 8.64/L × displaced litres; actual windfall larger)</div>
+    </div>
+    <div class="kpi-card accent-dark">
+      <div class="kpi-label">Worst Month on Record</div>
+      <div class="kpi-num">52.5%</div>
+      <div class="kpi-sub">May-26 formalization ratio — formal market captured barely half of model-implied HSD demand</div>
+    </div>
+    <div class="kpi-card accent-dark">
+      <div class="kpi-label">Structural Break Year</div>
+      <div class="kpi-num">2023</div>
+      <div class="kpi-sub">HSD fell 21.6% while LSM fell only 9.8% — a 12% unexplained divergence requiring counterfactual analysis</div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="verdict-box">
+    <div class="verdict-label">Central Finding</div>
+    <div class="verdict-text">
+      Pakistan's formal diesel market broke structurally in 2023 and has never fully recovered. The pre-break diesel-LSM relationship — with a 12-month rolling correlation of <strong>0.82</strong> and an elasticity of <strong>1.13</strong> — implies formal HSD should be significantly higher than observed across 41 of the last ~65 months. The cumulative formal-market gap represents a <strong>Rs 229bn PDL hole</strong> for the state, a <strong>Rs 1,286bn informal diesel economy</strong> operating outside regulated channels, and an indicative <strong>Rs 42.2bn windfall</strong> for pump operators handling displaced volume. The April-May 2026 data — with May at a formalization ratio of 52.5%, concurrent with PDL near-abolition — represents the most acute episode of formal-market stress in the dataset. This is not a demand-side problem. It is a supply-chain integrity problem requiring structural reform across pricing, logistics, levies, and enforcement.
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('overview', this)">Overview</button>
+    <button class="tab-btn" onclick="switchTab('leakage', this)">Leakage Monitor</button>
+    <button class="tab-btn" onclick="switchTab('fiscal', this)">Fiscal Impact</button>
+    <button class="tab-btn" onclick="switchTab('market', this)">Market Structure</button>
+    <button class="tab-btn" onclick="switchTab('methodology', this)">Methodology</button>
+    <button class="tab-btn" onclick="switchTab('reform', this)">Reform Agenda</button>
+  </div>
+
+  <!-- ==================== TAB 1: OVERVIEW ==================== -->
+  <div id="tab-overview" class="tab-content active">
+
+    <div class="section-label">Annual Counterfactual</div>
+    <div class="section-title">Actual vs No-Leakage HSD Sales, 2021–2025</div>
+    <div class="section-body">The counterfactual — estimated using a log-linear model fitted on the 2021–22 pre-break relationship — shows formal diesel consistently undershooting the industrial-seasonal baseline from 2022 onward. The 2023 break is the most severe: actual sales at 6.17M MT against a no-leakage implied 7.39M MT.</div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Actual vs Counterfactual HSD Sales (Million Metric Tons)</div>
+        <div class="panel-sub">Counterfactual estimated from log(HSD) = α + β·log(LSMI) + month fixed effects; fitted 2021–22 baseline</div>
+        <div class="chart-wrap-lg">
+          <canvas id="chartCounterfactual"></canvas>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#1A1A1A"></span> Actual HSD</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#C8923A"></span> No-Leakage Counterfactual</div>
+          <div class="legend-item"><span class="legend-line" style="background:#9B2335; height:2px"></span> Formalization % (right axis)</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">HSD vs LSM Intensity (Diesel/LSMI Ratio)</div>
+        <div class="panel-sub">Diesel intensity = formal HSD sales (MT) ÷ annual average LSMI. A declining trend signals progressive market leakage from 2022 onward.</div>
+        <div class="chart-wrap-lg">
+          <canvas id="chartIntensity"></canvas>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#1A1A1A"></span> HSD/LSMI Intensity</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>The 2023 structural break, quantified:</strong> HSD declined 21.6% while LSM declined only 9.8%. The counterfactual implies diesel should have declined ~11.4% given LSM weakness and seasonality. The residual unexplained gap — equivalent to 1.23M MT or 1.46 billion litres — points to systematic formal-market leakage, corroborated by contemporaneous Reuters reporting (May 2023) of up to 35% of diesel sold sourced from Iranian smuggling networks.
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Period Summary</div>
+    <div class="section-title">Formalization Ratio by Year and Sub-Period</div>
+
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Months</th>
+          <th>Actual HSD</th>
+          <th>No-Leakage CF</th>
+          <th>Gap</th>
+          <th>Formalization</th>
+          <th>Avg LSMI</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>2021</strong></td>
+          <td class="num">12</td>
+          <td class="num">8.32M MT</td>
+          <td class="num">7.76M MT</td>
+          <td class="num">+0.56M</td>
+          <td><span class="badge badge-green">107.2%</span></td>
+          <td class="num">118.7</td>
+          <td>Post-COVID rebound; formal market outperformed baseline</td>
+        </tr>
+        <tr>
+          <td><strong>2022</strong></td>
+          <td class="num">12</td>
+          <td class="num">7.87M MT</td>
+          <td class="num">8.35M MT</td>
+          <td class="num">-0.48M</td>
+          <td><span class="badge badge-amber">94.3%</span></td>
+          <td class="num">126.7</td>
+          <td>First signs of pressure; 7 months flagged below 95%</td>
+        </tr>
+        <tr>
+          <td><strong>2023 — Structural Break</strong></td>
+          <td class="num">12</td>
+          <td class="num">6.17M MT</td>
+          <td class="num">7.39M MT</td>
+          <td class="num">-1.23M</td>
+          <td><span class="badge badge-red">83.4%</span></td>
+          <td class="num">114.3</td>
+          <td>All 12 months flagged; PDL hike to Rs 50/L drove informal substitution</td>
+        </tr>
+        <tr>
+          <td><strong>2024 H1 — Persistence</strong></td>
+          <td class="num">6</td>
+          <td class="num">3.10M MT</td>
+          <td class="num">3.80M MT</td>
+          <td class="num">-0.69M</td>
+          <td><span class="badge badge-red">81.8%</span></td>
+          <td class="num">117.2</td>
+          <td>Break persisted; Apr-24 formalization at 65.5%</td>
+        </tr>
+        <tr>
+          <td><strong>2024 H2 — Partial Repair</strong></td>
+          <td class="num">6</td>
+          <td class="num">3.46M MT</td>
+          <td class="num">3.65M MT</td>
+          <td class="num">-0.19M</td>
+          <td><span class="badge badge-amber">94.9%</span></td>
+          <td class="num">112.2</td>
+          <td>Recovery; formal market regained share — enforcement or price narrowing</td>
+        </tr>
+        <tr>
+          <td><strong>2025 — Partial Recovery</strong></td>
+          <td class="num">12</td>
+          <td class="num">7.00M MT</td>
+          <td class="num">7.68M MT</td>
+          <td class="num">-0.68M</td>
+          <td><span class="badge badge-amber">91.1%</span></td>
+          <td class="num">117.5</td>
+          <td>Better than 2023 but still 8.9% below pre-break relationship</td>
+        </tr>
+        <tr>
+          <td><strong>CY2026 Jan–Mar</strong></td>
+          <td class="num">3</td>
+          <td class="num">1.78M MT</td>
+          <td class="num">1.81M MT</td>
+          <td class="num">-0.03M</td>
+          <td><span class="badge badge-green">98.4%</span></td>
+          <td class="num">133.7</td>
+          <td>Apparent normalization — but Apr–May reversed sharply</td>
+        </tr>
+        <tr style="background: rgba(155,35,53,0.05)">
+          <td><strong>Apr–May 2026 — Renewed Crisis</strong></td>
+          <td class="num">2</td>
+          <td class="num">~1.00M MT</td>
+          <td class="num">~1.52M MT</td>
+          <td class="num">-0.52M</td>
+          <td><span class="badge badge-red">~61%</span></td>
+          <td class="num">—</td>
+          <td>PDL abolished Apr 3 → price arbitrage surge; May-26 at 52.5%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="margin-top:1.5rem">
+      <strong>2026 should not be described as normalized.</strong> Q1 (Jan–Mar) appeared close to the pre-break relationship at 98.4%. But April and May both collapsed, with May-26 at 52.5% representing the most severe formal-market stress in the five-year dataset. The coincidence with PDL effective abolition from April 3, 2026, and subsequent volatile PL revisions (Rs 28.69 → Rs 42.60 → Rs 58 across May 2026 alone) points to price arbitrage as the primary driver of the April–May collapse.
+    </div>
+
+  </div><!-- end tab-overview -->
+
+
+  <!-- ==================== TAB 2: LEAKAGE MONITOR ==================== -->
+  <div id="tab-leakage" class="tab-content">
+
+    <div class="section-label">Monthly Formalization Ratio</div>
+    <div class="section-title">Formal Market Capture Rate, Jun 2022 – May 2026</div>
+    <div class="section-body">Each data point shows the ratio of actual formal HSD sales to model-implied no-leakage sales. A ratio below 95% (dashed red line) is treated as a material formal-market shortfall. Months above 95% are shown as normalized. Null gaps indicate months with no formalization stress signal (above 95% threshold).</div>
+
+    <div class="panel">
+      <div class="panel-title">Formalization Ratio by Month (%) — Flagged Months Highlighted</div>
+      <div class="panel-sub">Below 95% = material shortfall (flagged); above 95% = normal range; null = threshold not breached that month</div>
+      <div class="chart-wrap-lg" style="height:320px;">
+        <canvas id="chartFormalization"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#9B2335"></span> Formalization Ratio (below 95%)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#52B788"></span> Formalization Ratio (above 95%)</div>
+        <div class="legend-item"><span class="legend-line" style="background:#C8923A; height:2px; border-top: 2px dashed #C8923A; background:none"></span> 95% Threshold</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Worst Months</div>
+    <div class="section-title">Top 12 Episodes by Displaced Volume</div>
+    <div class="section-body">Ranked by potential displaced volume (litres), these months represent the highest-intensity informal market episodes. Note that Apr–May 2026 show low PDL loss despite high displaced volume because PDL was effectively abolished from April 3, 2026 — but the informal market value remains substantial at over Rs 300bn combined.</div>
+
+    <div class="panel" style="padding:0; overflow:hidden;">
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th style="padding-left:1rem">Rank</th>
+            <th>Month</th>
+            <th>Formalization</th>
+            <th class="num">Displaced (M litres)</th>
+            <th class="num">HSD Price (Rs/L)</th>
+            <th class="num">PDL/PL Rate (Rs/L)</th>
+            <th class="num">Fiscal Levy Loss (Rs bn)</th>
+            <th class="num">Gross Informal Value (Rs bn)</th>
+            <th class="num">Pump Margin (Rs bn)</th>
+            <th>Data Status</th>
+          </tr>
+        </thead>
+        <tbody id="worstMonthsBody">
+          <!-- populated by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout red" style="margin-top:1.5rem">
+      <strong>April–May 2026 anomaly:</strong> Despite showing the largest displaced volumes on record (484.5M L and 280.9M L), these months show low PDL/fiscal levy loss relative to prior years — because Pakistan's government abolished the HSD PDL from April 3, 2026, then introduced a volatile new Petroleum Levy (revised multiple times through May). The informal market's gross value, however, remains enormous at Rs 311bn combined (Apr + May), because formal HSD prices spiked to Rs 400+/L. The formal-market consumer is now bearing a price structure that has eliminated the PDL without removing the underlying supply-chain problem.
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Displaced Volume by Year</div>
+    <div class="section-title">Annual Cumulative Leakage Estimate</div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Displaced Volume (Million Litres) — Flagged Months Only</div>
+        <div class="panel-sub">Sum of max(Counterfactual − Actual, 0) for months where formalization &lt; 95%</div>
+        <div class="chart-wrap">
+          <canvas id="chartDisplaced"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Flagged Months per Year</div>
+        <div class="panel-sub">Number of months per calendar year where formal HSD fell more than 5% below counterfactual</div>
+        <div class="chart-wrap">
+          <canvas id="chartFlaggedMonths"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end tab-leakage -->
+
+
+  <!-- ==================== TAB 3: FISCAL IMPACT ==================== -->
+  <div id="tab-fiscal" class="tab-content">
+
+    <div class="section-label">Aggregate Fiscal & Commercial Losses</div>
+    <div class="section-title">Who Pays for the Leakage?</div>
+    <div class="section-body">The fiscal burden of Pakistan's diesel leakage falls on three parties: the state (lost PDL/PL revenue), formal OMC operators (lost volume and market share), and ultimately the formal diesel consumer (who faces progressively higher PDL as the government tries to compensate for base erosion). The pump and informal channel operator is the structural beneficiary.</div>
+
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title" style="color:var(--red)">State Fiscal Loss</div>
+        <div style="font-family:Georgia,serif;font-size:28px;margin:0.75rem 0">Rs 229bn</div>
+        <div class="kpi-sub" style="font-size:12px">PDL/PL revenue foregone across 41 flagged months. Government responded by hiking PDL on formal volumes — shifting the burden to formal consumers.</div>
+        <div style="margin-top:1rem;font-size:11px;color:var(--text-tertiary)">
+          Peak single-month: Rs 21.07bn (May-26)<br>
+          Peak annual: Rs 70.7bn (2023)
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="color:var(--amber)">Informal Economy Value</div>
+        <div style="font-family:Georgia,serif;font-size:28px;margin:0.75rem 0">Rs 1,286bn</div>
+        <div class="kpi-sub" style="font-size:12px">Value of displaced diesel at 10% discount to formal HSD prices. This represents the aggregate flow through informal channels — primarily Iranian smuggled diesel transiting Balochistan.</div>
+        <div style="margin-top:1rem;font-size:11px;color:var(--text-tertiary)">
+          At full formal price: Rs 1,428.7bn<br>
+          Rs 8.64/L dealer margin on displaced vol
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="color:var(--amber)">Pump / Dealer Windfall</div>
+        <div style="font-family:Georgia,serif;font-size:28px;margin:0.75rem 0">Rs 42.2bn</div>
+        <div class="kpi-sub" style="font-size:12px">Minimum estimate: normal dealer margin on displaced volume. Actual windfall is significantly larger — pumps sourcing Iranian diesel at Rs 100–150/L below formal price while retaining the full formal retail margin.</div>
+        <div style="margin-top:1rem;font-size:11px;color:var(--text-tertiary)">
+          Unquantified spread above Rs 42.2bn<br>
+          likely Rs 100–300bn+
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1.5rem">
+      <div class="panel-title">Year-wise Fiscal Impact — PDL Loss, Pump Margin, and Gross Informal Market</div>
+      <div class="panel-sub">Left axis: PDL loss (Rs bn, red bars) and pump/dealer margin (Rs bn, amber bars). Right axis: gross informal market value (Rs bn, gray line, at formal prices)</div>
+      <div class="chart-wrap-lg">
+        <canvas id="chartFiscalYearly"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#9B2335"></span> PDL/Fiscal Levy Loss (Rs bn)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#C8923A"></span> Pump/Dealer Margin (Rs bn)</div>
+        <div class="legend-item"><span class="legend-line" style="background:#1A1A1A; height:2px"></span> Gross Informal Value (Rs bn, right axis)</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:1rem">
+      <strong>The PDL trap:</strong> Each year the state lost PDL revenue (2023: Rs 70.7bn; 2024: Rs 69.6bn; 2025: Rs 55.7bn), it responded by raising the PDL rate on the remaining formal volume — from Rs 32.5/L in Jan-23, to Rs 50/L in Apr-23, to Rs 60/L in Dec-23, to Rs 73–77/L by mid-2025. This is a classic pro-cyclical revenue substitution: the state taxes formal consumers more heavily to compensate for informal market erosion, which in turn raises the price arbitrage incentive and drives more leakage. The abolition of PDL in April 2026 broke this cycle but simultaneously triggered the most severe leakage episode in the dataset.
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Year-wise Breakdown</div>
+    <div class="section-title">Detailed Fiscal Table by Calendar Year</div>
+
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Flagged Months</th>
+          <th class="num">Displaced Volume</th>
+          <th class="num">Gross Informal Value</th>
+          <th class="num">Value @ 10% Disc.</th>
+          <th class="num">PDL / Fiscal Loss</th>
+          <th class="num">Pump Margin</th>
+          <th class="num">Avg Formal Price (Rs/L)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>2021</strong></td>
+          <td class="num">1</td>
+          <td class="num">72.6M L</td>
+          <td class="num">Rs 8.3bn</td>
+          <td class="num">Rs 7.4bn</td>
+          <td class="num"><span style="color:var(--text-tertiary)">Rs 0.0bn</span></td>
+          <td class="num">Rs 0.6bn</td>
+          <td class="num">~Rs 114/L</td>
+        </tr>
+        <tr>
+          <td><strong>2022</strong></td>
+          <td class="num">7</td>
+          <td class="num">588.4M L</td>
+          <td class="num">Rs 142.5bn</td>
+          <td class="num">Rs 128.3bn</td>
+          <td class="num" style="color:var(--amber)">Rs 4.5bn</td>
+          <td class="num">Rs 5.1bn</td>
+          <td class="num">~Rs 242/L</td>
+        </tr>
+        <tr style="background: rgba(155,35,53,0.04)">
+          <td><strong>2023 — Break Year</strong></td>
+          <td class="num">12</td>
+          <td class="num"><strong>1,458.9M L</strong></td>
+          <td class="num"><strong>Rs 422.5bn</strong></td>
+          <td class="num"><strong>Rs 380.3bn</strong></td>
+          <td class="num" style="color:var(--red)"><strong>Rs 70.7bn</strong></td>
+          <td class="num" style="color:var(--red)"><strong>Rs 12.6bn</strong></td>
+          <td class="num">~Rs 290/L</td>
+        </tr>
+        <tr style="background: rgba(155,35,53,0.02)">
+          <td><strong>2024</strong></td>
+          <td class="num">9</td>
+          <td class="num">1,159.2M L</td>
+          <td class="num">Rs 321.1bn</td>
+          <td class="num">Rs 289.0bn</td>
+          <td class="num" style="color:var(--red)">Rs 69.6bn</td>
+          <td class="num">Rs 10.0bn</td>
+          <td class="num">~Rs 278/L</td>
+        </tr>
+        <tr>
+          <td><strong>2025</strong></td>
+          <td class="num">8</td>
+          <td class="num">752.7M L</td>
+          <td class="num">Rs 200.8bn</td>
+          <td class="num">Rs 180.7bn</td>
+          <td class="num" style="color:var(--amber)">Rs 55.7bn</td>
+          <td class="num">Rs 6.5bn</td>
+          <td class="num">~Rs 267/L</td>
+        </tr>
+        <tr style="background: rgba(155,35,53,0.05)">
+          <td><strong>2026 Jan–May</strong></td>
+          <td class="num">4</td>
+          <td class="num"><strong>850.4M L</strong></td>
+          <td class="num"><strong>Rs 333.6bn</strong></td>
+          <td class="num"><strong>Rs 300.2bn</strong></td>
+          <td class="num" style="color:var(--amber)">Rs 28.6bn</td>
+          <td class="num">Rs 7.3bn</td>
+          <td class="num">~Rs 393/L</td>
+        </tr>
+        <tr style="font-weight:600; background:var(--bg)">
+          <td><strong>TOTAL (All Flagged)</strong></td>
+          <td class="num">41</td>
+          <td class="num">4,882.2M L</td>
+          <td class="num">Rs 1,428.7bn</td>
+          <td class="num">Rs 1,285.9bn</td>
+          <td class="num" style="color:var(--red)">Rs 229.0bn</td>
+          <td class="num" style="color:var(--red)">Rs 42.2bn</td>
+          <td class="num">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="font-size:11px;color:var(--text-tertiary);margin-top:0.75rem;line-height:1.6">
+      Notes: Displaced volume = max(Counterfactual − Actual, 0) for months where formalization &lt; 95%. PDL figures reflect monthly weighted-average levy rates from PSO/OGRA notifications. 2026 PDL/PL rates changed multiple times within months; weighted averages used. Pump margin = displaced litres × Rs 8.64/L (dealer margin assumption in model).
+    </div>
+
+  </div><!-- end tab-fiscal -->
+
+
+  <!-- ==================== TAB 4: MARKET STRUCTURE ==================== -->
+  <div id="tab-market" class="tab-content">
+
+    <div class="section-label">OMC Market Composition</div>
+    <div class="section-title">Pakistan's Formal HSD Distribution Landscape, FY2025</div>
+    <div class="section-body">34 licensed OMCs collectively sold 7.00M MT of formal HSD in 2025. PSO dominates at 43.3%, followed by GO (14.1%), PGL (9.6%), and APL (8.7%). Despite this market concentration, the diesel leakage problem is industry-wide — it reflects not competitive failure among OMCs but systemic supply-chain infiltration from informal channels that undercut all formal operators.</div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">OMC Market Share — HSD Sales FY2025</div>
+        <div class="panel-sub">Based on monthly OGRA/Mettis data; excludes "TOTAL" row to avoid double-counting</div>
+        <div class="chart-wrap-lg">
+          <canvas id="chartMarketShare"></canvas>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Annual HSD Sales Volume (Million Metric Tons)</div>
+        <div class="panel-sub">2016–2025 calendar year totals. 2026 shows Jan–May only.</div>
+        <div class="chart-wrap-lg">
+          <canvas id="chartAnnualVolume"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Market Structure Analysis</div>
+    <div class="section-title">OMC Hierarchy and Competitive Dynamics</div>
+
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>OMC</th>
+          <th class="num">FY25 HSD (MT)</th>
+          <th class="num">Market Share</th>
+          <th class="num">5-yr Volume Bar</th>
+          <th>Market Position</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">1</td>
+          <td><strong>PSO</strong></td>
+          <td class="num">3,031,403</td>
+          <td class="num">43.3%</td>
+          <td>
+            <div class="inline-bar-wrap">
+              <div class="inline-bar" style="width:130px;background:#1A1A1A"></div>
+              <span style="font-size:11px;color:var(--text-tertiary)">43.3%</span>
+            </div>
+          </td>
+          <td>State-controlled dominant incumbent; benchmark for network reach</td>
+        </tr>
+        <tr>
+          <td class="rank">2</td>
+          <td><strong>GO</strong></td>
+          <td class="num">985,952</td>
+          <td class="num">14.1%</td>
+          <td>
+            <div class="inline-bar-wrap">
+              <div class="inline-bar" style="width:42px;background:#C8923A"></div>
+              <span style="font-size:11px;color:var(--text-tertiary)">14.1%</span>
+            </div>
+          </td>
+          <td>Fastest-growing mid-tier; aggressive retail expansion</td>
+        </tr>
+        <tr>
+          <td class="rank">3</td>
+          <td><strong>PGL</strong></td>
+          <td class="num">672,196</td>
+          <td class="num">9.6%</td>
+          <td>
+            <div class="inline-bar-wrap">
+              <div class="inline-bar" style="width:29px;background:#C8923A"></div>
+              <span style="font-size:11px;color:var(--text-tertiary)">9.6%</span>
+            </div>
+          </td>
+          <td>Established mid-tier; strong Punjab/KP presence</td>
+        </tr>
+        <tr>
+          <td class="rank">4</td>
+          <td><strong>APL</strong></td>
+          <td class="num">609,010</td>
+          <td class="num">8.7%</td>
+          <td>
+            <div class="inline-bar-wrap">
+              <div class="inline-bar" style="width:26px;background:#999"></div>
+              <span style="font-size:11px;color:var(--text-tertiary)">8.7%</span>
+            </div>
+          </td>
+          <td>Attock group affiliate; refinery-linked supply advantage</td>
+        </tr>
+        <tr>
+          <td class="rank">5</td>
+          <td><strong>WEPL</strong></td>
+          <td class="num">483,128</td>
+          <td class="num">6.9%</td>
+          <td>
+            <div class="inline-bar-wrap">
+              <div class="inline-bar" style="width:21px;background:#999"></div>
+              <span style="font-size:11px;color:var(--text-tertiary)">6.9%</span>
+            </div>
+          </td>
+          <td>Shell Pakistan legacy network; declining share</td>
+        </tr>
+        <tr>
+          <td class="rank">6–10</td>
+          <td><strong>HPL, TGPL, CYNERGYICO, BE, PUMA</strong></td>
+          <td class="num">—</td>
+          <td class="num">11.2%</td>
+          <td>
+            <div class="inline-bar-wrap">
+              <div class="inline-bar" style="width:34px;background:#E5E5E5;border:1px solid #ccc"></div>
+              <span style="font-size:11px;color:var(--text-tertiary)">11.2%</span>
+            </div>
+          </td>
+          <td>Smaller operators; combined share ≈ 1 major player</td>
+        </tr>
+        <tr>
+          <td class="rank">11–34</td>
+          <td><strong>Others (24 OMCs)</strong></td>
+          <td class="num">—</td>
+          <td class="num">6.2%</td>
+          <td>
+            <div class="inline-bar-wrap">
+              <div class="inline-bar" style="width:18px;background:#E5E5E5;border:1px solid #ccc"></div>
+              <span style="font-size:11px;color:var(--text-tertiary)">6.2%</span>
+            </div>
+          </td>
+          <td>Long-tail of small/new entrants; highest informal-market vulnerability</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="margin-top:1.5rem">
+      <strong>Market fragmentation amplifies leakage risk:</strong> With 34 licensed OMCs competing under fixed margins (OMC: Rs 10.50/L, dealer: Rs 12.50/L), smaller operators face commercial pressure to source cheaper informal product. Fixed margins eliminate any competitive incentive to reduce costs through logistics efficiency. The informal market's price advantage (Iranian diesel at Rs 100–150+ below formal prices) is so large that it structurally undermines the economics of formal compliance for smaller OMCs and pump operators. Margin deregulation combined with supply-chain traceability is the commercial counterpart to enforcement.
+    </div>
+
+  </div><!-- end tab-market -->
+
+
+  <!-- ==================== TAB 5: METHODOLOGY ==================== -->
+  <div id="tab-methodology" class="tab-content">
+
+    <div class="section-label">Model Architecture</div>
+    <div class="section-title">How the Counterfactual is Constructed</div>
+    <div class="section-body">The model does not directly observe smuggled diesel. It observes formal OMC HSD sales and compares them against what the historical diesel-LSM relationship — controlling for industrial activity and seasonal patterns — would imply. The gap is called "potential displaced diesel" or "formal-market leakage," not proven smuggling.</div>
+
+    <div class="formula-box">
+      Model: log(HSD sales<sub>t</sub>) = α + β · log(LSMI<sub>t</sub>) + Σ γ<sub>m</sub> · Month<sub>m,t</sub> + ε<sub>t</sub><br><br>
+      Fit period: January 2021 – December 2022 (pre-break baseline)<br>
+      Estimated elasticity (β): ≈ 1.13 | R-squared: ≈ 0.69<br><br>
+      Formalization ratio = (Actual HSD<sub>t</sub> / Counterfactual HSD<sub>t</sub>) × 100<br>
+      Potential displaced volume = max(Counterfactual HSD<sub>t</sub> − Actual HSD<sub>t</sub>, 0)<br>
+      Flagged threshold: Formalization ratio &lt; 95%
+    </div>
+
+    <div class="callout" style="margin-top:0">
+      <strong>Key caveat:</strong> The model cannot distinguish between smuggling, informal sales, price-driven demand destruction, inventory drawdowns, fuel switching to LNG/biomass, efficiency improvements, and construction/agriculture sector weakness. When diesel falls more than implied, the model registers a "leakage signal" — not a smuggling confession. The 2023 Reuters reporting and IMF/SBP commentary on Iranian fuel triangulation provide external triangulation, but the model itself is agnostic about the source of the gap.
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Correlation Diagnostics</div>
+    <div class="section-title">Diesel–LSM Relationship Strengthens with Smoothing</div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Correlation by Transformation</div>
+        <div class="panel-sub">Raw monthly levels show noise; the relationship strengthens progressively as series are smoothed</div>
+        <table class="est-table corr-table" style="margin-top:0.5rem">
+          <thead>
+            <tr>
+              <th>Series Transformation</th>
+              <th class="num">Correlation (r)</th>
+              <th>Signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Raw monthly levels</td>
+              <td class="num">0.13</td>
+              <td><span class="badge badge-dark">Very Weak</span></td>
+            </tr>
+            <tr>
+              <td>Month-on-month growth</td>
+              <td class="num">-0.10</td>
+              <td><span class="badge badge-dark">Noise-dominated</span></td>
+            </tr>
+            <tr>
+              <td>Year-on-year growth</td>
+              <td class="num">0.60</td>
+              <td><span class="badge badge-amber">Moderate</span></td>
+            </tr>
+            <tr>
+              <td>3-month average YoY</td>
+              <td class="num">0.70</td>
+              <td><span class="badge badge-amber">Good</span></td>
+            </tr>
+            <tr>
+              <td><strong>12-month rolling growth</strong></td>
+              <td class="num"><strong>0.82</strong></td>
+              <td><span class="badge badge-green">Strong</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Lag Structure — HSD Leads LSM</div>
+        <div class="panel-sub">Positive lag = HSD leads LSM by that many months. Peak correlation at +1/+2 months confirms diesel as a leading indicator for industrial activity.</div>
+        <table class="est-table" style="margin-top:0.5rem">
+          <thead>
+            <tr>
+              <th>Lag (months)</th>
+              <th class="num">YoY Correlation</th>
+              <th class="num">3M YoY Corr.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>HSD lags LSM by 3</td><td class="num">0.23</td><td class="num">0.36</td></tr>
+            <tr><td>HSD lags LSM by 2</td><td class="num">0.25</td><td class="num">0.43</td></tr>
+            <tr><td>HSD lags LSM by 1</td><td class="num">0.37</td><td class="num">0.55</td></tr>
+            <tr><td><strong>Contemporaneous</strong></td><td class="num"><strong>0.60</strong></td><td class="num"><strong>0.70</strong></td></tr>
+            <tr style="background:rgba(82,183,136,0.05)"><td><strong>HSD leads LSM by 1</strong></td><td class="num"><strong>0.63</strong></td><td class="num"><strong>0.77</strong></td></tr>
+            <tr style="background:rgba(82,183,136,0.05)"><td><strong>HSD leads LSM by 2</strong></td><td class="num"><strong>0.62</strong></td><td class="num"><strong>0.75</strong></td></tr>
+            <tr><td>HSD leads LSM by 3</td><td class="num">0.43</td><td class="num">0.66</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Seasonality</div>
+    <div class="section-title">Diesel and LSM Have Different Seasonal Profiles</div>
+    <div class="section-body">Diesel peaks in April–May (agriculture, construction, pre-monsoon logistics) and October–November (post-harvest, winter freight). LSM peaks in January–February and December. A counterfactual that ignores this divergence would wrongly classify normal seasonal diesel weakness as leakage. Month fixed effects are therefore essential to the model's validity.</div>
+
+    <div class="panel">
+      <div class="panel-title">Seasonal Index by Month (2020–25 average = 100)</div>
+      <div class="panel-sub">Index values above 100 = above-average for that series; note divergent peaks — diesel is spring/autumn, LSM is winter</div>
+      <div class="chart-wrap">
+        <canvas id="chartSeasonality"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#1A1A1A"></span> HSD Seasonality Index</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#C8923A"></span> LSM Seasonality Index</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label">Data Sources & Price Mapping</div>
+    <div class="section-title">Fiscal Estimates Rely on Monthly PDL/PL Rate Mapping</div>
+
+    <div class="narrative">The PDL loss estimates require a monthly PDL/PL rate for each flagged month. These rates were sourced from PSO POL price notifications, OGRA archives, Business Recorder, and Dawn price announcements. PDL changed frequently — sometimes fortnightly — so monthly weighted-average rates are used. The most sensitive period is 2026, where the April 3 PDL abolition and subsequent PL introduction create significant within-month variation. All source notes are documented in Appendix B of the underlying analytical report.</div>
+
+    <table class="est-table">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th class="num">PDL/PL Rate (Rs/L)</th>
+          <th>Policy Event</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Pre-Jan 2023</td><td class="num">Rs 0–5/L</td><td>Low/zero PDL period; leakage less profitable</td></tr>
+        <tr><td>Jan 2023</td><td class="num">Rs 32.50/L</td><td>Major hike: Business Recorder; effective Jan 1, 2023</td></tr>
+        <tr><td>Apr 2023 onward</td><td class="num">Rs 50.00/L</td><td>Further hike; PDL Rs 50 from Apr 1, 2023 — coincides with peak leakage</td></tr>
+        <tr><td>Dec 2023 onward</td><td class="num">Rs 60.00/L</td><td>PDL hiked to Rs 60 from Dec 1, 2023</td></tr>
+        <tr><td>Mar–Apr 2025</td><td class="num">Rs 70–77/L</td><td>PDL raised to Rs 70 (mid-Mar) then Rs 77.01 (Apr 16)</td></tr>
+        <tr><td>Apr 3, 2026</td><td class="num">Rs 0/L (PDL)</td><td>PDL abolished; new PL at Rs 55/L via Mar 14 ECC decision</td></tr>
+        <tr><td>May 2026</td><td class="num">Rs 28.69 → Rs 42.60 → Rs 58/L</td><td>PL revised three times in May 2026 alone — policy volatility peak</td></tr>
+      </tbody>
+    </table>
+
+  </div><!-- end tab-methodology -->
+
+
+  <!-- ==================== TAB 6: REFORM AGENDA ==================== -->
+  <div id="tab-reform" class="tab-content">
+
+    <div class="section-label">Structural Reform Framework</div>
+    <div class="section-title">Five Pillars to Restore Formal Market Integrity and Reduce Pump Prices</div>
+    <div class="section-body">Pakistan's diesel leakage is not primarily an enforcement problem — it is a price-arbitrage problem created by a broken pricing formula, an opaque freight structure, a punitive and unstable levy regime, and the absence of a strategic buffer. Closing the formalization gap requires simultaneous action across five tracks. Enforcement without pricing reform will fail; pricing reform without enforcement creates a different kind of leakage.</div>
+
+    <div class="callout red">
+      <strong>Estimated total pump price reduction potential:</strong> Rs 60–68/litre over 36 months, achievable without blanket subsidy, without undermining refinery economics, and without a permanent fiscal hole — if all five pillars are executed concurrently. Each pillar independently is insufficient; the system effect requires overlap.
+    </div>
+
+    <div class="reform-grid">
+
+      <!-- PILLAR 1 -->
+      <div class="reform-card">
+        <div class="reform-number">Pillar 01 — Pricing Formula</div>
+        <div class="reform-title">Replace Import-Parity with Weighted National Supply Cost</div>
+        <div class="reform-body">
+          Pakistan's current formula prices all diesel as if it arrived by tanker — despite 80% of HSD being locally refined. This embeds phantom ocean freight, marine insurance, and LC margins into every litre that was never imported. The fix is a Weighted National Supply Cost (WNSC) formula that separates local and imported supply costs.
+          <div class="formula-box" style="margin-top:0.75rem;font-size:11px">
+            HSD price = (0.80 × Local HSD cost) + (0.20 × Imported landed cost) + IFEM + Margins + Levies<br>
+            Petrol price = (0.33 × Local MS cost) + (0.67 × Imported landed cost) + IFEM + Margins + Levies
+          </div>
+          Local shares updated quarterly from OCAC/OGRA production data. Refinery economics are explicitly protected — the formula removes phantom freight, not refinery gate pricing.
+        </div>
+        <div class="reform-impact">
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">Rs 8–12</span>
+            <span class="reform-impact-lbl">Saving / litre</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">0–3 mo</span>
+            <span class="reform-impact-lbl">Admin notification</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">80%</span>
+            <span class="reform-impact-lbl">HSD locally sourced</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PILLAR 2 -->
+      <div class="reform-card">
+        <div class="reform-number">Pillar 02 — Long-Term Supply</div>
+        <div class="reform-title">G2G Term Supply: Cap Import Premiums, End Spot Default</div>
+        <div class="reform-body">
+          Pakistan buys residual import volumes on spot markets by default — absorbing premium spikes of USD 10–30/bbl above Platts benchmarks. Structured 5-year framework agreements with Saudi Arabia (Aramco Trading), Kuwait (KPC), UAE (ADNOC), and Oman (OQ) with a premium cap mechanism eliminate this volatility.
+          <div class="formula-box" style="margin-top:0.75rem;font-size:11px">
+            Product price = Benchmark + min(Market Premium, Agreed Cap)<br>
+            At USD 7/bbl cap vs USD 15/bbl spot: saves USD 8/bbl/cargo<br>
+            At USD 10/bbl cap vs USD 30/bbl spike: saves USD 20/bbl
+          </div>
+          Every USD 1/bbl saving ≈ Rs 1.75/litre at the pump. A USD 10/bbl cap saving = Rs 17–18/litre retail reduction. Terms should include 90–180 day deferred payment and emergency cargo call options.
+        </div>
+        <div class="reform-impact">
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">Rs 5–7</span>
+            <span class="reform-impact-lbl">Saving / litre</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">3–12 mo</span>
+            <span class="reform-impact-lbl">Framework negotiation</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">5-yr</span>
+            <span class="reform-impact-lbl">Contract duration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PILLAR 3 -->
+      <div class="reform-card">
+        <div class="reform-number">Pillar 03 — IFEM Unbundling</div>
+        <div class="reform-title">Five-Zone Competitive Freight Model: End the Blind Pool</div>
+        <div class="reform-body">
+          The current pooled IFEM (~Rs 16.78/L) averages freight costs nationally — protecting inefficient road transport and disincentivizing pipeline utilization. The reform creates five zones, each with a maximum allowed logistics cost, while preserving explicit support for remote areas.
+        </div>
+        <table class="est-table" style="margin-bottom:1rem;font-size:11px">
+          <thead><tr><th>Zone</th><th>Definition</th><th class="num">Allowed Logistics</th></tr></thead>
+          <tbody>
+            <tr><td><span class="zone-badge z1">Z1</span></td><td>Port/refinery cities (Karachi, PQ)</td><td class="num">Rs 2.25/L</td></tr>
+            <tr><td><span class="zone-badge z2">Z2</span></td><td>Pipeline-served depots</td><td class="num">Rs 5.25/L</td></tr>
+            <tr><td><span class="zone-badge z3">Z3</span></td><td>Normal inland depots</td><td class="num">Rs 9.25/L</td></tr>
+            <tr><td><span class="zone-badge z4">Z4</span></td><td>Remote/special areas (GB, AJK)</td><td class="num">Rs 24.00/L</td></tr>
+            <tr><td><span class="zone-badge z5">Z5</span></td><td>Crisis route (emergency)</td><td class="num">Variable</td></tr>
+          </tbody>
+        </table>
+        <div class="reform-impact">
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">Rs 14–22bn</span>
+            <span class="reform-impact-lbl">Logistics saving / yr</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">Rs 15–18</span>
+            <span class="reform-impact-lbl">Saving / litre</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">24–36 mo</span>
+            <span class="reform-impact-lbl">Phase-out timeline</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PILLAR 4 -->
+      <div class="reform-card">
+        <div class="reform-number">Pillar 04 — PDL Structural Reform</div>
+        <div class="reform-title">Split the Lazy Tax: Four Gazetted Components with Countercyclical Rule</div>
+        <div class="reform-body">
+          The PDL has become a discretionary fiscal plug — easy to collect, adjustable fortnightly, and applied with no rules and no purpose-linking. At Rs 60–77/L (before 2026 abolition), it was larger than OMC margins, IFEM, and dealer margins combined. The reform splits it into four transparent, purpose-linked components:
+          <ul class="reform-steps">
+            <li><strong>Road User Levy</strong> — Annual statutory instrument; funds NHA/provincial roads</li>
+            <li><strong>Carbon/Climate Levy</strong> — EV conversion, public bus electrification; preset annual schedule</li>
+            <li><strong>Strategic Reserve Levy</strong> — Ring-fenced SPR fund; expires at 30–45 day cover target</li>
+            <li><strong>Stabilisation Levy</strong> — Countercyclical: falls when landed cost rises, rises when cost falls. Formula: SL(t) = Base − α × (LandedCost(t) − Reference). Cap and floor by statute.</li>
+          </ul>
+        </div>
+        <div class="reform-impact">
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">Rs 30–40</span>
+            <span class="reform-impact-lbl">Saving / litre</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">Parliament</span>
+            <span class="reform-impact-lbl">Legislative lock-in</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">FY27+</span>
+            <span class="reform-impact-lbl">Transition start</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PILLAR 5 -->
+      <div class="reform-card">
+        <div class="reform-number">Pillar 05 — Strategic Storage</div>
+        <div class="reform-title">Three-Layer Buffer: Commercial → Bonded → Sovereign SPR</div>
+        <div class="reform-body">
+          Pakistan has no meaningful buffer between the international market and the retail pump. Every supply disruption — port congestion, tanker delay, refinery outage — triggers panic spot-buying and hoarding. The fix is a three-layer architecture with legally mandated release triggers and replenishment obligations.
+          <table class="est-table" style="margin:0.75rem 0;font-size:11px">
+            <thead><tr><th>Layer</th><th>Cover Target</th><th>HSD Volume</th></tr></thead>
+            <tbody>
+              <tr><td>L1: Commercial stocks</td><td>Normal continuity</td><td>Market-determined</td></tr>
+              <tr><td>L2: Bonded strategic buffer</td><td>15 days (Phase 1)</td><td>294,000 MT</td></tr>
+              <tr><td>L3: Sovereign SPR</td><td>30→45→60 days</td><td>587K→881K→1.17M MT</td></tr>
+            </tbody>
+          </table>
+          SRO 568(I)/2024 already permits bonded warehousing — requires 6 amendments to become a true strategic instrument. SPR Ordinance required with: government call option, priority domestic sale right, 24–36 month warehousing, tax neutrality inside bond, quarterly independent audit.
+        </div>
+        <div class="reform-impact">
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">45 day</span>
+            <span class="reform-impact-lbl">Cover target (Ph3)</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">SPR Ord.</span>
+            <span class="reform-impact-lbl">Legal instrument</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">PDL-funded</span>
+            <span class="reform-impact-lbl">Financing mechanism</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PILLAR 6 — Anti-Leakage -->
+      <div class="reform-card">
+        <div class="reform-number">Pillar 06 — Anti-Leakage Enforcement Architecture</div>
+        <div class="reform-title">Monthly Formalization Dashboard + Margin Deregulation + Supply-Chain Traceability</div>
+        <div class="reform-body">
+          The five structural pillars above reduce the economic incentive to source informal diesel. But enforcement must close the residual gap. Three mechanisms are required simultaneously:
+          <ul class="reform-steps">
+            <li><strong>Monthly HSD-LSM Divergence Dashboard</strong> — Mandatory OGRA/Petroleum Division public publication. Automatic enforcement trigger when formalization ratio falls below 90% for two consecutive months.</li>
+            <li><strong>OMC Margin Deregulation</strong> — Move from fixed OMC (Rs 10.50/L) and dealer (Rs 12.50/L) margins to permitted bands (OGRA-notified maximum; OMCs and dealers compete below cap). Eliminates the fixed margin as a riskless informal-channel profit floor.</li>
+            <li><strong>Supply-Chain Traceability</strong> — GPS-tagged tank lorry delivery confirmation, OMC product-source declaration per cargo, OGRA reconciliation of upliftment vs declared supply. Digital reconciliation for every litre claimed through the freight system. Pipeline-first condition: if pipeline capacity is available, recoverable road freight cannot exceed pipeline tariff + handling + efficient last-mile.</li>
+            <li><strong>Border Formalization / Fuel Voucher Scheme</strong> — On-border purchase limits for Iranian fuel corridors; formalization voucher incentive for informal traders to transition to regulated supply chains.</li>
+          </ul>
+        </div>
+        <div class="reform-impact">
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">90%</span>
+            <span class="reform-impact-lbl">Trigger threshold</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">Monthly</span>
+            <span class="reform-impact-lbl">Dashboard cadence</span>
+          </div>
+          <div class="reform-impact-item">
+            <span class="reform-impact-val">Rs 142bn+</span>
+            <span class="reform-impact-lbl">Annual PDL at stake</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end reform-grid -->
+
+    <hr class="divider">
+
+    <div class="section-label">Implementation Roadmap</div>
+    <div class="section-title">Sequenced Reform Over 36 Months</div>
+
+    <div class="roadmap">
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-num">Phase 1</div>
+        <div class="roadmap-phase-time">0–3 Months</div>
+        <div class="roadmap-phase-body">Admin notification of WNSC formula (P1). Publish IFEM sub-ledger by product. Begin G2G framework negotiation. Launch monthly formalization dashboard. Gazette PDL split proposal.</div>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-num">Phase 2</div>
+        <div class="roadmap-phase-time">3–9 Months</div>
+        <div class="roadmap-phase-body">Zone 1/2 IFEM pilot (port cities + pipeline depots). Shadow zonal pricing without consumer impact. G2G term contract signed with at least one Gulf partner. SPR Ordinance gazetted. GPS tank lorry tracking activated.</div>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-num">Phase 3</div>
+        <div class="roadmap-phase-time">9–18 Months</div>
+        <div class="roadmap-phase-body">PDL four-component split enacted by Parliament. Zone 3 road/rail benchmarks. Pipeline-first cap activated. OMC margin deregulation to permitted bands. Phase 2 SPR buffer (30-day cover) operationalized.</div>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-num">Phase 4</div>
+        <div class="roadmap-phase-time">18–24 Months</div>
+        <div class="roadmap-phase-body">Stabilisation Levy countercyclical rule operative. Remote Petroleum Access Support explicit line item. IFEM pool reduced 25%/quarter. G2G second partner contract. Supply-chain traceability fully operational.</div>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-phase-num">Phase 5</div>
+        <div class="roadmap-phase-time">24–36 Months</div>
+        <div class="roadmap-phase-body">Full competitive zonal cap regime. IFEM pooling eliminated. Phase 3 SPR (45-day cover). FBR forced to find alternate revenue as PDL earmarking tightens to ≤40% general budget support. Cumulative pump price reduction: Rs 60–68/litre.</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:1.5rem">
+      <strong>The sequencing rule:</strong> Pillars 1 (WNSC formula) and 4 (PDL split) must be initiated in Phase 1 because they set the commercial logic for all subsequent steps. IFEM unbundling (Pillar 3) and margin deregulation (Pillar 6) are Phase 2–3 because they require the pricing foundation to be in place first. Strategic storage (Pillar 5) has a long build time and must start immediately regardless of other sequencing. G2G supply (Pillar 2) is diplomatically independent and should run in parallel from day one.
+    </div>
+
+  </div><!-- end tab-reform -->
+
+  <div class="footer-bar">
+    <span>Sources: OGRA OMC Sales Data; PBS Quantum Index of Large-Scale Manufacturing; PSO POL Price Archives; Business Recorder; Dawn; Reuters (May 2023); PAPCO; PACRA; PIDE. &nbsp;|&nbsp; Model: Log-linear HSD-LSMI counterfactual with month fixed effects, fitted 2021–22. &nbsp;|&nbsp; Policy references: Downstream Petroleum Reform Note (May 2026); IFEM Unbundling Policy Note (May 2026), Ammar H. Khan.</span>
+  </div>
+
+</div><!-- end container -->
+
+
+<script>
+  // ===========================
+  // TAB SWITCHING
+  // ===========================
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+
+    // lazy-init charts
+    setTimeout(() => {
+      if (tabId === 'leakage' && !chartFormalizationObj) initLeakageCharts();
+      if (tabId === 'fiscal' && !chartFiscalObj) initFiscalCharts();
+      if (tabId === 'market' && !chartMarketObj) initMarketCharts();
+      if (tabId === 'methodology' && !chartSeasonalityObj) initMethodologyCharts();
+    }, 50);
+  }
+
+  // ===========================
+  // CHART COLORS & CONFIG
+  // ===========================
+  const C = {
+    black: '#1A1A1A',
+    amber: '#C8923A',
+    red: '#9B2335',
+    green: '#52B788',
+    gray: '#999999',
+    lightGray: '#E5E5E5',
+    text: '#666666',
+  };
+
+  Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif';
+  Chart.defaults.font.size = 11;
+  Chart.defaults.color = C.text;
+
+  const gridStyle = {
+    color: '#F0F0F0',
+    lineWidth: 1,
+  };
+  const tickStyle = { color: C.text, font: { size: 10 } };
+
+  // ===========================
+  // TAB 1 — OVERVIEW CHARTS
+  // ===========================
+  const annualLabels = ['2021', '2022', '2023', '2024', '2025'];
+  const actualHSD     = [8.32, 7.87, 6.17, 6.57, 7.00];
+  const cfHSD         = [7.76, 8.35, 7.39, 7.44, 7.68];
+  const formalPct     = [107.2, 94.3, 83.4, 88.2, 91.1];
+  const lsmiVals      = [118.7, 126.7, 114.3, 114.7, 117.5];
+
+  // Intensity = actual HSD (MT) × 1000 / LSMI (rough proxy)
+  const intensity = [5882, 5176, 4525, 4810, 4982];
+
+  const ctxCF = document.getElementById('chartCounterfactual').getContext('2d');
+  new Chart(ctxCF, {
+    type: 'bar',
+    data: {
+      labels: annualLabels,
+      datasets: [
+        {
+          label: 'Actual HSD (M MT)',
+          data: actualHSD,
+          backgroundColor: C.black,
+          barPercentage: 0.45,
+          categoryPercentage: 0.7,
+          order: 2,
+        },
+        {
+          label: 'Counterfactual HSD (M MT)',
+          data: cfHSD,
+          backgroundColor: C.amber,
+          barPercentage: 0.45,
+          categoryPercentage: 0.7,
+          order: 3,
+        },
+        {
+          label: 'Formalization % (right)',
+          data: formalPct,
+          type: 'line',
+          yAxisID: 'y2',
+          borderColor: C.red,
+          backgroundColor: 'rgba(155,35,53,0.08)',
+          borderWidth: 2,
+          pointBackgroundColor: formalPct.map(v => v < 95 ? C.red : C.green),
+          pointRadius: 5,
+          tension: 0.3,
+          fill: false,
+          order: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 2) return ` Formalization: ${ctx.raw}%`;
+              return ` ${ctx.dataset.label}: ${ctx.raw}M MT`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: gridStyle, ticks: tickStyle },
+        y: {
+          title: { display: true, text: 'Million MT', font: { size: 10 }, color: C.text },
+          min: 5, max: 10,
+          grid: gridStyle, ticks: tickStyle,
+        },
+        y2: {
+          position: 'right',
+          title: { display: true, text: 'Formalization (%)', font: { size: 10 }, color: C.red },
+          min: 75, max: 115,
+          grid: { display: false },
+          ticks: { ...tickStyle, color: C.red, callback: v => v + '%' }
+        }
+      }
+    }
+  });
+
+  const ctxInt = document.getElementById('chartIntensity').getContext('2d');
+  new Chart(ctxInt, {
+    type: 'line',
+    data: {
+      labels: annualLabels,
+      datasets: [{
+        label: 'HSD/LSMI Intensity',
+        data: intensity,
+        borderColor: C.black,
+        backgroundColor: 'rgba(26,26,26,0.06)',
+        borderWidth: 2,
+        pointBackgroundColor: intensity.map((v, i) => i === 2 ? C.red : C.black),
+        pointRadius: intensity.map((v, i) => i === 2 ? 7 : 5),
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` Intensity: ${ctx.raw.toLocaleString()} MT/LSMI-unit`
+          }
+        }
+      },
+      scales: {
+        x: { grid: gridStyle, ticks: tickStyle },
+        y: {
+          title: { display: true, text: 'HSD MT per LSMI point', font: { size: 10 }, color: C.text },
+          min: 4000, max: 6200,
+          grid: gridStyle, ticks: tickStyle,
+        }
+      }
+    }
+  });
+
+  // ===========================
+  // WORST MONTHS TABLE (Tab 2)
+  // ===========================
+  const worstMonths = [
+    { month: 'May-26', ratio: 52.5, vol: 484.5, price: 404.73, pdlRate: 43.48, pdlLoss: 21.07, grossInf: 196.1, pumpMargin: 4.19, note: 'Actual + central-case CF' },
+    { month: 'Apr-24', ratio: 65.5, vol: 294.3, price: 286.31, pdlRate: 60.00, pdlLoss: 17.66, grossInf: 84.25, pumpMargin: 2.54, note: 'Actual HSD & LSM' },
+    { month: 'Apr-26', ratio: 70.0, vol: 280.9, price: 409.61, pdlRate: 3.67, pdlLoss: 1.03, grossInf: 115.08, pumpMargin: 2.43, note: 'Actual + central-case CF' },
+    { month: 'Sep-23', ratio: 64.4, vol: 259.3, price: 320.51, pdlRate: 50.00, pdlLoss: 12.97, grossInf: 83.11, pumpMargin: 2.24, note: 'Actual HSD & LSM' },
+    { month: 'Apr-23', ratio: 68.5, vol: 252.5, price: 293.00, pdlRate: 50.00, pdlLoss: 12.62, grossInf: 73.97, pumpMargin: 2.18, note: 'Actual HSD & LSM' },
+    { month: 'May-23', ratio: 76.4, vol: 200.5, price: 272.52, pdlRate: 50.00, pdlLoss: 10.03, grossInf: 54.64, pumpMargin: 1.73, note: 'Actual HSD & LSM' },
+    { month: 'Oct-23', ratio: 78.1, vol: 187.2, price: 310.44, pdlRate: 50.00, pdlLoss: 9.36, grossInf: 58.13, pumpMargin: 1.62, note: 'Actual HSD & LSM' },
+    { month: 'May-24', ratio: 83.2, vol: 155.1, price: 277.89, pdlRate: 60.00, pdlLoss: 9.31, grossInf: 43.11, pumpMargin: 1.34, note: 'Actual HSD & LSM' },
+    { month: 'May-25', ratio: 84.2, vol: 149.9, price: 255.61, pdlRate: 77.01, pdlLoss: 11.54, grossInf: 38.31, pumpMargin: 1.29, note: 'Actual HSD & LSM' },
+    { month: 'Jan-24', ratio: 81.2, vol: 141.3, price: 276.21, pdlRate: 60.00, pdlLoss: 8.48, grossInf: 39.03, pumpMargin: 1.22, note: 'Actual HSD & LSM' },
+    { month: 'Jul-22', ratio: 79.4, vol: 137.2, price: 254.31, pdlRate: 5.00, pdlLoss: 0.69, grossInf: 34.88, pumpMargin: 1.19, note: 'Actual HSD & LSM' },
+    { month: 'Apr-25', ratio: 85.0, vol: 130.6, price: 258.64, pdlRate: 73.51, pdlLoss: 9.60, grossInf: 33.79, pumpMargin: 1.13, note: 'Actual HSD & LSM' },
+  ];
+
+  function getRatioBadge(r) {
+    if (r < 70) return `<span class="badge badge-red">${r}%</span>`;
+    if (r < 85) return `<span class="badge badge-red" style="opacity:0.8">${r}%</span>`;
+    if (r < 95) return `<span class="badge badge-amber">${r}%</span>`;
+    return `<span class="badge badge-green">${r}%</span>`;
+  }
+
+  const tbody = document.getElementById('worstMonthsBody');
+  worstMonths.forEach((m, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="rank" style="padding-left:1rem">${i + 1}</td>
+      <td><strong>${m.month}</strong></td>
+      <td>${getRatioBadge(m.ratio)}</td>
+      <td class="num">${m.vol.toFixed(1)}M</td>
+      <td class="num">Rs ${m.price.toFixed(0)}</td>
+      <td class="num">Rs ${m.pdlRate.toFixed(2)}</td>
+      <td class="num" style="color:var(--red)">Rs ${m.pdlLoss.toFixed(2)}bn</td>
+      <td class="num">Rs ${m.grossInf.toFixed(1)}bn</td>
+      <td class="num" style="color:var(--amber)">Rs ${m.pumpMargin.toFixed(2)}bn</td>
+      <td style="font-size:10px;color:var(--text-tertiary)">${m.note}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // ===========================
+  // TAB 2 CHARTS (lazy init)
+  // ===========================
+  let chartFormalizationObj = null;
+  let chartDisplacedObj = null;
+
+  function initLeakageCharts() {
+    // Monthly formalization ratio
+    const fMonths = [
+      'Jun-22','Jul-22','Aug-22','Sep-22','Oct-22','Nov-22','Dec-22',
+      'Jan-23','Feb-23','Mar-23','Apr-23','May-23','Jun-23','Jul-23','Aug-23','Sep-23','Oct-23','Nov-23','Dec-23',
+      'Jan-24','Feb-24','Mar-24','Apr-24','May-24','Jun-24','Jul-24','Aug-24','Sep-24',
+      'Oct-24','Nov-24','Dec-24',
+      'Jan-25','Feb-25','Mar-25','Apr-25','May-25','Jun-25','Jul-25','Aug-25','Sep-25','Oct-25','Nov-25','Dec-25',
+      'Jan-26','Feb-26','Mar-26','Apr-26','May-26'
+    ];
+
+    const fRatios = [
+      90.1, 79.4, 86.1, 87.2, 92.9, 93.3, 92.6,
+      93.6, 90.4, 80.9, 68.5, 76.4, 85.7, 94.3, 94.9, 64.4, 78.1, 91.1, 87.7,
+      81.2, 83.2, 91.9, 65.5, 83.2, 89.8, 86.3, 81.3, 82.7,
+      null, null, null,
+      null, 82.8, null, 85.0, 84.2, 93.3, 85.9, 92.1, null, 91.3, 91.0, null,
+      94.5, 94.1, 98.4, 70.0, 52.5
+    ];
+
+    const pointColors = fRatios.map(v => {
+      if (v === null) return 'transparent';
+      return v < 75 ? C.red : v < 95 ? C.amber : C.green;
+    });
+
+    const ctxF = document.getElementById('chartFormalization').getContext('2d');
+    chartFormalizationObj = new Chart(ctxF, {
+      type: 'line',
+      data: {
+        labels: fMonths,
+        datasets: [
+          {
+            label: 'Formalization Ratio (%)',
+            data: fRatios,
+            borderColor: C.black,
+            backgroundColor: ctx => {
+              const chart = ctx.chart;
+              const { ctx: c, chartArea } = chart;
+              if (!chartArea) return 'rgba(0,0,0,0)';
+              const grad = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+              grad.addColorStop(0, 'rgba(82,183,136,0.08)');
+              grad.addColorStop(1, 'rgba(155,35,53,0.12)');
+              return grad;
+            },
+            borderWidth: 1.5,
+            pointBackgroundColor: pointColors,
+            pointBorderColor: pointColors,
+            pointRadius: fRatios.map(v => v === null ? 0 : 4),
+            fill: true,
+            tension: 0.3,
+            spanGaps: false,
+          },
+          {
+            label: '95% Threshold',
+            data: fMonths.map(() => 95),
+            borderColor: C.amber,
+            borderWidth: 1.5,
+            borderDash: [6, 4],
+            pointRadius: 0,
+            fill: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                if (ctx.datasetIndex === 1) return ' Threshold: 95%';
+                if (ctx.raw === null) return ' Formalization: ≥95% (not flagged)';
+                return ` Formalization: ${ctx.raw}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: gridStyle,
+            ticks: {
+              ...tickStyle,
+              maxTicksLimit: 16,
+              maxRotation: 45,
+            }
+          },
+          y: {
+            min: 45, max: 115,
+            grid: gridStyle, ticks: { ...tickStyle, callback: v => v + '%' },
+            title: { display: true, text: 'Formalization Ratio (%)', font: { size: 10 }, color: C.text },
+          }
+        }
+      }
+    });
+
+    // Displaced volume by year
+    const dispLabels = ['2021', '2022', '2023', '2024', '2025', '2026\n(Jan–May)'];
+    const dispVol = [72.6, 588.4, 1458.9, 1159.2, 752.7, 850.4];
+    const dispColors = dispVol.map((v, i) => i === 2 || i === 5 ? C.red : i === 3 ? 'rgba(155,35,53,0.6)' : C.amber);
+
+    const ctxD = document.getElementById('chartDisplaced').getContext('2d');
+    chartDisplacedObj = new Chart(ctxD, {
+      type: 'bar',
+      data: {
+        labels: dispLabels,
+        datasets: [{
+          label: 'Displaced Volume (M litres)',
+          data: dispVol,
+          backgroundColor: dispColors,
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` Displaced: ${ctx.raw.toLocaleString()}M litres` } }
+        },
+        scales: {
+          x: { grid: gridStyle, ticks: tickStyle },
+          y: {
+            grid: gridStyle, ticks: tickStyle,
+            title: { display: true, text: 'Million Litres', font: { size: 10 }, color: C.text }
+          }
+        }
+      }
+    });
+
+    // Flagged months per year
+    const ctxFM = document.getElementById('chartFlaggedMonths').getContext('2d');
+    new Chart(ctxFM, {
+      type: 'bar',
+      data: {
+        labels: ['2021', '2022', '2023', '2024', '2025', '2026\n(Jan–May)'],
+        datasets: [{
+          label: 'Flagged Months',
+          data: [1, 7, 12, 9, 8, 4],
+          backgroundColor: [C.gray, C.amber, C.red, 'rgba(155,35,53,0.65)', C.amber, C.red],
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: gridStyle, ticks: tickStyle },
+          y: {
+            min: 0, max: 12,
+            grid: gridStyle, ticks: { ...tickStyle, stepSize: 2 },
+            title: { display: true, text: 'Months below 95%', font: { size: 10 }, color: C.text }
+          }
+        }
+      }
+    });
+  }
+
+  // ===========================
+  // TAB 3 CHARTS (lazy init)
+  // ===========================
+  let chartFiscalObj = null;
+
+  function initFiscalCharts() {
+    const yrLabels = ['2021', '2022', '2023', '2024', '2025', '2026\nJan–May'];
+    const pdlLoss  = [0.0, 4.5, 70.7, 69.6, 55.7, 28.6];
+    const pumpMgn  = [0.6, 5.1, 12.6, 10.0, 6.5, 7.3];
+    const grossInf = [8.3, 142.5, 422.5, 321.1, 200.8, 333.6];
+
+    const ctxFY = document.getElementById('chartFiscalYearly').getContext('2d');
+    chartFiscalObj = new Chart(ctxFY, {
+      type: 'bar',
+      data: {
+        labels: yrLabels,
+        datasets: [
+          {
+            label: 'PDL/Fiscal Levy Loss (Rs bn)',
+            data: pdlLoss,
+            backgroundColor: C.red,
+            yAxisID: 'y',
+            stack: 'fiscal',
+            order: 2,
+          },
+          {
+            label: 'Pump/Dealer Margin (Rs bn)',
+            data: pumpMgn,
+            backgroundColor: C.amber,
+            yAxisID: 'y',
+            stack: 'fiscal',
+            order: 3,
+          },
+          {
+            label: 'Gross Informal Sales Value (Rs bn)',
+            data: grossInf,
+            type: 'line',
+            yAxisID: 'y2',
+            borderColor: C.black,
+            borderWidth: 2,
+            pointBackgroundColor: C.black,
+            pointRadius: 5,
+            fill: false,
+            tension: 0.3,
+            order: 1,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: gridStyle, ticks: tickStyle, stacked: true },
+          y: {
+            stacked: true,
+            grid: gridStyle, ticks: { ...tickStyle, callback: v => 'Rs ' + v + 'bn' },
+            title: { display: true, text: 'Rs bn (PDL + Pump Margin)', font: { size: 10 }, color: C.text }
+          },
+          y2: {
+            position: 'right',
+            grid: { display: false },
+            ticks: { ...tickStyle, callback: v => 'Rs ' + v + 'bn' },
+            title: { display: true, text: 'Gross Informal Value (Rs bn)', font: { size: 10 }, color: C.black }
+          }
+        }
+      }
+    });
+  }
+
+  // ===========================
+  // TAB 4 CHARTS (lazy init)
+  // ===========================
+  let chartMarketObj = null;
+
+  function initMarketCharts() {
+    // Market share horizontal bar
+    const msLabels = ['PSO', 'GO', 'PGL', 'APL', 'WEPL', 'HPL', 'TGPL', 'CYNERGYICO', 'BE', 'Others'];
+    const msVals   = [43.3, 14.1, 9.6, 8.7, 6.9, 3.1, 2.5, 2.1, 2.0, 7.7];
+    const msColors = [C.black, C.amber, '#888', '#aaa', '#bbb', '#ccc', '#ddd', '#e0e0e0', '#ebebeb', C.lightGray];
+
+    const ctxMS = document.getElementById('chartMarketShare').getContext('2d');
+    chartMarketObj = new Chart(ctxMS, {
+      type: 'bar',
+      data: {
+        labels: msLabels,
+        datasets: [{
+          label: 'Market Share (%)',
+          data: msVals,
+          backgroundColor: msColors,
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.raw}%` } }
+        },
+        scales: {
+          x: {
+            grid: gridStyle,
+            ticks: { ...tickStyle, callback: v => v + '%' },
+            max: 50,
+          },
+          y: { grid: { display: false }, ticks: { ...tickStyle, font: { size: 11, weight: '600' } } }
+        }
+      }
+    });
+
+    // Annual volume bar
+    const avLabels = ['2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+    const avVals   = [7.67, 8.42, 7.84, 6.87, 6.91, 8.32, 7.87, 6.17, 6.57, 7.00];
+    const avColors = avVals.map((v, i) => i === 7 ? C.red : i === 1 ? C.amber : '#1A1A1A');
+
+    const ctxAV = document.getElementById('chartAnnualVolume').getContext('2d');
+    new Chart(ctxAV, {
+      type: 'bar',
+      data: {
+        labels: avLabels,
+        datasets: [{
+          label: 'HSD Sales (M MT)',
+          data: avVals,
+          backgroundColor: avColors,
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` HSD: ${ctx.raw}M MT` } }
+        },
+        scales: {
+          x: { grid: gridStyle, ticks: { ...tickStyle, maxRotation: 45 } },
+          y: {
+            min: 5.5, max: 9.0,
+            grid: gridStyle, ticks: { ...tickStyle, callback: v => v + 'M' },
+            title: { display: true, text: 'Million Metric Tons', font: { size: 10 }, color: C.text }
+          }
+        }
+      }
+    });
+  }
+
+  // ===========================
+  // TAB 5 CHARTS (lazy init)
+  // ===========================
+  let chartSeasonalityObj = null;
+
+  function initMethodologyCharts() {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const hsdSI  = [96.9, 80.4, 82.6, 106.6, 116.6, 111.4, 92.7, 89.7, 89.1, 117.1, 119.6, 94.8];
+    const lsmSI  = [111.9, 110.6, 103.0, 90.7, 94.4, 97.3, 94.4, 95.4, 97.1, 98.1, 97.0, 109.0];
+
+    const ctxS = document.getElementById('chartSeasonality').getContext('2d');
+    chartSeasonalityObj = new Chart(ctxS, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'HSD Seasonal Index',
+            data: hsdSI,
+            borderColor: C.black,
+            backgroundColor: 'rgba(26,26,26,0.06)',
+            borderWidth: 2,
+            pointRadius: 4,
+            fill: false,
+            tension: 0.3,
+          },
+          {
+            label: 'LSM Seasonal Index',
+            data: lsmSI,
+            borderColor: C.amber,
+            backgroundColor: 'rgba(200,146,58,0.06)',
+            borderWidth: 2,
+            pointRadius: 4,
+            fill: false,
+            tension: 0.3,
+          },
+          {
+            label: 'Baseline = 100',
+            data: months.map(() => 100),
+            borderColor: C.lightGray,
+            borderWidth: 1,
+            borderDash: [4, 3],
+            pointRadius: 0,
+            fill: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: gridStyle, ticks: tickStyle },
+          y: {
+            min: 78, max: 125,
+            grid: gridStyle, ticks: tickStyle,
+            title: { display: true, text: 'Seasonal Index (avg = 100)', font: { size: 10 }, color: C.text }
+          }
+        }
+      }
+    });
+  }
+
+  // Init overview charts immediately (tab 1 is active)
+  // Already done inline above
+
+</script>
+</body>
+</html>
