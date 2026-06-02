@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Residential Two-Part Tariff — Design Framework</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--bg:#fff;--bg2:#fafafa;--bd:#e5e5e5;--acc:#C8923A;--txt:#1A1A1A;--txt2:#666;--txt3:#999;--grn:#52B788;--red:#9B2335;--blu:#1B4F72;--ylw:#D4AC0D;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:#2D2D2D;line-height:1.6;font-size:14px;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 1.5rem;}
+.hdr{border-bottom:1px solid var(--bd);padding:1.75rem 0 1.5rem;margin-bottom:2rem;}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--txt3);text-transform:uppercase;margin-bottom:.4rem;}
+.htitle{font-family:Georgia,serif;font-size:30px;font-weight:400;color:var(--txt);line-height:1.2;margin-bottom:.6rem;}
+.hsub{font-size:13px;color:var(--txt2);line-height:1.7;max-width:800px;}
+.hmeta{margin-top:1rem;display:flex;gap:1.5rem;flex-wrap:wrap;}
+.mi{font-size:11px;color:var(--txt3);}
+.mi span{color:var(--txt);font-weight:500;}
+.v8ok{display:inline-flex;align-items:center;gap:.4rem;background:#f0f7f0;border:1px solid var(--grn);border-radius:4px;padding:.25rem .7rem;font-size:11px;font-weight:600;color:#2d7050;margin-top:.6rem;}
+.tabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:2.5rem;overflow-x:auto;}
+.tb{background:none;border:none;padding:.8rem 1.25rem;font-size:12px;font-weight:600;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .15s;}
+.tb:hover{color:var(--txt);}
+.tb.on{color:var(--txt);border-bottom-color:var(--txt);}
+.tc{display:none;}
+.tc.on{display:block;}
+.slbl{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--txt3);text-transform:uppercase;margin-bottom:.4rem;}
+.stitle{font-family:Georgia,serif;font-size:21px;font-weight:400;color:var(--txt);margin-bottom:1.2rem;line-height:1.3;}
+.sb{margin-bottom:2.75rem;}
+/* KPI row */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.kpi{background:var(--bg2);border:1px solid var(--bd);border-radius:6px;padding:1.2rem;border-top:3px solid var(--bd);}
+.kpi.g{border-top-color:var(--grn);}
+.kpi.a{border-top-color:var(--acc);}
+.kpi.r{border-top-color:var(--red);}
+.kpi.b{border-top-color:var(--blu);}
+.kpi.y{border-top-color:var(--ylw);}
+.kn{font-family:Georgia,serif;font-size:24px;font-weight:400;color:var(--txt);line-height:1;}
+.kl{font-size:11px;color:var(--txt3);margin-top:.4rem;letter-spacing:.06em;text-transform:uppercase;}
+.kx{font-size:11px;color:var(--txt2);margin-top:.3rem;}
+/* Panel */
+.pnl{background:var(--bg2);border:1px solid var(--bd);border-radius:6px;padding:1.4rem;margin-bottom:1.4rem;}
+.ptitle{font-size:12px;font-weight:700;color:var(--txt);margin-bottom:.9rem;text-transform:uppercase;letter-spacing:.06em;}
+/* Grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.4rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+/* Table */
+.dt{width:100%;border-collapse:collapse;font-size:13px;}
+.dt th{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--txt);text-align:left;padding:.7rem;border-bottom:2px solid var(--bd);background:#fff;text-transform:uppercase;}
+.dt td{padding:.7rem;border-bottom:1px solid var(--bd);color:#2D2D2D;}
+.dt tr:hover td{background:#fafafa;}
+.num{text-align:right;font-variant-numeric:tabular-nums;}
+.ctr{text-align:center;}
+.hl{font-weight:600;color:var(--txt);}
+.gc{color:var(--grn);font-weight:600;}
+.rc{color:var(--red);font-weight:600;}
+.ac{color:var(--acc);font-weight:600;}
+.bc{color:var(--blu);font-weight:600;}
+.yc{color:var(--ylw);font-weight:600;}
+/* Callouts */
+.cl{border-left:4px solid var(--acc);background:var(--bg2);padding:1.1rem 1.4rem;border-radius:0 6px 6px 0;margin:1.4rem 0;font-size:13px;line-height:1.7;}
+.cl.g{border-left-color:var(--grn);}
+.cl.r{border-left-color:var(--red);}
+.cl.b{border-left-color:var(--blu);}
+.cl.y{border-left-color:var(--ylw);}
+/* V8 boxes */
+.v8ok-box{background:#f0f7f0;border:1px solid var(--grn);border-radius:6px;padding:1.1rem 1.4rem;margin:.9rem 0;font-size:13px;}
+.v8ok-box .v8h{font-size:11px;font-weight:700;color:#2d7050;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;}
+.v8fix{background:#fff8f0;border:1px solid var(--acc);border-radius:6px;padding:1.1rem 1.4rem;margin:.9rem 0;font-size:13px;}
+.v8fix .v8h{font-size:11px;font-weight:700;color:#8B5E1A;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;}
+/* Tier pills */
+.tp{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase;}
+.tp0{background:#e8f5ee;color:#2d7050;}
+.tp1{background:#fef9e7;color:#9a7d0a;}
+.tp2{background:#fdf3e3;color:#d68910;}
+.tp3{background:#fdf5f5;color:#c0392b;}
+.tp4{background:#eaf2fb;color:#1a5276;}
+.tp5{background:#f5eef8;color:#7d3c98;}
+.tpS{background:#fff8e1;color:#e65100;}  /* solar */
+.tpB{background:#e8f5e9;color:#1b5e20;}  /* bess */
+/* Consumer type cards */
+.ctype-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin:1.2rem 0;}
+.ctype{border:1px solid var(--bd);border-radius:8px;padding:1.4rem;background:#fff;border-top:4px solid var(--bd);}
+.ctype.solar{border-top-color:var(--ylw);}
+.ctype.bess{border-top-color:var(--grn);}
+.ctype.both{border-top-color:var(--acc);}
+.ctype-icon{font-size:24px;margin-bottom:.5rem;}
+.ctype-name{font-weight:700;font-size:14px;color:var(--txt);margin-bottom:.3rem;}
+.ctype-sub{font-size:12px;color:var(--txt2);margin-bottom:.9rem;line-height:1.5;}
+.ctype-stat{font-size:12px;padding:.3rem 0;border-bottom:1px solid var(--bd);}
+.ctype-stat:last-child{border-bottom:none;}
+.ctype-stat strong{color:var(--txt);}
+/* Floor comparison */
+.floor-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1rem 0;}
+.floor-card{border:1px solid var(--bd);border-radius:6px;padding:1.2rem;text-align:center;}
+.floor-card.current-design{border-color:var(--red);background:#fff9f9;}
+.floor-card.proposed-A{border-color:var(--acc);background:#fdf8f0;}
+.floor-card.proposed-B{border-color:var(--grn);background:#f0f7f0;}
+.floor-pct{font-family:Georgia,serif;font-size:36px;font-weight:400;margin-bottom:.3rem;}
+.floor-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt2);}
+.floor-note{font-size:11px;color:var(--txt2);margin-top:.6rem;line-height:1.5;}
+/* Simulator */
+.calcwrap{background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:1.75rem;}
+.calc3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.4rem;margin-bottom:1.4rem;}
+.fg{display:flex;flex-direction:column;gap:.35rem;}
+.fl{font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em;}
+.fi{border:1px solid var(--bd);border-radius:4px;padding:.55rem .7rem;font-size:14px;background:#fff;color:var(--txt);outline:none;width:100%;}
+.fi:focus{border-color:var(--acc);}
+.ri{width:100%;accent-color:var(--acc);margin:.25rem 0;}
+.rv{font-size:13px;font-weight:600;color:var(--txt);}
+.resgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin:1.4rem 0;}
+.rc2{border:1px solid var(--bd);border-radius:6px;padding:1.1rem;background:#fff;border-top:3px solid var(--bd);}
+.rc2.curr{border-top-color:var(--red);}
+.rc2.p1{border-top-color:var(--acc);}
+.rc2.full{border-top-color:var(--grn);}
+.rc2.opt{border-top-color:var(--blu);}
+.rlbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:.7rem;}
+.rbill{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--txt);}
+.rrate{font-size:12px;color:var(--txt2);margin-top:.3rem;}
+.rdelta{font-size:12px;font-weight:600;margin-top:.4rem;}
+.rdelta.sv{color:var(--grn);}
+.rdelta.up{color:var(--red);}
+.rbd{font-size:11px;color:var(--txt2);margin-top:.6rem;line-height:1.6;}
+/* Archetype grid */
+.agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.75rem;}
+.acard{border:1px solid var(--bd);border-radius:6px;padding:1.1rem;cursor:pointer;transition:all .15s;background:#fff;}
+.acard.on{border-color:var(--acc);background:#fdf8f0;}
+.acard:hover:not(.on){border-color:#ccc;}
+.aname{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:.2rem;}
+.adesc{font-size:11px;color:var(--txt2);}
+.aunits{font-family:Georgia,serif;font-size:18px;color:var(--acc);margin-top:.4rem;}
+/* Chart */
+.cbox{background:#fff;border:1px solid var(--bd);border-radius:6px;padding:1.2rem;}
+.ctitle{font-size:12px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.9rem;}
+canvas{max-height:260px;}
+/* ToU clock */
+.tclock{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;margin:.7rem 0;}
+.th{height:36px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(255,255,255,.9);}
+.tlrow{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;}
+.tlh{font-size:9px;color:var(--txt3);text-align:center;}
+.tns{background:#5D7EA8;}
+.tsl{background:#F4D03F;color:#6D4C00;}
+.tpk{background:#C0392B;}
+.tleg{display:flex;gap:1.4rem;margin-top:.6rem;flex-wrap:wrap;}
+.tleg-i{display:flex;align-items:center;gap:.35rem;font-size:12px;color:var(--txt2);}
+.tleg-d{width:10px;height:10px;border-radius:2px;}
+/* Timeline */
+.tl{position:relative;padding-left:2rem;}
+.tl::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--bd);}
+.tli{position:relative;margin-bottom:2rem;}
+.tld{position:absolute;left:-1.75rem;top:4px;width:12px;height:12px;border-radius:50%;border:2px solid var(--acc);background:#fff;}
+.tld.on{background:var(--acc);}
+.tlp{font-size:11px;font-weight:600;color:var(--acc);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem;}
+.tlh2{font-size:14px;font-weight:600;color:var(--txt);margin-bottom:.4rem;}
+.tlb{font-size:13px;color:var(--txt2);line-height:1.7;}
+/* Strategy cards */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.2rem 0;}
+.strat{border:1px solid var(--bd);border-radius:6px;padding:1.3rem;background:#fff;}
+.strat-icon{font-size:20px;margin-bottom:.5rem;}
+.strat-name{font-weight:700;font-size:14px;color:var(--txt);margin-bottom:.6rem;}
+.strat-body{font-size:13px;color:var(--txt2);line-height:1.7;}
+.strat-benefit{margin-top:.8rem;background:var(--bg2);border-radius:4px;padding:.7rem;font-size:12px;}
+.strat-benefit strong{color:var(--txt);}
+@media(max-width:768px){
+.g2,.g3,.g4,.kpis,.calc3,.resgrid,.agrid,.ctype-grid,.g2,.floor-grid,.strat-grid{grid-template-columns:1fr;}
+.htitle{font-size:22px;}
+.kpis{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="eyebrow">Policy Design — Power Sector Reform</div>
+  <h1 class="htitle">Residential Two-Part Tariff: Design for the<br>Solar & Storage Era</h1>
+  <p class="hsub">A phased residential R-TPT framework grounded in PPMC V8 official rates, extended with specific design modifications for Pakistan's growing population of net-metering prosumers, behind-the-meter solar consumers, and BESS owners — the cohort most likely to opt in.</p>
+  <div class="hmeta">
+    <div class="mi">By <span>Ammar H. Khan</span></div>
+    <div class="mi">Reference <span>PPMC TPT V8 (March 26, 2026)</span></div>
+    <div class="mi">For <span>NEPRA / Power Division</span></div>
+  </div>
+  <div class="v8ok">✔ V8 rates applied — Solar & Storage design extensions added</div>
+</div>
+
+<div class="tabs">
+  <button class="tb on" onclick="go('v8',this)">V8 Alignment</button>
+  <button class="tb" onclick="go('solar',this)">☀ Solar & Storage</button>
+  <button class="tb" onclick="go('design',this)">Tariff Design</button>
+  <button class="tb" onclick="go('sim',this)">Bill Simulator</button>
+  <button class="tb" onclick="go('road',this)">Roadmap</button>
+</div>
+
+<!-- ===== V8 ALIGNMENT ===== -->
+<div id="tab-v8" class="tc on">
+<div class="sb">
+  <div class="slbl">Official Proposal Review</div>
+  <div class="stitle">What V8 says — and the three design gaps for solar/storage consumers</div>
+  <div class="cl b"><strong>V8 Context:</strong> The March 26 PPMC consultation (V8) is scoped for Industrial and Agricultural opt-in, with Domestic CSC shown as indicative. The domestic CSC is PKR 10,085/kW-MDI. As currently written, the V8 framework is <strong>hostile</strong> to prosumers, BTM solar, and BESS owners — bill increases of 1,200–2,600% for current net-metering consumers. Three targeted design extensions correct this.</div>
+
+  <div class="pnl">
+    <div class="ptitle">V8 Official Rates — Confirmed Correct (No Change)</div>
+    <table class="dt">
+      <thead><tr><th>Category</th><th>CSC (Rs/kW-mo)</th><th>Peak Rate</th><th>Solar Rate</th><th>Non-Solar Rate</th><th>Floor (billing demand)</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tp tp4">B1/B2</span> Industrial</td><td class="num hl">6,973</td><td class="num">11.33</td><td class="num">6.23</td><td class="num">9.21</td><td>max(50% SL, MDI)</td></tr>
+        <tr><td><span class="tp tp4">B3</span> Industrial</td><td class="num hl">7,432</td><td class="num">10.87</td><td class="num">5.98</td><td class="num">8.84</td><td>max(50% SL, MDI)</td></tr>
+        <tr><td><span class="tp tp4">B4</span> Industrial</td><td class="num hl">7,804</td><td class="num">10.16</td><td class="num">5.59</td><td class="num">8.26</td><td>max(50% SL, MDI)</td></tr>
+        <tr style="background:#fffff0;"><td><span class="tp tp5">DOM</span> Domestic</td><td class="num hl rc">10,085</td><td class="num">11.33</td><td class="num">6.23</td><td class="num">9.21</td><td>max(50% SL, MDI) — or full SL if no AMI</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pnl">
+    <div class="ptitle">Three Design Gaps for Solar & Storage Consumers</div>
+    <table class="dt">
+      <thead><tr><th>#</th><th>Gap in V8</th><th>Impact</th><th>Proposed Fix</th></tr></thead>
+      <tbody>
+        <tr style="background:#fff9f9;"><td class="rc hl">1</td><td>50% SL floor makes R-TPT punitive for prosumers regardless of actual grid draw — MDI reduction below 50% SL has ZERO value</td><td class="rc">Net-metering bill increases 1,264–2,600%. BESS investment incentive killed below 50% SL threshold</td><td>Tiered SL floors: <strong>35% SL for solar-only, 20% SL for solar+BESS</strong> — billing demand = max(floor, gross import MDI)</td></tr>
+        <tr style="background:#fff9f9;"><td class="rc hl">2</td><td>Solar export credited at pure SRMC (Rs 6.23/kWh) vs current net-metering retail (Rs 37.92/kWh) — export value destroyed by 84%</td><td class="rc">Prosumers will defect to full off-grid BESS (no export at all) rather than stay grid-connected</td><td><strong>Solar Export Premium: Rs 7.50/kWh</strong> — above SRMC (6.23) but well below retail (11.33-9.21). Keeps prosumers grid-connected as system assets</td></tr>
+        <tr style="background:#fff9f9;"><td class="rc hl">3</td><td>V8 T&C Condition 10: no-AMI consumers billed at full SL — creates enormous CSC for all BTM solar consumers without smart meters</td><td class="rc">BTM solar consumer (10 kW SL) without AMI faces PKR 100,850/month CSC vs current PKR 15,168 bill</td><td><strong>Phase-1 prosumer flat HCC: Rs 400/kW-SL</strong> — transitional, metered on SL. Gradually steps up as AMI meters roll out. Makes opt-in viable immediately.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pnl">
+    <div class="ptitle">Bill Impact — Current Tariff vs V8 As-Designed vs Proposed Extensions (10 kW SL, 6 kW Solar)</div>
+    <table class="dt">
+      <thead><tr><th>Consumer Type</th><th class="num">Current Bill</th><th class="num">V8 As-Designed</th><th class="num">Proposed Phase-1</th><th class="num">Proposed Full (AMI)</th><th>Delta vs Current</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tp tp4">Grid only</span> No solar/BESS</td><td class="num">36,024</td><td class="num rc">89,549</td><td class="num ac">32,650</td><td class="num ac">89,549</td><td class="rc">+149% (full V8)</td></tr>
+        <tr style="background:#fffff0;"><td><span class="tp tpS">Solar NM</span> Net metering, no BESS</td><td class="num">3,792</td><td class="num rc">51,980</td><td class="num ac">4,000 flat HCC</td><td class="num ac">35,298</td><td class="ac">+31% (proposed vs current net)</td></tr>
+        <tr style="background:#fffff0;"><td><span class="tp tpS">BTM Solar</span> No net meter, no BESS</td><td class="num">15,168</td><td class="num rc">64,244</td><td class="num ac">7,000 flat HCC</td><td class="num ac">42,357</td><td class="ac">+179% but corrects free-riding</td></tr>
+        <tr style="background:#f0fff4;"><td><span class="tp tpB">Solar+BESS</span> MDI managed to 3 kW</td><td class="num">1,896</td><td class="num rc">51,077</td><td class="num gc">4,000 flat HCC</td><td class="num gc">20,170</td><td class="gc">+963% → BESS earns 30,907/mo vs V8</td></tr>
+        <tr style="background:#f0fff4;"><td><span class="tp tpB">Solar+BESS</span> MDI optimized 2.5 kW</td><td class="num">1,138</td><td class="num rc">51,077</td><td class="num gc">4,000 flat HCC</td><td class="num gc">25,213</td><td class="gc">BESS MDI floor = 20%×10 = 2kW → 20,170</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--txt3);margin-top:.6rem;">Phase-1 flat HCC for prosumers: Rs 400/kW-SL/month. Full AMI: billing demand = max(35% SL, gross import MDI) for solar-only; max(20% SL, gross import MDI) for solar+BESS. Export credit Rs 7.50/kWh. All energy billed on gross grid import by ToU window.</p>
+  </div>
+
+  <div class="cl g"><strong>Core finding:</strong> MDI reduction under R-TPT is worth PKR 10,085 per kW per month. For a 10 kW SL household, reducing evening grid peak from 8 kW to 3 kW saves PKR 50,425/month — dwarfing any benefit from BESS energy arbitrage (Rs 6.23 solar → Rs 11.33 peak spread = Rs 1,346/month for a 10 kWh battery). The dominant R-TPT value proposition for BESS is demand management, not energy trading — and the design must reward this explicitly through a lower SL floor.</div>
+</div>
+</div>
+
+<!-- ===== SOLAR & STORAGE TAB ===== -->
+<div id="tab-solar" class="tc">
+<div class="sb">
+  <div class="slbl">Consumer Segmentation</div>
+  <div class="stitle">Three distinct consumer types — very different economics under R-TPT</div>
+
+  <div class="kpis">
+    <div class="kpi y">
+      <div class="kn">~1.5 GW</div>
+      <div class="kl">Rooftop solar installed</div>
+      <div class="kx">Pakistan, 2025. Growing at 500 MW/year</div>
+    </div>
+    <div class="kpi a">
+      <div class="kn">PKR 10,085</div>
+      <div class="kl">CSC value per kW MDI</div>
+      <div class="kx">Every kW of MDI reduced saves this per month</div>
+    </div>
+    <div class="kpi g">
+      <div class="kn">15×</div>
+      <div class="kl">MDI mgmt > energy arbitrage</div>
+      <div class="kx">MDI reduction vs BESS ToU trading value</div>
+    </div>
+    <div class="kpi b">
+      <div class="kn">Rs 7.50</div>
+      <div class="kl">Proposed export premium</div>
+      <div class="kx">vs SRMC Rs 6.23; vs retail Rs 37.92</div>
+    </div>
+  </div>
+
+  <div class="ctype-grid">
+    <div class="ctype solar">
+      <div class="ctype-icon">☀️</div>
+      <div class="ctype-name">Type A — Net Metering Prosumer</div>
+      <div class="ctype-sub">Rooftop solar with bidirectional meter. Exports surplus to grid. Currently billed on net units. Largest and fastest-growing cohort.</div>
+      <div class="ctype-stat"><strong>Current tariff benefit:</strong> Export credited at retail Rs 37.92/kWh</div>
+      <div class="ctype-stat"><strong>R-TPT challenge:</strong> CSC on full SL regardless of net consumption</div>
+      <div class="ctype-stat"><strong>R-TPT opportunity:</strong> Low energy rates during solar hours; export + MDI management</div>
+      <div class="ctype-stat" style="margin-top:.5rem;color:var(--acc);font-size:12px;font-weight:600;">Key metric: Gross import MDI (evening draw). Keep it low = keep CSC low</div>
+    </div>
+    <div class="ctype bess">
+      <div class="ctype-icon">🔋</div>
+      <div class="ctype-name">Type B — Behind-the-Meter Solar (No Export)</div>
+      <div class="ctype-sub">Rooftop solar, unidirectional or standard meter. Self-consumes all solar; surplus wasted or stored. Many BTM installations are this type.</div>
+      <div class="ctype-stat"><strong>Current tariff benefit:</strong> Reduces grid draw → lower volumetric bill</div>
+      <div class="ctype-stat"><strong>R-TPT challenge:</strong> CSC based on MDI — evening peak still high without BESS</div>
+      <div class="ctype-stat"><strong>R-TPT opportunity:</strong> With AMI + BESS, can manage gross import MDI actively</div>
+      <div class="ctype-stat" style="margin-top:.5rem;color:var(--grn);font-size:12px;font-weight:600;">Key metric: Evening grid peak. Solar helps daytime; BESS needed for evening MDI control</div>
+    </div>
+    <div class="ctype both">
+      <div class="ctype-icon">⚡</div>
+      <div class="ctype-name">Type C — Solar + BESS (Integrated System)</div>
+      <div class="ctype-sub">Rooftop solar with home battery. Self-consumes solar, stores surplus, discharges battery at evening peak to avoid grid draw. Optimal R-TPT positioning.</div>
+      <div class="ctype-stat"><strong>Current tariff benefit:</strong> Near-zero bills; solar + BESS eliminates most grid draw</div>
+      <div class="ctype-stat"><strong>R-TPT challenge:</strong> Must pay CSC even if grid draw is minimal</div>
+      <div class="ctype-stat"><strong>R-TPT opportunity:</strong> BESS dramatically reduces MDI → huge CSC savings at 20% SL floor</div>
+      <div class="ctype-stat" style="margin-top:.5rem;color:var(--acc);font-size:12px;font-weight:600;">Key metric: Gross import MDI. Well-managed BESS can reduce to 20% SL = minimum CSC floor</div>
+    </div>
+  </div>
+
+  <div class="cl y"><strong>Why these consumers are the opt-in population:</strong> Consumers who have already invested in solar and/or BESS have demonstrated price sensitivity and willingness to manage energy use. They are the most likely to opt in to R-TPT. Yet the V8 design as written would cause them the most harm. Getting the design right for these consumers is essential for opt-in adoption and system-wide peak reduction goals.</div>
+</div>
+
+<div class="sb">
+  <div class="slbl">The MDI Value Proposition</div>
+  <div class="stitle">Why demand management — not energy trading — is the game-changer under R-TPT</div>
+
+  <div class="g2">
+    <div class="pnl">
+      <div class="ptitle">MDI Reduction Value (PKR 10,085/kW-month)</div>
+      <table class="dt">
+        <thead><tr><th>MDI Reduced (kW)</th><th class="num">Monthly Saving</th><th class="num">Annual Saving</th><th class="num">BESS capex justified (5yr)</th></tr></thead>
+        <tbody>
+          <tr><td>1 kW</td><td class="num">10,085</td><td class="num">121,020</td><td class="num ac">605,100</td></tr>
+          <tr><td>2 kW</td><td class="num">20,170</td><td class="num">242,040</td><td class="num ac">1,210,200</td></tr>
+          <tr><td>3 kW</td><td class="num ac hl">30,255</td><td class="num ac hl">363,060</td><td class="num ac">1,815,300</td></tr>
+          <tr><td>4 kW</td><td class="num">40,340</td><td class="num">484,080</td><td class="num">2,420,400</td></tr>
+          <tr><td>5 kW</td><td class="num">50,425</td><td class="num">605,100</td><td class="num">3,025,500</td></tr>
+        </tbody>
+      </table>
+      <div class="cl g" style="margin-top:.9rem;padding:.9rem 1.1rem;">A 10 kWh BESS (≈ PKR 300,000–500,000 installed) that reduces MDI by 3 kW saves PKR 363,060/year. <strong>Simple payback: under 18 months under R-TPT</strong> — vs 5–7 years under current tariff where the benefit is only energy arbitrage.</div>
+    </div>
+    <div class="pnl">
+      <div class="ptitle">Energy Arbitrage vs MDI Management (10 kWh BESS)</div>
+      <table class="dt">
+        <thead><tr><th>Benefit Type</th><th class="num">Value/Month</th><th>Mechanism</th></tr></thead>
+        <tbody>
+          <tr><td>Pure energy arbitrage<br><small style="color:var(--txt3)">Buy solar Rs6.23, sell at peak Rs11.33</small></td><td class="num rc">PKR 1,346</td><td>10kWh × 1 cycle × 30d × Rs4.49 net spread (88% efficiency)</td></tr>
+          <tr><td>MDI management — 1kW reduction</td><td class="num ac">PKR 10,085</td><td>BESS caps grid draw during peak: 1kW less → 1kW × Rs10,085</td></tr>
+          <tr><td>MDI management — 2kW reduction</td><td class="num gc">PKR 20,170</td><td>BESS caps grid draw at 6kW instead of 8kW (10kW SL house)</td></tr>
+          <tr><td>MDI management — 3kW reduction</td><td class="num gc hl">PKR 30,255</td><td>Practical with 10kWh BESS + solar; caps evening peak at 5kW</td></tr>
+        </tbody>
+      </table>
+      <div class="cl r" style="margin-top:.9rem;padding:.9rem 1.1rem;"><strong>MDI reduction is 7–22× more valuable than energy arbitrage.</strong> Designing R-TPT to reward MDI management (via lower SL floors) is more important than the ToU energy rate spread.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="slbl">The SL Floor Problem — and Solution</div>
+  <div class="stitle">The 50% SL floor kills BESS investment incentives below the threshold</div>
+
+  <div class="floor-grid">
+    <div class="floor-card current-design">
+      <div class="floor-pct rc">50%</div>
+      <div class="floor-label">V8 Current Design</div>
+      <div class="floor-note">All consumers: billing demand = max(50% SL, MDI). For a 10kW SL house: minimum CSC = 10,085 × 5 = <strong>PKR 50,425/month</strong>. MDI management below 5kW has zero value — kills BESS incentive in the key range.</div>
+    </div>
+    <div class="floor-card proposed-A">
+      <div class="floor-pct ac">35%</div>
+      <div class="floor-label">Proposed: Solar-Only Prosumers</div>
+      <div class="floor-note">Net metering or BTM solar, no BESS: floor = 35% SL. For 10kW SL: minimum CSC = 10,085 × 3.5 = <strong>PKR 35,298/month</strong>. Acknowledges that solar genuinely reduces peak grid dependency. Still fair network cost contribution.</div>
+    </div>
+    <div class="floor-card proposed-B">
+      <div class="floor-pct gc">20%</div>
+      <div class="floor-label">Proposed: Solar+BESS Consumers</div>
+      <div class="floor-note">Verified solar + BESS with AMI: floor = 20% SL. For 10kW SL: minimum CSC = 10,085 × 2 = <strong>PKR 20,170/month</strong>. BESS investment creates PKR 30,255/month saving vs V8 design. Simple payback on BESS under 18 months.</div>
+    </div>
+  </div>
+
+  <div class="pnl" style="margin-top:1rem;">
+    <div class="ptitle">Proposed Complete Solar & Storage Billing Framework</div>
+    <table class="dt">
+      <thead>
+        <tr><th>Consumer Type</th><th>SL Floor</th><th>Billing Demand</th><th>Export Credit</th><th>Energy Billing Basis</th><th>Verification Req.</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="tp tp4">Standard</span> Grid only, no solar/BESS</td><td class="num">50% SL</td><td>max(50%SL, MDI)</td><td>N/A</td><td>Gross import by ToU</td><td>None</td></tr>
+        <tr style="background:#fffff0;"><td><span class="tp tpS">Solar-NM</span> Net metering, no BESS</td><td class="num ac">35% SL</td><td>max(35%SL, gross import MDI)</td><td>Rs 7.50/kWh (export premium)</td><td>Gross import by ToU; export deducted</td><td>Solar system registration</td></tr>
+        <tr style="background:#fffff0;"><td><span class="tp tpS">BTM Solar</span> Self-consume, no export</td><td class="num ac">35% SL</td><td>max(35%SL, gross import MDI)</td><td>N/A</td><td>Gross import by ToU (net if no AMI)</td><td>Solar system registration</td></tr>
+        <tr style="background:#f0fff4;"><td><span class="tp tpB">Solar+BESS</span> Solar + battery, AMI-metered</td><td class="num gc">20% SL</td><td>max(20%SL, gross import MDI)</td><td>Rs 7.50/kWh (solar export only)</td><td>Gross import by ToU; BESS dispatch verified</td><td>Solar + BESS registration + AMI</td></tr>
+        <tr style="background:#f0fff4;"><td><span class="tp tpB">BESS-only</span> Grid-charged battery, no solar</td><td class="num">40% SL</td><td>max(40%SL, gross import MDI)</td><td>N/A</td><td>Gross import by ToU (BESS charges at off-peak)</td><td>BESS registration + AMI</td></tr>
+        <tr style="background:#fdf5f5;"><td><span class="tp tp5">Prosumer P1</span> Phase-1 flat HCC (any type)</td><td>N/A</td><td>Flat HCC = Rs 400/kW-SL/month</td><td>Rs 7.50/kWh (for NM consumers)</td><td>Gross import at flat energy rate</td><td>Phase-1 transitional; no AMI req.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="slbl">Strategic Playbooks</div>
+  <div class="stitle">How each consumer type maximises benefit under R-TPT</div>
+  <div class="strat-grid">
+    <div class="strat">
+      <div class="strat-icon">☀️</div>
+      <div class="strat-name">Type A: Net-Metering Only (No BESS)</div>
+      <div class="strat-body">
+        Primary lever is <strong>evening MDI management</strong> — reduce household peak draw between 19:00–23:00. Practical steps: run AC, washing machine, geysers before 19:00; use LED bulbs and fans during peak; avoid coincident high-draw appliances in same hour.
+        <br><br>Secondary lever: <strong>maximize solar self-consumption</strong> vs export. Under R-TPT, solar self-consumption avoids paying Rs 6.23–9.21/kWh. Under current tariff, export at retail was more valuable. Now self-consume as much as possible.
+      </div>
+      <div class="strat-benefit"><strong>Achievable benefit:</strong> Reducing evening MDI from 6kW to 4kW saves PKR 20,170/month in CSC under proposed 35% floor design. No capital expenditure required.</div>
+    </div>
+    <div class="strat">
+      <div class="strat-icon">🔋</div>
+      <div class="strat-name">Type B: BTM Solar (No Export)</div>
+      <div class="strat-body">
+        Under current tariff, BTM solar has good economics: avoid Rs 37.92/kWh on every self-consumed unit. Under R-TPT, the volumetric savings diminish (avoiding Rs 6.23–11.33/kWh) but the MDI management opportunity opens up. 
+        <br><br>Adding BESS makes this consumer type highly attractive: solar charges BESS during day, BESS discharges at peak to cap MDI. Achievable MDI reduction of 3–4 kW with a 10 kWh battery. This qualifies for the 20% SL floor.
+      </div>
+      <div class="strat-benefit"><strong>Key decision:</strong> Adding a 10 kWh BESS (≈ PKR 400,000) enables Rs 30,255/month in CSC savings → payback in 13 months. R-TPT makes BESS dramatically more attractive than under current tariff.</div>
+    </div>
+    <div class="strat">
+      <div class="strat-icon">⚡</div>
+      <div class="strat-name">Type C: Solar + BESS (Integrated)</div>
+      <div class="strat-body">
+        This is the <strong>optimal R-TPT configuration</strong>. Dispatch strategy: charge BESS from solar 10:00–16:00 (Rs 6.23/kWh or free if own solar). Discharge during peak 19:00–23:00 to limit grid draw to MDI floor.
+        <br><br>Target: Gross import MDI ≤ 20% SL. For 10kW SL household, target ≤ 2 kW grid draw at any moment — achievable with 6 kW solar + 10 kWh BESS. CSC = 10,085 × 2 = PKR 20,170/month vs V8 as-designed PKR 80,680.
+      </div>
+      <div class="strat-benefit"><strong>Grid benefit:</strong> This consumer becomes a firm demand-response asset. Peak reduction of 5–8 kW per household × millions of households = GW-scale peak flattening. Enables lower installed capacity and lower QTA for all consumers.</div>
+    </div>
+    <div class="strat">
+      <div class="strat-icon">📱</div>
+      <div class="strat-name">BESS Dispatch Intelligence</div>
+      <div class="strat-body">
+        Under R-TPT, the MDI for billing is the <strong>single highest 15-minute peak gross import</strong> during the month. This means one outlier event (e.g., AC + geyser + EV charging simultaneously for 15 minutes) determines the entire month's CSC.
+        <br><br>Smart BESS dispatch algorithms that monitor real-time grid import and limit peak draw are therefore extremely high-value. This creates a market for home energy management systems (HEMS) and smart inverters that can provide MDI capping as a service.
+      </div>
+      <div class="strat-benefit"><strong>Market signal:</strong> R-TPT creates a PKR 10,085/kW/month market for MDI management technology. This is a powerful incentive for smart inverter, HEMS, and demand response product development in Pakistan.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sb">
+  <div class="slbl">Duck Curve Alignment</div>
+  <div class="stitle">R-TPT + Solar + BESS = optimal alignment with Pakistan's grid needs</div>
+  <div class="g2">
+    <div class="cbox">
+      <div class="ctitle">ToU Rate Structure — Domestic (V8 Official)</div>
+      <canvas id="touRateChart"></canvas>
+    </div>
+    <div class="pnl">
+      <div class="ptitle">Why BESS + Solar is the System's Best Friend</div>
+      <p style="font-size:13px;color:var(--txt2);line-height:1.8;">Pakistan's duck curve (V8 slides 5–7) shows solar demand trough of -15.4% during solar hours (2023→2025), with evening peak SRMC of Rs 12.7–23.41/kWh. The R-TPT ToU structure mirrors this exactly:
+      <br><br>• <strong>Solar hours (10–16h)</strong>: Rs 6.23/kWh — cheapest. Grid has surplus. Solar + BESS should charge.
+      <br><br>• <strong>Peak (19–23h)</strong>: Rs 11.33/kWh — most expensive. Grid is stressed. BESS should discharge.
+      <br><br>• <strong>Non-solar (rest)</strong>: Rs 9.21/kWh — baseline. Manage grid imports here.
+      <br><br>A household with Solar+BESS that follows this dispatch pattern absorbs surplus solar midday AND reduces evening peak draw — exactly what the system needs. The BESS MDI management floor (20% SL) is the pricing mechanism that makes this economically rational.
+      </p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== TARIFF DESIGN ===== -->
+<div id="tab-design" class="tc">
+<div class="sb">
+  <div class="slbl">Rate Schedule</div>
+  <div class="stitle">Complete R-TPT rate schedule including solar & storage modifications</div>
+
+  <div class="pnl">
+    <div class="ptitle">ToU Windows — Domestic (V8 Official, Slide 33)</div>
+    <div class="tclock" id="touClock"></div>
+    <div class="tlrow" id="touLabels"></div>
+    <div class="tleg">
+      <div class="tleg-i"><div class="tleg-d" style="background:#5D7EA8;"></div>Non-Solar 00–09h + 17–18h — Rs 9.21/kWh</div>
+      <div class="tleg-i"><div class="tleg-d" style="background:#F4D03F;"></div>Solar 10–16h — Rs 6.23/kWh ← cheapest</div>
+      <div class="tleg-i"><div class="tleg-d" style="background:#C0392B;"></div>Peak 19–23h — Rs 11.33/kWh ← most expensive</div>
+    </div>
+  </div>
+
+  <div class="pnl">
+    <div class="ptitle">Full R-TPT Rate Schedule — Standard Consumers (Phase 1 Transitional)</div>
+    <table class="dt">
+      <thead><tr><th>Tier</th><th>Units/Month</th><th class="num">Phase-1 HCC</th><th class="num">Energy Rate</th><th class="num">V8 Full CSC</th><th>MDI Floor</th><th>Revenue Floor</th></tr></thead>
+      <tbody>
+        <tr style="background:#f0faf5;"><td><span class="tp tp0">T0</span> Lifeline</td><td>0–100</td><td class="num gc">Rs 0</td><td class="num">Rs 4.00/kWh</td><td class="num">(exempt)</td><td>N/A</td><td class="ctr gc">Protected</td></tr>
+        <tr style="background:#fafaf0;"><td><span class="tp tp1">T1</span> Basic</td><td>101–200</td><td class="num">Rs 300 flat</td><td class="num">Rs 10.00/kWh</td><td class="num">10,085/kW</td><td>50% SL</td><td class="ctr ac">MIN(TPT, current)</td></tr>
+        <tr style="background:#fff8f0;"><td><span class="tp tp2">T2</span> Standard</td><td>201–400</td><td class="num">Rs 700 flat</td><td class="num">Rs 20.00/kWh</td><td class="num">10,085/kW</td><td>50% SL</td><td class="ctr ac">MIN(TPT, current)</td></tr>
+        <tr style="background:#fdf4f4;"><td><span class="tp tp3">T3</span> Premium</td><td>401–700</td><td class="num">Rs 1,500 flat</td><td class="num">Rs 25.00/kWh</td><td class="num">10,085/kW</td><td>50% SL</td><td class="ctr ac">MIN(TPT, current)</td></tr>
+        <tr style="background:#eef4ff;"><td><span class="tp tp4">T4a</span> High-Use (no AMI)</td><td>&gt;700</td><td class="num">Rs 700/kW-SL</td><td class="num">Rs 27.00/kWh</td><td class="num">10,085/kW</td><td>50% SL proxy</td><td class="ctr">None</td></tr>
+        <tr style="background:#eef4ff;"><td><span class="tp tp4">T4b</span> High-Use (AMI)</td><td>&gt;700</td><td class="num rc">Rs 10,085/kW-MDI</td><td class="num">ToU: 6.23/9.21/11.33</td><td class="num gc">V8 official</td><td>max(50%SL, MDI)</td><td class="ctr">None</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pnl">
+    <div class="ptitle">Solar & Storage Billing Framework — Design Extensions to V8</div>
+    <table class="dt">
+      <thead><tr><th>Consumer Type</th><th>Phase-1 HCC</th><th>Full AMI CSC</th><th>SL Floor</th><th>Export Credit</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr style="background:#fffff0;"><td><span class="tp tpS">Solar-NM</span> Net metering, no BESS</td><td class="num ac">Rs 400/kW-SL flat</td><td class="num">10,085 × max(35%SL, import MDI)</td><td class="ac">35% SL</td><td class="gc">Rs 7.50/kWh</td><td>Gross AMI metering. Export at solar premium.</td></tr>
+        <tr style="background:#fffff0;"><td><span class="tp tpS">BTM Solar</span> Self-consume, no export</td><td class="num ac">Rs 400/kW-SL flat</td><td class="num">10,085 × max(35%SL, import MDI)</td><td class="ac">35% SL</td><td>N/A</td><td>Standard AMI import metering.</td></tr>
+        <tr style="background:#f0fff4;"><td><span class="tp tpB">Solar+BESS</span> Verified system, AMI</td><td class="num gc">Rs 400/kW-SL flat</td><td class="num gc">10,085 × max(20%SL, import MDI)</td><td class="gc">20% SL</td><td class="gc">Rs 7.50/kWh</td><td>BESS + solar registration + AMI required. Quarterly verification.</td></tr>
+        <tr><td><span class="tp tp4">BESS-only</span> Grid-charged, no solar</td><td class="num">Rs 600/kW-SL flat</td><td class="num">10,085 × max(40%SL, import MDI)</td><td>40% SL</td><td>N/A</td><td>Standard AMI. BESS registration required.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--txt3);margin-top:.6rem;">QTA, FCA, DSS applicable per V8 T&C. Reversion option: 6 months minimum, 1-month notice per V8. All rates ex-GST. Phase-1 flat HCC steps up toward full V8 CSC over 3-year phase schedule.</p>
+  </div>
+</div>
+</div>
+
+<!-- ===== SIMULATOR ===== -->
+<div id="tab-sim" class="tc">
+<div class="sb">
+  <div class="slbl">Interactive Tool</div>
+  <div class="stitle">Bill Simulator — Solar, BESS & Standard Consumers</div>
+  <div class="v8ok-box"><div class="v8h">✔ V8 Rates Applied</div>Domestic: Peak Rs 11.33 / Non-Solar Rs 9.21 / Solar Rs 6.23. CSC Rs 10,085/kW. Export premium Rs 7.50/kWh. Proposed SL floors: standard 50%, solar-only 35%, solar+BESS 20%.</div>
+
+  <div class="agrid">
+    <div class="acard on" id="a-khalid" onclick="arch('khalid')">
+      <div class="aname">Khalid (Basic grid)</div>
+      <div class="adesc">Urban apt, no solar/BESS</div>
+      <div class="aunits">200u · 3kW SL</div>
+    </div>
+    <div class="acard" id="a-ayesha" onclick="arch('ayesha')">
+      <div class="aname">Ayesha (Standard)</div>
+      <div class="adesc">Mid home, 1 AC, no solar</div>
+      <div class="aunits">400u · 6kW SL</div>
+    </div>
+    <div class="acard" id="a-tariq" onclick="arch('tariq')">
+      <div class="aname">Tariq (High-Use)</div>
+      <div class="adesc">Large house, 3 ACs, no solar</div>
+      <div class="aunits">950u · 10kW SL</div>
+    </div>
+    <div class="acard" id="a-sara" onclick="arch('sara')">
+      <div class="aname">Sara (Net Metering)</div>
+      <div class="adesc">6kW solar, NM, no BESS</div>
+      <div class="aunits">300u net · 10kW SL</div>
+    </div>
+    <div class="acard" id="a-faisal" onclick="arch('faisal')">
+      <div class="aname">Faisal (BTM Solar)</div>
+      <div class="adesc">5kW solar, no export</div>
+      <div class="aunits">400u grid · 8kW SL</div>
+    </div>
+    <div class="acard" id="a-hassan" onclick="arch('hassan')">
+      <div class="aname">Hassan (Solar+BESS)</div>
+      <div class="adesc">6kW solar + 10kWh BESS</div>
+      <div class="aunits">150u grid · 10kW SL</div>
+    </div>
+    <div class="acard" id="a-nadia" onclick="arch('nadia')">
+      <div class="aname">Nadia (BESS only)</div>
+      <div class="adesc">10kWh BESS, no solar</div>
+      <div class="aunits">700u · 8kW SL</div>
+    </div>
+    <div class="acard" id="a-arif" onclick="arch('arif')">
+      <div class="aname">Arif (Optimized)</div>
+      <div class="adesc">8kW solar + 15kWh BESS, MDI managed</div>
+      <div class="aunits">80u grid · 12kW SL</div>
+    </div>
+  </div>
+
+  <div class="calcwrap">
+    <div class="calc3">
+      <div class="fg"><div class="fl">Monthly Grid Import (units)</div><input class="fi" type="number" id="i-units" value="200" min="0" max="5000" oninput="calc()"></div>
+      <div class="fg"><div class="fl">Sanctioned Load (kW)</div><input class="fi" type="number" id="i-sl" value="3" min="1" max="50" oninput="calc()"></div>
+      <div class="fg"><div class="fl">Consumer Type</div>
+        <select class="fi" id="i-type" onchange="calc()">
+          <option value="grid">Standard (grid only)</option>
+          <option value="solar">Solar — Net Metering</option>
+          <option value="btm">Solar — BTM (no export)</option>
+          <option value="bess">BESS only (no solar)</option>
+          <option value="both">Solar + BESS ✓ optimal</option>
+        </select>
+      </div>
+    </div>
+    <div class="calc3" style="margin-bottom:0;">
+      <div class="fg">
+        <div class="fl">% Grid draw in Peak (19–23h)</div>
+        <input type="range" class="ri" id="i-peak" min="5" max="55" value="20" oninput="lbl('i-peak','l-peak'); calc()">
+        <div class="rv" id="l-peak">20%</div>
+      </div>
+      <div class="fg">
+        <div class="fl">% Grid draw in Solar hours (10–16h)</div>
+        <input type="range" class="ri" id="i-solar" min="0" max="50" value="20" oninput="lbl('i-solar','l-solar'); calc()">
+        <div class="rv" id="l-solar">20%</div>
+      </div>
+      <div class="fg">
+        <div class="fl">Gross import MDI (kW, if known)</div>
+        <input class="fi" type="number" id="i-mdi" value="2.4" min="0" max="50" step="0.1" oninput="calc()">
+        <div style="font-size:11px;color:var(--txt3);margin-top:.2rem;">Peak grid draw; leave blank to auto-estimate</div>
+      </div>
+    </div>
+    <div style="margin-top:1rem;font-size:12px;color:var(--txt2);background:#fff;border:1px solid var(--bd);border-radius:4px;padding:.7rem;" id="type-hint"></div>
+  </div>
+
+  <div class="resgrid" style="margin-top:1.4rem;">
+    <div class="rc2 curr">
+      <div class="rlbl">Current Bill</div>
+      <div class="rbill" id="r-curr">—</div>
+      <div class="rrate" id="r-curr-rt"></div>
+      <div class="rbd" id="r-curr-bd"></div>
+    </div>
+    <div class="rc2 p1">
+      <div class="rlbl">Phase-1 R-TPT</div>
+      <div class="rbill" id="r-p1">—</div>
+      <div class="rrate" id="r-p1-rt"></div>
+      <div class="rdelta" id="r-p1-d"></div>
+      <div class="rbd" id="r-p1-bd"></div>
+    </div>
+    <div class="rc2 full">
+      <div class="rlbl">Full R-TPT (V8 50% floor)</div>
+      <div class="rbill" id="r-v8">—</div>
+      <div class="rrate" id="r-v8-rt"></div>
+      <div class="rdelta" id="r-v8-d"></div>
+      <div class="rbd" id="r-v8-bd"></div>
+    </div>
+    <div class="rc2 opt">
+      <div class="rlbl" id="r-opt-lbl">Full R-TPT (Proposed Floor)</div>
+      <div class="rbill" id="r-opt">—</div>
+      <div class="rrate" id="r-opt-rt"></div>
+      <div class="rdelta" id="r-opt-d"></div>
+      <div class="rbd" id="r-opt-bd"></div>
+    </div>
+  </div>
+
+  <div class="cbox" style="margin-top:1.4rem;">
+    <div class="ctitle">Bill Breakdown — Four Scenarios Compared</div>
+    <canvas id="simChart" style="max-height:230px;"></canvas>
+  </div>
+</div>
+</div>
+
+<!-- ===== ROADMAP ===== -->
+<div id="tab-road" class="tc">
+<div class="sb">
+  <div class="slbl">Implementation</div>
+  <div class="stitle">From V8 industrial launch to solar-optimised full residential R-TPT by FY2029</div>
+  <div class="g2">
+    <div class="tl">
+      <div class="tli">
+        <div class="tld on"></div>
+        <div class="tlp">Phase 0 — Q4 FY2026 (Now)</div>
+        <div class="tlh2">V8 industrial consultation + prosumer registration launch</div>
+        <div class="tlb">V8 TPT consultation concluded. NEPRA determination for industrial/agricultural. Solar system and BESS registration database established with DISCOs. All net-metering connections flagged for Phase-1 prosumer HCC. Consumer communication launched. RNR framework submitted.</div>
+      </div>
+      <div class="tli">
+        <div class="tld on"></div>
+        <div class="tlp">Phase 1 — July 2026</div>
+        <div class="tlh2">Industrial opt-in live; Flat prosumer HCC; Standard R-TPT for high-use domestic</div>
+        <div class="tlb">V8 TPT live for B1–B4 industrial and agricultural. Residential: flat HCC Rs 400/kW-SL for all prosumers (solar/BESS/NM). Phase-1 tiered HCC for standard domestic tiers T0–T4a. Export premium Rs 7.50/kWh for net-metering consumers. MIN(Bundled, R-TPT) floor for T0–T3. BESS registration process opened.</div>
+      </div>
+      <div class="tli">
+        <div class="tld"></div>
+        <div class="tlp">Phase 2 — FY2027</div>
+        <div class="tlh2">AMI rollout; Tiered SL floors activated; Full solar/BESS economics</div>
+        <div class="tlb">AMI mandated for: all A-1b consumers (&gt;700u); all net-metering prosumers; all registered BESS owners. Solar-only floor activated at 35% SL (from 50%). Solar+BESS floor activated at 20% SL for AMI-verified consumers. Gross import billing replaces net billing for prosumers. Monthly MDI-based CSC billing activated.</div>
+      </div>
+      <div class="tli">
+        <div class="tld"></div>
+        <div class="tlp">Phase 3 — FY2028</div>
+        <div class="tlh2">Standard tier AMI; HCC step-up; HEMS market development</div>
+        <div class="tlb">A-1a Standard tier (201–400u) offered opt-in AMI. Phase-1 flat HCC rates increased 50–75% toward cost-reflective levels. Home Energy Management System (HEMS) integration protocol published — allows certified HEMS to guarantee MDI caps and qualify for 20% SL floor without manual verification. BISP direct subsidy replaces tariff cross-subsidy for lifeline consumers.</div>
+      </div>
+      <div class="tli">
+        <div class="tld"></div>
+        <div class="tlp">Phase 4 — FY2029+</div>
+        <div class="tlh2">Full cost-reflective R-TPT across all domestic consumers</div>
+        <div class="tlb">Full V8 CSC of 10,085/kW with modified SL floors (50%/35%/20%) applied universally. Energy at pure domestic SRMC. Cross-subsidy fully replaced by fiscal transfers. Pakistan residential sector achieves economically efficient tariff structure with embedded solar/BESS investment incentives.</div>
+      </div>
+    </div>
+    <div>
+      <div class="pnl" style="margin-bottom:1.2rem;">
+        <div class="ptitle">Solar & Storage Consumer Path Under R-TPT</div>
+        <table class="dt">
+          <thead><tr><th>Stage</th><th>Prosumer Bill</th><th>Key Requirement</th></tr></thead>
+          <tbody>
+            <tr><td>Today (current tariff)</td><td class="gc">PKR 1,000–5,000/mo (net billing)</td><td>Net metering connection</td></tr>
+            <tr><td>Phase 1 (Jul 2026)</td><td class="ac">PKR 4,000–5,000 flat HCC</td><td>Solar/BESS registration</td></tr>
+            <tr><td>Phase 2 (FY2027)</td><td class="ac">PKR 20,000–35,000 (AMI, tiered floor)</td><td>AMI meter + verification</td></tr>
+            <tr><td>Phase 3 (FY2028)</td><td>PKR 18,000–30,000 (optimized BESS)</td><td>HEMS certified MDI cap</td></tr>
+            <tr><td>Phase 4 (FY2029)</td><td class="gc">PKR 15,000–25,000 (full design)</td><td>Full cost-reflective</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px;color:var(--txt3);margin-top:.5rem;">Range for 10 kW SL, 6 kW solar, 10 kWh BESS. Phase-2+ bills are higher than current net-metering but reflect genuine network cost contribution. Savings vs V8 as-designed: PKR 30,000–60,000/month through proposed floor modifications.</p>
+      </div>
+      <div class="pnl">
+        <div class="ptitle">Key Decision Points</div>
+        <table class="dt">
+          <thead><tr><th>Decision</th><th>Owner</th><th class="ctr">Status</th></tr></thead>
+          <tbody>
+            <tr><td>Approve prosumer Phase-1 flat HCC (Rs 400/kW-SL)</td><td>NEPRA</td><td class="ctr ac">Requires approval</td></tr>
+            <tr><td>Approve 35%/20% SL floor tiers for solar/BESS</td><td>NEPRA</td><td class="ctr ac">Proposed extension</td></tr>
+            <tr><td>Solar export premium (Rs 7.50/kWh vs SRMC)</td><td>Power Division</td><td class="ctr ac">Policy decision</td></tr>
+            <tr><td>Solar+BESS registration database at DISCOs</td><td>DISCO CEOs</td><td class="ctr rc">Not started</td></tr>
+            <tr><td>Gross AMI metering for prosumers</td><td>DISCOs</td><td class="ctr rc">Requires AMI</td></tr>
+            <tr><td>HEMS integration protocol (Phase 3)</td><td>NTDC/NEPRA</td><td class="ctr rc">FY2027 target</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// === TABS ===
+function go(n,btn){
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+n).classList.add('on');
+  if(btn)btn.classList.add('on');
+}
+
+// === ToU CLOCK ===
+(function(){
+  const c=document.getElementById('touClock'),l=document.getElementById('touLabels');
+  if(!c)return;
+  for(let h=0;h<24;h++){
+    const d=document.createElement('div');
+    d.className='th '+(h>=19&&h<23?'tpk':h>=10&&h<16?'tsl':'tns');
+    c.appendChild(d);
+    const lb=document.createElement('div');
+    lb.className='tlh';
+    lb.textContent=h%3===0?h+'h':'';
+    l.appendChild(lb);
+  }
+})();
+
+// === ToU RATES CHART ===
+(function(){
+  const ctx=document.getElementById('touRateChart');
+  if(!ctx)return;
+  new Chart(ctx,{type:'bar',data:{
+    labels:['Non-Solar\n(00–09,17–18h)','Solar\n(10–16h)','Peak\n(19–23h)'],
+    datasets:[{label:'V8 Official Domestic Rate',data:[9.21,6.23,11.33],backgroundColor:['#5D7EA8','#F4D03F','#C0392B'],borderRadius:4}]
+  },options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'#F0F0F0'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+})();
+
+// === ARCHETYPES ===
+const archs={
+  khalid:{units:200,sl:3,type:'grid',peak:25,solar:15,mdi:2.0},
+  ayesha:{units:400,sl:6,type:'grid',peak:35,solar:20,mdi:4.2},
+  tariq:{units:950,sl:10,type:'grid',peak:35,solar:20,mdi:7.5},
+  sara:{units:300,sl:10,type:'solar',peak:15,solar:10,mdi:4.5},
+  faisal:{units:400,sl:8,type:'btm',peak:30,solar:15,mdi:5.5},
+  hassan:{units:150,sl:10,type:'both',peak:10,solar:5,mdi:2.0},
+  nadia:{units:700,sl:8,type:'bess',peak:20,solar:25,mdi:4.0},
+  arif:{units:80,sl:12,type:'both',peak:5,solar:5,mdi:2.4}
+};
+function arch(n){
+  document.querySelectorAll('.acard').forEach(c=>c.classList.remove('on'));
+  document.getElementById('a-'+n).classList.add('on');
+  const a=archs[n];
+  document.getElementById('i-units').value=a.units;
+  document.getElementById('i-sl').value=a.sl;
+  document.getElementById('i-type').value=a.type;
+  document.getElementById('i-peak').value=a.peak;
+  document.getElementById('l-peak').textContent=a.peak+'%';
+  document.getElementById('i-solar').value=a.solar;
+  document.getElementById('l-solar').textContent=a.solar+'%';
+  document.getElementById('i-mdi').value=a.mdi;
+  calc();
+}
+function lbl(i,l){document.getElementById(l).textContent=document.getElementById(i).value+'%';}
+
+// === BILLING ENGINE ===
+const CSC=10085,PEAK=11.33,SOLAR=6.23,NS=9.21,EXPORT_PREM=7.50;
+
+function currentBill(units,type){
+  // Progressive slab (approximate effective all-in rates)
+  let b=0;
+  const slabs=[[100,4],[100,14],[100,22],[100,28],[100,32],[200,35],[Infinity,37.92]];
+  let r=units;
+  for(const[s,rt]of slabs){if(r<=0)break;const u=Math.min(r,s);b+=u*rt;r-=u;}
+  if(units>700)b+=500;else if(units>400)b+=300;else if(units>200)b+=150;else if(units>100)b+=75;
+  // Net metering: very low net bill (current tariff credits export at retail)
+  if(type==='solar'||type==='both')b=Math.max(b*0.15, 800); // approximate net-metering benefit
+  return Math.round(b);
+}
+
+function energyCharge(units,peakPct,solarPct){
+  const nsPct=Math.max(0,1-peakPct/100-solarPct/100);
+  return Math.round(units*(peakPct/100*PEAK+solarPct/100*SOLAR+nsPct*NS));
+}
+
+function p1Bill(units,sl,type){
+  let hcc,er,ec;
+  if(type==='solar'||type==='btm'||type==='both'||type==='bess'){
+    hcc=400*sl; // flat prosumer HCC
+    er=9.21; // simplified flat energy
+    ec=Math.round(units*er);
+    // export credit for NM
+    const credit=type==='solar'||type==='both'?Math.round(units*0.3*EXPORT_PREM):0;
+    return{hcc,ec,credit,total:Math.round(hcc+ec-credit),label:'Rs 400/kW-SL flat HCC'};
+  }
+  // Standard tiers
+  if(units<=100)hcc=0,er=4;
+  else if(units<=200)hcc=300,er=10;
+  else if(units<=400)hcc=700,er=20;
+  else if(units<=700)hcc=1500,er=25;
+  else hcc=700*sl,er=27;
+  ec=Math.round(units*er);
+  return{hcc,ec,credit:0,total:Math.min(Math.round(hcc+ec),currentBill(units,type)),label:'Transitional HCC + flat rate'};
+}
+
+function v8Bill(units,sl,type,peakPct,solarPct,mdi){
+  // V8 as-designed: 50% SL floor for all
+  const bd=Math.max(0.5*sl,mdi);
+  const csc=Math.round(CSC*bd);
+  const ec=energyCharge(units,peakPct,solarPct);
+  const credit=type==='solar'||type==='both'?Math.round(units*0.3*SOLAR):0; // SRMC credit (V8)
+  return{hcc:csc,ec,credit,total:Math.round(csc+ec-credit),bd:bd.toFixed(1),label:'50% SL floor (V8 standard)'};
+}
+
+function proposedBill(units,sl,type,peakPct,solarPct,mdi){
+  // Proposed tiered floors
+  let floor;
+  if(type==='both')floor=0.20;
+  else if(type==='solar'||type==='btm')floor=0.35;
+  else if(type==='bess')floor=0.40;
+  else floor=0.50;
+  const bd=Math.max(floor*sl,mdi);
+  const csc=Math.round(CSC*bd);
+  const ec=energyCharge(units,peakPct,solarPct);
+  // Export premium for solar consumers
+  const credit=type==='solar'||type==='both'?Math.round(units*0.3*EXPORT_PREM):0;
+  const floorLabel={'both':'20% SL (solar+BESS)','solar':'35% SL (solar-NM)','btm':'35% SL (BTM solar)','bess':'40% SL (BESS)','grid':'50% SL (standard)'}[type]||'50% SL';
+  return{hcc:csc,ec,credit,total:Math.round(csc+ec-credit),bd:bd.toFixed(1),label:floorLabel,saving:0};
+}
+
+const typeHints={
+  grid:'Standard grid consumer. No solar, no battery. 50% SL floor on billing demand.',
+  solar:'Net-metering prosumer. Exports to grid. Gross import billed by ToU. Export credited at Rs 7.50/kWh (proposed). 35% SL floor.',
+  btm:'Behind-the-meter solar. Self-consumes all solar. No grid export. 35% SL floor recognises genuine peak reduction.',
+  bess:'BESS only — charges from grid at solar/off-peak, discharges at peak. 40% SL floor rewards demand management.',
+  both:'Solar + BESS — optimal configuration. BESS manages MDI actively; solar provides cheap daytime charging. 20% SL floor — maximum reward for demand management.',
+};
+
+let simChart=null;
+function calc(){
+  const units=parseInt(document.getElementById('i-units').value)||0;
+  const sl=parseFloat(document.getElementById('i-sl').value)||5;
+  const type=document.getElementById('i-type').value;
+  const peakPct=parseInt(document.getElementById('i-peak').value);
+  const solarPct=parseInt(document.getElementById('i-solar').value);
+  const mdiInput=parseFloat(document.getElementById('i-mdi').value);
+  const mdi=isNaN(mdiInput)?sl*0.75:mdiInput;
+
+  document.getElementById('type-hint').textContent=typeHints[type]||'';
+
+  const curr=currentBill(units,type);
+  const p1=p1Bill(units,sl,type);
+  const v8=v8Bill(units,sl,type,peakPct,solarPct,mdi);
+  const opt=proposedBill(units,sl,type,peakPct,solarPct,mdi);
+
+  const fmt=n=>'PKR '+n.toLocaleString();
+  const rt=n=>units>0?(n/units).toFixed(1)+' Rs/unit avg':'—';
+  const delta=(n,base)=>{
+    if(!base)return'';
+    const pct=((n-base)/base*100).toFixed(1);
+    const cls=n<=base?'sv':'up';
+    const sign=n<=base?'▼':'▲';
+    return`<div class="rdelta ${cls}">${sign}${Math.abs(pct)}% vs current</div>`;
+  };
+  const saving=(v8t,optt)=>{
+    const s=v8t-optt;
+    if(s>0)return`<div class="rdelta sv">▼ PKR ${s.toLocaleString()}/mo vs V8 design</div>`;
+    return'';
+  };
+
+  document.getElementById('r-curr').textContent=fmt(curr);
+  document.getElementById('r-curr-rt').textContent=rt(curr);
+  document.getElementById('r-curr-bd').innerHTML=`Blended slab rate: ${(curr/Math.max(units,1)).toFixed(1)} Rs/kWh<br>${type==='solar'||type==='both'?'Includes net-metering benefit':'Bundled all-in rate'}`;
+
+  document.getElementById('r-p1').textContent=fmt(p1.total);
+  document.getElementById('r-p1-rt').textContent=rt(p1.total);
+  document.getElementById('r-p1-d').innerHTML=delta(p1.total,curr);
+  document.getElementById('r-p1-bd').innerHTML=`HCC: ${fmt(p1.hcc)}<br>Energy: ${fmt(p1.ec)}${p1.credit?`<br>Export credit: -${fmt(p1.credit)}`:''}`;
+
+  document.getElementById('r-v8').textContent=fmt(v8.total);
+  document.getElementById('r-v8-rt').textContent=rt(v8.total);
+  document.getElementById('r-v8-d').innerHTML=delta(v8.total,curr);
+  document.getElementById('r-v8-bd').innerHTML=`CSC: ${fmt(v8.hcc)} (${v8.bd}kW billing demand)<br>Energy: ${fmt(v8.ec)}${v8.credit?`<br>Export (SRMC): -${fmt(v8.credit)}`:''}`;
+
+  const optLabel={'both':'R-TPT Proposed (20% SL — Solar+BESS)','solar':'R-TPT Proposed (35% SL — Solar NM)','btm':'R-TPT Proposed (35% SL — BTM Solar)','bess':'R-TPT Proposed (40% SL — BESS)','grid':'R-TPT Full (50% SL — Standard)'}[type]||'R-TPT Proposed';
+  document.getElementById('r-opt-lbl').textContent=optLabel;
+  document.getElementById('r-opt').textContent=fmt(opt.total);
+  document.getElementById('r-opt-rt').textContent=rt(opt.total);
+  document.getElementById('r-opt-d').innerHTML=delta(opt.total,curr)+saving(v8.total,opt.total);
+  document.getElementById('r-opt-bd').innerHTML=`CSC: ${fmt(opt.hcc)} (${opt.bd}kW, ${opt.label})<br>Energy: ${fmt(opt.ec)}${opt.credit?`<br>Export premium: -${fmt(opt.credit)}`:''}`;
+
+  // Chart
+  const ctx=document.getElementById('simChart');
+  if(simChart)simChart.destroy();
+  simChart=new Chart(ctx,{type:'bar',data:{
+    labels:['Current\n(Slab)','Phase-1\nR-TPT','V8 Full\n(50%SL)','Proposed\n(Tiered Floor)'],
+    datasets:[
+      {label:'Fixed (HCC/CSC)',data:[Math.round(curr*0.55),p1.hcc,v8.hcc,opt.hcc],backgroundColor:'#1B4F72',borderRadius:4},
+      {label:'Variable Energy',data:[Math.round(curr*0.45),p1.ec,v8.ec,opt.ec],backgroundColor:'#C8923A',borderRadius:4},
+      {label:'Export Credit (negative)',data:[0,-(p1.credit||0),-(v8.credit||0),-(opt.credit||0)],backgroundColor:'#52B788',borderRadius:4}
+    ]
+  },options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}}},
+  scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:10}}},y:{stacked:true,grid:{color:'#F0F0F0'},ticks:{font:{size:11},callback:v=>'PKR '+v.toLocaleString()}}}}});
+}
+
+arch('khalid');
+</script>
+</body>
+</html>
