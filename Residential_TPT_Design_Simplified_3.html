@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Residential Two-Part Tariff — Crisp Policy Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--bg:#fff;--bg2:#fafafa;--bd:#e5e5e5;--acc:#C8923A;--txt:#1A1A1A;--txt2:#666;--txt3:#999;--grn:#52B788;--red:#9B2335;--blu:#1B4F72;--ylw:#D4AC0D;--softred:#fff6f6;--softgreen:#f0f7f0;--softgold:#fff8f0;--softblue:#eef4ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:#2D2D2D;line-height:1.55;font-size:14px;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.4rem 3rem;}
+.hdr{border-bottom:1px solid var(--bd);padding:1.7rem 0 1.35rem;margin-bottom:1.4rem;}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--txt3);text-transform:uppercase;margin-bottom:.4rem;}
+.htitle{font-family:Georgia,serif;font-size:31px;font-weight:400;color:var(--txt);line-height:1.18;margin-bottom:.65rem;}
+.hsub{font-size:13px;color:var(--txt2);line-height:1.7;max-width:900px;}
+.hmeta{margin-top:.9rem;display:flex;gap:1.4rem;flex-wrap:wrap;}
+.mi{font-size:11px;color:var(--txt3);}.mi span{color:var(--txt);font-weight:600;}
+.tabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:1.65rem;overflow-x:auto;}
+.tb{background:none;border:none;padding:.75rem 1rem;font-size:12px;font-weight:700;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;}
+.tb:hover{color:var(--txt);}.tb.on{color:var(--txt);border-bottom-color:var(--txt);}
+.tc{display:none;}.tc.on{display:block;}
+.slbl{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--txt3);text-transform:uppercase;margin-bottom:.35rem;}
+.stitle{font-family:Georgia,serif;font-size:21px;font-weight:400;color:var(--txt);margin-bottom:1rem;line-height:1.3;}
+.sb{margin-bottom:2.1rem;}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.25rem;}
+.kpi{background:var(--bg2);border:1px solid var(--bd);border-radius:7px;padding:1.05rem;border-top:3px solid var(--bd);min-height:110px;}
+.kpi.g{border-top-color:var(--grn);}.kpi.a{border-top-color:var(--acc);}.kpi.r{border-top-color:var(--red);}.kpi.b{border-top-color:var(--blu);}.kpi.y{border-top-color:var(--ylw);}
+.kn{font-family:Georgia,serif;font-size:25px;font-weight:400;color:var(--txt);line-height:1.05;}
+.kl{font-size:11px;color:var(--txt3);margin-top:.45rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;}.kx{font-size:11px;color:var(--txt2);margin-top:.35rem;line-height:1.45;}
+.pnl{background:var(--bg2);border:1px solid var(--bd);border-radius:7px;padding:1.2rem;margin-bottom:1.05rem;}.pnl.white{background:#fff;}
+.ptitle{font-size:12px;font-weight:800;color:var(--txt);margin-bottom:.72rem;text-transform:uppercase;letter-spacing:.06em;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;}
+.dt{width:100%;border-collapse:collapse;font-size:13px;}.dt th{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--txt);text-align:left;padding:.68rem;border-bottom:2px solid var(--bd);background:#fff;text-transform:uppercase;}.dt td{padding:.68rem;border-bottom:1px solid var(--bd);color:#2D2D2D;vertical-align:top;}.dt tr:last-child td{border-bottom:0;}.dt tr:hover td{background:#fafafa;}
+.num{text-align:right;font-variant-numeric:tabular-nums;}.ctr{text-align:center;}.hl{font-weight:700;color:var(--txt);}.gc{color:#2d7050;font-weight:700;}.rc{color:var(--red);font-weight:700;}.ac{color:var(--acc);font-weight:700;}.bc{color:var(--blu);font-weight:700;}.yc{color:#8b6f00;font-weight:700;}
+.cl{border-left:4px solid var(--acc);background:var(--bg2);padding:.95rem 1.1rem;border-radius:0 7px 7px 0;margin:1rem 0;font-size:13px;line-height:1.7;}.cl.g{border-left-color:var(--grn);}.cl.r{border-left-color:var(--red);}.cl.b{border-left-color:var(--blu);}.cl.y{border-left-color:var(--ylw);}
+.bigline{background:var(--softgold);border:1px solid #efd9ad;border-radius:8px;padding:1rem 1.15rem;margin:1rem 0;font-size:15px;line-height:1.65;}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
+.problem{border-top:4px solid var(--red);background:var(--softred);}.target{border-top:4px solid var(--grn);background:var(--softgreen);}
+.ul{margin-left:1.05rem;color:var(--txt2);font-size:13px;line-height:1.7;}.ul li{margin:.22rem 0;}
+.tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase;}.tag.r{background:#fdf5f5;color:#c0392b;}.tag.a{background:#fdf3e3;color:#d68910;}.tag.g{background:#e8f5ee;color:#2d7050;}.tag.b{background:#eaf2fb;color:#1a5276;}.tag.y{background:#fff8e1;color:#e65100;}
+.choice{background:#fff;border:1px solid var(--bd);border-radius:7px;padding:1.05rem;border-top:4px solid var(--bd);}.choice.r{border-top-color:var(--red);}.choice.a{border-top-color:var(--acc);}.choice.g{border-top-color:var(--grn);}
+.choice h3{font-family:Georgia,serif;font-size:18px;font-weight:400;color:var(--txt);margin-bottom:.55rem;}.choice p{font-size:13px;color:var(--txt2);line-height:1.7;}
+.formula{font-family:Georgia,serif;background:#fff;border:1px solid var(--bd);border-radius:7px;padding:1rem;text-align:center;font-size:22px;color:var(--txt);}
+.cbox{background:#fff;border:1px solid var(--bd);border-radius:7px;padding:1rem;}.ctitle{font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.8rem;}canvas{max-height:260px;}
+.exposure{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;}.ebox{background:#fff;border:1px solid var(--bd);border-radius:7px;padding:.95rem;text-align:center;border-top:3px solid var(--bd);}.ebox.r{border-top-color:var(--red);}.ebox.a{border-top-color:var(--acc);}.ebox.g{border-top-color:var(--grn);}.ebox.b{border-top-color:var(--blu);}.ebox .n{font-family:Georgia,serif;font-size:24px;color:var(--txt);line-height:1.05;}.ebox .l{font-size:10.5px;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-top:.45rem;}.ebox .x{font-size:11px;color:var(--txt2);margin-top:.3rem;line-height:1.4;}
+.calcwrap{background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:1.25rem;}.calc3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:.95rem;}.fg{display:flex;flex-direction:column;gap:.32rem;}.fl{font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em;}.fi{border:1px solid var(--bd);border-radius:4px;padding:.54rem .65rem;font-size:14px;background:#fff;color:var(--txt);outline:none;width:100%;}.fi:focus{border-color:var(--acc);}.ri{width:100%;accent-color:var(--acc);margin:.25rem 0;}.rv{font-size:13px;font-weight:700;color:var(--txt);}
+.resgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1rem 0;}.rcard{border:1px solid var(--bd);border-radius:7px;padding:.95rem;background:#fff;border-top:3px solid var(--bd);}.rcard.curr{border-top-color:#999;}.rcard.p1{border-top-color:var(--acc);}.rcard.v8{border-top-color:var(--red);}.rcard.opt{border-top-color:var(--grn);}.rlbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);font-weight:800;margin-bottom:.55rem;}.rbill{font-family:Georgia,serif;font-size:24px;color:var(--txt);}.rdelta{font-size:12px;font-weight:700;margin-top:.35rem;}.rdelta.sv{color:#2d7050;}.rdelta.up{color:var(--red);}.rbd{font-size:11px;color:var(--txt2);margin-top:.5rem;line-height:1.45;}
+.tclock{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;margin:.65rem 0;}.th{height:30px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:rgba(255,255,255,.9);}.tlrow{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;}.tlh{font-size:9px;color:var(--txt3);text-align:center;}.tns{background:#5D7EA8;}.tsl{background:#F4D03F;color:#6D4C00;}.tpk{background:#C0392B;}.tleg{display:flex;gap:1.2rem;margin-top:.55rem;flex-wrap:wrap;}.tleg-i{display:flex;align-items:center;gap:.35rem;font-size:12px;color:var(--txt2);}.tleg-d{width:10px;height:10px;border-radius:2px;}
+details{background:#fff;border:1px solid var(--bd);border-radius:7px;padding:.9rem 1rem;}summary{cursor:pointer;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--txt);}.scroll{max-height:330px;overflow:auto;margin-top:.8rem;}.scroll .dt th{position:sticky;top:0;z-index:1;}
+@media(max-width:900px){.g2,.g3,.g4,.compare,.kpis,.exposure,.calc3,.resgrid{grid-template-columns:1fr;}.kpis{grid-template-columns:1fr 1fr;}.htitle{font-size:24px;}.wrap{padding:0 1rem 2rem;}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <div class="eyebrow">Residential tariff reform — simplified policy dashboard</div>
+    <h1 class="htitle">What is happening now — and what the tariff reform should achieve</h1>
+    <p class="hsub">A crisper version of the residential Two-Part Tariff dashboard. The message is simple: today’s electricity bill hides fixed grid costs inside a high per-unit rate. The reform should make the fixed cost visible, lower the energy price, protect low-use households, and reward consumers who reduce evening peak demand.</p>
+    <div class="hmeta"><div class="mi">Core reference <span>PPMC V8 rates + supplied merit-order evidence</span></div><div class="mi">Solar credit updated to <span>Rs 20/kWh current buyback</span></div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tb on" onclick="go('brief',this)">1. Executive brief</button>
+    <button class="tb" onclick="go('choices',this)">2. Three choices</button>
+    <button class="tb" onclick="go('impact',this)">3. Consumer impact</button>
+    <button class="tb" onclick="go('sim',this)">4. Simple simulator</button>
+    <button class="tb" onclick="go('evidence',this)">5. Evidence & rollout</button>
+  </div>
+
+  <div id="tab-brief" class="tc on">
+    <div class="sb">
+      <div class="slbl">The policy problem</div>
+      <div class="stitle">Right now, the bill does not tell consumers what the system actually needs.</div>
+      <div class="kpis">
+        <div class="kpi r"><div class="kn">~Rs 38</div><div class="kl">Bundled tariff signal</div><div class="kx">Upper-tier domestic consumers see one high per-unit price.</div></div>
+        <div class="kpi b"><div class="kn">Rs 7.62</div><div class="kl">Avg fuel cost</div><div class="kx">Supplied monthly average system fuel cost, Feb‑24 to Apr‑26.</div></div>
+        <div class="kpi y"><div class="kn">Rs 20</div><div class="kl">Current solar credit</div><div class="kx">Current solar export / buyback rate used in this dashboard.</div></div>
+        <div class="kpi a"><div class="kn">Rs 10,085</div><div class="kl">Capacity value</div><div class="kx">Monthly value of 1 kW of measured peak demand under V8 domestic CSC.</div></div>
+      </div>
+
+      <div class="compare">
+        <div class="pnl problem">
+          <div class="ptitle">What is happening right now</div>
+          <ul class="ul">
+            <li>Households pay mostly through one bundled per-unit rate.</li>
+            <li>Fixed grid costs are hidden inside the energy charge.</li>
+            <li>There is weak incentive to move usage from 8pm to cheap solar hours.</li>
+            <li>Solar users reduce bills, but do not necessarily pay for backup grid readiness.</li>
+            <li>If V8 is applied literally to residential prosumers, the 50% sanctioned-load floor creates severe bill shock.</li>
+          </ul>
+        </div>
+        <div class="pnl target">
+          <div class="ptitle">What we want to achieve</div>
+          <ul class="ul">
+            <li>Split the bill into a fixed grid-readiness charge and a variable energy charge.</li>
+            <li>Show consumers when electricity is cheap, normal, and expensive.</li>
+            <li>Protect lifeline and middle-income consumers through a phased transition.</li>
+            <li>Make batteries and smart demand management valuable because they cut evening peak.</li>
+            <li>Keep solar users connected to the grid, but make their network contribution fair.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bigline"><strong>The whole reform in one sentence:</strong> start with a small, explainable fixed charge now; then move to smart-meter billing where consumers who reduce peak demand pay less.</div>
+    </div>
+
+    <div class="sb">
+      <div class="slbl">The bill structure</div>
+      <div class="stitle">The tariff should send two separate signals: grid readiness and time of use.</div>
+      <div class="g2">
+        <div class="pnl white">
+          <div class="ptitle">Simple formula</div>
+          <div class="formula">Bill = Fixed grid charge + Time-of-use energy charge</div>
+          <div class="cl b"><strong>Meaning:</strong> the fixed charge pays for the grid and capacity kept available. The energy charge pays for actual electricity consumed, with lower rates when the system is cheap and higher rates during evening peak.</div>
+        </div>
+        <div class="pnl white">
+          <div class="ptitle">Time-of-use windows</div>
+          <div class="tclock" id="clockBrief"></div><div class="tlrow" id="clockLabelsBrief"></div>
+          <div class="tleg">
+            <div class="tleg-i"><div class="tleg-d" style="background:#F4D03F"></div>Solar 10am–4pm: Rs 6.23/kWh</div>
+            <div class="tleg-i"><div class="tleg-d" style="background:#5D7EA8"></div>Normal: Rs 9.21/kWh</div>
+            <div class="tleg-i"><div class="tleg-d" style="background:#C0392B"></div>Peak 7pm–11pm: Rs 11.33/kWh</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-choices" class="tc">
+    <div class="sb">
+      <div class="slbl">Three proposals clarified</div>
+      <div class="stitle">These are three different policy choices — not three minor variations.</div>
+      <div class="g3">
+        <div class="choice r">
+          <h3>V8 as-designed</h3>
+          <p><strong>What it suggests:</strong> apply the official V8 domestic structure literally: Rs 10,085/kW-month capacity charge, ToU energy rates, and a minimum billing demand of 50% of sanctioned load.</p>
+          <p style="margin-top:.55rem;"><strong>Policy reading:</strong> technically cost-reflective, but too sharp for residential rollout and especially punitive for solar / battery consumers.</p>
+        </div>
+        <div class="choice a">
+          <h3>Proposed Phase‑1</h3>
+          <p><strong>What it suggests:</strong> begin with a simple transitional charge before AMI. For prosumers, charge Rs 400/kW sanctioned load per month. A 10 kW user pays Rs 4,000/month as the fixed grid charge.</p>
+          <p style="margin-top:.55rem;"><strong>Policy reading:</strong> politically viable bridge. It starts grid-cost recovery without creating an overnight backlash.</p>
+        </div>
+        <div class="choice g">
+          <h3>Proposed AMI design</h3>
+          <p><strong>What it suggests:</strong> once smart meters are available, use actual measured peak demand, but change the minimum floor by consumer type: 50% grid-only, 35% solar-only, 20% solar+BESS, 40% BESS-only.</p>
+          <p style="margin-top:.55rem;"><strong>Policy reading:</strong> the desired end-state. It rewards genuine peak reduction rather than treating every household the same.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb">
+      <div class="slbl">A 10 kW prosumer sees the difference immediately</div>
+      <div class="stitle">The fixed grid-charge exposure is the easiest way to explain the reform.</div>
+      <div class="exposure">
+        <div class="ebox"><div class="n">Rs 0</div><div class="l">Explicit fixed charge today</div><div class="x">Grid costs are mostly hidden in per-unit bills.</div></div>
+        <div class="ebox r"><div class="n">Rs 50,425</div><div class="l">V8 50% floor</div><div class="x">10 kW × 50% × Rs 10,085.</div></div>
+        <div class="ebox a"><div class="n">Rs 4,000</div><div class="l">Phase‑1 prosumer HCC</div><div class="x">10 kW × Rs 400.</div></div>
+        <div class="ebox b"><div class="n">Rs 35,298</div><div class="l">AMI solar-only floor</div><div class="x">10 kW × 35% × Rs 10,085.</div></div>
+        <div class="ebox g"><div class="n">Rs 20,170</div><div class="l">AMI solar+BESS floor</div><div class="x">10 kW × 20% × Rs 10,085.</div></div>
+      </div>
+      <div class="cl r"><strong>Key conclusion:</strong> V8 as-designed should remain the reference benchmark, not the immediate residential rollout. The practical rollout is Phase‑1 first, then AMI floors that recognise actual grid dependence.</div>
+    </div>
+
+    <div class="pnl white">
+      <div class="ptitle">Quick decision table</div>
+      <table class="dt">
+        <thead><tr><th>Question</th><th>V8 as-designed</th><th>Proposed Phase‑1</th><th>Proposed AMI design</th></tr></thead>
+        <tbody>
+          <tr><td class="hl">What is the role?</td><td>Stress test / official benchmark</td><td>Transition bridge</td><td>Final operating model</td></tr>
+          <tr><td class="hl">What does the consumer see?</td><td>A large capacity charge immediately</td><td>A small fixed grid charge</td><td>A measured peak-demand charge</td></tr>
+          <tr><td class="hl">What happens to solar?</td><td>Penalised under the 50% floor</td><td>Moved gradually through Rs 400/kW-SL</td><td>35% floor for solar-only</td></tr>
+          <tr><td class="hl">What happens to batteries?</td><td>Incentive is limited below 50% floor</td><td>Allowed to register and transition</td><td>20% floor if solar+BESS caps peak demand</td></tr>
+          <tr><td class="hl">Policy risk</td><td>Backlash</td><td>Under-recovery if not stepped up</td><td>Needs AMI and verification</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab-impact" class="tc">
+    <div class="sb">
+      <div class="slbl">Consumer impact</div>
+      <div class="stitle">The reform should be judged by whether it changes behaviour without creating avoidable bill shock.</div>
+      <div class="pnl white">
+        <div class="ptitle">Representative monthly bill / exposure comparison</div>
+        <table class="dt">
+          <thead><tr><th>Consumer example</th><th class="num">Current</th><th class="num">V8 as-designed</th><th class="num">Phase‑1 proposal</th><th class="num">Proposed AMI</th><th>What it means</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag b">Grid-only high-use</span></td><td class="num">36,024</td><td class="num rc">89,549</td><td class="num ac">32,650</td><td class="num rc">89,549</td><td>Full residential cost-reflective pricing is too sharp without phasing.</td></tr>
+            <tr><td><span class="tag y">Net-metering solar</span></td><td class="num">9,168</td><td class="num rc">~52,000</td><td class="num gc">~5,400</td><td class="num ac">~36,700</td><td>V8 literal rollout creates shock. Phase‑1 is the bridge; AMI is the end-state.</td></tr>
+            <tr><td><span class="tag y">BTM solar</span></td><td class="num">15,168</td><td class="num rc">~64,000</td><td class="num gc">~6,900</td><td class="num ac">~42,000</td><td>Some grid contribution is fair, but the path must be gradual.</td></tr>
+            <tr><td><span class="tag g">Solar + BESS</span></td><td class="num">3,688</td><td class="num rc">~51,000</td><td class="num ac">~4,600</td><td class="num gc">~20,800</td><td>Battery users still pay for backup grid access, but are rewarded for capping peak demand.</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px;color:var(--txt3);margin-top:.55rem;">Current prosumer estimates use Rs 37.92/kWh import proxy and the corrected current solar credit of Rs 20/kWh. V8 and AMI numbers are indicative and exclude taxes/adjustments; the dashboard’s purpose is to show direction and relative bill exposure.</p>
+      </div>
+      <div class="g2">
+        <div class="cbox"><div class="ctitle">Bill shock under V8 vs smoother proposed path</div><canvas id="impactChart"></canvas></div>
+        <div class="pnl">
+          <div class="ptitle">The message to policymakers</div>
+          <ul class="ul">
+            <li><strong>Do not sell this as a tariff increase.</strong> Sell it as a better price signal.</li>
+            <li><strong>Protect low-use households first.</strong> Their bills should not be the reform battlefield.</li>
+            <li><strong>Do not punish solar users overnight.</strong> Move from Rs 20/kWh export credit to a lower but explainable premium.</li>
+            <li><strong>Make peak reduction the core incentive.</strong> A battery is valuable because it lowers MDI, not because it trades a few kWh.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb">
+      <div class="slbl">Solar and battery fix</div>
+      <div class="stitle">The proposed floor structure is the heart of the reform.</div>
+      <div class="g4">
+        <div class="ebox r"><div class="n">50%</div><div class="l">Grid-only</div><div class="x">No special reduction.</div></div>
+        <div class="ebox b"><div class="n">40%</div><div class="l">BESS-only</div><div class="x">Some reward for demand control.</div></div>
+        <div class="ebox a"><div class="n">35%</div><div class="l">Solar-only</div><div class="x">Recognises lower daytime grid dependence.</div></div>
+        <div class="ebox g"><div class="n">20%</div><div class="l">Solar + BESS</div><div class="x">Rewards verifiable evening peak reduction.</div></div>
+      </div>
+      <div class="cl g"><strong>Single most important number:</strong> every 1 kW reduction in measured peak demand is worth Rs 10,085/month. That is why MDI management is far more important than simple energy arbitrage for batteries.</div>
+    </div>
+  </div>
+
+  <div id="tab-sim" class="tc">
+    <div class="sb">
+      <div class="slbl">Simple simulator</div>
+      <div class="stitle">Use this only to explain direction: fixed charges make low-use bills look high, but lower energy rates reward higher useful consumption and lower peak demand.</div>
+      <div class="calcwrap">
+        <div class="calc3">
+          <div class="fg"><div class="fl">Monthly grid import (kWh)</div><input class="fi" type="number" id="i-units" value="150" min="0" max="5000" oninput="calc()"></div>
+          <div class="fg"><div class="fl">Monthly export (kWh)</div><input class="fi" type="number" id="i-export" value="100" min="0" max="5000" oninput="calc()"></div>
+          <div class="fg"><div class="fl">Sanctioned load (kW)</div><input class="fi" type="number" id="i-sl" value="10" min="1" max="50" step="0.5" oninput="calc()"></div>
+        </div>
+        <div class="calc3">
+          <div class="fg"><div class="fl">Measured peak / MDI (kW)</div><input class="fi" type="number" id="i-mdi" value="2" min="0" max="50" step="0.1" oninput="calc()"></div>
+          <div class="fg"><div class="fl">Consumer type</div><select class="fi" id="i-type" onchange="presetByType();calc()"><option value="grid">Grid-only</option><option value="solar">Net-metering / solar-only</option><option value="btm">BTM solar, no export</option><option value="both" selected>Solar + BESS</option><option value="bess">BESS-only</option></select></div>
+          <div class="fg"><div class="fl">Peak share of imports</div><input type="range" class="ri" id="i-peak" min="5" max="55" value="20" oninput="lbl('i-peak','l-peak');calc()"><div class="rv" id="l-peak">20%</div></div>
+        </div>
+        <div style="font-size:12px;color:var(--txt2);background:#fff;border:1px solid var(--bd);border-radius:4px;padding:.7rem;" id="typeHint"></div>
+      </div>
+      <div class="resgrid">
+        <div class="rcard curr"><div class="rlbl">Current tariff</div><div class="rbill" id="r-curr">—</div><div class="rbd" id="r-curr-bd"></div></div>
+        <div class="rcard p1"><div class="rlbl">Phase‑1 proposal</div><div class="rbill" id="r-p1">—</div><div class="rdelta" id="r-p1-d"></div><div class="rbd" id="r-p1-bd"></div></div>
+        <div class="rcard v8"><div class="rlbl">V8 as-designed</div><div class="rbill" id="r-v8">—</div><div class="rdelta" id="r-v8-d"></div><div class="rbd" id="r-v8-bd"></div></div>
+        <div class="rcard opt"><div class="rlbl">Proposed AMI</div><div class="rbill" id="r-opt">—</div><div class="rdelta" id="r-opt-d"></div><div class="rbd" id="r-opt-bd"></div></div>
+      </div>
+      <div class="g2">
+        <div class="cbox"><div class="ctitle">Monthly bill comparison</div><canvas id="simChart"></canvas></div>
+        <div class="pnl white">
+          <div class="ptitle">When does higher grid use create savings?</div>
+          <table class="dt" id="growthTable"><thead><tr><th>Option</th><th class="num">Break-even import</th><th class="num">Growth needed</th></tr></thead><tbody id="growthRows"></tbody></table>
+          <p id="growthNote" style="font-size:11px;color:var(--txt3);margin-top:.55rem;"></p>
+        </div>
+      </div>
+      <div class="cbox" style="margin-top:1rem;"><div class="ctitle">Bill sensitivity as grid consumption rises</div><canvas id="growthChart"></canvas></div>
+    </div>
+  </div>
+
+  <div id="tab-evidence" class="tc">
+    <div class="sb">
+      <div class="slbl">Cost evidence</div>
+      <div class="stitle">The supplied cost data supports lower energy prices — but also proves why the fixed grid charge cannot disappear.</div>
+      <div class="kpis">
+        <div class="kpi b"><div class="kn">Rs 7.62</div><div class="kl">Average fuel cost</div><div class="kx">Mean of monthly average system fuel cost.</div></div>
+        <div class="kpi g"><div class="kn">Rs 4.46</div><div class="kl">Lowest month</div><div class="kx">Nov‑25 in the supplied table.</div></div>
+        <div class="kpi r"><div class="kn">Rs 13.08</div><div class="kl">Highest month</div><div class="kx">Jan‑26 in the supplied table.</div></div>
+        <div class="kpi a"><div class="kn">2.40×</div><div class="kl">Avg MC+ACF ratio</div><div class="kx">Shows marginal cost pressure above average cost.</div></div>
+      </div>
+      <div class="g2">
+        <div class="cbox"><div class="ctitle">Average system fuel cost vs tariff signals</div><canvas id="avgCostChart"></canvas></div>
+        <div class="pnl">
+          <div class="ptitle">Plain-English interpretation</div>
+          <ul class="ul">
+            <li>Average energy cost is far below the bundled tariff in most months.</li>
+            <li>That supports lower variable rates under a two-part tariff.</li>
+            <li>But the grid still needs capacity, wires, and backup readiness.</li>
+            <li>The fixed charge recovers that readiness cost; ToU rates guide when to consume.</li>
+          </ul>
+        </div>
+      </div>
+      <details>
+        <summary>Show embedded monthly cost table</summary>
+        <div class="scroll"><table class="dt" id="costTable"><thead><tr><th>Month</th><th class="num">Avg fuel cost</th><th class="num">Min hourly</th><th class="num">Max hourly</th><th class="num">MC+ACF ratio</th></tr></thead><tbody></tbody></table></div>
+      </details>
+    </div>
+
+    <div class="sb">
+      <div class="slbl">Rollout</div>
+      <div class="stitle">A three-step path that is easier to explain and harder to derail.</div>
+      <div class="g3">
+        <div class="choice a"><h3>1. Start softly</h3><p>Protect lifeline consumers. Introduce a small Phase‑1 fixed charge for prosumers and high-use households. Communicate that this is a grid-readiness charge, not a penalty.</p></div>
+        <div class="choice b"><h3>2. Meter properly</h3><p>Install AMI for high-use, solar, and battery consumers first. Start billing on actual measured peak demand rather than rough sanctioned-load proxies.</p></div>
+        <div class="choice g"><h3>3. Reward behaviour</h3><p>Apply differentiated floors once AMI is available: 50% grid-only, 35% solar-only, 20% solar+BESS, 40% BESS-only. Consumers who reduce evening peak pay less.</p></div>
+      </div>
+      <div class="bigline"><strong>Final policy ask:</strong> approve Phase‑1 as the bridge, approve AMI floors as the end-state, and avoid launching the unmodified V8 50% floor on residential prosumers.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function go(n,btn){document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));document.getElementById('tab-'+n).classList.add('on');if(btn)btn.classList.add('on');setTimeout(()=>{Object.values(charts).forEach(c=>{try{c.resize()}catch(e){}});},80)}
+function makeClock(id,lab){const c=document.getElementById(id),l=document.getElementById(lab); if(!c)return; c.innerHTML=''; l.innerHTML=''; for(let h=0;h<24;h++){const d=document.createElement('div');d.className='th '+(h>=19&&h<23?'tpk':h>=10&&h<16?'tsl':'tns');c.appendChild(d);const lb=document.createElement('div');lb.className='tlh';lb.textContent=h%3===0?h+'h':'';l.appendChild(lb);}}
+makeClock('clockBrief','clockLabelsBrief');
+const costData=[
+  {m:'Feb-24',avg:12.37,min:11.67,max:13.39,r:2.73},{m:'Mar-24',avg:5.67,min:5.48,max:5.95,r:2.01},{m:'Apr-24',avg:7.32,min:7.09,max:7.55,r:2.17},{m:'May-24',avg:9.26,min:8.85,max:9.63,r:2.04},{m:'Jun-24',avg:7.79,min:7.42,max:8.17,r:2.57},{m:'Jul-24',avg:7.79,min:7.42,max:8.17,r:2.57},{m:'Aug-24',avg:6.11,min:5.78,max:6.51,r:2.66},{m:'Sep-24',avg:7.25,min:6.82,max:7.69,r:2.49},{m:'Oct-24',avg:8.43,min:8.10,max:9.08,r:2.31},{m:'Nov-24',avg:6.08,min:5.77,max:6.43,r:2.42},{m:'Jan-25',avg:10.21,min:9.93,max:10.52,r:2.14},{m:'Feb-25',avg:6.01,min:5.90,max:6.34,r:1.91},{m:'Mar-25',avg:8.05,min:7.43,max:8.61,r:2.10},{m:'Apr-25',avg:9.20,min:8.85,max:9.66,r:2.39},{m:'May-25',avg:6.21,min:5.94,max:6.59,r:2.51},{m:'Jun-25',avg:4.65,min:4.22,max:5.12,r:3.51},{m:'Jul-25',avg:6.14,min:5.68,max:6.65,r:2.54},{m:'Aug-25',avg:5.51,min:5.04,max:6.01,r:2.44},{m:'Sep-25',avg:5.69,min:5.15,max:6.17,r:2.59},{m:'Oct-25',avg:8.15,min:7.88,max:8.39,r:2.25},{m:'Nov-25',avg:4.46,min:4.30,max:4.80,r:2.24},{m:'Dec-25',avg:7.00,min:6.78,max:7.24,r:1.90},{m:'Jan-26',avg:13.08,min:12.78,max:13.45,r:2.03},{m:'Feb-26',avg:7.42,min:7.15,max:7.81,r:2.03},{m:'Mar-26',avg:7.24,min:6.73,max:7.80,r:2.25},{m:'Apr-26',avg:11.15,min:10.65,max:11.52,r:3.60}
+];
+let charts={};
+function fillCostTable(){const tb=document.querySelector('#costTable tbody'); if(!tb)return; tb.innerHTML=costData.map(d=>`<tr><td>${d.m}</td><td class="num">${d.avg.toFixed(2)}</td><td class="num">${d.min.toFixed(2)}</td><td class="num">${d.max.toFixed(2)}</td><td class="num ${d.r>=3?'rc':d.r>=2.5?'ac':'bc'}">${d.r.toFixed(2)}×</td></tr>`).join('');}
+function initStaticCharts(){
+  const impact=document.getElementById('impactChart');
+  if(impact){charts.impact=new Chart(impact,{type:'bar',data:{labels:['Grid only','Net metering','BTM solar','Solar+BESS'],datasets:[{label:'Current',data:[36024,9168,15168,3688],backgroundColor:'#bfc7ce',borderRadius:4},{label:'V8 as-designed',data:[89549,52000,64000,51000],backgroundColor:'#9B2335',borderRadius:4},{label:'Proposed path',data:[32650,5400,6900,20800],backgroundColor:'#52B788',borderRadius:4}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:10}}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'Rs '+Number(v).toLocaleString()},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}}}});}
+  const avg=document.getElementById('avgCostChart');
+  if(avg){charts.avg=new Chart(avg,{type:'line',data:{labels:costData.map(d=>d.m),datasets:[{label:'Average system fuel cost',data:costData.map(d=>d.avg),borderColor:'#1B4F72',backgroundColor:'#1B4F72',pointRadius:2,tension:.25},{label:'Solar ToU rate Rs 6.23',data:costData.map(()=>6.23),borderColor:'#D4AC0D',pointRadius:0,borderDash:[4,4]},{label:'Peak ToU rate Rs 11.33',data:costData.map(()=>11.33),borderColor:'#9B2335',pointRadius:0,borderDash:[4,4]}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:10}}}},scales:{y:{beginAtZero:true,title:{display:true,text:'Rs/kWh'},grid:{color:'#f0f0f0'}},x:{ticks:{maxRotation:60,minRotation:60,font:{size:9}},grid:{display:false}}}}});}
+}
+function fmt(v){return 'Rs '+Math.round(v).toLocaleString();}
+function i(id){return document.getElementById(id)}
+function lbl(id,out){i(out).textContent=i(id).value+'%';}
+let simChart, growthChart;
+function presetByType(){const t=i('i-type').value; if(t==='grid'){i('i-export').value=0;i('i-units').value=950;i('i-sl').value=10;i('i-mdi').value=8;} if(t==='solar'){i('i-export').value=300;i('i-units').value=400;i('i-sl').value=10;i('i-mdi').value=4;} if(t==='btm'){i('i-export').value=0;i('i-units').value=400;i('i-sl').value=8;i('i-mdi').value=5;} if(t==='both'){i('i-export').value=100;i('i-units').value=150;i('i-sl').value=10;i('i-mdi').value=2;} if(t==='bess'){i('i-export').value=0;i('i-units').value=700;i('i-sl').value=8;i('i-mdi').value=4;}}
+function calc(){
+  const units=+i('i-units').value||0, exp=+i('i-export').value||0, sl=+i('i-sl').value||0, mdi=+i('i-mdi').value||0, type=i('i-type').value, peakShare=(+i('i-peak').value||20)/100;
+  const solarShare=Math.max(0,Math.min(.45,(type==='solar'||type==='both'||type==='btm')?.15:.25)); const normal=Math.max(0,1-solarShare-peakShare); const touRate=solarShare*6.23+normal*9.21+peakShare*11.33;
+  const CURRENT_IMPORT_RATE=37.92, CURRENT_SOLAR_CREDIT=20, EXPORT_PREMIUM=7.50, V8_EXPORT=6.23;
+  const hasExport=(type==='solar'||type==='both');
+  const exportCurrent=hasExport?exp*CURRENT_SOLAR_CREDIT:0, exportProposed=hasExport?exp*EXPORT_PREMIUM:0, exportV8=hasExport?exp*V8_EXPORT:0;
+  const curr=Math.max(0,units*CURRENT_IMPORT_RATE-exportCurrent);
+  const v8FloorKw=Math.max(.5*sl,mdi); const fullV8=Math.max(0,units*touRate+10085*v8FloorKw-exportV8);
+  let floor=.5; if(type==='solar'||type==='btm')floor=.35; if(type==='both')floor=.20; if(type==='bess')floor=.40;
+  const proposedKw=Math.max(floor*sl,mdi); const proposed=Math.max(0,units*touRate+10085*proposedKw-exportProposed);
+  const phaseHcc=(type==='grid')?Math.min(700*sl,7000):(type==='bess'?600*sl:400*sl); const phaseRate=(type==='grid')?27:9.21; const phase1=Math.max(0,phaseHcc+units*phaseRate-exportProposed);
+  i('typeHint').innerHTML=`<strong>Simulator reading:</strong> weighted energy rate ≈ <strong>Rs ${touRate.toFixed(2)}/kWh</strong>. V8 bills capacity at <strong>${v8FloorKw.toFixed(1)} kW</strong>; proposed AMI bills at <strong>${proposedKw.toFixed(1)} kW</strong>. Lower MDI is the main saving lever.`;
+  function setCard(key,val,base,bd){i('r-'+key).textContent=fmt(val); if(base!==null){const d=val-base; i('r-'+key+'-d').textContent=(d>=0?'+':'')+fmt(d)+' vs current'; i('r-'+key+'-d').className='rdelta '+(d<=0?'sv':'up');} i('r-'+key+'-bd').innerHTML=bd;}
+  setCard('curr',curr,null,hasExport?'Current solar exports credited at Rs 20/kWh.':'Current tariff is mostly per-unit billing.');
+  setCard('p1',phase1,curr,`Fixed charge ${fmt(phaseHcc)} plus simplified energy billing.`);
+  setCard('v8',fullV8,curr,`Capacity = Rs 10,085 × ${v8FloorKw.toFixed(1)} kW. 50% floor for all.`);
+  setCard('opt',proposed,curr,`Capacity = Rs 10,085 × ${proposedKw.toFixed(1)} kW. Floor: ${(floor*100).toFixed(0)}%.`);
+  const vals=[curr,phase1,fullV8,proposed].map(v=>Math.round(v));
+  const ctx=document.getElementById('simChart'); if(ctx){if(simChart)simChart.destroy(); simChart=new Chart(ctx,{type:'bar',data:{labels:['Current','Phase‑1','V8','Proposed AMI'],datasets:[{label:'Monthly bill',data:vals,backgroundColor:['#bfc7ce','#C8923A','#9B2335','#52B788'],borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'Rs '+Number(v).toLocaleString()},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}}}});}
+  // break-even against current as consumption grows, holding MDI/SL/export constant
+  const fixedCurrent=-exportCurrent, rateCurrent=CURRENT_IMPORT_RATE, fixedP1=phaseHcc-exportProposed, rateP1=phaseRate, fixedV8=10085*v8FloorKw-exportV8, rateV8=touRate, fixedOpt=10085*proposedKw-exportProposed, rateOpt=touRate;
+  const bill=(f,r,x)=>Math.max(0,f+r*x); const currentAt=x=>bill(fixedCurrent,rateCurrent,x);
+  function breakeven(name,f,r){if(units<=0)return {name,u:null,g:null}; const now=bill(f,r,units), base=currentAt(units); if(now<=base)return {name,u:units,g:0}; if(r>=rateCurrent)return {name,u:null,g:null}; let lo=units,hi=Math.max(units*2,1),guard=0; while(bill(f,r,hi)>currentAt(hi)&&hi<100000&&guard<60){hi*=2;guard++;} if(bill(f,r,hi)>currentAt(hi))return {name,u:null,g:null}; for(let k=0;k<60;k++){let mid=(lo+hi)/2; if(bill(f,r,mid)>currentAt(mid))lo=mid; else hi=mid;} return {name,u:hi,g:(hi/units-1)*100};}
+  const rows=[breakeven('Phase‑1',fixedP1,rateP1),breakeven('V8 as-designed',fixedV8,rateV8),breakeven('Proposed AMI',fixedOpt,rateOpt)];
+  const gr=i('growthRows'); if(gr){gr.innerHTML=rows.map(r=>`<tr><td class="hl">${r.name}</td><td class="num">${r.u===null?'—':Math.round(r.u).toLocaleString()+' kWh'}</td><td class="num ${r.g===null?'rc':r.g===0?'gc':r.g<=50?'ac':'bc'}">${r.g===null?'No practical break-even':(r.g===0?'Already cheaper':r.g.toFixed(0)+'%')}</td></tr>`).join('');}
+  const note=i('growthNote'); if(note)note.textContent='This holds sanctioned load, MDI, exports and peak share constant. In real life, savings improve fastest when consumption rises during solar hours while MDI stays capped.';
+  const gctx=document.getElementById('growthChart'); if(gctx){const pts=[0,25,50,100,150,200]; const labels=pts.map(p=>'+'+p+'%'); const mk=(f,r)=>pts.map(p=>Math.round(bill(f,r,units*(1+p/100)))); if(growthChart)growthChart.destroy(); growthChart=new Chart(gctx,{type:'line',data:{labels,datasets:[{label:'Current',data:mk(fixedCurrent,rateCurrent),borderColor:'#bfc7ce',pointRadius:2,tension:.25},{label:'Phase‑1',data:mk(fixedP1,rateP1),borderColor:'#C8923A',pointRadius:2,tension:.25},{label:'V8',data:mk(fixedV8,rateV8),borderColor:'#9B2335',pointRadius:2,tension:.25},{label:'Proposed AMI',data:mk(fixedOpt,rateOpt),borderColor:'#52B788',pointRadius:2,tension:.25}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:10}}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'Rs '+Number(v).toLocaleString()},grid:{color:'#f0f0f0'}},x:{grid:{display:false}}}}});}
+}
+window.addEventListener('load',()=>{fillCostTable();initStaticCharts();lbl('i-peak','l-peak');calc();});
+</script>
+</body>
+</html>
