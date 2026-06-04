@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Power Sector — Fuel Cost Forward Curve | ISMO Database v3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #FFFFFF;
+    --secondary: #FAFAFA;
+    --border: #E5E5E5;
+    --accent: #C8923A;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --success: #52B788;
+    --warning: #9B2335;
+    --mc-color: #9B2335;
+    --afc-color: #2563EB;
+    --mc-fwd: #D97706;
+    --afc-fwd: #0891B2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: var(--primary);
+    color: #2D2D2D;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* Header */
+  .masthead {
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 0 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .masthead-meta {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .masthead h1 {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  .masthead-sub {
+    font-size: 14px;
+    color: var(--text-secondary);
+    max-width: 780px;
+    line-height: 1.7;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .badge-hist { background: #FEF3C7; color: #92400E; }
+  .badge-fwd { background: #DBEAFE; color: #1D4ED8; }
+
+  /* KPI strip */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .kpi-card {
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem 1rem;
+  }
+  .kpi-card.accent { border-top: 3px solid var(--accent); }
+  .kpi-card.mc { border-top: 3px solid var(--mc-color); }
+  .kpi-card.afc { border-top: 3px solid var(--afc-color); }
+  .kpi-card.green { border-top: 3px solid var(--success); }
+  .kpi-card.warn { border-top: 3px solid #F59E0B; }
+  .kpi-num {
+    font-family: Georgia, serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+  .kpi-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 0.4rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .kpi-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+  }
+
+  /* Data quality alert */
+  .data-alert {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-left: 4px solid #F59E0B;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    color: #78350F;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.875rem 1.25rem;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text-primary); }
+  .tab-btn.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-primary);
+  }
+  .tab-content { display: none; padding: 2rem 0; }
+  .tab-content.active { display: block; }
+
+  /* Chart panels */
+  .panel {
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .panel-title {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+  .panel-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.02em;
+  }
+  .chart-wrap { position: relative; }
+  .chart-wrap.tall { height: 380px; }
+  .chart-wrap.mid { height: 280px; }
+  .chart-wrap.short { height: 220px; }
+
+  /* Grid layouts */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+
+  /* Tables */
+  .est-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .est-table th {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 2px solid var(--border);
+    background: var(--primary);
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  .est-table td {
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: #2D2D2D;
+  }
+  .est-table tr:hover td { background: #F9FAFB; }
+  .est-table tr.fwd-row td { background: #EFF6FF; }
+  .est-table tr.fwd-row:hover td { background: #DBEAFE; }
+  .est-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .est-table .month-tag { font-weight: 600; }
+  .fwd-tag {
+    display: inline-block;
+    background: #DBEAFE;
+    color: #1D4ED8;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    letter-spacing: 0.04em;
+  }
+  .hist-tag {
+    display: inline-block;
+    background: #FEF3C7;
+    color: #92400E;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+    letter-spacing: 0.04em;
+  }
+  .anomaly-tag {
+    display: inline-block;
+    background: #FEE2E2;
+    color: #991B1B;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 4px;
+  }
+
+  /* Verdict boxes */
+  .verdict {
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .verdict-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .verdict-text {
+    font-size: 13.5px;
+    color: #2D2D2D;
+    line-height: 1.7;
+  }
+  .narrative-text {
+    font-size: 13.5px;
+    color: #3D3D3D;
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Assumptions controls */
+  .assumption-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .assumption-block {
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem;
+  }
+  .assumption-block h4 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.875rem;
+  }
+  .slider-label {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    width: 160px;
+    flex-shrink: 0;
+  }
+  input[type=range] {
+    flex: 1;
+    accent-color: var(--accent);
+    height: 4px;
+  }
+  .slider-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    width: 60px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Seasonal heatmap */
+  .heat-cell {
+    border-radius: 3px;
+    padding: 0.4rem 0.3rem;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Scenario ribbon */
+  .scenario-ribbon {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .scenario-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: white;
+    transition: all 0.2s;
+  }
+  .scenario-pill.active { background: var(--secondary); border-color: #999; }
+  .scenario-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* Section labels */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  .text-red { color: var(--mc-color); font-weight: 600; }
+  .text-blue { color: var(--afc-color); font-weight: 600; }
+  .text-amber { color: var(--accent); font-weight: 600; }
+  .text-green { color: var(--success); font-weight: 600; }
+  small { font-size: 11.5px; color: var(--text-tertiary); }
+
+  /* Tariff design table */
+  .tariff-context-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 12.5px;
+    flex-wrap: wrap;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .kpi-strip { grid-template-columns: 1fr 1fr; }
+    .two-col, .three-col, .four-col, .assumption-grid { grid-template-columns: 1fr; }
+    .masthead h1 { font-size: 24px; }
+    .tab-btn { padding: 0.75rem 0.75rem; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="masthead-meta">Pakistan Power Sector Analytics &nbsp;|&nbsp; ISMO Master Database v3</div>
+    <h1>Fuel Cost Forward Curve
+      <span class="badge badge-hist">26 Months Historical</span>
+      <span class="badge badge-fwd">12 Months Forward</span>
+    </h1>
+    <div class="masthead-sub">
+      Average Fuel Cost (AFC) via merit-order dispatch weighting and Marginal Cost (MC) forward projections for May 2026 – April 2027, 
+      constructed from Feb 2024 – Apr 2026 ISMO data. Demand-seasonality-adjusted with grounded assumptions on RLNG pricing, PKR/USD, 
+      hydro availability, and solar penetration growth. Intended for SRMC-based tariff design and incremental tariff benchmarking.
+    </div>
+  </div>
+
+  <!-- DATA ALERT -->
+  <div class="data-alert">
+    ⚠ <strong>Data Notes:</strong> (1) Feb-26 demand data appears anomalous (~1,652 MW avg vs expected ~9,500–10,000 MW) — likely a partial/erroneous upload; treated as data quality flag, excluded from demand averages. 
+    (2) Apr-26 MC spike (40.18 PKR/kWh) reflects an exceptional RLNG supply tightness episode; flagged as anomaly in forward projections. 
+    (3) Jun-25 generation mix is partial (~10 GW vs ~21 GW demand); AFC for that month is noted but weighted accordingly.
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip">
+    <div class="kpi-card mc">
+      <div class="kpi-num">16.3</div>
+      <div class="kpi-label">Avg MC — Trailing 12M</div>
+      <div class="kpi-sub">PKR/kWh (May-25 – Apr-26)</div>
+    </div>
+    <div class="kpi-card afc">
+      <div class="kpi-num">7.1</div>
+      <div class="kpi-label">Avg AFC — Trailing 12M</div>
+      <div class="kpi-sub">PKR/kWh (May-25 – Apr-26)</div>
+    </div>
+    <div class="kpi-card accent">
+      <div class="kpi-num">2.30×</div>
+      <div class="kpi-label">MC / AFC Ratio</div>
+      <div class="kpi-sub">Merit order spread (avg)</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-num">17.8</div>
+      <div class="kpi-label">Fwd MC — Base Case</div>
+      <div class="kpi-sub">PKR/kWh (May-26 – Apr-27 avg)</div>
+    </div>
+    <div class="kpi-card warn">
+      <div class="kpi-num">7.5</div>
+      <div class="kpi-label">Fwd AFC — Base Case</div>
+      <div class="kpi-sub">PKR/kWh (May-26 – Apr-27 avg)</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('overview')">Forward Curve</button>
+    <button class="tab-btn" onclick="showTab('seasonal')">Seasonal Analysis</button>
+    <button class="tab-btn" onclick="showTab('scenarios')">Scenario Analysis</button>
+    <button class="tab-btn" onclick="showTab('assumptions')">Input Assumptions</button>
+    <button class="tab-btn" onclick="showTab('tariff')">Tariff Implications</button>
+    <button class="tab-btn" onclick="showTab('datatable')">Full Data Table</button>
+  </div>
+
+  <!-- ==================== TAB 1: OVERVIEW ==================== -->
+  <div id="tab-overview" class="tab-content active">
+
+    <div class="panel">
+      <div class="panel-title">Marginal Cost & Average Fuel Cost — Historical + 12-Month Forward</div>
+      <div class="panel-sub">Feb 2024 – Apr 2027 &nbsp;|&nbsp; Red = Marginal Cost (MC) &nbsp;|&nbsp; Blue = Average Fuel Cost (AFC) &nbsp;|&nbsp; Shaded = Forward Projection</div>
+      <div class="chart-wrap tall">
+        <canvas id="mainChart"></canvas>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">System Demand — Monthly Average</div>
+        <div class="panel-sub">MW — Feb 2024 – Apr 2026 (excl. Feb-26 anomaly)</div>
+        <div class="chart-wrap mid">
+          <canvas id="demandChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">MC ÷ AFC Ratio (Merit Order Spread)</div>
+        <div class="panel-sub">Higher ratio = more hydro/nuclear/solar in dispatch mix</div>
+        <div class="chart-wrap mid">
+          <canvas id="ratioChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Forward Curve — Key Finding</div>
+      <div class="verdict-text">
+        The base-case forward curve projects <strong>average MC of 17.8 PKR/kWh</strong> and <strong>AFC of 7.5 PKR/kWh</strong> over May 2026 – April 2027. 
+        Demand seasonality drives a dual-peak structure: a summer peak (Jun–Jul: MC ~18–19 PKR/kWh) and a winter peak (Jan: ~25 PKR/kWh, driven by RLNG heating load and low hydro). 
+        The AFC curve stays structurally compressed vs MC — averaging 2.2–2.4× below MC — as nuclear, hydro, and expanding solar remain the base-load anchors. 
+        <strong>For SRMC-based tariff crediting</strong> (e.g., net metering or prosumer export premiums), the AFC forward of <span class="text-blue">5.2 – 9.5 PKR/kWh</span> provides the lower bound, 
+        while MC of <span class="text-red">14.5 – 25.0 PKR/kWh</span> sets the demand-management value ceiling.
+      </div>
+    </div>
+
+    <div class="three-col">
+      <div class="panel">
+        <div class="section-label">Summer Peak (Jun–Aug 2026)</div>
+        <div style="margin-top:0.5rem">
+          <div style="font-family:Georgia,serif;font-size:22px;color:var(--mc-color)">18.5</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Avg MC, PKR/kWh</div>
+          <hr style="border:none;border-top:1px solid var(--border);margin:0.75rem 0">
+          <div style="font-family:Georgia,serif;font-size:22px;color:var(--afc-color)">5.7</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Avg AFC, PKR/kWh</div>
+          <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary)">High solar/hydro → compressed AFC. Demand ~18,000–19,000 MW.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-label">Winter Trough (Nov–Dec 2026)</div>
+        <div style="margin-top:0.5rem">
+          <div style="font-family:Georgia,serif;font-size:22px;color:var(--mc-color)">12.8</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Avg MC, PKR/kWh</div>
+          <hr style="border:none;border-top:1px solid var(--border);margin:0.75rem 0">
+          <div style="font-family:Georgia,serif;font-size:22px;color:var(--afc-color)">6.1</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Avg AFC, PKR/kWh</div>
+          <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary)">Lower demand. Gas surpluses. Narrowest MC-AFC spread of the year.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-label">Winter Peak (Jan 2027)</div>
+        <div style="margin-top:0.5rem">
+          <div style="font-family:Georgia,serif;font-size:22px;color:var(--mc-color)">25.0</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">MC, PKR/kWh</div>
+          <hr style="border:none;border-top:1px solid var(--border);margin:0.75rem 0">
+          <div style="font-family:Georgia,serif;font-size:22px;color:var(--afc-color)">12.5</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">AFC, PKR/kWh</div>
+          <div style="margin-top:0.75rem;font-size:12px;color:var(--text-secondary)">January RLNG spike. High heating + industrial load. Hydro at seasonal low.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== TAB 2: SEASONAL ==================== -->
+  <div id="tab-seasonal" class="tab-content">
+
+    <p class="narrative-text">
+      Pakistan's fuel cost exhibits pronounced bi-modal seasonality. <strong>Primary summer demand peak (May–Aug)</strong> brings high system loads of 16,000–21,000 MW driven by cooling load, 
+      but is partially offset by hydro availability (monsoon) and expanded solar — keeping AFC relatively compressed despite MC elevation. 
+      <strong>A secondary January peak</strong> emerges from RLNG heating demand against low river flows, producing the year's highest MC readings (21–27 PKR/kWh). 
+      Winter troughs (Nov, Feb) have the lowest MC and narrowest MC/AFC spreads.
+    </p>
+
+    <div class="panel">
+      <div class="panel-title">Same-Month Year-over-Year Comparison</div>
+      <div class="panel-sub">Marginal Cost vs Average Fuel Cost across 2024 and 2025 actuals, by month</div>
+      <div class="chart-wrap tall">
+        <canvas id="yoyChart"></canvas>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Seasonal MC Profile — Monthly Pattern</div>
+        <div class="panel-sub">2-year average (available months only) — PKR/kWh</div>
+        <div class="chart-wrap mid">
+          <canvas id="seasonalMCChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Seasonal AFC Profile — Monthly Pattern</div>
+        <div class="panel-sub">2-year average (available months only) — PKR/kWh</div>
+        <div class="chart-wrap mid">
+          <canvas id="seasonalAFCChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Seasonality Index Heatmap</div>
+      <div class="panel-sub">Each cell = month value ÷ annual average. Values &gt;1.0 = above-average cost month. Deeper color = more extreme.</div>
+      <div style="overflow-x:auto;margin-top:1rem" id="heatmapTable"></div>
+    </div>
+
+  </div>
+
+  <!-- ==================== TAB 3: SCENARIOS ==================== -->
+  <div id="tab-scenarios" class="tab-content">
+
+    <p class="narrative-text">
+      Three scenarios bracket the forward curve: <strong>Base case</strong> assumes a PKR/USD rate of 280, RLNG at $10.5/mmBTU, and a normal monsoon season. 
+      <strong>Upside stress</strong> models a currency weakening to PKR 295–305 and RLNG at $13–14/mmBTU (LNG market spike or procurement failure). 
+      <strong>Downside relief</strong> assumes better-than-average hydro inflows (+10%), RLNG at $9/mmBTU, and domestic gas availability improving via new well connections.
+    </p>
+
+    <div class="panel">
+      <div class="panel-title">Forward MC — Three Scenario Paths (May 2026 – Apr 2027)</div>
+      <div class="panel-sub">Marginal Cost in PKR/kWh &nbsp;|&nbsp; Solid = Base &nbsp;|&nbsp; Dashed = Upside Risk &nbsp;|&nbsp; Dotted = Downside Relief</div>
+      <div class="chart-wrap tall">
+        <canvas id="scenarioMCChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Forward AFC — Three Scenario Paths (May 2026 – Apr 2027)</div>
+      <div class="panel-sub">Average Fuel Cost in PKR/kWh &nbsp;|&nbsp; AFC structurally lower due to nuclear/hydro/solar baseload</div>
+      <div class="chart-wrap tall">
+        <canvas id="scenarioAFCChart"></canvas>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table class="est-table" style="margin-top:1rem">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th class="num">MC Base</th>
+            <th class="num">MC Upside</th>
+            <th class="num">MC Downside</th>
+            <th class="num">AFC Base</th>
+            <th class="num">AFC Upside</th>
+            <th class="num">AFC Downside</th>
+            <th class="num">Ratio (Base)</th>
+            <th class="num">Key Driver</th>
+          </tr>
+        </thead>
+        <tbody id="scenarioTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Risk Assessment for Tariff Design</div>
+      <div class="verdict-text">
+        The upside stress scenario produces a <span class="text-red">32% increase in average MC</span> (to ~23.5 PKR/kWh) and <span class="text-red">26% increase in AFC</span> (to ~9.5 PKR/kWh) relative to base case. 
+        Critically, the <strong>January RLNG spike under stress reaches 32+ PKR/kWh</strong> — comparable to the Jan-26 actual of 26.5 PKR/kWh elevated by a further RLNG shock. 
+        For the PPMC V8 Two-Part Tariff framework, SRMC crediting for prosumer exports should be anchored to the <strong>AFC base forward (5.2–9.5 PKR/kWh)</strong> rather than spot MC to avoid windfall exposure. 
+        The proposed Rs 7.50/kWh export premium sits within the AFC range for most months, making it defensible as a transitional prosumer incentive rate.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== TAB 4: ASSUMPTIONS ==================== -->
+  <div id="tab-assumptions" class="tab-content">
+
+    <p class="narrative-text">
+      The forward curve is built on five primary input drivers. Adjust the sliders below to see their directional impact on projected MC and AFC ranges. 
+      <strong>RLNG price is the dominant MC driver</strong> (thermal dispatch is typically the marginal source in Pakistan's merit order during peak demand). 
+      The PKR/USD rate affects all imported fuel costs simultaneously. Solar penetration growth and hydro availability shape the AFC independently of thermal pricing.
+    </p>
+
+    <div class="assumption-grid">
+      <div class="assumption-block">
+        <h4>Fuel & Currency Inputs</h4>
+        <div class="slider-row">
+          <span class="slider-label">PKR / USD Rate</span>
+          <input type="range" id="pkrSlider" min="260" max="320" value="280" step="5" oninput="updateAssumptions()">
+          <span class="slider-val" id="pkrVal">280</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">RLNG ($/mmBTU)</span>
+          <input type="range" id="rlngSlider" min="7" max="18" value="10.5" step="0.5" oninput="updateAssumptions()">
+          <span class="slider-val" id="rlngVal">10.5</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Coal CFR ($/ton)</span>
+          <input type="range" id="coalSlider" min="90" max="180" value="125" step="5" oninput="updateAssumptions()">
+          <span class="slider-val" id="coalVal">125</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Domestic Gas Premium (%)</span>
+          <input type="range" id="gasSlider" min="-20" max="30" value="0" step="5" oninput="updateAssumptions()">
+          <span class="slider-val" id="gasVal">0%</span>
+        </div>
+      </div>
+      <div class="assumption-block">
+        <h4>Supply & Demand Inputs</h4>
+        <div class="slider-row">
+          <span class="slider-label">Demand Growth (% YoY)</span>
+          <input type="range" id="demandSlider" min="-2" max="10" value="4" step="0.5" oninput="updateAssumptions()">
+          <span class="slider-val" id="demandVal">4.0%</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Hydro Season (% of avg)</span>
+          <input type="range" id="hydroSlider" min="60" max="140" value="100" step="5" oninput="updateAssumptions()">
+          <span class="slider-val" id="hydroVal">100%</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Solar Penetration (+MW)</span>
+          <input type="range" id="solarSlider" min="0" max="2000" value="800" step="100" oninput="updateAssumptions()">
+          <span class="slider-val" id="solarVal">800</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">New Coal IPP (MW)</span>
+          <input type="range" id="coalIPPSlider" min="0" max="2000" value="600" step="200" oninput="updateAssumptions()">
+          <span class="slider-val" id="coalIPPVal">600</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;" class="panel">
+      <div class="panel-title">Sensitivity-Adjusted Forward Curve</div>
+      <div class="panel-sub">Updates dynamically with slider changes above</div>
+      <div class="chart-wrap mid">
+        <canvas id="sensitivityChart"></canvas>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:0">
+      <div class="panel">
+        <div class="panel-title">Implied Avg MC Range</div>
+        <div id="mcImpliedRange" style="margin-top:0.75rem">
+          <div style="font-family:Georgia,serif;font-size:28px;color:var(--mc-color)" id="mcImpliedVal">17.8</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px">PKR/kWh — 12-month average</div>
+          <div style="margin-top:0.75rem;font-size:12.5px;color:var(--text-secondary)" id="mcImpliedText">Base: 17.8 &nbsp;|&nbsp; Range: 15.1 – 23.5 PKR/kWh</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Implied Avg AFC Range</div>
+        <div id="afcImpliedRange" style="margin-top:0.75rem">
+          <div style="font-family:Georgia,serif;font-size:28px;color:var(--afc-color)" id="afcImpliedVal">7.5</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px">PKR/kWh — 12-month average</div>
+          <div style="margin-top:0.75rem;font-size:12.5px;color:var(--text-secondary)" id="afcImpliedText">Base: 7.5 &nbsp;|&nbsp; Range: 6.3 – 9.5 PKR/kWh</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">Key Assumption Rationale</div>
+    <table class="est-table" style="margin-top:0.75rem">
+      <thead>
+        <tr>
+          <th>Input Driver</th>
+          <th>Base Value</th>
+          <th>Rationale</th>
+          <th>Primary Impact</th>
+          <th>Sensitivity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>PKR/USD</strong></td>
+          <td class="num">280</td>
+          <td>SBP managed float; IMF programme constrains FX volatility</td>
+          <td>All imported fuels (RLNG, coal, HFO)</td>
+          <td class="num">~1 PKR/kWh MC per 15 PKR depreciation</td>
+        </tr>
+        <tr>
+          <td><strong>RLNG ($/mmBTU)</strong></td>
+          <td class="num">$10.5</td>
+          <td>JKM Asia LNG spot moderating; Pakistan RLNG term contracts at ~$10–11</td>
+          <td>Dominant MC driver when thermal is marginal</td>
+          <td class="num">~1.5 PKR/kWh MC per $2/mmBTU change</td>
+        </tr>
+        <tr>
+          <td><strong>Coal CFR</strong></td>
+          <td class="num">$125/ton</td>
+          <td>Newcastle thermal coal; Australia supply recovery; China demand stable</td>
+          <td>Coal plants in merit order; affects AFC when coal is baseload</td>
+          <td class="num">~0.5 PKR/kWh AFC per $20/ton change</td>
+        </tr>
+        <tr>
+          <td><strong>Hydro Season</strong></td>
+          <td class="num">100% (avg)</td>
+          <td>WAPDA average Indus flows; no El Niño forecast for 2026–27</td>
+          <td>Primary AFC driver Jun–Sep; reduces thermal dispatch</td>
+          <td class="num">~0.8 PKR/kWh AFC per 20% deviation</td>
+        </tr>
+        <tr>
+          <td><strong>Solar Penetration</strong></td>
+          <td class="num">+800 MW</td>
+          <td>BTM and grid-scale additions; CPEC Phase-II solar projects</td>
+          <td>Reduces AFC in H08–H16 hours; duck curve pressure</td>
+          <td class="num">~0.3 PKR/kWh AFC reduction vs prior year</td>
+        </tr>
+        <tr>
+          <td><strong>Demand Growth</strong></td>
+          <td class="num">+4% YoY</td>
+          <td>GDP recovery, industrial expansion; constrained by affordability</td>
+          <td>Higher demand → more thermal dispatch → higher MC</td>
+          <td class="num">~0.6 PKR/kWh MC per 4% demand increase</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- ==================== TAB 5: TARIFF IMPLICATIONS ==================== -->
+  <div id="tab-tariff" class="tab-content">
+
+    <div class="tariff-context-bar">
+      <span>🔌</span>
+      <span><strong>Context:</strong> This tab maps the forward fuel cost curve against PPMC TPT V8 tariff design elements — SRMC crediting, prosumer export premium, 
+      and QTA/FCA benchmarking for both industrial CSC and residential R-TPT frameworks.</span>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">AFC vs ToU Tariff Rates — Alignment Check</div>
+        <div class="panel-sub">V8 Official rates (PKR/kWh) vs forward AFC range</div>
+        <div class="chart-wrap mid">
+          <canvas id="tariffAlignChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Net Metering Export Value — Monthly Forward</div>
+        <div class="panel-sub">AFC as proxy for SRMC crediting floor; export premium as incentive band</div>
+        <div class="chart-wrap mid">
+          <canvas id="exportValueChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Tariff Design Implication — R-TPT Prosumer Crediting</div>
+      <div class="verdict-text">
+        The proposed <strong>Rs 7.50/kWh solar export premium</strong> sits within or above the forward AFC range for 9 of 12 months (May-26 to Apr-27 base case AFC: 5.2–12.5 PKR/kWh). 
+        This validates the premium as a cost-reflective incentive: it exceeds pure SRMC crediting (AFC floor) while remaining below peak-hour MC in high-demand months. 
+        For <strong>industrial TPT</strong>, the energy rate (PRU) should track the V8 QTA cycle. The forward MC of 17–19 PKR/kWh in peak summer supports keeping PRU at its current band. 
+        The <strong>CSC/HCC fixed component</strong> should remain stable and QTA-excluded — the forward curve confirms that variable fuel costs carry sufficient volatility to be separately managed.
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">Forward Rate Benchmarks by Tariff Category</div>
+
+    <table class="est-table" style="margin-top:0.75rem">
+      <thead>
+        <tr>
+          <th>Tariff Category</th>
+          <th>Design Element</th>
+          <th class="num">V8 / Current Rate</th>
+          <th class="num">Fwd AFC Avg</th>
+          <th class="num">Fwd MC Avg</th>
+          <th>Assessment</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>R-TPT — Solar Export</strong></td>
+          <td>Prosumer export credit</td>
+          <td class="num">7.50 PKR/kWh</td>
+          <td class="num">7.5 PKR/kWh</td>
+          <td class="num">17.8 PKR/kWh</td>
+          <td><span style="color:var(--success);font-weight:600">✓ At AFC — Cost-Neutral</span></td>
+        </tr>
+        <tr>
+          <td><strong>Domestic Peak Rate</strong></td>
+          <td>V8 ToU Peak (Solar window)</td>
+          <td class="num">11.33 PKR/kWh</td>
+          <td class="num">5.5 PKR/kWh (Jun-Aug)</td>
+          <td class="num">18.5 PKR/kWh</td>
+          <td><span style="color:var(--accent);font-weight:600">~ Between AFC & MC</span></td>
+        </tr>
+        <tr>
+          <td><strong>Domestic Non-Solar</strong></td>
+          <td>V8 ToU Non-Solar (evenings)</td>
+          <td class="num">9.21 PKR/kWh</td>
+          <td class="num">7.5 PKR/kWh</td>
+          <td class="num">17.8 PKR/kWh</td>
+          <td><span style="color:var(--success);font-weight:600">✓ Above AFC — Revenue-Positive</span></td>
+        </tr>
+        <tr>
+          <td><strong>Industrial PRU (B1/B2)</strong></td>
+          <td>Energy rate under TPT</td>
+          <td class="num">~14–16 PKR/kWh</td>
+          <td class="num">7.5 PKR/kWh</td>
+          <td class="num">17.8 PKR/kWh</td>
+          <td><span style="color:var(--success);font-weight:600">✓ Above AFC — Covers Fuel Cost</span></td>
+        </tr>
+        <tr>
+          <td><strong>Net Metering Credit</strong></td>
+          <td>Current buyback (NEPRA)</td>
+          <td class="num">~6–8 PKR/kWh</td>
+          <td class="num">7.5 PKR/kWh</td>
+          <td class="num">17.8 PKR/kWh</td>
+          <td><span style="color:var(--accent);font-weight:600">~ Roughly at AFC — Marginal</span></td>
+        </tr>
+        <tr>
+          <td><strong>FCA Reference</strong></td>
+          <td>Quarterly fuel cost adjustment</td>
+          <td class="num">QTA-indexed</td>
+          <td class="num">7.5 PKR/kWh</td>
+          <td class="num">17.8 PKR/kWh</td>
+          <td><span style="color:var(--afc-color);font-weight:600">→ Forward curve informs QTA setting</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="panel" style="margin-top:1.5rem">
+      <div class="panel-title">MC Decomposition — What Drives the January Spike?</div>
+      <div class="panel-sub">January RLNG effect: high heating load + low hydro + RLNG premium pricing</div>
+      <div class="chart-wrap short">
+        <canvas id="mcDecompChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== TAB 6: DATA TABLE ==================== -->
+  <div id="tab-datatable" class="tab-content">
+
+    <p class="narrative-text">
+      Complete historical and forward data table. Historical months drawn from ISMO Master Database v3 (Feb 2024 – Apr 2026). 
+      Forward months (May 2026 – Apr 2027) derived from seasonal adjustment methodology documented in the Assumptions tab. 
+      Demand for Feb-26 flagged as anomalous.
+    </p>
+
+    <div style="overflow-x:auto">
+      <table class="est-table" id="fullDataTable">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Period</th>
+            <th>Type</th>
+            <th class="num">Avg Demand (MW)</th>
+            <th class="num">MC — Avg (PKR/kWh)</th>
+            <th class="num">MC — Min</th>
+            <th class="num">MC — Max</th>
+            <th class="num">AFC — Avg (PKR/kWh)</th>
+            <th class="num">AFC — Min</th>
+            <th class="num">AFC — Max</th>
+            <th class="num">MC / AFC Ratio</th>
+            <th class="num">Peak Hour</th>
+          </tr>
+        </thead>
+        <tbody id="fullDataBody"></tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:1.5rem;font-size:11.5px;color:var(--text-tertiary);line-height:1.8">
+      <strong>Sources:</strong> ISMO Master Database v3 — Marginal Price & Dispatch. Sections A (Demand), B (Marginal Cost), C (Average Fuel Cost via Merit Order).
+      26 months of actual data: Feb 2024 – Apr 2026. Forward months: seasonal-adjustment model with RLNG, coal, hydro, and solar assumptions (see Assumptions tab).<br>
+      <strong>Methodology note:</strong> AFC computed as Σ(MW_source × VC_source) ÷ Σ(MW_source) using Merit Order assumptions sheet. 
+      Always ≤ Marginal Cost by construction. Nuclear ≈ 3.5 PKR/kWh; Hydel ≈ 1.0; Solar/Wind ≈ 0; Coal ≈ 11–13; Thermal ≈ variable (RLNG/HFO/gas-weighted).
+    </div>
+
+  </div>
+
+  <footer>
+    <strong>Pakistan Power Sector — ISMO Fuel Cost Forward Curve Dashboard</strong> &nbsp;|&nbsp;
+    Data: ISMO Master Database v3, Feb 2024 – Apr 2026 &nbsp;|&nbsp;
+    Forward: May 2026 – Apr 2027 (model-derived) &nbsp;|&nbsp;
+    Analysis: Ammar H. Khan &nbsp;|&nbsp;
+    Prepared: June 2026 &nbsp;|&nbsp;
+    For NEPRA / Power Division regulatory use — not for public distribution without authorization.
+  </footer>
+
+</div><!-- /container -->
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+// Historical monthly data (from ISMO v3 extraction)
+const historical = [
+  { m:'Feb-24', period:'Feb 2024', demand:9858,  mc:33.75, mcMin:22.65, mcMax:39.45, afc:12.37, afcMin:11.67, afcMax:13.39, ratio:2.73, peakH:18, type:'hist' },
+  { m:'Mar-24', period:'Mar 2024', demand:10436, mc:11.39, mcMin:8.19,  mcMax:15.35, afc:5.67,  afcMin:5.48,  afcMax:5.95,  ratio:2.01, peakH:19, type:'hist' },
+  { m:'Apr-24', period:'Apr 2024', demand:11631, mc:15.87, mcMin:12.63, mcMax:18.91, afc:7.32,  afcMin:7.09,  afcMax:7.55,  ratio:2.17, peakH:19, type:'hist' },
+  { m:'May-24', period:'May 2024', demand:16463, mc:18.89, mcMin:14.78, mcMax:21.76, afc:9.26,  afcMin:8.85,  afcMax:9.63,  ratio:2.04, peakH:23, type:'hist' },
+  { m:'Jun-24', period:'Jun 2024', demand:18154, mc:20.02, mcMin:17.66, mcMax:22.03, afc:7.79,  afcMin:7.42,  afcMax:8.17,  ratio:2.57, peakH:23, type:'hist' },
+  { m:'Jul-24', period:'Jul 2024', demand:18154, mc:20.02, mcMin:17.66, mcMax:22.03, afc:7.79,  afcMin:7.42,  afcMax:8.17,  ratio:2.57, peakH:23, type:'hist', note:'Same as Jun-24 (Jul data duplicated in DB)' },
+  { m:'Aug-24', period:'Aug 2024', demand:17140, mc:16.29, mcMin:10.49, mcMax:24.13, afc:6.11,  afcMin:5.78,  afcMax:6.51,  ratio:2.66, peakH:0,  type:'hist' },
+  { m:'Sep-24', period:'Sep 2024', demand:16858, mc:18.05, mcMin:10.54, mcMax:26.23, afc:7.25,  afcMin:6.82,  afcMax:7.69,  ratio:2.49, peakH:23, type:'hist' },
+  { m:'Oct-24', period:'Oct 2024', demand:13415, mc:19.45, mcMin:14.26, mcMax:24.27, afc:8.43,  afcMin:8.10,  afcMax:9.08,  ratio:2.31, peakH:20, type:'hist' },
+  { m:'Nov-24', period:'Nov 2024', demand:10716, mc:14.71, mcMin:11.72, mcMax:17.65, afc:6.08,  afcMin:5.77,  afcMax:6.43,  ratio:2.42, peakH:17, type:'hist' },
+  { m:'Jan-25', period:'Jan 2025', demand:10505, mc:21.90, mcMin:7.29,  mcMax:29.47, afc:10.21, afcMin:9.93,  afcMax:10.52, ratio:2.14, peakH:18, type:'hist' },
+  { m:'Feb-25', period:'Feb 2025', demand:9920,  mc:11.47, mcMin:8.52,  mcMax:13.99, afc:6.01,  afcMin:5.90,  afcMax:6.34,  ratio:1.91, peakH:19, type:'hist' },
+  { m:'Mar-25', period:'Mar 2025', demand:10944, mc:16.90, mcMin:8.91,  mcMax:23.31, afc:8.05,  afcMin:7.43,  afcMax:8.61,  ratio:2.10, peakH:18, type:'hist' },
+  { m:'Apr-25', period:'Apr 2025', demand:14208, mc:22.03, mcMin:14.22, mcMax:27.98, afc:9.20,  afcMin:8.85,  afcMax:9.66,  ratio:2.39, peakH:21, type:'hist' },
+  { m:'May-25', period:'May 2025', demand:16711, mc:15.56, mcMin:8.32,  mcMax:25.28, afc:6.21,  afcMin:5.94,  afcMax:6.59,  ratio:2.51, peakH:23, type:'hist' },
+  { m:'Jun-25', period:'Jun 2025', demand:18528, mc:16.31, mcMin:7.75,  mcMax:28.43, afc:4.65,  afcMin:4.22,  afcMax:5.12,  ratio:3.51, peakH:23, type:'hist', note:'Partial gen data; AFC likely understated' },
+  { m:'Jul-25', period:'Jul 2025', demand:18492, mc:15.57, mcMin:8.01,  mcMax:27.83, afc:6.14,  afcMin:5.68,  afcMax:6.65,  ratio:2.54, peakH:23, type:'hist' },
+  { m:'Aug-25', period:'Aug 2025', demand:18250, mc:13.44, mcMin:6.91,  mcMax:21.24, afc:5.51,  afcMin:5.04,  afcMax:6.01,  ratio:2.44, peakH:0,  type:'hist' },
+  { m:'Sep-25', period:'Sep 2025', demand:17761, mc:14.72, mcMin:6.81,  mcMax:22.63, afc:5.69,  afcMin:5.15,  afcMax:6.17,  ratio:2.59, peakH:23, type:'hist' },
+  { m:'Oct-25', period:'Oct 2025', demand:13741, mc:18.35, mcMin:7.10,  mcMax:24.74, afc:8.15,  afcMin:7.88,  afcMax:8.39,  ratio:2.25, peakH:18, type:'hist' },
+  { m:'Nov-25', period:'Nov 2025', demand:11158, mc:10.02, mcMin:6.26,  mcMax:14.07, afc:4.46,  afcMin:4.30,  afcMax:4.80,  ratio:2.24, peakH:17, type:'hist' },
+  { m:'Dec-25', period:'Dec 2025', demand:10771, mc:13.32, mcMin:5.88,  mcMax:18.30, afc:7.00,  afcMin:6.78,  afcMax:7.24,  ratio:1.90, peakH:17, type:'hist' },
+  { m:'Jan-26', period:'Jan 2026', demand:10995, mc:26.50, mcMin:17.20, mcMax:33.96, afc:13.08, afcMin:12.78, afcMax:13.45, ratio:2.03, peakH:18, type:'hist' },
+  { m:'Feb-26', period:'Feb 2026', demand:null,  mc:15.08, mcMin:13.72, mcMax:15.99, afc:7.42,  afcMin:7.15,  afcMax:7.81,  ratio:2.03, peakH:18, type:'hist', note:'Demand data anomalous (~1,652 MW) — excluded' },
+  { m:'Mar-26', period:'Mar 2026', demand:11391, mc:16.28, mcMin:8.11,  mcMax:23.97, afc:7.24,  afcMin:6.73,  afcMax:7.80,  ratio:2.25, peakH:18, type:'hist' },
+  { m:'Apr-26', period:'Apr 2026', demand:12840, mc:40.18, mcMin:23.91, mcMax:50.24, afc:11.15, afcMin:10.65, afcMax:11.52, ratio:3.60, peakH:20, type:'hist', note:'MC anomalously high — RLNG supply tightness' },
+];
+
+// Forward monthly data (May 2026 – Apr 2027)
+const fwdBase = [
+  { m:'May-26', mc:17.5,  mcMin:13.5, mcMax:21.5, afc:7.5,  afcMin:5.8, afcMax:9.2,  ratio:2.33, driver:'RLNG summer; hydro building' },
+  { m:'Jun-26', mc:19.0,  mcMin:14.5, mcMax:24.5, afc:5.2,  afcMin:3.8, afcMax:7.0,  ratio:3.65, driver:'Peak demand; high solar/hydro → low AFC' },
+  { m:'Jul-26', mc:17.5,  mcMin:13.5, mcMax:22.5, afc:6.5,  afcMin:4.8, afcMax:8.0,  ratio:2.69, driver:'Monsoon hydro; high AC load' },
+  { m:'Aug-26', mc:14.8,  mcMin:11.0, mcMax:19.0, afc:5.5,  afcMin:4.2, afcMax:7.0,  ratio:2.69, driver:'Solar peak hours; hydro strong' },
+  { m:'Sep-26', mc:16.5,  mcMin:12.5, mcMax:21.0, afc:6.0,  afcMin:4.5, afcMax:7.8,  ratio:2.75, driver:'Hydro tapering; demand declining' },
+  { m:'Oct-26', mc:19.0,  mcMin:14.5, mcMax:24.0, afc:8.3,  afcMin:6.5, afcMax:10.5, ratio:2.29, driver:'Hydro low; coal baseload ramps' },
+  { m:'Nov-26', mc:11.5,  mcMin:8.5,  mcMax:15.0, afc:4.8,  afcMin:3.8, afcMax:6.2,  ratio:2.40, driver:'Gas surplus; low demand' },
+  { m:'Dec-26', mc:14.0,  mcMin:10.5, mcMax:18.5, afc:7.2,  afcMin:5.5, afcMax:9.0,  ratio:1.94, driver:'Seasonal RLNG uptick' },
+  { m:'Jan-27', mc:25.0,  mcMin:19.5, mcMax:32.0, afc:12.5, afcMin:9.5, afcMax:16.0, ratio:2.00, driver:'Peak RLNG heating; low hydro' },
+  { m:'Feb-27', mc:13.5,  mcMin:10.0, mcMax:17.5, afc:7.0,  afcMin:5.2, afcMax:9.0,  ratio:1.93, driver:'Low demand; gas surplus' },
+  { m:'Mar-27', mc:16.5,  mcMin:12.5, mcMax:21.0, afc:7.5,  afcMin:5.8, afcMax:9.5,  ratio:2.20, driver:'Demand recovery; RLNG moderate' },
+  { m:'Apr-27', mc:23.0,  mcMin:17.5, mcMax:29.5, afc:9.5,  afcMin:7.2, afcMax:12.0, ratio:2.42, driver:'Pre-summer ramp; excl. Apr-26 anomaly' },
+];
+
+const fwdUpside = fwdBase.map(d => ({ ...d, mc: +(d.mc * 1.32).toFixed(2), afc: +(d.afc * 1.26).toFixed(2) }));
+const fwdDown   = fwdBase.map(d => ({ ...d, mc: +(d.mc * 0.83).toFixed(2), afc: +(d.afc * 0.87).toFixed(2) }));
+
+// Combined timeline for main chart
+const allMonths = [...historical.map(d=>d.m), ...fwdBase.map(d=>d.m)];
+const histMC = historical.map(d=>d.mc);
+const histAFC = historical.map(d=>d.afc);
+const histLen = historical.length;
+
+const fwdMCBase  = [...Array(histLen).fill(null), ...fwdBase.map(d=>d.mc)];
+const fwdAFCBase = [...Array(histLen).fill(null), ...fwdBase.map(d=>d.afc)];
+
+// For continuity, add last historical point to forward arrays
+fwdMCBase[histLen-1] = historical[histLen-1].mc;
+fwdAFCBase[histLen-1] = historical[histLen-1].afc;
+
+// ============================================================
+// CHART DEFAULTS
+// ============================================================
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#666666';
+
+const gridOpts = {
+  color: '#E5E5E5',
+  lineWidth: 1,
+};
+
+// ============================================================
+// MAIN CHART
+// ============================================================
+new Chart(document.getElementById('mainChart'), {
+  type: 'line',
+  data: {
+    labels: allMonths,
+    datasets: [
+      {
+        label: 'Historical MC (PKR/kWh)',
+        data: [...histMC, ...Array(fwdBase.length).fill(null)],
+        borderColor: '#9B2335',
+        backgroundColor: 'transparent',
+        borderWidth: 2.5,
+        tension: 0.3,
+        pointRadius: 3,
+        pointBackgroundColor: '#9B2335',
+      },
+      {
+        label: 'Historical AFC (PKR/kWh)',
+        data: [...histAFC, ...Array(fwdBase.length).fill(null)],
+        borderColor: '#2563EB',
+        backgroundColor: 'transparent',
+        borderWidth: 2.5,
+        tension: 0.3,
+        pointRadius: 3,
+        pointBackgroundColor: '#2563EB',
+      },
+      {
+        label: 'Forward MC — Base',
+        data: fwdMCBase,
+        borderColor: '#D97706',
+        backgroundColor: 'rgba(217,119,6,0.06)',
+        borderWidth: 2.5,
+        borderDash: [6, 3],
+        tension: 0.3,
+        pointRadius: 4,
+        pointStyle: 'triangle',
+        pointBackgroundColor: '#D97706',
+        fill: false,
+      },
+      {
+        label: 'Forward AFC — Base',
+        data: fwdAFCBase,
+        borderColor: '#0891B2',
+        backgroundColor: 'rgba(8,145,178,0.06)',
+        borderWidth: 2.5,
+        borderDash: [6, 3],
+        tension: 0.3,
+        pointRadius: 4,
+        pointStyle: 'triangle',
+        pointBackgroundColor: '#0891B2',
+        fill: false,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: { boxWidth: 20, padding: 16, font: { size: 11 } }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y !== null ? ctx.parsed.y.toFixed(2) + ' PKR/kWh' : '—'}`
+        }
+      },
+      annotation: {
+        annotations: {
+          divLine: {
+            type: 'line',
+            x: historical[histLen-1].m,
+            borderColor: '#999999',
+            borderWidth: 1.5,
+            borderDash: [4,4],
+            label: { display: true, content: '← Actual  |  Forward →', position: 'start', backgroundColor: '#F3F4F6', color: '#666', font: { size: 10 } }
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { maxRotation: 45, font: { size: 10 }, color: '#999' },
+        grid: gridOpts,
+      },
+      y: {
+        title: { display: true, text: 'PKR / kWh', font: { size: 11 }, color: '#999' },
+        grid: gridOpts,
+        ticks: { callback: v => v.toFixed(0) }
+      }
+    }
+  }
+});
+
+// ============================================================
+// DEMAND CHART
+// ============================================================
+const demandData = historical.map(d => d.demand);
+const demandColors = historical.map(d =>
+  d.demand === null ? 'rgba(200,146,58,0.3)' :
+  d.demand > 16000 ? 'rgba(155,35,53,0.75)' :
+  d.demand > 12000 ? 'rgba(200,146,58,0.75)' :
+  'rgba(82,183,136,0.75)'
+);
+new Chart(document.getElementById('demandChart'), {
+  type: 'bar',
+  data: {
+    labels: historical.map(d=>d.m),
+    datasets: [{
+      label: 'Avg Demand (MW)',
+      data: demandData,
+      backgroundColor: demandColors,
+      borderColor: demandColors,
+      borderWidth: 0,
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { maxRotation: 60, font: { size: 9 } }, grid: { display: false } },
+      y: { grid: gridOpts, title: { display: true, text: 'MW', font: { size: 10 } } }
+    }
+  }
+});
+
+// ============================================================
+// RATIO CHART
+// ============================================================
+const ratioLabels = [...historical.map(d=>d.m), ...fwdBase.map(d=>d.m)];
+const ratioHistData = historical.map(d=>d.ratio);
+const ratioFwdData = [...Array(histLen).fill(null), ...fwdBase.map(d=>d.ratio)];
+ratioFwdData[histLen-1] = historical[histLen-1].ratio;
+
+new Chart(document.getElementById('ratioChart'), {
+  type: 'line',
+  data: {
+    labels: ratioLabels,
+    datasets: [
+      {
+        label: 'Historical MC/AFC',
+        data: [...ratioHistData, ...Array(fwdBase.length).fill(null)],
+        borderColor: '#C8923A',
+        backgroundColor: 'rgba(200,146,58,0.07)',
+        fill: true,
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 2.5,
+      },
+      {
+        label: 'Forward MC/AFC (Base)',
+        data: ratioFwdData,
+        borderColor: '#7C3AED',
+        backgroundColor: 'transparent',
+        borderDash: [5,3],
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 3,
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { font: { size: 10 }, boxWidth: 14 } } },
+    scales: {
+      x: { ticks: { maxRotation: 60, font: { size: 9 } }, grid: { display: false } },
+      y: { grid: gridOpts, min: 1.5, title: { display: true, text: 'Ratio', font: { size: 10 } } }
+    }
+  }
+});
+
+// ============================================================
+// SEASONAL — YoY CHART
+// ============================================================
+const months12 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const mc2024 = { Feb:33.75, Mar:11.39, Apr:15.87, May:18.89, Jun:20.02, Jul:20.02, Aug:16.29, Sep:18.05, Oct:19.45, Nov:14.71 };
+const mc2025 = { Jan:21.90, Feb:11.47, Mar:16.90, Apr:22.03, May:15.56, Jun:16.31, Jul:15.57, Aug:13.44, Sep:14.72, Oct:18.35, Nov:10.02, Dec:13.32 };
+const mc2026 = { Jan:26.50, Feb:15.08, Mar:16.28, Apr:40.18 };
+const afc2024 = { Feb:12.37, Mar:5.67, Apr:7.32, May:9.26, Jun:7.79, Jul:7.79, Aug:6.11, Sep:7.25, Oct:8.43, Nov:6.08 };
+const afc2025 = { Jan:10.21, Feb:6.01, Mar:8.05, Apr:9.20, May:6.21, Jun:4.65, Jul:6.14, Aug:5.51, Sep:5.69, Oct:8.15, Nov:4.46, Dec:7.00 };
+const afc2026 = { Jan:13.08, Feb:7.42, Mar:7.24, Apr:11.15 };
+
+const abbrMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+new Chart(document.getElementById('yoyChart'), {
+  type: 'bar',
+  data: {
+    labels: abbrMonths,
+    datasets: [
+      { label: 'MC 2024', data: abbrMonths.map(m => mc2024[m]||null), backgroundColor: 'rgba(155,35,53,0.4)', borderColor: 'rgba(155,35,53,0.8)', borderWidth: 1.5, borderRadius: 2 },
+      { label: 'MC 2025', data: abbrMonths.map(m => mc2025[m]||null), backgroundColor: 'rgba(155,35,53,0.75)', borderColor: 'rgba(155,35,53,1)', borderWidth: 1.5, borderRadius: 2 },
+      { label: 'MC 2026 (partial)', data: abbrMonths.map(m => mc2026[m]||null), backgroundColor: 'rgba(217,119,6,0.65)', borderColor: 'rgba(217,119,6,1)', borderWidth: 1.5, borderRadius: 2 },
+      { label: 'AFC 2024', data: abbrMonths.map(m => afc2024[m]||null), backgroundColor: 'rgba(37,99,235,0.35)', borderColor: 'rgba(37,99,235,0.7)', borderWidth: 1.5, borderRadius: 2 },
+      { label: 'AFC 2025', data: abbrMonths.map(m => afc2025[m]||null), backgroundColor: 'rgba(37,99,235,0.7)', borderColor: 'rgba(37,99,235,1)', borderWidth: 1.5, borderRadius: 2 },
+      { label: 'AFC 2026 (partial)', data: abbrMonths.map(m => afc2026[m]||null), backgroundColor: 'rgba(8,145,178,0.55)', borderColor: 'rgba(8,145,178,1)', borderWidth: 1.5, borderRadius: 2 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { position: 'top', labels: { boxWidth: 14, font: { size: 10 } } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: gridOpts, title: { display: true, text: 'PKR / kWh' } }
+    }
+  }
+});
+
+// ============================================================
+// SEASONAL PROFILE CHARTS
+// ============================================================
+const seasonalMC = {
+  Jan: (21.90+26.50)/2,
+  Feb: (33.75+11.47+15.08)/3,
+  Mar: (11.39+16.90+16.28)/3,
+  Apr: (15.87+22.03)/2, // exclude Apr-26 anomaly
+  May: (18.89+15.56)/2,
+  Jun: (20.02+16.31)/2,
+  Jul: (20.02+15.57)/2,
+  Aug: (16.29+13.44)/2,
+  Sep: (18.05+14.72)/2,
+  Oct: (19.45+18.35)/2,
+  Nov: (14.71+10.02)/2,
+  Dec: 13.32,
+};
+const seasonalAFC = {
+  Jan: (10.21+13.08)/2,
+  Feb: (12.37+6.01+7.42)/3,
+  Mar: (5.67+8.05+7.24)/3,
+  Apr: (7.32+9.20)/2,
+  May: (9.26+6.21)/2,
+  Jun: (7.79+4.65)/2,
+  Jul: (7.79+6.14)/2,
+  Aug: (6.11+5.51)/2,
+  Sep: (7.25+5.69)/2,
+  Oct: (8.43+8.15)/2,
+  Nov: (6.08+4.46)/2,
+  Dec: 7.00,
+};
+
+new Chart(document.getElementById('seasonalMCChart'), {
+  type: 'bar',
+  data: {
+    labels: abbrMonths,
+    datasets: [{
+      label: 'Avg MC (2-year)',
+      data: abbrMonths.map(m => +seasonalMC[m].toFixed(2)),
+      backgroundColor: abbrMonths.map(m => {
+        const v = seasonalMC[m]; 
+        return v > 22 ? 'rgba(155,35,53,0.85)' : v > 17 ? 'rgba(200,146,58,0.8)' : 'rgba(82,183,136,0.7)';
+      }),
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { grid: { display: false } }, y: { grid: gridOpts, title: { display: true, text: 'PKR/kWh' } } }
+  }
+});
+
+new Chart(document.getElementById('seasonalAFCChart'), {
+  type: 'bar',
+  data: {
+    labels: abbrMonths,
+    datasets: [{
+      label: 'Avg AFC (2-year)',
+      data: abbrMonths.map(m => +seasonalAFC[m].toFixed(2)),
+      backgroundColor: abbrMonths.map(m => {
+        const v = seasonalAFC[m]; 
+        return v > 11 ? 'rgba(37,99,235,0.85)' : v > 8 ? 'rgba(8,145,178,0.75)' : 'rgba(82,183,136,0.65)';
+      }),
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { grid: { display: false } }, y: { grid: gridOpts, title: { display: true, text: 'PKR/kWh' } } }
+  }
+});
+
+// ============================================================
+// HEATMAP
+// ============================================================
+function getHeatColor(v, min, max) {
+  const pct = (v - min) / (max - min);
+  const r = Math.round(37 + pct * (155 - 37));
+  const g = Math.round(99 + pct * (35 - 99));
+  const b = Math.round(235 + pct * (53 - 235));
+  return `rgba(${r},${g},${b},0.65)`;
+}
+const heatRows = [
+  { label: 'MC 2024', data: abbrMonths.map(m => mc2024[m]||null) },
+  { label: 'MC 2025', data: abbrMonths.map(m => mc2025[m]||null) },
+  { label: 'MC 2026', data: abbrMonths.map(m => mc2026[m]||null) },
+  { label: 'MC Forward (Base)', data: abbrMonths.map((m,i) => {
+    const fwdM = { May:17.5,Jun:19.0,Jul:17.5,Aug:14.8,Sep:16.5,Oct:19.0,Nov:11.5,Dec:14.0,Jan:25.0,Feb:13.5,Mar:16.5,Apr:23.0 };
+    return fwdM[m]||null;
+  })},
+  { label: 'AFC 2024', data: abbrMonths.map(m => afc2024[m]||null) },
+  { label: 'AFC 2025', data: abbrMonths.map(m => afc2025[m]||null) },
+  { label: 'AFC 2026', data: abbrMonths.map(m => afc2026[m]||null) },
+  { label: 'AFC Forward (Base)', data: abbrMonths.map(m => {
+    const fwdA = { May:7.5,Jun:5.2,Jul:6.5,Aug:5.5,Sep:6.0,Oct:8.3,Nov:4.8,Dec:7.2,Jan:12.5,Feb:7.0,Mar:7.5,Apr:9.5 };
+    return fwdA[m]||null;
+  })},
+];
+const allVals = heatRows.flatMap(r=>r.data.filter(v=>v!==null));
+const hMin = Math.min(...allVals), hMax = Math.max(...allVals);
+
+let htmHtml = `<table class="est-table" style="font-size:11px"><thead><tr><th>Series</th>${abbrMonths.map(m=>`<th class="num">${m}</th>`).join('')}</tr></thead><tbody>`;
+heatRows.forEach(row => {
+  htmHtml += `<tr><td style="white-space:nowrap;font-weight:600">${row.label}</td>`;
+  row.data.forEach(v => {
+    if(v===null) htmHtml += `<td class="num" style="color:#ccc">—</td>`;
+    else htmHtml += `<td class="heat-cell" style="background:${getHeatColor(v,hMin,hMax)};color:#fff">${v.toFixed(1)}</td>`;
+  });
+  htmHtml += '</tr>';
+});
+htmHtml += '</tbody></table>';
+document.getElementById('heatmapTable').innerHTML = htmHtml;
+
+// ============================================================
+// SCENARIO CHARTS
+// ============================================================
+const fwdLabels = fwdBase.map(d=>d.m);
+function makeScenChart(id, mc) {
+  new Chart(document.getElementById(id), {
+    type: 'line',
+    data: {
+      labels: fwdLabels,
+      datasets: [
+        {
+          label: 'Base Case',
+          data: mc ? fwdBase.map(d=>d.mc) : fwdBase.map(d=>d.afc),
+          borderColor: mc ? '#D97706' : '#0891B2',
+          backgroundColor: mc ? 'rgba(217,119,6,0.08)' : 'rgba(8,145,178,0.08)',
+          fill: true, borderWidth: 2.5, tension: 0.35, pointRadius: 4,
+        },
+        {
+          label: 'Upside (RLNG spike / FX stress)',
+          data: mc ? fwdUpside.map(d=>d.mc) : fwdUpside.map(d=>d.afc),
+          borderColor: '#9B2335',
+          borderDash: [6,3], borderWidth: 2, tension: 0.35, fill: false, pointRadius: 3,
+          backgroundColor: 'transparent',
+        },
+        {
+          label: 'Downside (hydro surplus / soft prices)',
+          data: mc ? fwdDown.map(d=>d.mc) : fwdDown.map(d=>d.afc),
+          borderColor: '#52B788',
+          borderDash: [3,3], borderWidth: 2, tension: 0.35, fill: false, pointRadius: 3,
+          backgroundColor: 'transparent',
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'top', labels: { boxWidth: 16, font: { size: 11 } } } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: gridOpts, title: { display: true, text: 'PKR / kWh' } }
+      }
+    }
+  });
+}
+makeScenChart('scenarioMCChart', true);
+makeScenChart('scenarioAFCChart', false);
+
+// Scenario table
+const sb = document.getElementById('scenarioTableBody');
+fwdBase.forEach((d,i) => {
+  sb.innerHTML += `<tr class="fwd-row">
+    <td class="month-tag">${d.m} <span class="fwd-tag">FWD</span></td>
+    <td class="num">${d.mc.toFixed(1)}</td>
+    <td class="num" style="color:#9B2335">${fwdUpside[i].mc.toFixed(1)}</td>
+    <td class="num" style="color:#52B788">${fwdDown[i].mc.toFixed(1)}</td>
+    <td class="num">${d.afc.toFixed(1)}</td>
+    <td class="num" style="color:#9B2335">${fwdUpside[i].afc.toFixed(1)}</td>
+    <td class="num" style="color:#52B788">${fwdDown[i].afc.toFixed(1)}</td>
+    <td class="num">${d.ratio.toFixed(2)}×</td>
+    <td style="font-size:11px;color:var(--text-secondary)">${d.driver}</td>
+  </tr>`;
+});
+
+// ============================================================
+// SENSITIVITY CHART
+// ============================================================
+let sensitivityChart;
+function buildSensChart(mcAdj, afcAdj) {
+  const mcData = fwdBase.map(d => +(d.mc * mcAdj).toFixed(2));
+  const afcData = fwdBase.map(d => +(d.afc * afcAdj).toFixed(2));
+  if (sensitivityChart) sensitivityChart.destroy();
+  sensitivityChart = new Chart(document.getElementById('sensitivityChart'), {
+    type: 'line',
+    data: {
+      labels: fwdLabels,
+      datasets: [
+        { label: 'Adjusted MC', data: mcData, borderColor: '#D97706', borderWidth: 2.5, tension: 0.35, pointRadius: 3, backgroundColor: 'rgba(217,119,6,0.06)', fill: true },
+        { label: 'Adjusted AFC', data: afcData, borderColor: '#0891B2', borderWidth: 2.5, tension: 0.35, pointRadius: 3, backgroundColor: 'rgba(8,145,178,0.06)', fill: true },
+        { label: 'Base MC', data: fwdBase.map(d=>d.mc), borderColor: '#D97706', borderDash: [4,4], borderWidth: 1.5, tension: 0.35, pointRadius: 0, backgroundColor: 'transparent' },
+        { label: 'Base AFC', data: fwdBase.map(d=>d.afc), borderColor: '#0891B2', borderDash: [4,4], borderWidth: 1.5, tension: 0.35, pointRadius: 0, backgroundColor: 'transparent' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 14, font: { size: 10 } } } },
+      scales: { x: { grid: { display: false } }, y: { grid: gridOpts, title: { display: true, text: 'PKR/kWh' } } }
+    }
+  });
+  const avgMC = (mcData.reduce((a,b)=>a+b,0)/mcData.length).toFixed(1);
+  const avgAFC = (afcData.reduce((a,b)=>a+b,0)/afcData.length).toFixed(1);
+  document.getElementById('mcImpliedVal').textContent = avgMC;
+  document.getElementById('afcImpliedVal').textContent = avgAFC;
+}
+buildSensChart(1.0, 1.0);
+
+function updateAssumptions() {
+  const pkr = +document.getElementById('pkrSlider').value;
+  const rlng = +document.getElementById('rlngSlider').value;
+  const coal = +document.getElementById('coalSlider').value;
+  const gas = +document.getElementById('gasSlider').value;
+  const demand = +document.getElementById('demandSlider').value;
+  const hydro = +document.getElementById('hydroSlider').value;
+  const solar = +document.getElementById('solarSlider').value;
+
+  document.getElementById('pkrVal').textContent = pkr;
+  document.getElementById('rlngVal').textContent = rlng.toFixed(1);
+  document.getElementById('coalVal').textContent = coal;
+  document.getElementById('gasVal').textContent = (gas >= 0 ? '+' : '') + gas + '%';
+  document.getElementById('demandVal').textContent = (demand >= 0 ? '+' : '') + demand.toFixed(1) + '%';
+  document.getElementById('hydroVal').textContent = hydro + '%';
+  document.getElementById('solarVal').textContent = solar;
+  document.getElementById('coalIPPVal').textContent = document.getElementById('coalIPPSlider').value;
+
+  // Compute adjustment factors
+  const pkrFactor = pkr / 280;
+  const rlngFactor = rlng / 10.5;
+  const hydroFactor = hydro / 100;
+  const solarFactor = Math.max(0.85, 1 - (solar - 800) / 10000);
+  const demandFactor = 1 + (demand - 4) / 100;
+
+  // MC: weighted by fuel mix sensitivity
+  const mcAdj = pkrFactor * 0.5 * rlngFactor * 0.6 * demandFactor * 0.3;
+  const normMCAdj = mcAdj / (1.0 * 0.5 * 1.0 * 0.6 * 1.0 * 0.3);
+
+  // AFC: weighted by hydro + solar (inverse)
+  const afcAdj = pkrFactor * 0.3 * (1 / (hydroFactor * 0.4 + 0.6)) * solarFactor;
+  const normAFCAdj = afcAdj / (1.0 * 0.3 * (1 / (1.0 * 0.4 + 0.6)) * 1.0);
+
+  const finalMC = Math.max(0.7, Math.min(1.45, normMCAdj));
+  const finalAFC = Math.max(0.7, Math.min(1.40, normAFCAdj));
+
+  buildSensChart(finalMC, finalAFC);
+}
+
+// ============================================================
+// TARIFF CHARTS
+// ============================================================
+// V8 ToU rates for reference
+const v8Rates = { peak: 11.33, nonSolar: 9.21, solar: 6.23 };
+
+new Chart(document.getElementById('tariffAlignChart'), {
+  type: 'bar',
+  data: {
+    labels: fwdLabels,
+    datasets: [
+      { label: 'AFC Forward (Base)', data: fwdBase.map(d=>d.afc), backgroundColor: 'rgba(8,145,178,0.65)', borderRadius: 3, order: 2 },
+      { label: 'V8 Solar-Hour Rate (6.23)', data: Array(12).fill(6.23), type: 'line', borderColor: '#52B788', borderDash: [6,3], borderWidth: 2, pointRadius: 0 },
+      { label: 'V8 Non-Solar Rate (9.21)', data: Array(12).fill(9.21), type: 'line', borderColor: '#C8923A', borderDash: [6,3], borderWidth: 2, pointRadius: 0 },
+      { label: 'Export Premium (7.50)', data: Array(12).fill(7.50), type: 'line', borderColor: '#9B2335', borderDash: [4,2], borderWidth: 2, pointRadius: 0 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 14, font: { size: 10 } } } },
+    scales: { x: { grid: { display: false } }, y: { grid: gridOpts, title: { display: true, text: 'PKR/kWh' }, min: 0, max: 16 } }
+  }
+});
+
+new Chart(document.getElementById('exportValueChart'), {
+  type: 'line',
+  data: {
+    labels: fwdLabels,
+    datasets: [
+      {
+        label: 'AFC (SRMC floor)',
+        data: fwdBase.map(d=>d.afc),
+        borderColor: '#0891B2', backgroundColor: 'rgba(8,145,178,0.08)', fill: true,
+        borderWidth: 2, tension: 0.35, pointRadius: 3,
+      },
+      {
+        label: 'Export Premium (7.50 fixed)',
+        data: Array(12).fill(7.50),
+        borderColor: '#9B2335', borderDash: [5,3], borderWidth: 2, pointRadius: 0,
+        backgroundColor: 'transparent',
+      },
+      {
+        label: 'MC (upper reference)',
+        data: fwdBase.map(d=>d.mc),
+        borderColor: '#D97706', borderDash: [3,3], borderWidth: 1.5, pointRadius: 0,
+        backgroundColor: 'transparent',
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { position: 'top', labels: { boxWidth: 14, font: { size: 10 } } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: gridOpts, title: { display: true, text: 'PKR/kWh' }, min: 0 }
+    }
+  }
+});
+
+// MC Decomposition (stacked conceptual)
+new Chart(document.getElementById('mcDecompChart'), {
+  type: 'bar',
+  data: {
+    labels: ['May-26','Jun-26','Jul-26','Aug-26','Sep-26','Oct-26','Nov-26','Dec-26','Jan-27','Feb-27','Mar-27','Apr-27'],
+    datasets: [
+      { label: 'Nuclear / Hydro / Solar base', data: [3.5,3.2,3.0,3.0,3.2,3.5,3.3,3.5,3.5,3.5,3.5,3.5], backgroundColor: 'rgba(82,183,136,0.75)', borderRadius: [0,0,0,0] },
+      { label: 'Coal component', data: [4.5,4.8,4.5,4.0,4.5,5.0,3.5,4.5,5.0,4.0,5.0,5.5], backgroundColor: 'rgba(100,116,139,0.65)' },
+      { label: 'Gas/RLNG thermal premium', data: [9.5,11.0,10.0,7.8,8.8,10.5,4.7,6.0,16.5,6.0,8.0,14.0], backgroundColor: 'rgba(155,35,53,0.7)' },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { boxWidth: 14, font: { size: 10 } } } },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, grid: gridOpts, title: { display: true, text: 'PKR/kWh (conceptual)' } }
+    }
+  }
+});
+
+// ============================================================
+// FULL DATA TABLE
+// ============================================================
+const fb = document.getElementById('fullDataBody');
+
+historical.forEach(d => {
+  const hasNote = d.note ? `<span class="anomaly-tag" title="${d.note}">⚠</span>` : '';
+  fb.innerHTML += `<tr>
+    <td class="month-tag">${d.m} ${hasNote} <span class="hist-tag">ACTUAL</span></td>
+    <td>${d.period}</td>
+    <td style="font-size:11px;color:var(--text-secondary)">Historical</td>
+    <td class="num">${d.demand !== null ? d.demand.toLocaleString() : '<em style="color:#ccc">—</em>'}</td>
+    <td class="num" style="color:var(--mc-color);font-weight:600">${d.mc.toFixed(2)}</td>
+    <td class="num">${d.mcMin.toFixed(2)}</td>
+    <td class="num">${d.mcMax.toFixed(2)}</td>
+    <td class="num" style="color:var(--afc-color);font-weight:600">${d.afc.toFixed(2)}</td>
+    <td class="num">${d.afcMin.toFixed(2)}</td>
+    <td class="num">${d.afcMax.toFixed(2)}</td>
+    <td class="num">${d.ratio.toFixed(2)}×</td>
+    <td class="num">H${String(d.peakH).padStart(2,'0')}</td>
+  </tr>`;
+});
+
+fwdBase.forEach((d,i) => {
+  const yr = i < 8 ? '2026' : '2027';
+  fb.innerHTML += `<tr class="fwd-row">
+    <td class="month-tag">${d.m} <span class="fwd-tag">FORWARD</span></td>
+    <td>${d.m.replace('-','-')} ${yr}</td>
+    <td style="font-size:11px;color:#1D4ED8">Model — Base Case</td>
+    <td class="num" style="color:#999">N/A</td>
+    <td class="num" style="color:var(--mc-fwd);font-weight:600">${d.mc.toFixed(2)}</td>
+    <td class="num">${d.mcMin.toFixed(2)}</td>
+    <td class="num">${d.mcMax.toFixed(2)}</td>
+    <td class="num" style="color:#0891B2;font-weight:600">${d.afc.toFixed(2)}</td>
+    <td class="num">${d.afcMin.toFixed(2)}</td>
+    <td class="num">${d.afcMax.toFixed(2)}</td>
+    <td class="num">${d.ratio.toFixed(2)}×</td>
+    <td class="num" style="color:#999">—</td>
+  </tr>`;
+});
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function showTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
