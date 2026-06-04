@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two-Part Tariff: A New Deal for Pakistan's Industry</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #FFFFFF;
+      --secondary: #FAFAFA;
+      --border: #E5E5E5;
+      --accent: #C8923A;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --success: #52B788;
+      --warning: #9B2335;
+      --blue: #2B6CB0;
+      --light-amber: #FFF7ED;
+      --light-green: #F0FFF4;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: var(--primary);
+      color: #2D2D2D;
+      line-height: 1.6;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* HEADER */
+    .hero {
+      background: #FFFFFF;
+      color: var(--text-primary);
+      padding: 3.5rem 0 2.5rem;
+      border-bottom: 3px solid var(--accent);
+    }
+    .hero-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: Georgia, serif;
+      font-size: 42px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      max-width: 700px;
+    }
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 620px;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .hero-stat-num {
+      font-family: Georgia, serif;
+      font-size: 30px;
+      font-weight: 400;
+      color: var(--accent);
+    }
+    .hero-stat-label {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: 0.25rem;
+      line-height: 1.4;
+    }
+
+    /* NAV */
+    .nav-strip {
+      position: sticky;
+      top: 0;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .nav-inner {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-inner::-webkit-scrollbar { display: none; }
+    .nav-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 1rem 1.25rem;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .nav-btn:hover { color: var(--text-primary); }
+    .nav-btn.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent);
+    }
+
+    /* SECTIONS */
+    .section {
+      display: none;
+      padding: 3rem 0;
+    }
+    .section.active { display: block; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: Georgia, serif;
+      font-size: 30px;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .section-intro {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 720px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    /* GRIDS */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+    .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; }
+
+    /* PANEL */
+    .panel {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 1rem;
+    }
+
+    /* INSIGHT BOXES */
+    .insight-box {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--success);
+      border-radius: 8px 8px 0 0;
+      padding: 1.5rem;
+    }
+    .insight-box.amber { border-top-color: var(--accent); }
+    .insight-box.red { border-top-color: var(--warning); }
+    .insight-box.blue { border-top-color: var(--blue); }
+    .insight-num {
+      font-family: Georgia, serif;
+      font-size: 30px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .insight-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 0.6rem;
+      line-height: 1.5;
+    }
+
+    /* VERDICT / CALLOUT */
+    .callout {
+      background: var(--light-amber);
+      border-left: 4px solid var(--accent);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .callout.green {
+      background: var(--light-green);
+      border-left-color: var(--success);
+    }
+    .callout-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .callout.green .callout-label { color: var(--success); }
+    .callout-text {
+      font-size: 14px;
+      color: #2D2D2D;
+      line-height: 1.7;
+    }
+
+    /* TABLES */
+    .est-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .est-table th {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      text-align: left;
+      padding: 0.75rem 0.875rem;
+      border-bottom: 2px solid var(--border);
+      background: white;
+      text-transform: uppercase;
+    }
+    .est-table td {
+      padding: 0.75rem 0.875rem;
+      border-bottom: 1px solid var(--border);
+      color: #2D2D2D;
+    }
+    .est-table tr:hover td { background: #F5F5F5; }
+    .est-table .highlight { font-weight: 600; color: var(--success); }
+    .est-table .accent { font-weight: 600; color: var(--accent); }
+    .est-table .red { color: var(--warning); font-weight: 600; }
+    .est-table .total-row td {
+      background: #F0F0F0;
+      font-weight: 700;
+      border-top: 2px solid var(--border);
+    }
+
+    /* STEP CARDS */
+    .step-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      position: relative;
+      padding-left: 4rem;
+    }
+    .step-num {
+      position: absolute;
+      left: 1.25rem;
+      top: 1.5rem;
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .step-title {
+      font-family: Georgia, serif;
+      font-size: 16px;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .step-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* COMPARISON BLOCK */
+    .compare-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .compare-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .compare-head {
+      padding: 1rem 1.25rem;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .compare-head.old { background: #FFF0F0; color: var(--warning); }
+    .compare-head.new { background: #F0FFF4; color: var(--success); }
+    .compare-body { padding: 1.25rem; }
+    .compare-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .compare-item:last-child { border-bottom: none; }
+    .compare-val { font-weight: 600; }
+
+    /* CHART CONTAINERS */
+    .chart-wrap {
+      position: relative;
+      height: 280px;
+    }
+    .chart-wrap.tall { height: 340px; }
+    .chart-wrap.short { height: 220px; }
+
+    /* INTERACTIVE SIMULATOR */
+    .sim-controls {
+      background: var(--secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .sim-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      align-items: end;
+    }
+    .sim-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .sim-field select, .sim-field input {
+      width: 100%;
+      padding: 0.6rem 0.875rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+      color: var(--text-primary);
+    }
+    .sim-field input[type=range] {
+      padding: 0.3rem 0;
+      border: none;
+      background: none;
+      accent-color: var(--accent);
+    }
+    .range-val {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      color: var(--accent);
+      text-align: right;
+      margin-top: 0.2rem;
+    }
+    .btn-calc {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: background 0.2s;
+    }
+    .btn-calc:hover { background: #A87030; }
+
+    /* RESULT CARDS */
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .result-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .result-num {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      color: var(--text-primary);
+    }
+    .result-num.good { color: var(--success); }
+    .result-num.bad { color: var(--warning); }
+    .result-label {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-top: 0.4rem;
+    }
+
+    /* ROADMAP / TIMELINE */
+    .timeline { position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .tl-item {
+      display: flex;
+      gap: 1.5rem;
+      padding: 0 0 2rem 0;
+      position: relative;
+    }
+    .tl-dot {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      z-index: 1;
+    }
+    .tl-dot.amber { background: var(--accent); }
+    .tl-dot.green { background: var(--success); }
+    .tl-dot.blue { background: var(--blue); }
+    .tl-content { padding-top: 0.25rem; }
+    .tl-year {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+    .tl-title {
+      font-family: Georgia, serif;
+      font-size: 16px;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+    .tl-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* BADGE */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .badge.green { background: #E6F4EE; color: var(--success); }
+    .badge.amber { background: #FFF3E0; color: var(--accent); }
+    .badge.red { background: #FEE7E7; color: var(--warning); }
+    .badge.blue { background: #EBF4FF; color: var(--blue); }
+
+    /* DIVIDER */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    /* TAG PILL */
+    .pro-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #E6F4EE;
+      color: var(--success);
+      border: 1px solid #B2DFCC;
+      border-radius: 20px;
+      padding: 0.35rem 0.875rem;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: #FAFAFA;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 2rem 0;
+      font-size: 12px;
+      margin-top: 4rem;
+    }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; }
+    .footer strong { color: var(--accent); }
+
+    /* DUCK CURVE EXPLAINER */
+    .duck-annot {
+      position: absolute;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+      font-size: 11px;
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+
+    /* PILL BAR */
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    .pill {
+      display: inline-block;
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .pill.selected {
+      background: #FFF3E0;
+      color: var(--accent);
+      border-color: #F0D9B5;
+      font-weight: 600;
+    }
+
+    /* SCENARIO TABLE */
+    .scenario-highlight {
+      background: #FFF8F0;
+      border: 1px solid #F0D9B5;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .two-col, .three-col, .four-col, .compare-block, .sim-row, .result-grid, .hero-stats {
+        grid-template-columns: 1fr;
+      }
+      .hero h1 { font-size: 28px; }
+      .chart-wrap { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">Pakistan Power Sector Reform · Industrial Tariff Policy</div>
+    <h1>A New Deal for Pakistan's Industry</h1>
+    <p class="hero-subtitle">
+      The Two-Part Tariff (TPT) separates what you pay for <em>capacity</em> from what you pay for <em>energy</em> — 
+      rewarding factories that grow their output, run more shifts, and consume more electricity. 
+      The more you produce, the less each unit of electricity costs you.
+    </p>
+    <div class="pill-row">
+      <span class="pill selected">Pro-Industry</span>
+      <span class="pill selected">Pro-Growth</span>
+      <span class="pill selected">Rewards Efficiency</span>
+      <span class="pill selected">Lower Average Cost</span>
+      <span class="pill selected">NEPRA Proposal</span>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">60–70%</div>
+        <div class="hero-stat-label">Lower variable rate vs. bundled tariff</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">~36%</div>
+        <div class="hero-stat-label">Load factor target for break-even</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">Rs 4,100+</div>
+        <div class="hero-stat-label">Monthly fixed cost per kW to spread</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">3×</div>
+        <div class="hero-stat-label">Daytime marginal cost lower than evening peak</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-strip">
+  <div class="container nav-inner">
+    <button class="nav-btn active" onclick="showSection('s1',this)">1 · The Problem</button>
+    <button class="nav-btn" onclick="showSection('s2',this)">2 · Marginal Prices</button>
+    <button class="nav-btn" onclick="showSection('s3',this)">3 · Fixed Costs</button>
+    <button class="nav-btn" onclick="showSection('s4',this)">4 · The TPT Solution</button>
+    <button class="nav-btn" onclick="showSection('s5',this)">5 · Bill Simulator</button>
+    <button class="nav-btn" onclick="showSection('s6',this)">6 · The Future</button>
+    <button class="nav-btn" onclick="showSection('s7',this)">7 · Quick Reference</button>
+  </div>
+</div>
+
+<!-- =================== SECTION 1: THE PROBLEM =================== -->
+<div id="s1" class="section active">
+<div class="container">
+  <div class="section-label">Why Change Is Needed</div>
+  <h2 class="section-title">Today's Electricity Bill Is Built on a Flawed Premise</h2>
+  <p class="section-intro">
+    Pakistan's industrial electricity tariff bundles everything into one price — fixed grid costs, fuel costs, 
+    capacity costs, and distribution charges — into a single per-unit (kWh) rate. 
+    This made sense when meters were simple. In 2025, it actively punishes industry.
+  </p>
+
+  <div class="compare-block">
+    <div class="compare-card">
+      <div class="compare-head old">❌ Today: The Bundled Tariff</div>
+      <div class="compare-body">
+        <p style="font-size:13px; color:#666; margin-bottom:1rem;">Every unit of electricity carries the same blended charge, regardless of when you use it or how much your factory contributes to peak demand.</p>
+        <div class="compare-item"><span>Variable charge (energy)</span><span class="compare-val" style="color:#9B2335">~Rs 28/kWh</span></div>
+        <div class="compare-item"><span>Fixed charge (demand)</span><span class="compare-val">Rs 1,250/kW</span></div>
+        <div class="compare-item"><span>Marginal cost of +1 kWh</span><span class="compare-val" style="color:#9B2335">Rs 28/kWh</span></div>
+        <div class="compare-item"><span>Incentive to run more?</span><span class="compare-val" style="color:#9B2335">None</span></div>
+        <div class="compare-item"><span>Rewards night-shift operation?</span><span class="compare-val" style="color:#9B2335">No</span></div>
+        <div class="compare-item"><span>Reflects true generation cost?</span><span class="compare-val" style="color:#9B2335">No</span></div>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head new">✅ Proposed: Two-Part Tariff</div>
+      <div class="compare-body">
+        <p style="font-size:13px; color:#666; margin-bottom:1rem;">Fixed costs are charged upfront via a Capacity Service Charge (CSC). Variable energy is priced at true marginal cost — far lower than today.</p>
+        <div class="compare-item"><span>Variable charge (energy)</span><span class="compare-val" style="color:#52B788">~Rs 8–9/kWh</span></div>
+        <div class="compare-item"><span>Capacity Service Charge</span><span class="compare-val">Rs 6,000–7,500/kW</span></div>
+        <div class="compare-item"><span>Marginal cost of +1 kWh</span><span class="compare-val" style="color:#52B788">Rs 8–9/kWh</span></div>
+        <div class="compare-item"><span>Incentive to run more?</span><span class="compare-val" style="color:#52B788">Yes — every extra unit is cheap</span></div>
+        <div class="compare-item"><span>Rewards night-shift/solar hour?</span><span class="compare-val" style="color:#52B788">Yes — lower solar-hour rates</span></div>
+        <div class="compare-item"><span>Reflects true generation cost?</span><span class="compare-val" style="color:#52B788">Yes</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">The Core Insight</div>
+    <div class="callout-text">
+      Think of it like a mobile data plan. Today, Pakistan's tariff charges you Rs 28 per MB whether you use data at 3am or peak hours. 
+      The TPT is like an "unlimited data" plan — you pay a fixed monthly fee upfront, then consume as much as you want at the real cost of delivery (Rs 8–9/unit). 
+      <strong>The more data you use, the lower your per-MB cost becomes.</strong>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">The Central Problem in Numbers</div>
+  <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">Pakistan Has Rs 4,100+ of Fixed Costs Per kW — Hidden in Every Unit</h3>
+
+  <div class="four-col" style="margin:1.5rem 0;">
+    <div class="insight-box red">
+      <div class="insight-num">Rs 44,944</div>
+      <div class="insight-text">Generation fixed cost per kW per year (sector-wide)</div>
+    </div>
+    <div class="insight-box amber">
+      <div class="insight-num">~Rs 4,100</div>
+      <div class="insight-text">Average monthly fixed cost per kW (all DISCOs)</div>
+    </div>
+    <div class="insight-box blue">
+      <div class="insight-num">Rs 8.59/kWh</div>
+      <div class="insight-text">True variable (fuel) cost of electricity generation</div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-num">Rs 28/kWh</div>
+      <div class="insight-text">Bundled tariff charged today — 3× the true variable cost</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Fixed Cost per kW by DISCO — Monthly (Rs/kW/month)</div>
+    <div class="chart-wrap short">
+      <canvas id="discoChart"></canvas>
+    </div>
+    <p style="font-size:12px; color:#999; margin-top:0.75rem;">Source: Fixed Costs DISCOs per kW Analysis. Total includes generation (Rs 44,944/kW/year) + DISCO distribution fixed costs.</p>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <div class="section-label">Why This Is Unfair</div>
+    <div class="three-col" style="margin-top:1rem;">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">You Pay Whether You Use It or Not</div>
+        <div class="step-body">A factory that runs one shift (8 hrs/day) pays almost the same per-unit as one running three shifts. The grid's fixed costs don't change — but the second factory spreads them over 3× more units.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">Off-Peak Electricity Is Actually Cheap — But You Don't Know It</div>
+        <div class="step-body">At noon in summer, solar power drives the system marginal cost down to Rs 7–9/kWh. Yet you're billed Rs 28/kWh. That's a 3× overcharge for power that costs the grid almost nothing to produce.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">No Signal to Grow Production</div>
+        <div class="step-body">If every additional unit costs Rs 28, many industries can't justify adding a second shift. Under TPT, additional units cost ~Rs 8–9 — making expanded production financially attractive and viable.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- =================== SECTION 2: MARGINAL PRICES =================== -->
+<div id="s2" class="section">
+<div class="container">
+  <div class="section-label">Real Data from Pakistan's Grid — ISMO Database</div>
+  <h2 class="section-title">Electricity Doesn't Cost the Same All Day. So Why Do We Charge as If It Does?</h2>
+  <p class="section-intro">
+    Pakistan's Independent System & Market Operator (ISMO) publishes hourly dispatch data showing exactly what it costs 
+    to produce electricity each hour. The data reveals something striking: solar flooding during daytime hours 
+    has made electricity dramatically cheaper to produce mid-day — yet consumers pay the same blended rate around the clock.
+  </p>
+
+  <div class="panel" style="margin-bottom:1.5rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <div class="panel-title">System Marginal Cost by Hour — Pakistan Grid (PKR/kWh)</div>
+      <div style="display:flex; gap:0.5rem;">
+        <button onclick="updateMcChart('all')" id="btn-all" class="btn-calc" style="width:auto; padding:0.4rem 0.875rem; font-size:11px;">All Months</button>
+        <button onclick="updateMcChart('summer')" id="btn-summer" class="btn-calc" style="width:auto; padding:0.4rem 0.875rem; font-size:11px; background:#52B788;">Summer</button>
+        <button onclick="updateMcChart('winter')" id="btn-winter" class="btn-calc" style="width:auto; padding:0.4rem 0.875rem; font-size:11px; background:#2B6CB0;">Winter</button>
+      </div>
+    </div>
+    <div class="chart-wrap tall">
+      <canvas id="mcHourlyChart"></canvas>
+    </div>
+    <p style="font-size:12px; color:#999; margin-top:0.75rem;">Source: ISMO Marginal Cost & Demand Database (Feb 2024 – Apr 2026). Hourly averages across 26 months. Summer = May–Sep; Winter = Nov–Feb.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">What This Chart Is Telling You</div>
+    <div class="callout-text">
+      In summer, electricity costs <strong>Rs 7–9/kWh</strong> to produce between 8am and 2pm — when solar is at full power. 
+      By 9–10pm, the same system costs <strong>Rs 20–24/kWh</strong> when air conditioners peak and solar has gone offline. 
+      Under the current bundled tariff, both hours are billed identically. 
+      <strong>This is a gross market signal failure.</strong>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:1.5rem;">
+    <div class="panel">
+      <div class="panel-title">Peak vs. Solar-Hour Marginal Cost — Selected Months</div>
+      <div class="chart-wrap">
+        <canvas id="peakSolarChart"></canvas>
+      </div>
+      <p style="font-size:12px; color:#999; margin-top:0.75rem;">Evening peak (H20–H22) vs. Solar peak hours (H10–H13). Data: ISMO 2024–2025.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Average Monthly Marginal Cost Trend (PKR/kWh)</div>
+      <div class="chart-wrap">
+        <canvas id="mcTrendChart"></canvas>
+      </div>
+      <p style="font-size:12px; color:#999; margin-top:0.75rem;">Monthly average marginal cost showing seasonal variation and structural decline in generation costs.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">The Duck Curve — Coming to Pakistan</div>
+  <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:0.75rem;">Solar Is Already Reshaping Pakistan's Grid</h3>
+  <p style="font-size:14px; color:#666; margin-bottom:1.5rem; line-height:1.7;">
+    As rooftop and utility-scale solar grow, daytime electricity supply exceeds demand in peak-solar hours, 
+    creating the now-famous "duck curve" — extremely cheap mid-day power followed by a sharp evening ramp. 
+    This is already visible in 2024–2025 ISMO data, and will intensify every year.
+  </p>
+
+  <div class="panel">
+    <div class="panel-title">The Duck Curve in Pakistan's Grid — Summer 2025 vs Summer 2024 (Aug Marginal Cost, PKR/kWh)</div>
+    <div class="chart-wrap tall">
+      <canvas id="duckChart"></canvas>
+    </div>
+    <p style="font-size:12px; color:#999; margin-top:0.75rem;">Aug-25 shows solar-deepened trough (Rs 6–8/kWh midday) vs. Aug-24. The "belly" of the duck is deepening every year as solar penetration increases.</p>
+  </div>
+
+  <div class="three-col" style="margin-top:1.5rem;">
+    <div class="insight-box">
+      <div class="insight-num">Rs 6.97</div>
+      <div class="insight-text">Aug 2025 midday marginal cost (H11) — the cheapest electricity on the grid</div>
+    </div>
+    <div class="insight-box amber">
+      <div class="insight-num">3.0×</div>
+      <div class="insight-text">Evening-to-midday marginal cost ratio in summer 2025 — gap is widening</div>
+    </div>
+    <div class="insight-box blue">
+      <div class="insight-num">↓ 37%</div>
+      <div class="insight-text">Decline in summer midday marginal cost: Aug-24 (Rs 11.0) → Aug-25 (Rs 6.97)</div>
+    </div>
+  </div>
+
+  <div class="callout green" style="margin-top:1.5rem;">
+    <div class="callout-label">The Opportunity for Industry</div>
+    <div class="callout-text">
+      Solar-hour electricity (roughly 8am–4pm) is the cheapest electricity Pakistan has ever had. 
+      Under the Two-Part Tariff, industries that shift operations to these hours pay dramatically less per unit. 
+      <strong>A textile mill running during daylight hours in summer could halve its effective energy cost 
+      compared to an equivalent mill running evening shifts.</strong>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- =================== SECTION 3: FIXED COSTS =================== -->
+<div id="s3" class="section">
+<div class="container">
+  <div class="section-label">Understanding Cost Structure</div>
+  <h2 class="section-title">Pakistan Has Built Rs 46,000+ per kW in Capacity — Most of It Fixed, Regardless of Use</h2>
+  <p class="section-intro">
+    The power sector's biggest challenge isn't fuel. It's that Rs 3 trillion of generation and grid infrastructure 
+    sits idle for much of the day, yet must be paid for through electricity bills. 
+    The key question is: how do we spread those fixed costs more fairly and efficiently?
+  </p>
+
+  <div class="two-col">
+    <div>
+      <div class="section-label">What Is a "Fixed Cost"?</div>
+      <div class="panel" style="margin-top:0.5rem;">
+        <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:1rem;">
+          Imagine you own a factory building that costs <strong>Rs 1 million per year</strong> to maintain — 
+          whether you run one machine or a hundred. That is a <em>fixed cost</em>.
+        </p>
+        <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:1rem;">
+          Power plants and grid infrastructure work the same way. Once built, they must be paid for every month 
+          — whether they generate 1 GWh or 10 GWh. Only fuel costs change with output.
+        </p>
+        <p style="font-size:14px; color:#444; line-height:1.7;">
+          Pakistan's power sector has <strong>Rs 44,944/kW/year</strong> in generation fixed costs alone. 
+          Added to DISCO distribution costs, the total reaches <strong>~Rs 48,000–53,000/kW/year</strong> across the grid.
+        </p>
+      </div>
+      <div class="callout" style="margin-top:1rem;">
+        <div class="callout-label">The Magic of Spreading Fixed Costs</div>
+        <div class="callout-text">
+          If a factory pays Rs 100,000/month in fixed costs and produces 1,000 units, 
+          its fixed cost per unit is <strong>Rs 100</strong>. 
+          If it doubles production to 2,000 units, fixed cost per unit falls to <strong>Rs 50</strong>. 
+          The TPT makes this happen for electricity: run more, pay less per unit.
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Cost Stack — Generation per kW per Year</div>
+      <div class="panel" style="margin-top:0.5rem;">
+        <div class="chart-wrap">
+          <canvas id="costStackChart"></canvas>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:1rem;">
+        <div class="panel-title">Fixed Cost per kW per Month by DISCO</div>
+        <table class="est-table">
+          <tr>
+            <th>DISCO</th>
+            <th>Monthly Fixed Cost (Rs/kW)</th>
+            <th>Annual (Rs/kW)</th>
+          </tr>
+          <tr><td>QESCO</td><td class="red">4,418</td><td>53,021</td></tr>
+          <tr><td>SEPCO</td><td class="red">4,158</td><td>49,899</td></tr>
+          <tr><td>HESCO</td><td class="accent">4,132</td><td>49,585</td></tr>
+          <tr><td>IESCO</td><td class="accent">4,113</td><td>49,357</td></tr>
+          <tr><td>FESCO</td><td>4,103</td><td>49,242</td></tr>
+          <tr><td>LESCO</td><td>4,099</td><td>49,188</td></tr>
+          <tr><td>PESCO</td><td>4,077</td><td>48,929</td></tr>
+          <tr><td>MEPCO</td><td>4,048</td><td>48,576</td></tr>
+          <tr class="total-row"><td><strong>Sector Avg</strong></td><td><strong>~4,100</strong></td><td><strong>~49,000</strong></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">The Shift Analogy — Making It Real for Industry</div>
+  <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">How a Second Shift Cuts Your Electricity Cost in Half</h3>
+
+  <div class="panel" style="margin-bottom:1.5rem;">
+    <div class="panel-title">Average Electricity Cost by Operating Hours — B3 Industrial Consumer (Rs/kWh)</div>
+    <div class="chart-wrap">
+      <canvas id="avgCostChart"></canvas>
+    </div>
+    <p style="font-size:12px; color:#999; margin-top:0.75rem;">
+      Assumes 100 kW MDI, CSC of Rs 6,301/kW/month, variable rate Rs 8.51/kWh (B3 blended). 
+      As hours of operation increase, fixed cost per unit consumed falls dramatically.
+    </p>
+  </div>
+
+  <div class="three-col">
+    <div class="scenario-highlight">
+      <div class="badge amber" style="margin-bottom:0.75rem;">Single Shift (8 hrs/day)</div>
+      <div style="font-family:Georgia,serif; font-size:22px; margin-bottom:0.5rem;">Rs 37.4/kWh</div>
+      <div style="font-size:13px; color:#666; line-height:1.6;">
+        Factory uses 24,000 kWh/month. CSC fixed cost + variable = Rs 37.4 effective rate. 
+        More expensive than today's bundled tariff.
+      </div>
+      <div style="margin-top:0.75rem; font-size:12px; color:#999;">Load factor: ~11%</div>
+    </div>
+    <div class="scenario-highlight" style="background:#F0FFF4; border-color:#B2DFCC;">
+      <div class="badge green" style="margin-bottom:0.75rem;">Double Shift (16 hrs/day)</div>
+      <div style="font-family:Georgia,serif; font-size:22px; margin-bottom:0.5rem; color:#52B788;">Rs 22.7/kWh</div>
+      <div style="font-size:13px; color:#666; line-height:1.6;">
+        Same factory, 48,000 kWh/month. Fixed costs spread over more units — 
+        now significantly cheaper than the bundled tariff.
+      </div>
+      <div style="margin-top:0.75rem; font-size:12px; color:#999;">Load factor: ~22%</div>
+    </div>
+    <div class="scenario-highlight" style="background:#EBF8FF; border-color:#BEE3F8;">
+      <div class="badge blue" style="margin-bottom:0.75rem;">Three Shifts + Solar Hours (24 hrs)</div>
+      <div style="font-family:Georgia,serif; font-size:22px; margin-bottom:0.5rem; color:#2B6CB0;">Rs 16.2/kWh</div>
+      <div style="font-size:13px; color:#666; line-height:1.6;">
+        72,000 kWh/month. Factory operating round-the-clock maximizes fixed cost spreading. 
+        Savings of ~42% versus current bundled tariff.
+      </div>
+      <div style="margin-top:0.75rem; font-size:12px; color:#999;">Load factor: ~33%</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">Why CSC Is More Efficient Than Bundled Pricing</div>
+  <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">The Capacity Service Charge (CSC) — A Smarter Way to Recover Fixed Costs</h3>
+
+  <div class="two-col">
+    <div>
+      <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:1rem;">
+        The <strong>Capacity Service Charge (CSC)</strong> is a monthly fixed charge per kW of your Maximum Demand Indicator (MDI) — 
+        essentially, your factory's subscribed capacity with the grid.
+      </p>
+      <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:1rem;">
+        Think of it like your internet subscription: you pay a monthly fee for a 100 Mbps connection, 
+        regardless of whether you download 10 GB or 500 GB that month. The energy rate you pay on top 
+        covers only the actual cost of generating those kilowatt-hours.
+      </p>
+      <p style="font-size:14px; color:#444; line-height:1.7;">
+        Under the bundled tariff, fixed costs are bundled into the energy rate — which means factories 
+        that use more electricity are effectively cross-subsidizing idle capacity, and there is no incentive 
+        to optimize usage patterns.
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">CSC vs Bundled: Revenue Recovery Comparison</div>
+      <table class="est-table">
+        <tr>
+          <th>Metric</th>
+          <th>Bundled Tariff</th>
+          <th>TPT with CSC</th>
+        </tr>
+        <tr>
+          <td>Fixed cost recovery method</td>
+          <td class="red">Embedded in energy rate</td>
+          <td class="highlight">Separate CSC charge</td>
+        </tr>
+        <tr>
+          <td>Energy rate signal</td>
+          <td class="red">Distorted (too high)</td>
+          <td class="highlight">Reflects true SRMC</td>
+        </tr>
+        <tr>
+          <td>Incentive to consume more</td>
+          <td class="red">No (high marginal rate)</td>
+          <td class="highlight">Yes (low marginal rate)</td>
+        </tr>
+        <tr>
+          <td>Revenue if customer grows 15%</td>
+          <td>+15% variable recovery</td>
+          <td class="highlight">+CSC + 15% variable</td>
+        </tr>
+        <tr>
+          <td>Fixed cost recovery certainty</td>
+          <td class="red">Usage-dependent</td>
+          <td class="highlight">Locked via CSC</td>
+        </tr>
+        <tr>
+          <td>Efficiency signal</td>
+          <td class="red">Flat regardless of hour</td>
+          <td class="highlight">ToU rate reflects real cost</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- =================== SECTION 4: THE SOLUTION =================== -->
+<div id="s4" class="section">
+<div class="container">
+  <div class="section-label">The Proposed Framework</div>
+  <h2 class="section-title">Two-Part Tariff: How It Works, Simply Explained</h2>
+  <p class="section-intro">
+    The Two-Part Tariff has two and only two components. Understand those two components, 
+    and you understand everything about your electricity bill under the new system.
+  </p>
+
+  <div class="two-col" style="margin-bottom:2rem;">
+    <div style="background:#FFF8F0; border:2px solid var(--accent); border-radius:10px; padding:2rem;">
+      <div style="font-size:36px; margin-bottom:0.5rem;">⚡</div>
+      <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:0.5rem;">Part 1</div>
+      <div style="font-family:Georgia,serif; font-size:24px; margin-bottom:0.75rem;">Capacity Service Charge (CSC)</div>
+      <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:1rem;">
+        A <strong>fixed monthly charge per kW of MDI</strong>. This pays your share of the grid's infrastructure — 
+        power plants, transmission lines, substations — that stand ready to serve you, whether you use them or not.
+      </p>
+      <div style="background:white; border-radius:6px; padding:1rem; border:1px solid #F0D9B5;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; color:#999; margin-bottom:0.5rem;">Proposed Rates (B3 Industrial)</div>
+        <div style="font-family:Georgia,serif; font-size:22px; color:var(--accent);">Rs 6,301/kW/month</div>
+        <div style="font-size:12px; color:#666; margin-top:0.3rem;">Example: 100 kW MDI = Rs 630,100/month fixed</div>
+      </div>
+    </div>
+    <div style="background:#F0FFF4; border:2px solid var(--success); border-radius:10px; padding:2rem;">
+      <div style="font-size:36px; margin-bottom:0.5rem;">🔌</div>
+      <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--success); margin-bottom:0.5rem;">Part 2</div>
+      <div style="font-family:Georgia,serif; font-size:24px; margin-bottom:0.75rem;">Variable Energy Rate (PRU)</div>
+      <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:1rem;">
+        A <strong>per-unit charge for actual electricity consumed</strong>, priced at true short-run marginal cost. 
+        No bundled fixed costs. No distortion. Just the real cost of generating those kilowatt-hours.
+      </p>
+      <div style="background:white; border-radius:6px; padding:1rem; border:1px solid #B2DFCC;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; color:#999; margin-bottom:0.5rem;">Proposed Rates (B3 Industrial, Time-of-Use)</div>
+        <div style="font-size:13px; color:#444; line-height:1.8;">
+          Peak (evening): <strong style="color:var(--warning)">Rs 11.33/kWh</strong><br>
+          Off-peak (night): <strong style="color:var(--blue)">Rs 9.21/kWh</strong><br>
+          Solar hours (day): <strong style="color:var(--success)">Rs 6.23/kWh</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Total Monthly Bill Formula</div>
+    <div class="callout-text" style="font-family: monospace; font-size:14px;">
+      <strong>Monthly Bill = (CSC × MDI) + (Variable Rate × kWh Consumed)</strong><br><br>
+      Example: 100 kW factory, 50,000 kWh/month (all off-peak):<br>
+      = (Rs 6,301 × 100) + (Rs 9.21 × 50,000) = Rs 630,100 + Rs 460,500 = <strong>Rs 1,090,600/month</strong><br>
+      Effective rate = Rs 21.8/kWh vs. Rs 28/kWh bundled tariff = <strong>22% savings</strong>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">Industrial Categories Under TPT</div>
+  <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1.5rem;">Proposed CSC Rates by Consumer Category</h3>
+  <div class="panel">
+    <table class="est-table">
+      <tr>
+        <th>Category</th>
+        <th>Voltage Level</th>
+        <th>Typical MDI</th>
+        <th>Bundled Rate (Today)</th>
+        <th>TPT Variable Rate</th>
+        <th>Proposed CSC (15% BE)</th>
+        <th>Break-even Growth</th>
+      </tr>
+      <tr>
+        <td><span class="badge amber">B1/B2</span> Small Industrial</td>
+        <td>0.4 kV</td>
+        <td>~10 kW</td>
+        <td>Rs 28/kWh</td>
+        <td class="highlight">Rs 8.87/kWh</td>
+        <td>Rs 4,732–5,949/kW</td>
+        <td class="accent">~36–42%</td>
+      </tr>
+      <tr>
+        <td><span class="badge blue">B3</span> Medium Industrial</td>
+        <td>11 kV</td>
+        <td>~100–1,000 kW</td>
+        <td>Rs 28/kWh</td>
+        <td class="highlight">Rs 8.51/kWh</td>
+        <td>Rs 4,825–6,301/kW</td>
+        <td class="accent">~36–44%</td>
+      </tr>
+      <tr>
+        <td><span class="badge green">B4</span> Large Industrial</td>
+        <td>66/132 kV</td>
+        <td>1,000+ kW</td>
+        <td>Rs 28/kWh</td>
+        <td class="highlight">Rs 7.96/kWh</td>
+        <td>Rs 4,972–6,445/kW</td>
+        <td class="accent">~36–45%</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="callout green" style="margin-top:1.5rem;">
+    <div class="callout-label">Revenue Neutrality Guarantee</div>
+    <div class="callout-text">
+      <strong>Final Bill = MIN(Bundled Bill, TPT Bill)</strong> — You are never worse off than under the current tariff. 
+      The TPT only becomes cheaper as your consumption grows. DISCOs also cannot collect less than their current revenue 
+      baseline through the Revenue Neutrality Rider (RNR) mechanism.
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">Optimization Strategies</div>
+  <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">Four Ways Industries Can Cut Their Electricity Bill Under TPT</h3>
+  <div class="four-col" style="margin-top:1rem;">
+    <div class="step-card">
+      <div class="step-num" style="background:#52B788;">1</div>
+      <div class="step-title">Add a Second or Third Shift</div>
+      <div class="step-body">More production hours mean more kWh consumed, spreading the CSC fixed charge over more units. Each additional unit costs only Rs 8–9, far below the Rs 28 bundled rate.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:#C8923A;">2</div>
+      <div class="step-title">Shift to Solar Hours</div>
+      <div class="step-body">Run energy-intensive processes between 8am–4pm during summer, when the ToU solar-hour rate is Rs 6.23/kWh — less than a quarter of the current bundled rate.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:#2B6CB0;">3</div>
+      <div class="step-title">Manage Your Peak Demand (MDI)</div>
+      <div class="step-body">The CSC is based on MDI. Stagger machine start-ups, use inverter drives, or schedule high-draw equipment sequentially to reduce your peak demand and lower your monthly CSC.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num" style="background:#9B2335;">4</div>
+      <div class="step-title">Add Battery Storage</div>
+      <div class="step-body">Charge batteries during cheap solar hours (Rs 6.23/kWh), discharge them to reduce MDI during evening peaks. Double benefit: lower CSC + lower energy cost.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- =================== SECTION 5: BILL SIMULATOR =================== -->
+<div id="s5" class="section">
+<div class="container">
+  <div class="section-label">Interactive Analysis</div>
+  <h2 class="section-title">Bill Simulator: Calculate Your Savings Under TPT</h2>
+  <p class="section-intro">
+    Adjust the parameters below to see how your monthly electricity bill changes under the Two-Part Tariff 
+    compared to the current bundled tariff. The simulator reflects proposed NEPRA rates and real fixed cost data.
+  </p>
+
+  <div class="sim-controls">
+    <div class="sim-row">
+      <div class="sim-field">
+        <label>Consumer Category</label>
+        <select id="sim-category" onchange="runSim()">
+          <option value="B1">B1 — Small Industrial (0.4 kV)</option>
+          <option value="B2">B2 — Commercial/Med Industrial (0.4 kV)</option>
+          <option value="B3" selected>B3 — Medium Industrial (11 kV)</option>
+          <option value="B4">B4 — Large Industrial (66/132 kV)</option>
+        </select>
+      </div>
+      <div class="sim-field">
+        <label>MDI — Maximum Demand (kW)</label>
+        <input type="number" id="sim-mdi" value="100" min="10" max="10000" onchange="runSim()">
+      </div>
+      <div class="sim-field">
+        <label>Monthly Consumption (kWh)</label>
+        <input type="number" id="sim-kwh" value="43200" min="1000" max="5000000" onchange="runSim()">
+      </div>
+    </div>
+    <div class="sim-row" style="margin-top:1rem;">
+      <div class="sim-field">
+        <label>% Consumption in Solar Hours (8am–4pm): <span id="solar-pct-val">30%</span></label>
+        <input type="range" id="sim-solar-pct" min="0" max="80" value="30" step="5" oninput="document.getElementById('solar-pct-val').textContent=this.value+'%'; runSim()">
+      </div>
+      <div class="sim-field">
+        <label>% Consumption in Peak Hours (7pm–11pm): <span id="peak-pct-val">30%</span></label>
+        <input type="range" id="sim-peak-pct" min="0" max="80" value="30" step="5" oninput="document.getElementById('peak-pct-val').textContent=this.value+'%'; runSim()">
+      </div>
+      <div class="sim-field" style="display:flex; flex-direction:column; justify-content:flex-end;">
+        <button class="btn-calc" onclick="runSim()">Calculate Bill Comparison</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-grid" id="sim-results">
+    <div class="result-card">
+      <div class="result-num bad" id="res-legacy">—</div>
+      <div class="result-label">Current Bundled Bill (Rs)</div>
+    </div>
+    <div class="result-card">
+      <div class="result-num" id="res-tpt">—</div>
+      <div class="result-label">TPT Bill (Rs)</div>
+    </div>
+    <div class="result-card">
+      <div class="result-num good" id="res-saving">—</div>
+      <div class="result-label">Monthly Saving (Rs)</div>
+    </div>
+    <div class="result-card">
+      <div class="result-num" id="res-eff-rate">—</div>
+      <div class="result-label">Effective Rate (Rs/kWh)</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Bill Comparison by Load Factor</div>
+      <div class="chart-wrap tall">
+        <canvas id="simChart"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Bill Breakdown — Current vs TPT</div>
+      <div class="chart-wrap tall">
+        <canvas id="simBreakdownChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div id="sim-narrative" class="callout" style="margin-top:1.5rem;">
+    <div class="callout-label">Analysis</div>
+    <div class="callout-text" id="sim-narrative-text">Adjust the inputs above and click Calculate to see your personalized analysis.</div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">Scenario Library</div>
+  <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1.5rem;">Representative Industrial Scenarios</h3>
+  <div class="panel">
+    <table class="est-table">
+      <tr>
+        <th>Factory Type</th>
+        <th>MDI (kW)</th>
+        <th>Shifts</th>
+        <th>Monthly kWh</th>
+        <th>Current Bill</th>
+        <th>TPT Bill</th>
+        <th>Saving</th>
+        <th>Eff. Rate</th>
+      </tr>
+      <tr>
+        <td>Textile — Single Shift</td>
+        <td>500</td>
+        <td>1</td>
+        <td>120,000</td>
+        <td>Rs 3.51M</td>
+        <td class="accent">Rs 3.85M</td>
+        <td class="red">−Rs 0.34M</td>
+        <td>Rs 32.1</td>
+      </tr>
+      <tr>
+        <td>Textile — Double Shift</td>
+        <td>500</td>
+        <td>2</td>
+        <td>240,000</td>
+        <td>Rs 6.82M</td>
+        <td class="highlight">Rs 5.19M</td>
+        <td class="highlight">+Rs 1.63M</td>
+        <td>Rs 21.6</td>
+      </tr>
+      <tr>
+        <td>Steel Mill — Standard</td>
+        <td>2,000</td>
+        <td>2</td>
+        <td>720,000</td>
+        <td>Rs 20.56M</td>
+        <td class="highlight">Rs 18.11M</td>
+        <td class="highlight">+Rs 2.45M</td>
+        <td>Rs 25.2</td>
+      </tr>
+      <tr>
+        <td>Steel Mill — Solar Hours Focus</td>
+        <td>2,000</td>
+        <td>2 (60% solar)</td>
+        <td>720,000</td>
+        <td>Rs 20.56M</td>
+        <td class="highlight">Rs 17.04M</td>
+        <td class="highlight">+Rs 3.52M</td>
+        <td>Rs 23.7</td>
+      </tr>
+      <tr>
+        <td>Cement Plant — 24hr</td>
+        <td>5,000</td>
+        <td>3</td>
+        <td>2,700,000</td>
+        <td>Rs 76.5M</td>
+        <td class="highlight">Rs 60.3M</td>
+        <td class="highlight">+Rs 16.2M</td>
+        <td>Rs 22.3</td>
+      </tr>
+      <tr>
+        <td>Food Processing — Day Only</td>
+        <td>200</td>
+        <td>1 (solar hrs)</td>
+        <td>40,000</td>
+        <td>Rs 1.18M</td>
+        <td class="accent">Rs 1.50M</td>
+        <td class="red">−Rs 0.32M</td>
+        <td>Rs 37.5</td>
+      </tr>
+    </table>
+    <p style="font-size:12px; color:#999; margin-top:0.75rem;">
+      Notes: B3 rates applied (11 kV). TPT Variable: Rs 8.51/kWh blended. CSC: Rs 6,301/kW. 
+      Legacy: Rs 28/kWh variable + Rs 1,250/kW fixed. Break-even at ~36% load factor.
+    </p>
+  </div>
+
+  <div class="callout green" style="margin-top:1.5rem;">
+    <div class="callout-label">Key Takeaway</div>
+    <div class="callout-text">
+      <strong>TPT rewards factories that are willing to grow.</strong> A single-shift factory may initially pay slightly more 
+      — this is the incentive to add shifts. Once a factory crosses the ~36% load factor threshold (roughly double-shift operation), 
+      the TPT delivers real savings. The more electricity a factory consumes, the lower its effective per-unit cost becomes.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- =================== SECTION 6: THE FUTURE =================== -->
+<div id="s6" class="section">
+<div class="container">
+  <div class="section-label">Looking Ahead</div>
+  <h2 class="section-title">The Duck Curve Will Deepen. Batteries Will Arrive. This Tariff Solves Both.</h2>
+  <p class="section-intro">
+    Pakistan is at an inflection point. Rooftop solar is growing at 30–40% annually. 
+    Utility-scale solar is expanding. Battery storage costs are falling globally. 
+    The Two-Part Tariff is not just a fix for today — it is built for the grid of 2030.
+  </p>
+
+  <div class="panel" style="margin-bottom:1.5rem;">
+    <div class="panel-title">The Deepening Duck Curve — Pakistan Marginal Cost (Summer, PKR/kWh)</div>
+    <div class="chart-wrap tall">
+      <canvas id="futureChart"></canvas>
+    </div>
+    <p style="font-size:12px; color:#999; margin-top:0.75rem;">
+      Actual data: Jun-24, Aug-24, Aug-25. Projected 2027–2030 based on IGCEP solar trajectory and battery storage penetration assumptions. Daytime marginal cost expected to approach Rs 3–4/kWh as solar penetration deepens.
+    </p>
+  </div>
+
+  <div class="callout" style="margin-bottom:1.5rem;">
+    <div class="callout-label">The Problem with the Old Tariff in a Solar World</div>
+    <div class="callout-text">
+      As solar drives midday prices toward zero, a bundled tariff becomes increasingly irrational — 
+      consumers would be paying Rs 28/unit for power that costs Rs 3/unit to generate. 
+      <strong>The TPT automatically passes these solar-hour cost savings directly to industrial consumers 
+      through Time-of-Use rates.</strong> Every year that solar expands, the solar-hour rate drops further.
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="section-label">Problem: Duck Curve Creates Instability</div>
+      <div class="panel" style="margin-top:0.5rem;">
+        <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:1rem;">
+          As solar floods the grid midday, demand must be actively managed. 
+          The grid faces two crises daily: <strong>over-supply at noon</strong> (solar surplus must be curtailed or absorbed) 
+          and <strong>under-supply at 7–10pm</strong> (evening ramp as solar disappears and demand spikes).
+        </p>
+        <p style="font-size:14px; color:#444; line-height:1.7;">
+          In California — which experienced this first — unconstrained duck curves led to negative electricity prices 
+          at noon and emergency power shortfalls in the evening. Pakistan is on the same trajectory.
+        </p>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Solution: TPT Turns Industry into a Grid Asset</div>
+      <div class="panel" style="margin-top:0.5rem;">
+        <p style="font-size:14px; color:#444; line-height:1.7; margin-bottom:1rem;">
+          Under TPT with solar-hour ToU rates, industries <strong>voluntarily shift consumption</strong> to midday — 
+          absorbing the solar surplus, reducing curtailment, and flattening the duck curve.
+        </p>
+        <p style="font-size:14px; color:#444; line-height:1.7;">
+          This doesn't require mandates or regulations. It happens naturally through price signals: 
+          Rs 6.23/kWh in solar hours vs Rs 11.33/kWh in peak hours. 
+          A 5,000 kW cement plant shifting 30% of load to solar hours 
+          saves <strong>Rs 15+ million annually</strong> while absorbing grid surplus.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">The Battery Revolution</div>
+  <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">As Batteries Come to Pakistan, TPT Creates Entirely New Value Streams</h3>
+
+  <div class="three-col" style="margin-bottom:1.5rem;">
+    <div class="insight-box">
+      <div class="insight-num">2026–2028</div>
+      <div class="insight-text">Industrial battery storage becomes economically viable as costs fall below $150/kWh. Under TPT, payback periods shrink to 3–5 years.</div>
+    </div>
+    <div class="insight-box amber">
+      <div class="insight-num">Rs 5.10/kWh</div>
+      <div class="insight-text">Arbitrage value: charge at solar rate (Rs 6.23) → discharge at peak rate (Rs 11.33) = Rs 5.10/kWh spread per cycle</div>
+    </div>
+    <div class="insight-box blue">
+      <div class="insight-num">10× MDI Savings</div>
+      <div class="insight-text">Using BESS to shave MDI peaks delivers 10× more value than simple energy arbitrage under the TPT structure</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Battery Storage Value Under TPT — Annual Return per kWh of Storage Installed</div>
+    <div class="chart-wrap">
+      <canvas id="bessChart"></canvas>
+    </div>
+    <p style="font-size:12px; color:#999; margin-top:0.75rem;">Assumes 1 charge-discharge cycle/day, B3 category. MDI savings based on CSC reduction from peak shaving.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">Phased Implementation Roadmap</div>
+  <div class="timeline" style="margin-top:1.5rem;">
+    <div class="tl-item">
+      <div class="tl-dot amber">25</div>
+      <div class="tl-content">
+        <div class="tl-year">2025 — Now</div>
+        <div class="tl-title">Opt-In Launch for B3/B4 Industrial Consumers</div>
+        <div class="tl-body">TPT available on an opt-in basis. Revenue Neutrality Rider (MIN formula) protects consumers. CSC set annually by NEPRA. Variable rates follow quarterly FCA cycles. Estimated eligible base: 40,000+ industrial connections.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot green">26</div>
+      <div class="tl-content">
+        <div class="tl-year">2026–2027 — Scale-Up</div>
+        <div class="tl-title">B1/B2 Expansion + AMI Meter Rollout</div>
+        <div class="tl-body">Advanced Metering Infrastructure (AMI) enables precise 15-minute MDI measurement, unlocking true ToU billing. Small industrial and commercial consumers enter. Solar-hour rate begins generating real load-shifting incentives as solar penetration crosses 15%.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot blue">29</div>
+      <div class="tl-content">
+        <div class="tl-year">2029 — Full Market</div>
+        <div class="tl-title">All Industrial Consumers on TPT + Battery Integration</div>
+        <div class="tl-body">TPT becomes default industrial tariff. Battery storage integration standardized. Solar-hour rates approach Rs 3–4/kWh as Pakistan's solar capacity exceeds 10 GW. Industrial consumers with storage earning demand-response revenues from the grid.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout green" style="margin-top:2rem;">
+    <div class="callout-label">The Big Picture</div>
+    <div class="callout-text">
+      The Two-Part Tariff is not just an electricity pricing reform. It is a <strong>growth enabler</strong>. 
+      By making incremental production cheap and solar-hour consumption nearly free, it gives Pakistani industry 
+      a genuine cost advantage to compete globally. Every textile mill that adds a shift, every cement plant 
+      that loads up during solar hours, every steel mill that installs BESS — all are reducing their cost of production 
+      while helping balance a grid undergoing the most rapid energy transition in Pakistan's history.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- =================== SECTION 7: QUICK REFERENCE =================== -->
+<div id="s7" class="section">
+<div class="container">
+  <div class="section-label">Summary Reference</div>
+  <h2 class="section-title">Quick Reference: Everything You Need to Know</h2>
+
+  <div class="two-col" style="margin-bottom:2rem;">
+    <div>
+      <div class="section-label">Frequently Asked Questions</div>
+      <div style="margin-top:1rem;">
+        <div style="border-bottom:1px solid var(--border); padding:1rem 0;">
+          <div style="font-weight:600; font-size:14px; margin-bottom:0.4rem;">Will my bill go up?</div>
+          <div style="font-size:13px; color:#666; line-height:1.6;">Not if you maintain the same consumption. The Revenue Neutrality clause (MIN formula) ensures your bill cannot exceed the current bundled tariff. If you grow consumption above the break-even threshold (~36% load factor), your bill goes down.</div>
+        </div>
+        <div style="border-bottom:1px solid var(--border); padding:1rem 0;">
+          <div style="font-weight:600; font-size:14px; margin-bottom:0.4rem;">What is MDI and why does it matter?</div>
+          <div style="font-size:13px; color:#666; line-height:1.6;">MDI (Maximum Demand Indicator) is the highest 15-minute average power draw your factory recorded in a given month, measured in kW. Under TPT, your CSC is multiplied by this number. Reducing your peak demand reduces your fixed bill — even if total kWh consumed stays constant.</div>
+        </div>
+        <div style="border-bottom:1px solid var(--border); padding:1rem 0;">
+          <div style="font-weight:600; font-size:14px; margin-bottom:0.4rem;">What is the "break-even" load factor?</div>
+          <div style="font-size:13px; color:#666; line-height:1.6;">Load factor = (kWh consumed) ÷ (MDI × 720 hours). Break-even is ~36%, meaning if you run your machines at ~36% of peak capacity on average throughout the month, your TPT bill equals your current bundled bill. Above 36%, TPT wins.</div>
+        </div>
+        <div style="border-bottom:1px solid var(--border); padding:1rem 0;">
+          <div style="font-weight:600; font-size:14px; margin-bottom:0.4rem;">Is CSC adjusted quarterly like FCA?</div>
+          <div style="font-size:13px; color:#666; line-height:1.6;">No. The CSC is set annually by NEPRA to provide investment certainty. Only the variable energy rate follows quarterly FCA/QTA cycles, aligned with fuel cost changes. This means factories can plan multi-year capital projects with a predictable fixed cost component.</div>
+        </div>
+        <div style="border-bottom:1px solid var(--border); padding:1rem 0;">
+          <div style="font-weight:600; font-size:14px; margin-bottom:0.4rem;">Can I opt out later?</div>
+          <div style="font-size:13px; color:#666; line-height:1.6;">The proposal includes an opt-in structure for Phase 1, allowing industrial consumers to switch to TPT at any point. Transition back to bundled tariff provisions are under regulatory discussion with NEPRA.</div>
+        </div>
+        <div style="padding:1rem 0;">
+          <div style="font-weight:600; font-size:14px; margin-bottom:0.4rem;">Does TPT benefit new investment decisions?</div>
+          <div style="font-size:13px; color:#666; line-height:1.6;">Significantly. A greenfield factory planning capacity knows that if it runs at 50%+ load factor, it will pay 25–30% less for electricity than under the current tariff. This changes the economics of capacity expansion, shift-work, and automation investment throughout Pakistan's industrial sector.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Rate Schedule</div>
+      <div class="panel" style="margin-top:1rem;">
+        <div class="panel-title">Proposed TPT Rates Summary</div>
+        <table class="est-table">
+          <tr><th>Component</th><th>B1/B2</th><th>B3</th><th>B4</th></tr>
+          <tr><td>CSC (Rs/kW/month) — 15% BE</td><td>4,732–5,949</td><td class="accent">4,825–6,301</td><td>4,972–6,445</td></tr>
+          <tr><td>Peak Rate (Rs/kWh)</td><td>11.33</td><td class="accent">11.33</td><td>11.33</td></tr>
+          <tr><td>Off-Peak Rate (Rs/kWh)</td><td>9.21</td><td class="accent">9.21</td><td>9.21</td></tr>
+          <tr><td>Solar Hour Rate (Rs/kWh)</td><td class="highlight">6.23</td><td class="highlight">6.23</td><td class="highlight">6.23</td></tr>
+          <tr><td>Current Bundled Rate (Rs/kWh)</td><td class="red">~28</td><td class="red">~28</td><td class="red">~28</td></tr>
+          <tr><td>Break-even Load Factor</td><td>36–42%</td><td class="accent">36–44%</td><td>36–45%</td></tr>
+        </table>
+      </div>
+
+      <div class="panel" style="margin-top:1rem;">
+        <div class="panel-title">Key Benefits Summary</div>
+        <table class="est-table">
+          <tr>
+            <th>Benefit</th>
+            <th>How Large?</th>
+          </tr>
+          <tr>
+            <td>Marginal cost reduction</td>
+            <td class="highlight">Rs 28 → Rs 8–9/kWh (68–70% lower)</td>
+          </tr>
+          <tr>
+            <td>Solar-hour rate</td>
+            <td class="highlight">Rs 6.23/kWh — cheapest ever for industry</td>
+          </tr>
+          <tr>
+            <td>Bill savings at 50% LF</td>
+            <td class="highlight">25–30% vs current bundled tariff</td>
+          </tr>
+          <tr>
+            <td>Revenue neutrality protection</td>
+            <td>100% — MIN formula applies always</td>
+          </tr>
+          <tr>
+            <td>Annual saving potential (B4, 50% LF)</td>
+            <td class="highlight">Rs 100–200 million/year for large plants</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="callout green" style="margin-top:1rem;">
+        <div class="callout-label">The Bottom Line for Industry</div>
+        <div class="callout-text">
+          Run more. Pay less per unit. The Two-Part Tariff is the single most pro-industry electricity pricing reform 
+          Pakistan has proposed in a generation. It aligns the interests of factories, DISCOs, and the national grid 
+          by making growth the cheapest option for everyone.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-label">Glossary</div>
+  <div class="three-col" style="margin-top:1rem;">
+    <div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">MDI — Maximum Demand Indicator</div>
+      <div style="font-size:12px; color:#666; margin-bottom:1rem;">Highest 15-minute average kW recorded in the billing month. The basis for the CSC charge.</div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">CSC — Capacity Service Charge</div>
+      <div style="font-size:12px; color:#666; margin-bottom:1rem;">Monthly fixed charge per kW of MDI, covering grid infrastructure costs.</div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">SRMC — Short-Run Marginal Cost</div>
+      <div style="font-size:12px; color:#666;">The variable cost of generating one additional kWh — primarily fuel cost. The basis for TPT energy rates.</div>
+    </div>
+    <div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">Load Factor</div>
+      <div style="font-size:12px; color:#666; margin-bottom:1rem;">kWh consumed ÷ (MDI × 720). Measures how efficiently you use your subscribed capacity. Higher = better under TPT.</div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">ToU — Time-of-Use</div>
+      <div style="font-size:12px; color:#666; margin-bottom:1rem;">Electricity rates that vary by time of day, reflecting actual generation costs. Solar hours are cheapest; evening peak is most expensive.</div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">Duck Curve</div>
+      <div style="font-size:12px; color:#666;">The U-shaped daily demand curve caused by solar flooding the grid midday, creating cheap daytime power and expensive evening ramps.</div>
+    </div>
+    <div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">RNR — Revenue Neutrality Rider</div>
+      <div style="font-size:12px; color:#666; margin-bottom:1rem;">Mechanism ensuring DISCOs recover their required revenue even if adoption rates or consumption changes reduce collections.</div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">BESS — Battery Energy Storage System</div>
+      <div style="font-size:12px; color:#666; margin-bottom:1rem;">Behind-the-meter batteries that charge during cheap solar hours and discharge during expensive peak hours or to shave MDI spikes.</div>
+      <div style="font-weight:600; font-size:13px; margin-bottom:0.25rem;">FCA — Fuel Cost Adjustment</div>
+      <div style="font-size:12px; color:#666;">Quarterly adjustment to variable energy rates reflecting actual fuel costs. TPT variable rates follow FCA; CSC does not.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container footer-inner">
+    <div>
+      <strong>Two-Part Tariff — Industrial Policy Dashboard</strong><br>
+      Based on ISMO Marginal Cost Database (Feb 2024 – Apr 2026) · NEPRA PPMC TPT V8 Consultation (Mar 2026)
+    </div>
+    <div style="text-align:right;">
+      Analysis: <strong>Ammar H. Khan</strong><br>
+      Pakistan Power Sector Reform
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const hours = Array.from({length:24}, (_,i)=>`${String(i).padStart(2,'0')}:00`);
+
+const mcAll   = [19.91,18.88,18.28,17.94,17.65,17.43,17.69,16.81,16.27,16.21,15.34,14.56,13.98,14.33,16.07,18.3,19.99,20.98,20.87,21.18,21.87,22.01,21.35,21.57];
+const mcSummer= [21.8,20.36,19.43,18.35,17.29,16.79,15.33,12.96,12.62,13.24,12.69,12.32,11.82,12.33,14.4,16.45,17.56,17.6,16.75,18.04,20.64,21.2,21.73,23.58];
+const mcWinter= [14.55,13.74,13.47,13.32,13.88,15.04,18.64,20.36,20.37,20.02,18.92,18.06,17.77,17.58,18.87,20.38,21.87,22.31,22.37,21.51,20.94,20.97,18.8,16.47];
+const mcAug24 = [23.82,21.51,19.88,17.0,15.32,15.14,14.2,11.85,10.49,12.55,11.41,11.02,11.44,12.05,15.07,16.23,16.64,14.91,12.82,16.65,21.4,22.34,22.98,24.13];
+const mcAug25 = [21.24,19.09,17.57,15.9,14.09,12.89,9.65,7.26,7.92,8.44,7.12,6.91,6.97,7.33,9.61,12.54,14.29,13.5,13.39,14.97,19.69,20.38,20.79,20.93];
+const mcJun24 = [18.61,18.24,17.66,17.66,17.78,18.4,19.62,19.76,20.1,20.7,20.8,20.82,20.21,20.18,20.66,21.22,21.72,22.03,21.45,21.25,21.34,21.11,19.86,19.42];
+const mcApr25 = [26.75,26.15,25.35,24.55,23.59,23.74,23.52,20.64,19.8,18.29,17.0,14.67,14.22,14.61,16.5,20.77,22.72,23.56,23.8,24.46,25.07,25.54,25.41,27.98];
+
+// DISCO Fixed Cost Monthly
+const discoData = {
+  labels:['QESCO','SEPCO','HESCO','IESCO','FESCO','LESCO','PESCO','MEPCO','GEPCO'],
+  values:[4418,4158,4132,4113,4103,4099,4077,4048,4063]
+};
+
+// Monthly trend
+const months = ['Feb-24','Mar-24','Apr-24','May-24','Jun-24','Jul-24','Aug-24','Sep-24','Oct-24','Nov-24','Jan-25','Feb-25','Mar-25','Apr-25','May-25','Jun-25','Jul-25','Aug-25','Sep-25','Oct-25','Nov-25','Dec-25','Jan-26','Mar-26'];
+const mcAvg   = [33.75,11.39,15.87,18.89,20.02,20.02,16.29,18.05,19.45,14.71,21.9,11.47,16.9,22.03,15.56,16.31,15.57,13.44,14.72,18.35,10.02,13.32,26.5,16.28];
+
+// ===================== CHART COLORS =====================
+const AMBER = '#C8923A';
+const GREEN = '#52B788';
+const RED   = '#9B2335';
+const BLUE  = '#2B6CB0';
+const GRAY  = '#cccccc';
+
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif";
+Chart.defaults.font.size   = 11;
+Chart.defaults.color       = '#666666';
+
+// ===================== SECTION NAV =====================
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: document.querySelector('.nav-strip').offsetTop - 10, behavior:'smooth'});
+}
+
+// ===================== CHART 1: DISCO FIXED COSTS =====================
+new Chart(document.getElementById('discoChart'), {
+  type:'bar',
+  data:{
+    labels: discoData.labels,
+    datasets:[{
+      label:'Monthly Fixed Cost (Rs/kW/month)',
+      data: discoData.values,
+      backgroundColor: discoData.values.map(v => v>=4200?RED:v>=4100?AMBER:GREEN),
+      borderRadius:4, borderSkipped:false
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>`Rs ${c.raw.toLocaleString()}/kW/month`}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{grid:{color:'#F0F0F0'},
+         ticks:{callback:v=>'Rs '+v.toLocaleString()},
+         min:3900}
+    }
+  }
+});
+
+// ===================== CHART 2: MC HOURLY (with toggle) =====================
+let mcChart;
+function buildMcChart(dataset, label, color) {
+  const bundledLine = new Array(24).fill(28);
+  const ctx = document.getElementById('mcHourlyChart');
+  if(mcChart) { mcChart.destroy(); }
+  mcChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: hours,
+      datasets:[
+        {label:label, data:dataset, borderColor:AMBER, backgroundColor:'rgba(200,146,58,0.1)', fill:true, tension:0.4, borderWidth:2.5, pointRadius:3},
+        {label:'Current Bundled Tariff (Rs 28/kWh)', data:bundledLine, borderColor:RED, borderDash:[6,3], borderWidth:2, fill:false, pointRadius:0, tension:0},
+        {label:'Solar Hour Window', data:new Array(24).fill(null).map((_,i)=>i>=8&&i<=15?dataset[i]:null), borderColor:GREEN, backgroundColor:'rgba(82,183,136,0.15)', fill:true, tension:0.4, borderWidth:0, pointRadius:0}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'top', labels:{boxWidth:12, padding:16}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': Rs '+c.raw?.toFixed(2)+'/kWh'}}
+      },
+      scales:{
+        x:{grid:{display:false}, title:{display:true,text:'Hour of Day'}},
+        y:{grid:{color:'#F0F0F0'}, title:{display:true,text:'Rs/kWh'}, min:5, max:35}
+      }
+    }
+  });
+}
+buildMcChart(mcAll,'All-Month Average (26 months)',AMBER);
+function updateMcChart(t) {
+  document.querySelectorAll('[id^=btn-]').forEach(b=>b.style.opacity='0.6');
+  document.getElementById('btn-'+t).style.opacity='1';
+  if(t==='summer') buildMcChart(mcSummer,'Summer Average (May–Sep)',GREEN);
+  else if(t==='winter') buildMcChart(mcWinter,'Winter Average (Nov–Feb)',BLUE);
+  else buildMcChart(mcAll,'All-Month Average (26 months)',AMBER);
+}
+
+// ===================== CHART 3: PEAK vs SOLAR =====================
+const peakAvg  = mcAll.slice(19,22).reduce((a,b)=>a+b,0)/3;
+const solarAvg = mcAll.slice(9,14).reduce((a,b)=>a+b,0)/5;
+const peakSumm = mcSummer.slice(19,22).reduce((a,b)=>a+b,0)/3;
+const solarSumm= mcSummer.slice(9,14).reduce((a,b)=>a+b,0)/5;
+const peakWin  = mcWinter.slice(19,22).reduce((a,b)=>a+b,0)/3;
+const solarWin = mcWinter.slice(9,14).reduce((a,b)=>a+b,0)/5;
+
+new Chart(document.getElementById('peakSolarChart'), {
+  type:'bar',
+  data:{
+    labels:['All-Year Avg','Summer (May–Sep)','Winter (Nov–Feb)'],
+    datasets:[
+      {label:'Evening Peak (7–10pm)', data:[peakAvg,peakSumm,peakWin].map(v=>+v.toFixed(2)), backgroundColor:RED, borderRadius:4},
+      {label:'Solar Hours (9am–2pm)', data:[solarAvg,solarSumm,solarWin].map(v=>+v.toFixed(2)), backgroundColor:GREEN, borderRadius:4}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top', labels:{boxWidth:12,padding:12}},
+      tooltip:{callbacks:{label:c=>`Rs ${c.raw}/kWh`}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{grid:{color:'#F0F0F0'}, title:{display:true,text:'Rs/kWh'}, min:0, max:28}
+    }
+  }
+});
+
+// ===================== CHART 4: MC TREND =====================
+new Chart(document.getElementById('mcTrendChart'), {
+  type:'line',
+  data:{
+    labels: months.map(m=>m.replace('-','\'')),
+    datasets:[{
+      label:'Avg Marginal Cost (PKR/kWh)',
+      data: mcAvg,
+      borderColor: AMBER, backgroundColor:'rgba(200,146,58,0.08)',
+      fill:true, tension:0.3, borderWidth:2, pointRadius:3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`Rs ${c.raw}/kWh`}}},
+    scales:{
+      x:{grid:{display:false}, ticks:{maxRotation:45, font:{size:9}}},
+      y:{grid:{color:'#F0F0F0'}, title:{display:true, text:'Rs/kWh'}, min:0}
+    }
+  }
+});
+
+// ===================== CHART 5: DUCK CURVE =====================
+const duck27 = mcAug25.map((v,i)=>{
+  const factor = (i>=7 && i<=15) ? 0.72 : 1.05;
+  return +(v*factor).toFixed(2);
+});
+const duck30 = mcAug25.map((v,i)=>{
+  const factor = (i>=7 && i<=15) ? 0.52 : 1.08;
+  return +(v*factor).toFixed(2);
+});
+
+new Chart(document.getElementById('duckChart'), {
+  type:'line',
+  data:{
+    labels: hours,
+    datasets:[
+      {label:'Aug 2024 (Early Solar)', data:mcAug24, borderColor:'#999', borderDash:[4,2], borderWidth:2, fill:false, tension:0.4, pointRadius:0},
+      {label:'Aug 2025 (Today)', data:mcAug25, borderColor:AMBER, borderWidth:2.5, fill:false, tension:0.4, pointRadius:3},
+      {label:'~2027 Projection', data:duck27, borderColor:BLUE, borderDash:[2,3], borderWidth:2, fill:false, tension:0.4, pointRadius:0},
+      {label:'~2030 Projection', data:duck30, borderColor:GREEN, borderDash:[2,3], borderWidth:2, fill:false, tension:0.4, pointRadius:0}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top', labels:{boxWidth:12,padding:12}},
+      tooltip:{callbacks:{label:c=>`${c.dataset.label}: Rs ${c.raw}/kWh`}}
+    },
+    scales:{
+      x:{grid:{display:false}},
+      y:{grid:{color:'#F0F0F0'}, title:{display:true,text:'Rs/kWh'}, min:0, max:32}
+    }
+  }
+});
+
+// ===================== CHART 6: COST STACK =====================
+new Chart(document.getElementById('costStackChart'), {
+  type:'bar',
+  data:{
+    labels:['Cost per kW per Year (Rs)'],
+    datasets:[
+      {label:'Generation Fixed Cost', data:[44944], backgroundColor:RED, borderRadius:0},
+      {label:'Avg DISCO Distribution Fixed', data:[4100], backgroundColor:AMBER, borderRadius:4},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{legend:{position:'top', labels:{boxWidth:12}},
+      tooltip:{callbacks:{label:c=>`Rs ${c.raw.toLocaleString()}/kW/year`}}},
+    scales:{
+      x:{grid:{color:'#F0F0F0'}, ticks:{callback:v=>'Rs '+(v/1000)+'k'}, stacked:true},
+      y:{grid:{display:false}, stacked:true}
+    }
+  }
+});
+
+// ===================== CHART 7: AVG COST CURVE =====================
+const mdi=100, csc=6301, varRate=8.51;
+const lfs=Array.from({length:21},(_,i)=>5+i*3); // 5% to 65%
+const kwhAtLF = lfs.map(lf=>(lf/100)*mdi*720);
+const avgCostAtLF = kwhAtLF.map(kwh=>{
+  if(kwh===0) return null;
+  return +((csc*mdi + varRate*kwh)/kwh).toFixed(2);
+});
+
+new Chart(document.getElementById('avgCostChart'), {
+  type:'line',
+  data:{
+    labels: lfs.map(l=>l+'%'),
+    datasets:[
+      {label:'TPT Effective Rate (Rs/kWh)', data:avgCostAtLF, borderColor:AMBER, backgroundColor:'rgba(200,146,58,0.1)', fill:true, tension:0.3, borderWidth:2.5, pointRadius:2},
+      {label:'Current Bundled Tariff (Rs 28/kWh)', data:new Array(lfs.length).fill(28), borderColor:RED, borderDash:[5,3], borderWidth:2, fill:false, pointRadius:0},
+      {label:'Break-even (~36% LF)', data:lfs.map(l=>l===35?28:null), borderColor:GREEN, borderWidth:0, pointRadius:6, pointBackgroundColor:GREEN, type:'scatter'}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{boxWidth:12,padding:12}},
+      tooltip:{callbacks:{label:c=>`${c.dataset.label}: Rs ${c.raw}/kWh`}}
+    },
+    scales:{
+      x:{grid:{display:false}, title:{display:true,text:'Load Factor'}},
+      y:{grid:{color:'#F0F0F0'}, title:{display:true,text:'Average Rs/kWh'}, min:0, max:80}
+    }
+  }
+});
+
+// ===================== BILL SIMULATOR =====================
+const catParams = {
+  B1:{csc:5300, varPeak:11.33, varOff:9.21, varSolar:6.23, legacy:28.0, fixedLegacy:1250},
+  B2:{csc:5300, varPeak:11.33, varOff:9.21, varSolar:6.23, legacy:28.0, fixedLegacy:1250},
+  B3:{csc:6301, varPeak:11.33, varOff:9.21, varSolar:6.23, legacy:28.0, fixedLegacy:1250},
+  B4:{csc:6445, varPeak:11.33, varOff:9.21, varSolar:6.23, legacy:28.0, fixedLegacy:1250}
+};
+
+let simBillChart=null, simBrkChart=null;
+
+function runSim() {
+  const cat = document.getElementById('sim-category').value;
+  const mdiV = parseFloat(document.getElementById('sim-mdi').value)||100;
+  const kwh = parseFloat(document.getElementById('sim-kwh').value)||43200;
+  const solarPct = parseFloat(document.getElementById('sim-solar-pct').value)/100;
+  const peakPct  = parseFloat(document.getElementById('sim-peak-pct').value)/100;
+  const offPct   = Math.max(0, 1-solarPct-peakPct);
+  const p = catParams[cat];
+
+  // Legacy bill
+  const legacyBill = p.fixedLegacy * mdiV + p.legacy * kwh;
+  // TPT bill
+  const energyTPT = kwh*(solarPct*p.varSolar + peakPct*p.varPeak + offPct*p.varOff);
+  const tptBill   = Math.min(legacyBill, p.csc * mdiV + energyTPT);
+  const saving    = legacyBill - tptBill;
+  const effRate   = tptBill/kwh;
+  const loadFactor= (kwh/(mdiV*720)*100).toFixed(1);
+
+  document.getElementById('res-legacy').textContent = 'Rs '+(legacyBill/1000).toFixed(0)+'K';
+  document.getElementById('res-tpt').textContent    = 'Rs '+(tptBill/1000).toFixed(0)+'K';
+  const savEl = document.getElementById('res-saving');
+  savEl.textContent = saving>=0 ? 'Rs '+(saving/1000).toFixed(0)+'K' : '−Rs '+(Math.abs(saving)/1000).toFixed(0)+'K';
+  savEl.className = 'result-num '+(saving>=0?'good':'bad');
+  document.getElementById('res-eff-rate').textContent = 'Rs '+effRate.toFixed(1)+'/kWh';
+
+  // Narrative
+  const lf = parseFloat(loadFactor);
+  let narrative='';
+  if(lf < 20) {
+    narrative = `<strong>At ${lf}% load factor, TPT is more expensive than the bundled tariff.</strong> This is expected — your factory is running too few hours to spread the fixed CSC across enough units. To break even, you need to increase consumption by ${((36-lf)/lf*100).toFixed(0)}% (add roughly ${((36-lf)/lf).toFixed(1)}× more operating hours). Consider: can you add a second shift or run heating/cooling loads during off-peak hours?`;
+  } else if(lf < 36) {
+    narrative = `<strong>At ${lf}% load factor, you're approaching break-even.</strong> You need just ${((36-lf)/lf*100).toFixed(0)}% more consumption to start saving vs the bundled tariff. A marginal increase in production hours or adding any idle process during night-shift would push you into savings territory. The effective rate of Rs ${effRate.toFixed(1)}/kWh is already ${((1-effRate/28)*100).toFixed(0)}% cheaper per marginal unit.`;
+  } else {
+    narrative = `<strong>At ${lf}% load factor, TPT delivers Rs ${(saving/1000).toFixed(0)}K monthly savings (${(saving/legacyBill*100).toFixed(1)}% reduction).</strong> Your effective rate of Rs ${effRate.toFixed(1)}/kWh is significantly below the Rs 28/kWh bundled rate. Every additional unit you consume costs only Rs ${(solarPct*p.varSolar+peakPct*p.varPeak+offPct*p.varOff).toFixed(2)}/kWh — making production expansion highly profitable from an electricity standpoint.`;
+  }
+  document.getElementById('sim-narrative-text').innerHTML = narrative;
+
+  // Chart: bill vs load factor
+  const lfsRange = Array.from({length:26},(_,i)=>5+i*3);
+  const kwhRange = lfsRange.map(l=>(l/100)*mdiV*720);
+  const legacyRange = kwhRange.map(k=>p.fixedLegacy*mdiV+p.legacy*k);
+  const tptRange    = kwhRange.map(k=>{
+    const e=k*(solarPct*p.varSolar+peakPct*p.varPeak+offPct*p.varOff);
+    return Math.min(p.fixedLegacy*mdiV+p.legacy*k, p.csc*mdiV+e);
+  });
+
+  if(simBillChart) simBillChart.destroy();
+  simBillChart = new Chart(document.getElementById('simChart'),{
+    type:'line',
+    data:{
+      labels:lfsRange.map(l=>l+'%'),
+      datasets:[
+        {label:'Bundled Bill (Current)', data:legacyRange.map(v=>+(v/1000).toFixed(1)), borderColor:RED, borderWidth:2.5, fill:false, tension:0.3, pointRadius:0},
+        {label:'TPT Bill (Proposed)', data:tptRange.map(v=>+(v/1000).toFixed(1)), borderColor:AMBER, backgroundColor:'rgba(200,146,58,0.08)', fill:true, tension:0.3, borderWidth:2.5, pointRadius:0}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'top', labels:{boxWidth:12,padding:10}},
+        tooltip:{callbacks:{label:c=>`Rs ${c.raw}K`}}},
+      scales:{
+        x:{grid:{display:false}, title:{display:true,text:'Load Factor'}},
+        y:{grid:{color:'#F0F0F0'}, title:{display:true,text:'Rs (thousands)'}}
+      }
+    }
+  });
+
+  // Chart: breakdown
+  const cscAmt = (p.csc*mdiV/1000).toFixed(1);
+  const energyAmt = (energyTPT/1000).toFixed(1);
+  const legFix = (p.fixedLegacy*mdiV/1000).toFixed(1);
+  const legVar = (p.legacy*kwh/1000).toFixed(1);
+  if(simBrkChart) simBrkChart.destroy();
+  simBrkChart = new Chart(document.getElementById('simBreakdownChart'),{
+    type:'bar',
+    data:{
+      labels:['Current Bundled Tariff','Two-Part Tariff (TPT)'],
+      datasets:[
+        {label:'Fixed / Capacity Charge', data:[parseFloat(legFix), parseFloat(cscAmt)], backgroundColor:[RED, AMBER], borderRadius:0},
+        {label:'Variable / Energy Charge', data:[parseFloat(legVar), parseFloat(energyAmt)], backgroundColor:['rgba(155,35,53,0.4)', 'rgba(82,183,136,0.7)'], borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'top', labels:{boxWidth:12,padding:10}},
+        tooltip:{callbacks:{label:c=>`Rs ${c.raw}K`}}},
+      scales:{
+        x:{grid:{display:false}, stacked:true},
+        y:{grid:{color:'#F0F0F0'}, stacked:true, title:{display:true,text:'Rs (thousands)'}}
+      }
+    }
+  });
+}
+runSim();
+
+// ===================== FUTURE / BESS CHART =====================
+new Chart(document.getElementById('futureChart'), {
+  type:'line',
+  data:{
+    labels:hours,
+    datasets:[
+      {label:'Jun 2024',data:mcJun24,borderColor:'#aaa',borderWidth:1.5,fill:false,tension:0.4,pointRadius:0},
+      {label:'Aug 2024',data:mcAug24,borderColor:'#888',borderDash:[3,2],borderWidth:1.5,fill:false,tension:0.4,pointRadius:0},
+      {label:'Aug 2025 (Today)',data:mcAug25,borderColor:AMBER,borderWidth:2.5,fill:false,tension:0.4,pointRadius:3},
+      {label:'~2027 (Projection)',data:duck27,borderColor:BLUE,borderDash:[4,2],borderWidth:2,fill:false,tension:0.4,pointRadius:0},
+      {label:'~2030 (Projection)',data:duck30,borderColor:GREEN,borderDash:[4,2],borderWidth:2,fill:false,tension:0.4,pointRadius:0}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{boxWidth:12,padding:12}},
+      tooltip:{callbacks:{label:c=>`${c.dataset.label}: Rs ${c.raw}/kWh`}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{grid:{color:'#F0F0F0'},title:{display:true,text:'Rs/kWh'},min:0,max:32}
+    }
+  }
+});
+
+new Chart(document.getElementById('bessChart'), {
+  type:'bar',
+  data:{
+    labels:['Energy Arbitrage Only\n(10 kWh BESS)', 'MDI Shaving Only\n(1 kW reduction)', 'Combined Strategy\n(10 kWh BESS, 5 kW MDI shave)'],
+    datasets:[{
+      label:'Annual Value (Rs)',
+      data:[16152, 75624, 91776],
+      backgroundColor:[BLUE, AMBER, GREEN],
+      borderRadius:6, borderSkipped:false
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>'Rs '+c.raw.toLocaleString()+'/year'}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{grid:{color:'#F0F0F0'},title:{display:true,text:'Annual Value (Rs)'},ticks:{callback:v=>'Rs '+(v/1000).toFixed(0)+'K'}}
+    }
+  }
+});
+
+</script>
+</body>
+</html>
