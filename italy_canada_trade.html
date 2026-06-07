@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italy–Canada Trade Intelligence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #FFFFFF;
+    --secondary: #FAFAFA;
+    --border: #E5E5E5;
+    --accent: #C8923A;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --success: #52B788;
+    --warning: #9B2335;
+    --italy: #C8923A;
+    --canada: #9B2335;
+    --blue: #2E6FAB;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #2D2D2D; line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+  .hero { border-bottom: 1px solid var(--border); padding: 2.5rem 0 0; }
+  .hero-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.5rem; }
+  .hero-title { font-family: Georgia, serif; font-size: 32px; font-weight: 400; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1.15; }
+  .hero-sub { font-size: 14px; color: var(--text-secondary); max-width: 680px; margin-bottom: 1.5rem; }
+  .flag-pair { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+  .flag { width: 28px; height: 18px; border-radius: 2px; border: 1px solid #E0E0E0; display: inline-flex; overflow: hidden; }
+  .flag-it { background: linear-gradient(to right, #009246 33.3%, #fff 33.3% 66.6%, #CE2B37 66.6%); }
+  .flag-ca { background: #FF0000; position: relative; }
+  .flag-ca::before { content: ''; position: absolute; left: 25%; top: 0; width: 50%; height: 100%; background: #fff; }
+  .sep { font-size: 18px; color: var(--text-tertiary); }
+
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-top: 1rem; overflow-x: auto; }
+  .tab-btn { background: none; border: none; padding: 0.875rem 1.25rem; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: all 0.2s; }
+  .tab-btn:hover { color: var(--text-primary); }
+  .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+  .tab-content { display: none; padding: 2.5rem 0; }
+  .tab-content.active { display: block; }
+
+  .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.5rem; margin-top: 2rem; }
+  .section-title { font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; line-height: 1.25; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .kpi-card { background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
+  .kpi-card.accent { border-top: 3px solid var(--accent); }
+  .kpi-card.red { border-top: 3px solid var(--canada); }
+  .kpi-card.green { border-top: 3px solid var(--success); }
+  .kpi-num { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: var(--text-primary); line-height: 1; }
+  .kpi-label { font-size: 12px; color: var(--text-tertiary); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .kpi-sub { font-size: 12px; color: var(--success); margin-top: 0.3rem; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .panel { background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; }
+  .panel-title { font-size: 13px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; }
+
+  .est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .est-table th { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; color: var(--text-primary); text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); background: #fff; text-transform: uppercase; }
+  .est-table td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border); color: #2D2D2D; vertical-align: top; }
+  .est-table tr:hover td { background: var(--secondary); }
+  .est-table td.num { font-family: Georgia, serif; font-size: 14px; }
+
+  .verdict { background: var(--secondary); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 1.25rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+  .verdict-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.4rem; }
+  .verdict-text { font-size: 14px; color: #2D2D2D; line-height: 1.7; }
+
+  .bar-wrap { margin: 0.5rem 0; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+  .bar-track { height: 6px; background: var(--border); border-radius: 3px; }
+  .bar-fill { height: 6px; border-radius: 3px; }
+  .bar-italy { background: var(--accent); }
+  .bar-canada { background: var(--canada); }
+  .bar-blue { background: var(--blue); }
+
+  .product-card { background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; }
+  .product-card:hover { border-color: var(--accent); }
+  .product-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+  .product-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .product-rank { font-size: 11px; font-weight: 600; color: var(--text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; }
+  .product-value { font-family: Georgia, serif; font-size: 22px; color: var(--text-primary); }
+  .product-value small { font-size: 13px; color: var(--text-secondary); font-family: sans-serif; }
+  .product-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 0.5rem; }
+  .product-chain { font-size: 13px; color: #3D3D3D; line-height: 1.65; border-left: 3px solid var(--accent); padding-left: 0.75rem; margin-top: 0.5rem; }
+
+  .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; letter-spacing: 0.04em; }
+  .pill-amber { background: #FDF3E4; color: #8B5E17; }
+  .pill-red { background: #FCECEA; color: #7A1E1E; }
+  .pill-green { background: #EAF5F0; color: #27694A; }
+  .pill-blue { background: #E8F0FA; color: #1B4B8A; }
+
+  .timeline { position: relative; padding-left: 1.5rem; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 1.5rem; }
+  .tl-item::before { content: ''; position: absolute; left: -1.65rem; top: 0.3rem; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 0 0 2px var(--accent); }
+  .tl-year { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; }
+  .tl-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+  .chart-wrap { position: relative; width: 100%; }
+  .legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; font-size: 12px; color: var(--text-secondary); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; }
+
+  .flow-row { display: flex; align-items: center; gap: 0.5rem; font-size: 13px; color: var(--text-secondary); margin-bottom: 0.5rem; }
+  .flow-box { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 12px; font-weight: 600; }
+  .flow-arrow { color: var(--accent); font-size: 16px; }
+
+  @media (max-width: 768px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .hero-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="hero-label">Trade Intelligence Report</div>
+    <div class="flag-pair">
+      <span class="flag flag-it" title="Italy"></span>
+      <span class="sep">×</span>
+      <span class="flag flag-ca" title="Canada"></span>
+    </div>
+    <h1 class="hero-title">Italy & Canada: A Bilateral Trade Deep Dive</h1>
+    <p class="hero-sub">Comprehensive analysis of bilateral trade flows, product-level value chains, and partner concentration — from pre-CETA baseline through 2024.</p>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+      <button class="tab-btn" onclick="showTab('growth')">Trade Growth</button>
+      <button class="tab-btn" onclick="showTab('italy-exports')">Italy → Canada</button>
+      <button class="tab-btn" onclick="showTab('canada-exports')">Canada → Italy</button>
+      <button class="tab-btn" onclick="showTab('concentration')">Partner Concentration</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ TAB 1: OVERVIEW ═══════════════ -->
+  <div id="overview" class="tab-content active">
+
+    <div class="section-label">Bilateral snapshot · 2024</div>
+    <div class="kpi-grid">
+      <div class="kpi-card accent">
+        <div class="kpi-num">CAD 15.5B</div>
+        <div class="kpi-label">Total Bilateral Trade</div>
+        <div class="kpi-sub">↑ 73% vs. pre-CETA 2016</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-num">CAD 12.3B</div>
+        <div class="kpi-label">Italy Exports to Canada</div>
+        <div class="kpi-sub">~79% of bilateral flow</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">CAD 3.3B</div>
+        <div class="kpi-label">Canada Exports to Italy</div>
+        <div class="kpi-sub">↑ 22% vs. 2023</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">CAD 9.0B</div>
+        <div class="kpi-label">Italy's Trade Surplus</div>
+        <div class="kpi-sub">Structurally in Italy's favour</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Structural Overview</div>
+        <p style="font-size:14px;color:#3D3D3D;line-height:1.75;margin-bottom:1rem;">
+          The Italy–Canada trade relationship is structurally asymmetric: Italy is a net exporter by a wide margin, shipping high-value manufactures — precision machinery, luxury goods, agri-food, and pharmaceuticals — while Canada supplies raw and semi-processed commodities: durum wheat, aerospace components, canola, and gold.
+        </p>
+        <p style="font-size:14px;color:#3D3D3D;line-height:1.75;margin-bottom:1rem;">
+          This asymmetry reflects the comparative advantages of both economies. Italy's manufacturing base, concentrated in Lombardy, Emilia-Romagna, and Veneto, produces world-class goods across precision engineering, fashion, food, and design. Canada's strength lies in natural resources, arable land, and aerospace technology.
+        </p>
+        <p style="font-size:14px;color:#3D3D3D;line-height:1.75;">
+          The imbalance is not unusual: Canada runs structural goods deficits with nearly every major European partner. Italy holds the second-largest bilateral surplus with Canada among all EU member states.
+        </p>
+      </div>
+      <div>
+        <div class="panel" style="margin-bottom:1rem;">
+          <div class="panel-title">Italy's Position in Canada's Import Basket</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:0.75rem;">Italy ranks 8th among Canada's import sources globally</div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>United States</span><span>49.6%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-canada" style="width:100%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>China</span><span>11.8%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-canada" style="width:23.7%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>Mexico</span><span>6.1%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-canada" style="width:12.3%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>Germany</span><span>3.3%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-canada" style="width:6.6%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span><strong>Italy</strong></span><span><strong>~1.8%</strong></span></div>
+            <div class="bar-track"><div class="bar-fill bar-italy" style="width:3.6%"></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Canada's Position in Italy's Export Basket</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:0.75rem;">Canada ranks ~16th among Italy's export destinations</div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>Germany</span><span>11.9%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-blue" style="width:100%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>USA</span><span>10.8%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-blue" style="width:90.8%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>France</span><span>10.1%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-blue" style="width:84.9%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span>Switzerland</span><span>4.9%</span></div>
+            <div class="bar-track"><div class="bar-fill bar-blue" style="width:41.2%"></div></div>
+          </div>
+          <div class="bar-wrap">
+            <div class="bar-label"><span><strong>Canada</strong></span><span><strong>~0.8%</strong></span></div>
+            <div class="bar-track"><div class="bar-fill bar-italy" style="width:6.7%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">CETA Impact</div>
+      <div class="verdict-text">The Canada–European Union Comprehensive Economic and Trade Agreement (CETA) has been the defining structural force in the bilateral relationship since its provisional application on September 21, 2017. Bilateral merchandise trade has grown 73% from pre-CETA 2016 to 2024. The agreement eliminated tariffs on 98% of goods immediately, with near-full elimination achieved by 2019. Italy has not formally ratified CETA — a legacy of political opposition from the Brothers of Italy and Five Star Movement — but benefits from its provisional application. Full ratification would unlock investment protections and deeper services liberalisation, further expanding the corridor.</div>
+    </div>
+
+    <div class="section-label">Italian Community Bridge</div>
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Italo-Canadian Diaspora</div>
+        <div class="kpi-num" style="font-size:30px;margin-bottom:0.4rem;">1.5M+</div>
+        <div style="font-size:13px;color:var(--text-secondary);">Canadians of Italian origin — the second-largest European diaspora in Canada — creating lasting cultural, commercial, and political bridges between the two nations.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Youth Mobility Agreement</div>
+        <div class="kpi-num" style="font-size:30px;margin-bottom:0.4rem;">18–35</div>
+        <div style="font-size:13px;color:var(--text-secondary);">Enhanced 2022 Youth Mobility Agreement allows Canadians and Italians aged 18–35 to work and travel bilaterally for up to 24 months, strengthening labour and talent linkages.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">GI Protections (CETA)</div>
+        <div class="kpi-num" style="font-size:30px;margin-bottom:0.4rem;">41</div>
+        <div style="font-size:13px;color:var(--text-secondary);">Italian Geographical Indications (Parmigiano Reggiano, Prosciutto di Parma, Prosecco, etc.) protected in Canada under CETA, covering over 90% of Italian agri-food exports.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ TAB 2: TRADE GROWTH ═══════════════ -->
+  <div id="growth" class="tab-content">
+    <div class="section-label">Historical trajectory · 2014–2024</div>
+    <h2 class="section-title">A decade of deepening bilateral trade</h2>
+
+    <div class="kpi-grid">
+      <div class="kpi-card accent">
+        <div class="kpi-num">+73%</div>
+        <div class="kpi-label">Growth since CETA 2016</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">+22.2%</div>
+        <div class="kpi-label">2016–2019 growth</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-num">CAD 9.0B</div>
+        <div class="kpi-label">2016 pre-CETA baseline</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">CAD 15.5B</div>
+        <div class="kpi-label">2024 peak bilateral value</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:1.5rem;">
+      <div class="panel-title">Bilateral Trade Volume — CAD Billions</div>
+      <div class="legend-row">
+        <span><span class="legend-dot" style="background:var(--accent)"></span>Italy → Canada (CAD B)</span>
+        <span><span class="legend-dot" style="background:var(--canada)"></span>Canada → Italy (CAD B)</span>
+        <span><span class="legend-dot" style="background:#2E6FAB;"></span>Total Bilateral (CAD B)</span>
+      </div>
+      <div class="chart-wrap" style="height:280px;">
+        <canvas id="growthChart" role="img" aria-label="Line chart showing Italy-Canada bilateral trade growth from 2014 to 2024, rising from roughly 7.5 billion CAD to 15.5 billion CAD total.">Bilateral trade grew from CAD 7.5B in 2014 to CAD 15.5B in 2024.</canvas>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Key inflection points</div>
+        <div class="timeline" style="margin-top:1rem;">
+          <div class="tl-item">
+            <div class="tl-year">2016 — Pre-CETA Baseline</div>
+            <div class="tl-text">Total bilateral trade: ~CAD 9.0B. Italy's structural surplus already established at ~3:1 export-to-import ratio. CETA negotiations conclude, agreement ready for signature.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">Sep 2017 — CETA Provisional Application</div>
+            <div class="tl-text">98% of tariffs eliminated on day one. Immediate uplift in agri-food exports from Italy. Canadian wheat and canola exporters gain preferential access to Italian mills. First year sees +8% growth in bilateral flows.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2018–2019 — Tariff Dividend</div>
+            <div class="tl-text">Bilateral goods trade grows 22.2% from 2016 to 2019 as businesses adapt supply chains to CETA preferences. Italian wine, machinery, and pharma export surges. Canadian cereals and aerospace gain Italian market share.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2020 — COVID Disruption</div>
+            <div class="tl-text">Global supply chain disruptions and demand collapse reduce bilateral trade ~13%. Italian luxury goods and automotive exports hit hardest. Canadian commodity flows relatively resilient — Italian pasta demand sustains wheat imports.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2021–2022 — Post-Pandemic Surge</div>
+            <div class="tl-text">Bilateral trade rebounds sharply, reaching CAD 14.0B by 2022. Pent-up demand in Italian luxury goods, post-COVID construction machinery demand in Canada drives Italian machinery exports. Canadian aerospace recovers as Bombardier deliveries resume.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2023–2024 — Consolidation</div>
+            <div class="tl-text">Bilateral trade stabilises at CAD 15.3–15.5B. Canadian exports to Italy up 22% in 2024 (aerospace +113%), narrowing the deficit. Italian pharmaceutical exports grow despite overall slight decline. Total growth now 73% above pre-CETA levels.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel" style="margin-bottom:1rem;">
+          <div class="panel-title">Annual Export Breakdown — CAD Billions</div>
+          <table class="est-table">
+            <tr>
+              <th>Year</th>
+              <th>IT → CA</th>
+              <th>CA → IT</th>
+              <th>Total</th>
+              <th>YoY %</th>
+            </tr>
+            <tr><td>2014</td><td class="num">5.8</td><td class="num">1.7</td><td class="num">7.5</td><td>—</td></tr>
+            <tr><td>2015</td><td class="num">6.2</td><td class="num">1.8</td><td class="num">8.0</td><td class="num" style="color:var(--success)">+6.7%</td></tr>
+            <tr><td>2016</td><td class="num">6.8</td><td class="num">2.2</td><td class="num">9.0</td><td class="num" style="color:var(--success)">+12.5%</td></tr>
+            <tr><td>2017</td><td class="num">7.3</td><td class="num">2.3</td><td class="num">9.6</td><td class="num" style="color:var(--success)">+6.7%</td></tr>
+            <tr><td>2018</td><td class="num">8.0</td><td class="num">2.5</td><td class="num">10.5</td><td class="num" style="color:var(--success)">+9.4%</td></tr>
+            <tr><td>2019</td><td class="num">8.7</td><td class="num">2.7</td><td class="num">11.4</td><td class="num" style="color:var(--success)">+8.6%</td></tr>
+            <tr><td>2020</td><td class="num">7.7</td><td class="num">2.2</td><td class="num">9.9</td><td class="num" style="color:var(--warning)">−13.2%</td></tr>
+            <tr><td>2021</td><td class="num">9.1</td><td class="num">2.4</td><td class="num">11.5</td><td class="num" style="color:var(--success)">+16.2%</td></tr>
+            <tr><td>2022</td><td class="num">11.2</td><td class="num">2.8</td><td class="num">14.0</td><td class="num" style="color:var(--success)">+21.7%</td></tr>
+            <tr><td>2023</td><td class="num">12.9</td><td class="num">2.7</td><td class="num">15.3</td><td class="num" style="color:var(--success)">+9.3%</td></tr>
+            <tr><td><strong>2024</strong></td><td class="num"><strong>12.3</strong></td><td class="num"><strong>3.3</strong></td><td class="num"><strong>15.5</strong></td><td class="num" style="color:var(--success)"><strong>+1.3%</strong></td></tr>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Trade Balance Trend (Italy Surplus, CAD B)</div>
+          <div class="chart-wrap" style="height:160px;">
+            <canvas id="balanceChart" role="img" aria-label="Bar chart showing Italy's trade surplus with Canada from 2014 to 2024, widening from 4.1 to 9.0 billion CAD.">Italy's trade surplus with Canada has grown from CAD 4.1B in 2014 to CAD 9.0B in 2024.</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Structural Reading</div>
+      <div class="verdict-text">The bilateral relationship entered a structurally higher growth phase post-CETA — but the driver of 2022–24 growth was not CETA alone. CAD depreciation against the EUR made Italian goods cheaper in Canadian-dollar terms, amplifying Italian export volumes mechanically. The 2024 narrowing of Canada's deficit (Canada's exports to Italy up 22%, driven by a 113% aerospace surge) reflects Bombardier deliveries rather than a fundamental shift in trade balance dynamics. The underlying asymmetry — Italy manufactures, Canada commoditises — remains intact.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ TAB 3: ITALY → CANADA ═══════════════ -->
+  <div id="italy-exports" class="tab-content">
+    <div class="section-label">Italy's export basket to Canada · 2024</div>
+    <h2 class="section-title">What Italy ships: precision, pleasure, and prestige</h2>
+
+    <div class="kpi-grid">
+      <div class="kpi-card accent">
+        <div class="kpi-num">USD 6.43B</div>
+        <div class="kpi-label">Italy's exports to Canada</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">22%</div>
+        <div class="kpi-label">Machinery share of basket</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">8th</div>
+        <div class="kpi-label">Italy's rank among Canada's suppliers</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">41</div>
+        <div class="kpi-label">GI products protected under CETA</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:1.5rem;">
+      <div class="panel-title">Top 10 Italian Exports to Canada — USD Millions (2024)</div>
+      <div class="legend-row">
+        <span><span class="legend-dot" style="background:var(--accent)"></span>USD export value</span>
+        <span><span class="legend-dot" style="background:var(--border)"></span>Scale relative to top product</span>
+      </div>
+      <div class="chart-wrap" style="height:340px;">
+        <canvas id="italyExportChart" role="img" aria-label="Horizontal bar chart of Italy's top 10 exports to Canada, led by machinery at 1,420 million USD.">Top export: Machinery USD 1,420M; Wine USD 583M; Vehicles USD 389M.</canvas>
+      </div>
+    </div>
+
+    <div class="section-label">Product-level value chain analysis</div>
+
+    <!-- Product 1 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#1 · HS 84 · Machinery</div>
+          <div class="product-name">Industrial & Precision Machinery</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 1.42B <small>/ 22.1% of basket</small></div>
+          <span class="pill pill-amber">Advanced Manufacturing</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-italy" style="width:100%"></div></div>
+      <div class="product-meta">Key sub-categories: CNC machines, packaging equipment, food processing machinery, turbines, pumps, construction equipment</div>
+      <div class="product-chain">
+        <strong>Italy's position:</strong> Italy is the world's 4th-largest exporter of machinery, with its "machine tool corridor" in Emilia-Romagna and Lombardy producing globally benchmarked precision equipment. Italian machinery is preferred in Canada's food & beverage, automotive, and construction sectors for its engineering precision and after-sales service networks.
+        <br><br>
+        <strong>Value chain role in Canada:</strong> These machines sit at the centre of Canadian industrial production. A Sacmi packaging machine in a Toronto beverage plant, a Comau robotic cell in Windsor automotive, or a Veronesi food processing line in Alberta — Italian machinery is embedded deep in Canadian manufacturing infrastructure, enabling productivity rather than displacing domestic production.
+        <br><br>
+        <strong>Strategic context:</strong> Canada's manufacturing productivity gap vs. OECD peers creates sustained demand for high-efficiency Italian capital goods. CETA eliminated the 4–6% tariff on most machinery, reducing landed cost and making Italian equipment competitive against German and Japanese alternatives.
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#2 · HS 22 · Beverages</div>
+          <div class="product-name">Wine, Spirits & Beverages</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 583M <small>/ 9.1% of basket</small></div>
+          <span class="pill pill-amber">Agri-food</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-italy" style="width:41%"></div></div>
+      <div class="product-meta">Led by: Prosecco, Barolo, Brunello di Montalcino, Chianti Classico, Amarone, Pinot Grigio, Grappa</div>
+      <div class="product-chain">
+        <strong>Italy's position:</strong> Italy is the world's largest wine exporter by volume, and Canada represents one of its top-5 non-EU markets. CETA progressively eliminated Canada's 11% wine tariff and secured protection for Italian Geographical Indications, making branded Italian wine cheaper and legally protected against imitation.
+        <br><br>
+        <strong>Value chain role in Canada:</strong> Canada's provincial liquor control boards (LCBO in Ontario, SAQ in Quebec, BCLDB in BC) are the dominant retail channel. Italian wines command premium shelf position. The 1.5 million Italo-Canadians represent a culturally anchored demand base that has generalised into mainstream Canadian wine culture. Canadian restaurants with Italian menus (a large cohort in Toronto, Montreal, Vancouver) drive the on-trade channel.
+        <br><br>
+        <strong>CETA effect:</strong> Prosecco exports to Canada grew 10% in the first quarter of 2024 alone, with wine and pharma showing the greatest CETA-driven resilience even in a year of overall Italian export contraction.
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#3 · HS 87 · Vehicles</div>
+          <div class="product-name">Automobiles & Vehicle Components</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 389M <small>/ 6.0% of basket</small></div>
+          <span class="pill pill-red">Luxury / Automotive</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-italy" style="width:27.4%"></div></div>
+      <div class="product-meta">Key brands: Ferrari, Lamborghini, Maserati, Alfa Romeo, Fiat, Ducati motorcycles; plus automotive components</div>
+      <div class="product-chain">
+        <strong>Italy's position:</strong> Italian automotive exports to Canada fell 19% in 2024, reflecting weak luxury demand and supply chain normalisation post-COVID. However, the category remains structurally significant — Italian marques occupy the ultra-luxury segment ($150K+ vehicles) where Canada's high-net-worth population (Toronto, Vancouver) is a key global buyer.
+        <br><br>
+        <strong>Value chain role in Canada:</strong> Ferrari and Lamborghini are pure final consumer goods — they do not enter a production chain. Fiat and Alfa Romeo vehicles compete in the mass-market and premium segments respectively. Automotive components (Brembo brakes, Magneti Marelli electronics, Sogefi filters) flow into Canadian dealership service networks and light assembly operations.
+        <br><br>
+        <strong>Outlook:</strong> CETA progressively phased out the 6.1% auto tariff. The structural shift toward EVs creates competitive pressure on Italian internal combustion vehicles but potential opportunities for Italian EV component suppliers as Canadian auto assembly (Windsor, Oshawa) transitions.
+      </div>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#4 · HS 85 · Electrical Equipment</div>
+          <div class="product-name">Electrical & Electronic Equipment</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 352M <small>/ 5.5% of basket</small></div>
+          <span class="pill pill-blue">Industrial Electronics</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-italy" style="width:24.8%"></div></div>
+      <div class="product-meta">Sub-sectors: switchgear, transformers, automation controllers, motors, wiring harnesses, telecom equipment</div>
+      <div class="product-chain">
+        <strong>Italy's position:</strong> Anchored in companies like ABB Italia, Sirti, Gewiss, and BTicino, Italy's electrical equipment sector serves industrial and infrastructure markets. Italian switchgear and automation controllers supply Canadian mining, oil & gas, and utilities sectors.
+        <br><br>
+        <strong>Value chain role in Canada:</strong> These are intermediate goods — they don't reach final consumers but enable the industrial base. Canadian oil sands, hydro facilities, and mining operations embed Italian electrical systems in their production infrastructure. Replacement cycles create recurring demand independent of new capital investment cycles.
+      </div>
+    </div>
+
+    <!-- Product 5 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#5 · HS 30 · Pharmaceuticals</div>
+          <div class="product-name">Pharmaceutical Products</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 283M <small>/ 4.4% of basket</small></div>
+          <span class="pill pill-green">Healthcare</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-italy" style="width:19.9%"></div></div>
+      <div class="product-meta">Categories: branded originator drugs, generics, API (active pharmaceutical ingredients), biologics</div>
+      <div class="product-chain">
+        <strong>Italy's position:</strong> Italy is Europe's 3rd-largest pharmaceutical manufacturer, with major clusters in Lombardy (Milan/Sesto San Giovanni) and Lazio. Companies like Menarini, Angelini, and Chiesi produce both branded and generic formulations. Italian pharma exports to Canada grew 16% in Q1 2024 even as overall exports dipped — demonstrating resilience and healthcare price insensitivity.
+        <br><br>
+        <strong>Value chain role in Canada:</strong> Canadian provincial health systems (public payer) and private drug plans import Italian generics and branded drugs for dispensation through hospital and community pharmacy networks. Italy's role as an API manufacturer also supplies Canadian pharma finishers (contract manufacturers in Toronto, Montreal) who import Italian intermediates for local formulation.
+      </div>
+    </div>
+
+    <!-- Product 6 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#6 · HS 94 · Furniture</div>
+          <div class="product-name">Furniture, Lighting & Design</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 234M <small>/ 3.6% of basket</small></div>
+          <span class="pill pill-amber">Design / Consumer</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-italy" style="width:16.5%"></div></div>
+      <div class="product-meta">Key brands: Poltrona Frau, B&B Italia, Minotti, Flos (lighting), Foscarini, Cassina; residential and contract segments</div>
+      <div class="product-chain">
+        <strong>Value chain role:</strong> Canada is the world's 11th-largest furniture producer but runs a large import deficit in premium design segments. Italian furniture (Brianza district in Lombardy, Matera in Basilicata) addresses the luxury residential and contract hospitality segment — high-end condominiums in Toronto and Vancouver, five-star hotels in Whistler or Quebec City. Italy ranked 5th in furniture exports to Canada at CAD 291M (2022), showing strong and consistent demand.
+      </div>
+    </div>
+
+    <!-- Product 7 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#7 · HS 62 · Apparel (Not Knit)</div>
+          <div class="product-name">Luxury Fashion & Apparel</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 227M <small>/ 3.5% of basket</small></div>
+          <span class="pill pill-red">Luxury / Lifestyle</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-italy" style="width:16.0%"></div></div>
+      <div class="product-meta">Key brands: Gucci, Prada, Versace, Dolce & Gabbana, Armani, Loro Piana, Brunello Cucinelli</div>
+      <div class="product-chain">
+        <strong>Value chain role:</strong> Italian luxury fashion is a final consumer good — but its presence in the Canadian market reflects the depth of luxury spending in a high-income, multi-cultural consumer base. Toronto's Yorkville, Vancouver's Robson Street, and Montreal's Sherbrooke Street West are key retail corridors for Italian brands. The Italo-Canadian diaspora creates a culturally aligned consumer segment that sustains demand across fashion cycles.
+      </div>
+    </div>
+
+    <!-- Products 8-10 compact -->
+    <div class="three-col">
+      <div class="product-card" style="margin-bottom:0;">
+        <div class="product-rank">#8 · HS 19 · Food Preparations</div>
+        <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Pasta, Flour & Food Products</div>
+        <div class="product-value" style="font-size:18px;">USD 182M</div>
+        <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Canada imported Italian pasta (Barilla, De Cecco, Garofalo), risotto, and preserved foods worth CAD 291M in 2022 — ranking Italy 4th in food exports to Canada. CETA's 41 GI protections lock in Italian brand premiums: "Parmigiano Reggiano" can only be sourced from Italy's Emilia-Romagna PDO zone, removing Canadian-made imitations from legal competition.</div>
+      </div>
+      <div class="product-card" style="margin-bottom:0;">
+        <div class="product-rank">#9 · HS 15 · Fats & Oils</div>
+        <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Olive Oil & Vegetable Fats</div>
+        <div class="product-value" style="font-size:18px;">USD 156M</div>
+        <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Italy's olive oil sector (Sicily, Puglia, Calabria) produces premium EVOO with PDO and PGI designations. Canadian health food trends and the Italo-Canadian cooking culture drive steady demand. Italy competes with Spanish bulk olive oil — Italian product commands a 40–60% premium on a per-litre basis, supplied through specialty retail and foodservice channels.</div>
+      </div>
+      <div class="product-card" style="margin-bottom:0;">
+        <div class="product-rank">#10 · HS 71 · Precious Stones</div>
+        <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Jewellery & Precious Metals</div>
+        <div class="product-value" style="font-size:18px;">USD 147M</div>
+        <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Italy's Valenza (Piedmont), Vicenza, and Arezzo jewellery districts are globally benchmarked for gold and diamond fabrication. Italian jewellery exports to Canada flow through Birks, independent luxury jewellers, and e-commerce. As a global gold miner, Canada provides some raw gold inputs to Italian fabricators — creating a circular value chain where Canadian gold returns as finished Italian jewellery.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ TAB 4: CANADA → ITALY ═══════════════ -->
+  <div id="canada-exports" class="tab-content">
+    <div class="section-label">Canada's export basket to Italy · 2024</div>
+    <h2 class="section-title">What Canada ships: commodities, aerospace, and agri-inputs</h2>
+
+    <div class="kpi-grid">
+      <div class="kpi-card red">
+        <div class="kpi-num">USD 2.33B</div>
+        <div class="kpi-label">Canada's exports to Italy</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">22%</div>
+        <div class="kpi-label">Aerospace share of basket</div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="kpi-num">+112.7%</div>
+        <div class="kpi-label">Aerospace surge 2023→24</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">19%</div>
+        <div class="kpi-label">Cereals share of basket</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:1.5rem;">
+      <div class="panel-title">Top 10 Canadian Exports to Italy — USD Millions (2024)</div>
+      <div class="legend-row">
+        <span><span class="legend-dot" style="background:var(--canada)"></span>USD export value</span>
+      </div>
+      <div class="chart-wrap" style="height:340px;">
+        <canvas id="canadaExportChart" role="img" aria-label="Horizontal bar chart of Canada's top 10 exports to Italy, led by aircraft at 518 million USD.">Top export: Aircraft USD 518M; Cereals USD 435M; Machinery USD 220M.</canvas>
+      </div>
+    </div>
+
+    <div class="section-label">Product-level value chain analysis</div>
+
+    <!-- Product 1 Aerospace -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#1 · HS 88 · Aircraft & Spacecraft</div>
+          <div class="product-name">Aerospace — Aircraft, Parts & Components</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 518M <small>/ 22.2% of basket</small></div>
+          <span class="pill pill-blue">Aerospace</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-canada" style="width:100%"></div></div>
+      <div class="product-meta">Key players: Bombardier (aircraft), Magellan Aerospace (structural components), CAE (flight simulators), Heroux-Devtek (landing systems)</div>
+      <div class="product-chain">
+        <strong>Canada's position:</strong> Canada is the world's 5th-largest aerospace exporter, with Quebec (Montreal) as its epicentre. Bombardier's business jets (Challenger, Global series) are significant Canadian exports to Italy, where the high-net-worth market is substantial. Canada's aerospace exports to Italy surged 112.7% in 2024 — driven by Bombardier aircraft deliveries to Italian corporate and charter operators, and likely components to Leonardo (formerly Finmeccanica), Italy's state aerospace-defence company.
+        <br><br>
+        <strong>Value chain role in Italy:</strong> Bombardier aircraft enter Italy as final consumer goods for corporate aviation. Canadian aerospace components (structural assemblies, hydraulics, landing gear from Heroux-Devtek) flow into Italian aerospace manufacturers, particularly Leonardo, Avio Aero (GE subsidiary), and Piaggio Aero — feeding Italy's defence and civil aerospace production chains.
+        <br><br>
+        <strong>Strategic depth:</strong> Canada and Italy maintain an active bilateral defence-industrial relationship through NATO frameworks. Joint programs on helicopter components, avionics, and unmanned systems create recurring component trade flows that are classified under this HS chapter. The Leonardo–Bombardier supply chain is a bilateral value chain that flows both ways.
+      </div>
+    </div>
+
+    <!-- Product 2 Cereals -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#2 · HS 10 · Cereals</div>
+          <div class="product-name">Wheat, Durum & Cereals</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 435M <small>/ 18.7% of basket</small></div>
+          <span class="pill pill-green">Agri-commodity</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-canada" style="width:84.0%"></div></div>
+      <div class="product-meta">Key crops: durum wheat (Saskatchewan, Alberta), hard red spring wheat, oats; Canada's Prairies are critical supplier to Italian pasta and bakery industries</div>
+      <div class="product-chain">
+        <strong>Canada's position:</strong> Canada is the world's 2nd-largest exporter of wheat and the dominant global supplier of durum wheat — the hard variety essential for semolina pasta production. Saskatchewan's "bread basket" feeds Italy's pasta corridor.
+        <br><br>
+        <strong>Value chain role in Italy:</strong> This is the most strategically significant Canada-Italy trade flow in terms of food system criticality. Italian pasta production — EUR 4+ billion industry, anchored in Barilla, De Cecco, Rummo, Garofalo — requires durum wheat as its primary raw material input. Canadian durum (amber hue, high protein 13-14%) is preferred by Italian millers for its consistency. Italian mills import Canadian wheat, grind it into semolina, extrude and dry pasta, then sell globally — including back to Canada (see Tab 3: #8). This is a compelling bilateral value loop: raw Canadian grain → Italian processing and branding → finished Italian pasta reimported into Canada.
+        <br><br>
+        <strong>Market concentration risk:</strong> Italy imports ~30% of its durum wheat requirements from Canada, making it exposed to Canadian Prairie production variability (drought, frost, logistics disruption). The 2021 Western Canadian drought sharply reduced Italian durum imports and spiked pasta prices across Europe.
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#3 · HS 84 · Machinery</div>
+          <div class="product-name">Industrial Machinery & Equipment</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 220M <small>/ 9.4% of basket</small></div>
+          <span class="pill pill-blue">Capital Goods</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-canada" style="width:42.5%"></div></div>
+      <div class="product-meta">Sub-categories: mining equipment, forestry machinery, oil & gas production equipment, construction equipment</div>
+      <div class="product-chain">
+        <strong>Value chain role:</strong> Canada exports resource-extraction and processing machinery to Italy — a reversal of the usual Canada-as-commodity-supplier narrative. Canadian mining equipment (Sandvik Canada, Caterpillar Canada) and energy-sector capital goods find markets in Italian industrial and mining operations (e.g., Sardinian mining, marble quarrying in Carrara). Canadian forestry equipment supports Italy's wood processing industry. This category reflects Canada's capability in applied industrial engineering, particularly for extractive sectors.
+      </div>
+    </div>
+
+    <!-- Product 4 -->
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-rank">#4 · HS 30 · Pharmaceuticals</div>
+          <div class="product-name">Pharmaceutical Products</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-value">USD 206M <small>/ 8.8% of basket</small></div>
+          <span class="pill pill-green">Healthcare</span>
+        </div>
+      </div>
+      <div class="bar-track" style="margin-bottom:0.75rem;"><div class="bar-fill bar-canada" style="width:39.8%"></div></div>
+      <div class="product-meta">Canadian exports fell 29.3% in 2024 — reflecting Italian domestic pharma supply normalisation post-pandemic</div>
+      <div class="product-chain">
+        <strong>Value chain role:</strong> Canada is a significant generic pharmaceutical exporter (Apotex, Pharmascience, Teva Canada). Italian imports of Canadian generics are primarily for retail pharmacy distribution through Italy's SSN (Servizio Sanitario Nazionale), the national health system. The 29% decline in 2024 reflects Italy's resumed domestic production capacity (temporarily reduced during COVID) displacing Canadian generics. Biological/specialty drugs (from Canadian biotech: Angiotech, Zymeworks) show more resilient demand.
+      </div>
+    </div>
+
+    <!-- Products 5-10 compact -->
+    <div class="two-col">
+      <div>
+        <div class="product-card">
+          <div class="product-rank">#5 · HS 90 · Optical & Medical Apparatus</div>
+          <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Medical Devices & Diagnostic Equipment</div>
+          <div class="product-value" style="font-size:18px;">USD 104M</div>
+          <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Canadian medical device exports (MDS, Cardiac Science, Hologic Canada) flow to Italian hospital procurement and the private healthcare system. Canada's strong MRI and diagnostic imaging sector (Analogic Corporation, Resonant Medical) supplies Italian radiology departments. CETA preferential access has expanded the addressable Italian market by removing the 3.7% medical device tariff.</div>
+        </div>
+        <div class="product-card">
+          <div class="product-rank">#6 · HS 71 · Precious Metals</div>
+          <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Gold, Silver & Precious Stones</div>
+          <div class="product-value" style="font-size:18px;">USD 94M</div>
+          <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Canada is the world's 4th-largest gold producer (Ontario, Quebec, British Columbia mines). Italian jewellery manufacturers in Valenza, Vicenza, and Arezzo import Canadian gold doré (semi-refined bullion) for fabrication into finished jewellery — which is then re-exported globally including back to Canada. A classical bilateral value-addition loop: Canadian raw gold → Italian design and craftsmanship → global distribution.</div>
+        </div>
+        <div class="product-card">
+          <div class="product-rank">#7 · HS 12 · Oil Seeds</div>
+          <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Canola, Flaxseed & Oilseeds</div>
+          <div class="product-value" style="font-size:18px;">USD 94M</div>
+          <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Canada is the world's largest canola (rapeseed) producer and exporter. Italian food manufacturers use Canadian canola oil as a neutral-flavour cooking oil for industrial baking and processed foods. Canadian flaxseed (linseed) imports into Italy serve both food and industrial (linseed oil for paints, wood finishes) sectors. This trade is demand-inelastic: Italian food processors have limited alternative suppliers for Canadian-grade canola at scale.</div>
+        </div>
+      </div>
+      <div>
+        <div class="product-card">
+          <div class="product-rank">#8 · HS 85 · Electrical Equipment</div>
+          <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Electrical Components & Equipment</div>
+          <div class="product-value" style="font-size:18px;">USD 92M</div>
+          <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Canadian power electronics, hydro turbine components (Voith Hydro Canada, GE Hydro), and electrical switchgear flow to Italian utilities and industrial companies. Canada's hydro engineering expertise (SNC-Lavalin, Stantec) is increasingly relevant to Italy's energy transition investment cycle — generating engineering services trade on top of goods.</div>
+        </div>
+        <div class="product-card">
+          <div class="product-rank">#9 · HS 18 · Cocoa Preparations</div>
+          <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Cocoa & Chocolate Products</div>
+          <div class="product-value" style="font-size:18px;">USD 86M</div>
+          <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Canada re-exports cocoa-based intermediates (cocoa butter, cocoa powder, chocolate couverture produced by Canadian processors like Cargill Canada, Barry Callebaut Canada) to Italian confectionery manufacturers — Ferrero (Nutella), Perugina (Baci), and the artisanal Piedmont chocolate cluster. This is a value-added processing chain: raw cocoa from West Africa is processed in Canada into intermediate products, then imported into Italy for luxury confectionery finishing.</div>
+        </div>
+        <div class="product-card">
+          <div class="product-rank">#10 · HS 07 · Vegetables</div>
+          <div class="product-name" style="font-size:14px;margin:0.3rem 0;">Edible Vegetables & Roots</div>
+          <div class="product-value" style="font-size:18px;">USD 84M</div>
+          <div class="product-chain" style="margin-top:0.5rem;font-size:12px;">Canadian pulse crops (lentils, chickpeas, peas from Saskatchewan) are a significant export to Italy, used in Italian canned goods, soups, and the growing legume protein food segment. Canada grows 40% of the world's lentil supply. Italian food processors import Canadian lentils as bulk commodity inputs for consumer-ready canned and dried products distributed through the Italian retail network (Esselunga, Coop, Carrefour Italia).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Canada's Value Chain Posture</div>
+      <div class="verdict-text">Canada's export basket to Italy is structurally split: roughly 40% is high-complexity (aerospace, medical devices, machinery, pharma) and 60% is commodity and agri-input (cereals, canola, gold, vegetables, cocoa intermediates). The striking finding is the bilateral value loop: Canadian raw materials (gold, wheat, canola) are exported to Italy, transformed through Italian craftsmanship and manufacturing, and returned to Canada as finished goods (jewellery, pasta, olive oil-based food products). Italy captures the value-addition margin in this loop. Canada's path to rebalancing the trade deficit runs through expanding its aerospace and technology exports — the 2024 aerospace surge (+113%) is the most promising structural signal.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ TAB 5: PARTNER CONCENTRATION ═══════════════ -->
+  <div id="concentration" class="tab-content">
+    <div class="section-label">Trade partner concentration · 2023–2024</div>
+    <h2 class="section-title">Where Italy and Canada send their exports — and who they depend on</h2>
+
+    <div class="two-col" style="margin-bottom:1.5rem;">
+      <div class="panel">
+        <div class="panel-title">Italy Export Partners (2023, EUR Billions)</div>
+        <div class="legend-row">
+          <span><span class="legend-dot" style="background:var(--accent)"></span>EUR export value</span>
+        </div>
+        <div class="chart-wrap" style="height:300px;">
+          <canvas id="italyPartnersChart" role="img" aria-label="Horizontal bar chart of Italy's top 10 export partners in 2023, led by Germany at 74.7 billion EUR.">Italy's top partners: Germany 74.7B, USA 67.3B, France 63.4B.</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Canada Export Partners (2023, USD Billions)</div>
+        <div class="legend-row">
+          <span><span class="legend-dot" style="background:var(--canada)"></span>USD export value</span>
+        </div>
+        <div class="chart-wrap" style="height:300px;">
+          <canvas id="canadaPartnersChart" role="img" aria-label="Bar chart of Canada's top 5 export partners in 2023, dominated by the USA at 438.7 billion USD.">Canada's exports are overwhelmingly to the USA at 77.3% of total.</canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Italy — Partner Concentration Analysis</div>
+        <div class="panel" style="margin-top:0.5rem;">
+          <div class="panel-title">HHI & Diversification Metrics</div>
+          <table class="est-table">
+            <tr><th>Metric</th><th>Value</th><th>Assessment</th></tr>
+            <tr>
+              <td>Top 3 partners' export share</td>
+              <td class="num">32.8%</td>
+              <td><span class="pill pill-green">Well diversified</span></td>
+            </tr>
+            <tr>
+              <td>EU share of total exports</td>
+              <td class="num">~51.6%</td>
+              <td><span class="pill pill-amber">EU-anchored</span></td>
+            </tr>
+            <tr>
+              <td>US share</td>
+              <td class="num">10.8%</td>
+              <td><span class="pill pill-green">Healthy</span></td>
+            </tr>
+            <tr>
+              <td>Top 10 partner share</td>
+              <td class="num">~66%</td>
+              <td><span class="pill pill-green">Diversified</span></td>
+            </tr>
+            <tr>
+              <td>Canada share of Italy's exports</td>
+              <td class="num">~0.8%</td>
+              <td><span class="pill pill-blue">Growth market</span></td>
+            </tr>
+          </table>
+
+          <div style="margin-top:1rem;">
+            <div style="font-size:13px;color:#3D3D3D;line-height:1.7;">
+              Italy's export base is notably diversified for a large economy — no single partner exceeds 12% of total exports. Germany is the largest partner but at 11.9%, the concentration is manageable. The EU collectively accounts for ~52% of exports — creating exposure to EU economic cycles (2023 EU slowdown dampened Italy's export growth). The United States (10.8%) has grown significantly as a destination, and Italy posted its third-highest surplus with the US ($42B EUR) in 2023.
+            </div>
+          </div>
+
+          <div class="verdict" style="margin-top:1rem;">
+            <div class="verdict-label">Canada's relevance to Italy</div>
+            <div class="verdict-text">At ~0.8% of Italy's total exports, Canada is a secondary-tier market — significant but not strategically critical for Italy's macro trade position. However, Canada ranks as Italy's <em>2nd-largest bilateral surplus country outside the EU</em>, making it important for balance-of-payments considerations. The Italo-Canadian diaspora sustains demand floors across product categories that pure market economics might not.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Canada — Partner Concentration Analysis</div>
+        <div class="panel" style="margin-top:0.5rem;">
+          <div class="panel-title">HHI & Diversification Metrics</div>
+          <table class="est-table">
+            <tr><th>Metric</th><th>Value</th><th>Assessment</th></tr>
+            <tr>
+              <td>US share of total exports</td>
+              <td class="num">77.3%</td>
+              <td><span class="pill pill-red">Critical concentration</span></td>
+            </tr>
+            <tr>
+              <td>China share</td>
+              <td class="num">4.0%</td>
+              <td><span class="pill pill-amber">Secondary partner</span></td>
+            </tr>
+            <tr>
+              <td>Top 3 partners' share</td>
+              <td class="num">83.4%</td>
+              <td><span class="pill pill-red">Highly concentrated</span></td>
+            </tr>
+            <tr>
+              <td>Europe (all) share</td>
+              <td class="num">~10%</td>
+              <td><span class="pill pill-amber">Underpenetrated</span></td>
+            </tr>
+            <tr>
+              <td>Italy share of Canada's exports</td>
+              <td class="num">~0.4%</td>
+              <td><span class="pill pill-blue">Significant upside</span></td>
+            </tr>
+          </table>
+
+          <div style="margin-top:1rem;">
+            <div style="font-size:13px;color:#3D3D3D;line-height:1.7;">
+              Canada's export concentration is one of the most extreme among G7 economies — 77.3% of merchandise exports flowing to a single partner (USA) creates systemic vulnerability. The 2025 US tariff regime (25% on non-USMCA goods) exposed this structurally: a 15.7% drop in exports to the US in April 2025 sent Canada's trade data sharply negative. Diversification toward Europe — where CETA provides a ready framework — is the policy imperative.
+            </div>
+          </div>
+
+          <div class="verdict" style="margin-top:1rem;">
+            <div class="verdict-label">Italy's relevance to Canada's diversification</div>
+            <div class="verdict-text">Italy should be central to Canada's European diversification strategy. Italy is the EU's 3rd-largest economy, Italy's industrial base is a natural buyer of Canadian aerospace, agri-commodities, and resources, and the bilateral CETA framework provides ready preferential access. Canada's 2024 export surge to Italy (+21.2%) — driven by metals, aerospace, and agri-food — validates the opportunity. The diaspora bond, bilateral defence relationship, and G7 alignment make Italy a higher-trust partner than Canada's newer EU interlocutors.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2rem;">Export Concentration: A Visual Comparison</div>
+    <div class="panel">
+      <div class="panel-title">Partner Share Comparison — Italy vs Canada (Export Concentration)</div>
+      <div class="chart-wrap" style="height:260px;">
+        <canvas id="concentrationChart" role="img" aria-label="Stacked bar chart comparing Italy and Canada export partner concentration. Canada is far more concentrated on USA.">Italy's exports are diversified; Canada's are 77% to USA.</canvas>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:1.5rem;">
+      <div class="panel">
+        <div class="panel-title">Italy Import Partner Concentration (2023)</div>
+        <table class="est-table">
+          <tr><th>Partner</th><th>EUR Billions</th><th>Share</th></tr>
+          <tr><td>Germany</td><td class="num">89.7</td><td>15.2%</td></tr>
+          <tr><td>China</td><td class="num">47.6</td><td>8.0%</td></tr>
+          <tr><td>France</td><td class="num">46.6</td><td>7.9%</td></tr>
+          <tr><td>Netherlands</td><td class="num">36.4</td><td>6.1%</td></tr>
+          <tr><td>Spain</td><td class="num">32.8</td><td>5.5%</td></tr>
+          <tr><td>Belgium</td><td class="num">26.7</td><td>4.5%</td></tr>
+          <tr><td>USA</td><td class="num">25.2</td><td>4.3%</td></tr>
+          <tr><td>Russia (pre-2022)</td><td class="num">—</td><td>Sanctioned</td></tr>
+          <tr><td>UK</td><td class="num">8.7</td><td>1.5%</td></tr>
+          <tr><td><strong>Canada</strong></td><td class="num"><strong>~2.8</strong></td><td><strong>~0.5%</strong></td></tr>
+        </table>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:0.75rem;">Italy's largest import deficit: China (−EUR 28.4B). Germany also deficit (−EUR 15B). Canada: Italy runs a surplus — Italy imports raw materials, exports finished manufactures.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Canada Import Partner Concentration (2023)</div>
+        <table class="est-table">
+          <tr><th>Partner</th><th>USD Billions</th><th>Share</th></tr>
+          <tr><td>United States</td><td class="num">276.8</td><td>49.6%</td></tr>
+          <tr><td>China</td><td class="num">66.1</td><td>11.8%</td></tr>
+          <tr><td>Mexico</td><td class="num">34.2</td><td>6.1%</td></tr>
+          <tr><td>Germany</td><td class="num">18.4</td><td>3.3%</td></tr>
+          <tr><td>Japan</td><td class="num">12.1</td><td>2.2%</td></tr>
+          <tr><td>UK</td><td class="num">9.4</td><td>1.7%</td></tr>
+          <tr><td>South Korea</td><td class="num">8.6</td><td>1.5%</td></tr>
+          <tr><td>France</td><td class="num">7.8</td><td>1.4%</td></tr>
+          <tr><td><strong>Italy</strong></td><td class="num"><strong>~9.6</strong></td><td><strong>~1.8%</strong></td></tr>
+          <tr><td>India</td><td class="num">7.1</td><td>1.3%</td></tr>
+        </table>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:0.75rem;">Canada runs a deficit with China (−USD 56B), Mexico (−USD 28B), and Germany (−USD 13B). Import diversification from US (49.6%) is a parallel challenge to export diversification.</div>
+      </div>
+    </div>
+
+    <div class="verdict" style="margin-top:1.5rem;">
+      <div class="verdict-label">Strategic Synthesis</div>
+      <div class="verdict-text">The bilateral trade relationship between Italy and Canada, while structurally asymmetric, is one of growing strategic importance to both sides — but for different reasons. For Italy, Canada is a surplus-generating, tariff-liberalised market where Italian brands command premiums and GI protections lock in competitive moats. For Canada, Italy represents both a high-quality supplier of industrial inputs and an underutilised export corridor that, given Canada's extreme US concentration, should be actively developed. CETA's 73% bilateral trade growth since 2016 is the empirical proof of concept. The constraint is not the trade architecture — it is the bilateral awareness gap among Canadian exporters, the political uncertainty around Italy's formal CETA ratification, and Canada's own inertia in building European commercial relationships beyond the US anchor.</div>
+    </div>
+
+  </div>
+</div>
+
+<div style="border-top:1px solid var(--border);margin-top:2rem;padding:1.5rem 0;background:#fff;">
+  <div class="container">
+    <div style="font-size:11px;color:var(--text-tertiary);">Sources: Italian Embassy Ottawa (bilateral trade 2024); Statistics Canada; Global Affairs Canada Chief Economist Annual Report 2024; UN COMTRADE via Trading Economics; Wikipedia — List of largest trading partners of Italy; World Bank WITS; European Commission CETA ex-post evaluation 2025; Carleton University Transatlantic Trade Politics Network; Export Development Canada. All CAD figures sourced from Statistics Canada customs-based data. USD figures from UN COMTRADE. Data as of 2024.</div>
+  </div>
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+const amberColor = '#C8923A';
+const redColor = '#9B2335';
+const blueColor = '#2E6FAB';
+const greenColor = '#52B788';
+const borderColor = '#E5E5E5';
+const textColor = '#1A1A1A';
+const lightAmber = 'rgba(200,146,58,0.15)';
+const lightRed = 'rgba(155,35,53,0.15)';
+
+const commonOpts = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false }, tooltip: { callbacks: {} } }
+};
+
+new Chart(document.getElementById('growthChart'), {
+  type: 'line',
+  data: {
+    labels: ['2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
+    datasets: [
+      {
+        label: 'Italy → Canada',
+        data: [5.8, 6.2, 6.8, 7.3, 8.0, 8.7, 7.7, 9.1, 11.2, 12.9, 12.3],
+        borderColor: amberColor,
+        backgroundColor: lightAmber,
+        fill: false,
+        tension: 0.3,
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: amberColor,
+        borderDash: [],
+      },
+      {
+        label: 'Canada → Italy',
+        data: [1.7, 1.8, 2.2, 2.3, 2.5, 2.7, 2.2, 2.4, 2.8, 2.7, 3.3],
+        borderColor: redColor,
+        backgroundColor: lightRed,
+        fill: false,
+        tension: 0.3,
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: redColor,
+        borderDash: [4,3],
+      },
+      {
+        label: 'Total',
+        data: [7.5, 8.0, 9.0, 9.6, 10.5, 11.4, 9.9, 11.5, 14.0, 15.3, 15.5],
+        borderColor: blueColor,
+        backgroundColor: 'transparent',
+        fill: false,
+        tension: 0.3,
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: blueColor,
+        borderDash: [2,2],
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: borderColor }, ticks: { color: '#666', font: { size: 11 } } },
+      y: {
+        grid: { color: borderColor },
+        ticks: { color: '#666', font: { size: 11 }, callback: v => 'CAD ' + v + 'B' }
+      }
+    },
+    elements: { point: { hoverRadius: 5 } }
+  }
+});
+
+new Chart(document.getElementById('balanceChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
+    datasets: [{
+      label: "Italy's Surplus (CAD B)",
+      data: [4.1, 4.4, 4.6, 5.0, 5.5, 6.0, 5.5, 6.7, 8.4, 10.2, 9.0],
+      backgroundColor: Array(11).fill(lightAmber),
+      borderColor: Array(11).fill(amberColor),
+      borderWidth: 1,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#666', font: { size: 10 } } },
+      y: { grid: { color: borderColor }, ticks: { color: '#666', font: { size: 10 }, callback: v => v + 'B' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('italyExportChart'), {
+  type: 'bar',
+  data: {
+    labels: [
+      'Machinery (HS84)', 'Wine & Beverages (HS22)', 'Vehicles (HS87)',
+      'Electrical Equip. (HS85)', 'Pharmaceuticals (HS30)', 'Furniture (HS94)',
+      'Apparel (HS62)', 'Food Preparations (HS19)', 'Olive Oil (HS15)',
+      'Jewellery (HS71)'
+    ],
+    datasets: [{
+      label: 'USD Millions',
+      data: [1420, 583, 389, 352, 283, 234, 227, 182, 156, 147],
+      backgroundColor: [
+        amberColor,'rgba(200,146,58,0.8)','rgba(200,146,58,0.7)',
+        'rgba(200,146,58,0.65)','rgba(200,146,58,0.6)','rgba(200,146,58,0.55)',
+        'rgba(200,146,58,0.5)','rgba(200,146,58,0.45)','rgba(200,146,58,0.4)',
+        'rgba(200,146,58,0.35)'
+      ],
+      borderColor: amberColor,
+      borderWidth: 0,
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        grid: { color: borderColor },
+        ticks: { color: '#666', font: { size: 11 }, callback: v => 'USD ' + v.toLocaleString() + 'M' }
+      },
+      y: { grid: { display: false }, ticks: { color: textColor, font: { size: 11 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('canadaExportChart'), {
+  type: 'bar',
+  data: {
+    labels: [
+      'Aircraft & Aerospace (HS88)', 'Cereals / Wheat (HS10)', 'Machinery (HS84)',
+      'Pharmaceuticals (HS30)', 'Medical Devices (HS90)', 'Precious Metals (HS71)',
+      'Oilseeds / Canola (HS12)', 'Electrical Equip. (HS85)', 'Cocoa Preparations (HS18)',
+      'Edible Vegetables (HS07)'
+    ],
+    datasets: [{
+      label: 'USD Millions',
+      data: [518, 435, 220, 206, 104, 94, 94, 92, 86, 84],
+      backgroundColor: [
+        redColor,'rgba(155,35,53,0.8)','rgba(155,35,53,0.72)',
+        'rgba(155,35,53,0.65)','rgba(155,35,53,0.57)','rgba(155,35,53,0.5)',
+        'rgba(155,35,53,0.45)','rgba(155,35,53,0.40)','rgba(155,35,53,0.35)',
+        'rgba(155,35,53,0.30)'
+      ],
+      borderColor: redColor,
+      borderWidth: 0,
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        grid: { color: borderColor },
+        ticks: { color: '#666', font: { size: 11 }, callback: v => 'USD ' + v.toLocaleString() + 'M' }
+      },
+      y: { grid: { display: false }, ticks: { color: textColor, font: { size: 11 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('italyPartnersChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Germany','USA','France','Spain','Switzerland','UK','Poland','Belgium','China','Netherlands'],
+    datasets: [{
+      label: 'EUR Billions',
+      data: [74.7, 67.3, 63.4, 33.0, 30.5, 26.1, 19.8, 19.3, 19.2, 18.5],
+      backgroundColor: Array(10).fill(lightAmber),
+      borderColor: Array(10).fill(amberColor),
+      borderWidth: 1,
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: borderColor }, ticks: { color: '#666', font: { size: 10 }, callback: v => v + 'B' } },
+      y: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('canadaPartnersChart'), {
+  type: 'bar',
+  data: {
+    labels: ['USA','China','Japan','UK','Mexico','Germany','S. Korea','Netherlands','Italy','India'],
+    datasets: [{
+      label: 'USD Billions',
+      data: [438.7, 22.6, 11.7, 11.3, 6.6, 5.7, 4.7, 4.2, 2.1, 2.0],
+      backgroundColor: ['rgba(155,35,53,0.85)'].concat(Array(9).fill(lightRed)),
+      borderColor: Array(10).fill(redColor),
+      borderWidth: 1,
+      borderRadius: 3,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        grid: { color: borderColor },
+        ticks: { color: '#666', font: { size: 10 }, callback: v => v + 'B' }
+      },
+      y: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('concentrationChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Italy (exports)','Canada (exports)'],
+    datasets: [
+      { label: 'Top partner', data: [11.9, 77.3], backgroundColor: [amberColor, redColor], borderRadius: 3 },
+      { label: '2nd partner', data: [10.8, 4.0], backgroundColor: ['rgba(200,146,58,0.65)', 'rgba(155,35,53,0.65)'], borderRadius: 0 },
+      { label: '3rd partner', data: [10.1, 2.1], backgroundColor: ['rgba(200,146,58,0.45)', 'rgba(155,35,53,0.45)'], borderRadius: 0 },
+      { label: 'All others', data: [67.2, 16.6], backgroundColor: [borderColor, borderColor], borderRadius: 0 }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { color: textColor, font: { size: 13 } } },
+      y: {
+        stacked: true,
+        grid: { color: borderColor },
+        max: 100,
+        ticks: { color: '#666', font: { size: 11 }, callback: v => v + '%' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
