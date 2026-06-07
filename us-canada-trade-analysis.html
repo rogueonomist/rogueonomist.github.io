@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US–Canada Trade: A Comprehensive Analysis</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #FFFFFF;
+  --secondary: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --accent-light: #FDF3E7;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --success: #52B788;
+  --success-light: #EBF7F3;
+  --warning: #9B2335;
+  --warning-light: #FBEAEA;
+  --blue: #2A6EBB;
+  --blue-light: #EEF4FB;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: var(--primary);
+  color: #2D2D2D;
+  line-height: 1.6;
+}
+.container { max-width: 1120px; margin: 0 auto; padding: 0 2rem; }
+.hero {
+  border-bottom: 1px solid var(--border);
+  padding: 3rem 0 2rem;
+}
+.hero-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.hero h1 {
+  font-family: Georgia, serif;
+  font-size: 42px;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+.hero h1 span { color: var(--accent); }
+.hero-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 640px;
+  line-height: 1.7;
+}
+.hero-meta {
+  margin-top: 1rem;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+}
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 1rem 1.25rem;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tab-btn:hover { color: var(--text-primary); }
+.tab-btn.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+.tab-content { display: none; padding: 2.5rem 0 3rem; }
+.tab-content.active { display: block; }
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: Georgia, serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+.section-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.7;
+  max-width: 720px;
+}
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.kpi-card {
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  position: relative;
+}
+.kpi-card.accent { border-top: 3px solid var(--accent); }
+.kpi-card.green { border-top: 3px solid var(--success); }
+.kpi-card.red { border-top: 3px solid var(--warning); }
+.kpi-card.blue { border-top: 3px solid var(--blue); }
+.kpi-num {
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.kpi-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.kpi-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 0.4rem;
+}
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+.panel {
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.est-table th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+}
+.est-table td {
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: #2D2D2D;
+  font-size: 13px;
+}
+.est-table tr:last-child td { border-bottom: none; }
+.est-table tr:hover td { background: #F5F5F5; }
+.verdict {
+  background: var(--accent-light);
+  border-left: 4px solid var(--accent);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.verdict-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.verdict-text { font-size: 14px; color: #2D2D2D; line-height: 1.7; }
+.info-box {
+  background: var(--blue-light);
+  border-left: 4px solid var(--blue);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.info-box p { font-size: 14px; color: #2D2D2D; line-height: 1.7; }
+.info-box strong { color: var(--blue); }
+.success-box {
+  background: var(--success-light);
+  border-left: 4px solid var(--success);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.success-box p { font-size: 14px; color: #2D2D2D; line-height: 1.7; }
+.chart-wrap { position: relative; }
+.chart-h240 { height: 240px; }
+.chart-h300 { height: 300px; }
+.chart-h360 { height: 360px; }
+.chart-h420 { height: 420px; }
+.chart-h480 { height: 480px; }
+.chart-h520 { height: 520px; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+.milestone-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.milestone {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  background: var(--primary);
+}
+.milestone-year {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  color: var(--accent);
+  font-weight: 400;
+  margin-bottom: 0.4rem;
+}
+.milestone-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; }
+.milestone-text { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.bar-label { font-size: 12px; color: var(--text-primary); width: 210px; flex-shrink: 0; line-height: 1.3; }
+.bar-track { flex: 1; height: 18px; background: #F0F0F0; border-radius: 2px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+.bar-val { font-size: 12px; font-weight: 600; color: var(--text-primary); width: 55px; text-align: right; flex-shrink: 0; }
+.bar-pct { font-size: 11px; color: var(--text-tertiary); width: 38px; text-align: right; flex-shrink: 0; }
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+.tag-amber { background: var(--accent-light); color: var(--accent); }
+.tag-green { background: var(--success-light); color: #2E7D55; }
+.tag-red { background: var(--warning-light); color: var(--warning); }
+.tag-blue { background: var(--blue-light); color: var(--blue); }
+.flow-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.flow-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+}
+.flow-icon { font-size: 22px; margin-bottom: 0.5rem; }
+.flow-val { font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: var(--text-primary); }
+.flow-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.3rem; }
+.vc-row {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+.vc-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.vc-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.vc-val { font-family: Georgia, serif; font-size: 18px; color: var(--accent); text-align: right; white-space: nowrap; }
+.legend-wrap { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; font-size: 12px; color: var(--text-secondary); }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+.corridor-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.corridor-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+.corridor-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.corridor-val { font-family: Georgia, serif; font-size: 18px; color: var(--accent); }
+.corridor-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.sector-pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-right: 4px; margin-bottom: 4px; border: 1px solid var(--border); color: var(--text-secondary); }
+.highlight { color: var(--accent); font-weight: 500; }
+@media (max-width: 768px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .two-col, .three-col, .milestone-grid, .flow-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 28px; }
+  .vc-row { grid-template-columns: 1fr; }
+  .bar-label { width: 140px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-label">Bilateral Trade Analysis · Updated 2024</div>
+    <h1>United States <span>&amp;</span> Canada</h1>
+    <h1 style="font-size:22px; margin-top:0.3rem; color:#666;">The World's Largest Bilateral Trading Relationship</h1>
+    <p class="hero-sub">From NAFTA to USMCA, the US–Canada economic corridor has deepened for three decades — integrating supply chains in automotive, energy, agriculture, and technology at a scale no other bilateral relationship matches.</p>
+    <p class="hero-meta">Sources: US Census Bureau · Statistics Canada · USTR · Global Affairs Canada · ITA · USDA ERS · OEC World &nbsp;|&nbsp; All figures in USD unless noted</p>
+  </div>
+
+  <!-- TAB NAV -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="growth">Growth Trajectory</button>
+    <button class="tab-btn" data-tab="ca-exports">Canada → US Exports</button>
+    <button class="tab-btn" data-tab="us-exports">US → Canada Exports</button>
+    <button class="tab-btn" data-tab="concentration">Partner Concentration</button>
+    <button class="tab-btn" data-tab="regional">Regional Analysis</button>
+    <button class="tab-btn" data-tab="value-chain">Value Chain Deep Dive</button>
+    <button class="tab-btn" data-tab="geopolitics">Geopolitics &amp; Outlook</button>
+  </div>
+
+  <!-- ======== TAB 1: OVERVIEW ======== -->
+  <div id="overview" class="tab-content active">
+    <div class="section-label">Headline Figures · 2024</div>
+    <p class="section-sub">Together, the US and Canada trade over <strong>$2.5 billion in goods and services every single day</strong> — a corridor so integrated that 50% of bilateral goods move between related companies across the border.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card accent">
+        <div class="kpi-num">$917B</div>
+        <div class="kpi-label">Total Two-Way Trade</div>
+        <div class="kpi-sub">Goods + services · 2024</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">$422B</div>
+        <div class="kpi-label">US Imports from Canada</div>
+        <div class="kpi-sub">+CAGR 4.07% since 2017</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-num">$349B</div>
+        <div class="kpi-label">US Exports to Canada</div>
+        <div class="kpi-sub">Largest single-country market</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-num">$62B</div>
+        <div class="kpi-label">US Goods Trade Deficit</div>
+        <div class="kpi-sub">Offset by $33B services surplus</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="panel-title" style="font-size:13px;font-weight:600;color:var(--text-primary);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);">Trade at a Glance</div>
+        <div class="flow-grid" style="grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div class="flow-card">
+            <div class="flow-val" style="font-size:20px;">75.9%</div>
+            <div class="flow-label">Canada's exports destined for US</div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-val" style="font-size:20px;">62.2%</div>
+            <div class="flow-label">Canada's imports from US</div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-val" style="font-size:20px;">16.8%</div>
+            <div class="flow-label">Share of all US goods exports</div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-val" style="font-size:20px;">34 states</div>
+            <div class="flow-label">Rank Canada as #1 export market</div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-val" style="font-size:20px;">$2.5B</div>
+            <div class="flow-label">Goods & services per day</div>
+          </div>
+          <div class="flow-card">
+            <div class="flow-val" style="font-size:20px;">50%</div>
+            <div class="flow-label">Trade between related companies</div>
+          </div>
+        </div>
+
+        <div class="verdict" style="margin-top:1.5rem;">
+          <div class="verdict-label">Key Insight</div>
+          <div class="verdict-text">If the energy sector is excluded, the US runs a <strong>$63 billion surplus</strong> with Canada — inverting the commonly-cited trade deficit narrative. The deficit is almost entirely a function of Canadian crude oil shipments, not a structural competitiveness problem.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel-title" style="font-size:13px;font-weight:600;color:var(--text-primary);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);">Composition of Bilateral Trade (2024)</div>
+        <div class="chart-wrap chart-h280" style="height:280px;">
+          <canvas id="compositionChart" role="img" aria-label="Donut chart showing composition of US-Canada bilateral trade in 2024">US goods exports $349B, US goods imports $422B, US services exports $90B, US services imports $57B.</canvas>
+        </div>
+        <div class="legend-wrap" style="margin-top:1rem;">
+          <span class="legend-item"><span class="legend-swatch" style="background:#2A6EBB;"></span>US Goods Exports $349B</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#52B788;"></span>US Goods Imports $422B</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#C8923A;"></span>US Services Exports $90B</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#9B2335;"></span>US Services Imports $57B</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section-label" style="margin-bottom:1rem;">Policy Milestones</div>
+    <div class="milestone-grid">
+      <div class="milestone">
+        <div class="milestone-year">1965</div>
+        <div class="milestone-title">Canada–US Auto Pact</div>
+        <div class="milestone-text">Eliminated tariffs on vehicles and parts. Seeded the integrated Ontario–Michigan automotive corridor that persists today — over 22% of North American vehicle production.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year">1989</div>
+        <div class="milestone-title">Canada–US Free Trade Agreement</div>
+        <div class="milestone-text">CUSTA eliminated most tariffs bilaterally. Agricultural trade CAGR since: 7.7% for US exports, 8.1% for Canadian exports to the US — without interruption.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year">1994</div>
+        <div class="milestone-title">NAFTA Takes Effect</div>
+        <div class="milestone-text">Extended integration to Mexico. Bilateral US–Canada goods trade jumped from ~$225B in 1993 to over $408B by 2000 — a near-doubling in seven years.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year">2008–09</div>
+        <div class="milestone-title">Financial Crisis Shock</div>
+        <div class="milestone-text">Bilateral goods trade fell from $597B (2008) to $430B (2009) — a 28% contraction in one year, concentrated in automotive, energy, and industrial exports.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year">2020</div>
+        <div class="milestone-title">USMCA Replaces NAFTA</div>
+        <div class="milestone-text">Stronger rules of origin for autos (75% content threshold), enhanced IP protections, and digital trade provisions. Underpins ~$2 trillion in North American regional trade.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year">2025</div>
+        <div class="milestone-title">Trump Tariff Escalation</div>
+        <div class="milestone-text">25% tariffs imposed on most Canadian goods; Canada retaliates. USMCA review scheduled for July 2026 — the first substantive test of the updated framework.</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="two-col" style="margin-top:1.5rem;">
+      <div class="info-box" style="margin:0;">
+        <p><strong>Investment layer:</strong> Beyond trade flows, bilateral investment stock totals $1.19 trillion (2024). Canadian FDI in the US reached $811.7 billion — the second-largest source globally — while US FDI in Canada stands at $459.6 billion. US affiliates of Canadian firms directly employ 887,900 Americans.</p>
+      </div>
+      <div class="success-box" style="margin:0;">
+        <p><strong>Employment anchor:</strong> US–Canada trade supports an estimated <strong>1.4 million American jobs</strong> dependent on Canadian exports, and 2.04 million Canadian jobs (direct + indirect) linked to US trade — 54% of which sit in manufacturing. Ontario's auto sector alone accounts for 1.9% of all provincial employment.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== TAB 2: GROWTH TRAJECTORY ======== -->
+  <div id="growth" class="tab-content">
+    <div class="section-label">2000–2024 · Bilateral Goods Trade</div>
+    <div class="section-title">Three Decades of Deepening Integration</div>
+    <p class="section-sub">US–Canada goods trade has grown from $407 billion in 2000 to $771 billion in 2024 — an 89% expansion over 24 years, punctuated by two sharp discontinuities: the 2008–09 financial crisis and the 2020 COVID contraction.</p>
+
+    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:2rem;">
+      <div class="kpi-card accent">
+        <div class="kpi-num">$407B</div>
+        <div class="kpi-label">2000 Baseline</div>
+        <div class="kpi-sub">Post-NAFTA plateau</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">$795B</div>
+        <div class="kpi-label">2022 Peak (Goods)</div>
+        <div class="kpi-sub">Energy price spike + pent-up demand</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-num">+3.0%</div>
+        <div class="kpi-label">CAGR 2000–2024</div>
+        <div class="kpi-sub">Goods trade only</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-num">-28%</div>
+        <div class="kpi-label">2009 Crisis Drop</div>
+        <div class="kpi-sub">Largest single-year contraction</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Bilateral Goods Trade: US Exports to Canada vs US Imports from Canada (USD billion)</div>
+      <div class="legend-wrap">
+        <span class="legend-item"><span class="legend-swatch" style="background:#2A6EBB;"></span>US Exports to Canada</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#52B788;"></span>US Imports from Canada</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#E5E5E5;border:1px solid #ccc;"></span>Key events annotated</span>
+      </div>
+      <div class="chart-wrap chart-h360">
+        <canvas id="growthChart" role="img" aria-label="Line chart of US-Canada bilateral goods trade from 2000 to 2024, showing exports and imports trends with key policy milestones">Trade grew from $407B in 2000 to $771B in 2024, with notable drops in 2009 and 2020.</canvas>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Trade Balance by Era (USD Billion)</div>
+        <table class="est-table">
+          <tr><th>Period</th><th>US Exports</th><th>US Imports</th><th>Balance</th></tr>
+          <tr><td>1994 (NAFTA start)</td><td>$115B</td><td>$130B</td><td style="color:var(--warning);">−$15B</td></tr>
+          <tr><td>2000 (peak growth)</td><td>$178B</td><td>$229B</td><td style="color:var(--warning);">−$51B</td></tr>
+          <tr><td>2008 (pre-crisis)</td><td>$261B</td><td>$336B</td><td style="color:var(--warning);">−$75B</td></tr>
+          <tr><td>2009 (crisis trough)</td><td>$204B</td><td>$226B</td><td style="color:var(--warning);">−$22B</td></tr>
+          <tr><td>2014 (oil-era peak)</td><td>$312B</td><td>$346B</td><td style="color:var(--warning);">−$34B</td></tr>
+          <tr><td>2019 (pre-COVID)</td><td>$292B</td><td>$319B</td><td style="color:var(--warning);">−$27B</td></tr>
+          <tr><td>2020 (COVID trough)</td><td>$256B</td><td>$270B</td><td style="color:var(--warning);">−$14B</td></tr>
+          <tr><td>2022 (peak goods)</td><td>$358B</td><td>$437B</td><td style="color:var(--warning);">−$79B</td></tr>
+          <tr><td style="font-weight:600;">2024 (latest)</td><td style="font-weight:600;">$349B</td><td style="font-weight:600;">$422B</td><td style="color:var(--warning);font-weight:600;">−$73B</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="panel" style="margin-bottom:1rem;">
+          <div class="panel-title">Phase Analysis</div>
+          <div class="corridor-card" style="margin-bottom:0.75rem; padding:1rem;">
+            <div class="corridor-header" style="margin-bottom:0.3rem;">
+              <div class="corridor-title">Phase 1: NAFTA Expansion (1994–2000)</div>
+              <span class="tag tag-green">+67%</span>
+            </div>
+            <div class="corridor-desc">Trade nearly doubled in six years as tariff dismantlement unlocked integrated manufacturing. Energy, autos, and agri drove the surge.</div>
+          </div>
+          <div class="corridor-card" style="margin-bottom:0.75rem; padding:1rem;">
+            <div class="corridor-header" style="margin-bottom:0.3rem;">
+              <div class="corridor-title">Phase 2: Post-Dotcom to Pre-Crisis (2001–2008)</div>
+              <span class="tag tag-amber">+57%</span>
+            </div>
+            <div class="corridor-desc">Steady commodity-led expansion. Canadian oil sands output scaled rapidly, lifting energy exports and widening the goods deficit.</div>
+          </div>
+          <div class="corridor-card" style="margin-bottom:0.75rem; padding:1rem;">
+            <div class="corridor-header" style="margin-bottom:0.3rem;">
+              <div class="corridor-title">Phase 3: Crisis, Recovery, Oil Correction (2009–2016)</div>
+              <span class="tag tag-amber">+26%</span>
+            </div>
+            <div class="corridor-desc">Sharp V-recovery post-crisis; then oil price collapse in 2014–15 compressed Canadian energy revenues and flattened trade volumes.</div>
+          </div>
+          <div class="corridor-card" style="padding:1rem;">
+            <div class="corridor-header" style="margin-bottom:0.3rem;">
+              <div class="corridor-title">Phase 4: USMCA Era (2017–2024)</div>
+              <span class="tag tag-green">+32%</span>
+            </div>
+            <div class="corridor-desc">Post-pandemic recovery produced a record 2022 peak. Energy prices drove the surge; moderation in 2023–24 reflects lower commodity prices and services growth.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict" style="margin-top:1.5rem;">
+      <div class="verdict-label">Structural Reading</div>
+      <div class="verdict-text">The most revealing metric is not total trade volume but <strong>intra-industry trade intensity</strong>: over 50% of bilateral goods move between related companies (intra-firm trade). That means the US–Canada relationship is not a simple buyer-seller relationship — it is a single, integrated North American production system operating across a jurisdictional boundary.</div>
+    </div>
+  </div>
+
+  <!-- ======== TAB 3: CANADA → US EXPORTS ======== -->
+  <div id="ca-exports" class="tab-content">
+    <div class="section-label">Canada's Exports to the United States · 2024</div>
+    <div class="section-title">Energy Dominates, But the Portfolio Runs Deep</div>
+    <p class="section-sub">Canada exported $422 billion in goods to the US in 2024 — 75.9% of all Canadian goods exports. Mineral fuels alone account for $126 billion, but the next nine categories reveal a sophisticated industrial economy embedded in American supply chains.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card accent">
+        <div class="kpi-num">$422B</div>
+        <div class="kpi-label">Total CA → US Goods</div>
+        <div class="kpi-sub">2024</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">75.9%</div>
+        <div class="kpi-label">Share of Canada's Total Exports</div>
+        <div class="kpi-sub">All goods categories</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-num">$126B</div>
+        <div class="kpi-label">Energy Alone (Mineral Fuels)</div>
+        <div class="kpi-sub">29.8% of total CA→US shipments</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-num">51%</div>
+        <div class="kpi-label">US Energy Imports from Canada</div>
+        <div class="kpi-sub">Canada = majority US energy supplier</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Top 10 Canada Exports to US by Value (USD billion, 2024)</div>
+      <div class="legend-wrap">
+        <span class="legend-item"><span class="legend-swatch" style="background:#C8923A;"></span>Energy</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#2A6EBB;"></span>Manufacturing &amp; Vehicles</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#52B788;"></span>Industrial Materials</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#9B6B2E;"></span>Other</span>
+      </div>
+      <div id="caExportBars"></div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:1rem;">Value Chain Significance — Product by Product</div>
+    <div id="caVCRows"></div>
+
+    <div class="verdict" style="margin-top:2rem;">
+      <div class="verdict-label">Value Chain Reading</div>
+      <div class="verdict-text">The critical insight is that Canada's top exports are not luxury or discretionary goods — they are <strong>essential industrial inputs</strong>. Strip out Canadian crude and the US refinery system faces immediate shortfall. Strip out Canadian automotive parts and Michigan assembly lines halt within days. Strip out softwood lumber and US housing construction costs spike. The interdependence is structural, not transactional.</div>
+    </div>
+  </div>
+
+  <!-- ======== TAB 4: US → CANADA EXPORTS ======== -->
+  <div id="us-exports" class="tab-content">
+    <div class="section-label">US Exports to Canada · 2024</div>
+    <div class="section-title">America's Single Largest Export Market</div>
+    <p class="section-sub">Canada absorbed $349 billion in US goods in 2024 — more than the UK, France, China, and Japan combined. The US exports more to Canada than to any other nation on earth, and the composition reflects a high-value industrial and consumer relationship.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card accent">
+        <div class="kpi-num">$349B</div>
+        <div class="kpi-label">Total US → CA Goods</div>
+        <div class="kpi-sub">2024</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">16.8%</div>
+        <div class="kpi-label">Share of All US Goods Exports</div>
+        <div class="kpi-sub">#1 destination globally</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-num">$90B</div>
+        <div class="kpi-label">US Services Exports to Canada</div>
+        <div class="kpi-sub">Business, travel, professional</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-num">$29.5B</div>
+        <div class="kpi-label">US Agricultural Exports to Canada</div>
+        <div class="kpi-sub">+CAGR 7.7% since 1988</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Top 10 US Exports to Canada by Value (USD billion, 2024)</div>
+      <div class="legend-wrap">
+        <span class="legend-item"><span class="legend-swatch" style="background:#2A6EBB;"></span>Vehicles &amp; Machinery</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#52B788;"></span>Agriculture</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#C8923A;"></span>Energy</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#9B2335;"></span>Industrials &amp; Other</span>
+      </div>
+      <div id="usExportBars"></div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:1rem;">Value Chain Significance — US Exports</div>
+    <div id="usVCRows"></div>
+
+    <div class="verdict" style="margin-top:2rem;">
+      <div class="verdict-label">Comparative Advantage Read</div>
+      <div class="verdict-text">US exports to Canada skew toward <strong>high-value finished and semi-finished goods</strong>: vehicles, complex machinery, electrical equipment, and agricultural products. This mirrors a bilateral structure where the US ships capital goods and Canada ships raw industrial inputs — but the automotive sector fundamentally inverts this logic, with sub-assembly crossing the border 5–7 times before final vehicle completion.</div>
+    </div>
+  </div>
+
+  <!-- ======== TAB 5: PARTNER CONCENTRATION ======== -->
+  <div id="concentration" class="tab-content">
+    <div class="section-label">Trade Partner Concentration · 2024</div>
+    <div class="section-title">Canada's Near-Total US Dependency vs US's Diversified Portfolio</div>
+    <p class="section-sub">The asymmetry is stark. Canada sends 75.9% of its goods to a single partner. The US, by contrast, directs just 16.8% of goods to Canada — its largest partner, but far from its only one. This concentration differential defines the underlying negotiating dynamic in every bilateral trade dispute.</p>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">Canada Export Partners — Share of Total Goods Exports (2024)</div>
+        <div class="chart-wrap" style="height:260px;">
+          <canvas id="caExportPartners" role="img" aria-label="Donut chart of Canada export partners: US 75.9%, China 4.8%, UK 2.1%, Japan 1.8%, Other EU 3.5%, Mexico 1.2%, Other 10.7%">US dominates at 75.9%.</canvas>
+        </div>
+        <div class="legend-wrap" style="margin-top:0.75rem; font-size:11px;">
+          <span class="legend-item"><span class="legend-swatch" style="background:#C8923A;"></span>US 75.9%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#2A6EBB;"></span>China 4.8%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#52B788;"></span>UK 2.1%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#9B2335;"></span>Japan 1.8%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#6B5B95;"></span>EU 3.5%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#888;"></span>Other 11.9%</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Canada Import Partners — Share of Total Goods Imports (2024)</div>
+        <div class="chart-wrap" style="height:260px;">
+          <canvas id="caImportPartners" role="img" aria-label="Donut chart of Canada import partners: US 62.2%, China 11.5%, Mexico 4.5%, Germany 2.1%, UK 1.8%, Japan 1.6%, Other 16.3%">US leads at 62.2%, China is second at 11.5%.</canvas>
+        </div>
+        <div class="legend-wrap" style="margin-top:0.75rem; font-size:11px;">
+          <span class="legend-item"><span class="legend-swatch" style="background:#C8923A;"></span>US 62.2%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#2A6EBB;"></span>China 11.5%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#52B788;"></span>Mexico 4.5%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#9B2335;"></span>Germany 2.1%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#6B5B95;"></span>UK 1.8%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#888;"></span>Other 17.9%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">US Export Partners — Share of All US Goods Exports (2024)</div>
+        <div class="chart-wrap" style="height:260px;">
+          <canvas id="usExportPartners" role="img" aria-label="Donut chart of US export partners: Canada 16.8%, Mexico 15.7%, China 7%, UK 4.5%, Japan 3.2%, Germany 3.2%, Other 49.6%">Canada leads at 16.8%, closely followed by Mexico at 15.7%.</canvas>
+        </div>
+        <div class="legend-wrap" style="margin-top:0.75rem; font-size:11px;">
+          <span class="legend-item"><span class="legend-swatch" style="background:#C8923A;"></span>Canada 16.8%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#2A6EBB;"></span>Mexico 15.7%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#52B788;"></span>China 7.0%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#9B2335;"></span>UK 4.5%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#6B5B95;"></span>Japan 3.2%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#888;"></span>Other 52.8%</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">US Import Partners — Share of All US Goods Imports (2024)</div>
+        <div class="chart-wrap" style="height:260px;">
+          <canvas id="usImportPartners" role="img" aria-label="Donut chart of US import partners: China 13.5%, Mexico 15.5%, Canada 13.5%, Germany 4.6%, Japan 4.5%, Other 48.4%">Mexico leads at 15.5%, followed by Canada and China tied at ~13.5%.</canvas>
+        </div>
+        <div class="legend-wrap" style="margin-top:0.75rem; font-size:11px;">
+          <span class="legend-item"><span class="legend-swatch" style="background:#C8923A;"></span>Mexico 15.5%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#2A6EBB;"></span>Canada 13.5%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#52B788;"></span>China 13.5%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#9B2335;"></span>Germany 4.6%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#6B5B95;"></span>Japan 4.5%</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#888;"></span>Other 48.4%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Canada's Top Export Markets — Ranked</div>
+        <table class="est-table">
+          <tr><th>#</th><th>Partner</th><th>Exports</th><th>Share</th></tr>
+          <tr><td>1</td><td style="font-weight:600; color:var(--accent);">United States</td><td>$320B+</td><td style="font-weight:600; color:var(--accent);">75.9%</td></tr>
+          <tr><td>2</td><td>China</td><td>~$27B</td><td>4.8%</td></tr>
+          <tr><td>3</td><td>United Kingdom</td><td>~$12B</td><td>2.1%</td></tr>
+          <tr><td>4</td><td>Japan</td><td>~$10B</td><td>1.8%</td></tr>
+          <tr><td>5</td><td>Germany</td><td>~$7B</td><td>1.3%</td></tr>
+          <tr><td>6</td><td>South Korea</td><td>~$6B</td><td>1.1%</td></tr>
+          <tr><td>7</td><td>Netherlands</td><td>~$5B</td><td>0.9%</td></tr>
+          <tr><td>8</td><td>Mexico</td><td>~$7B</td><td>1.2%</td></tr>
+          <tr><td>9</td><td>India</td><td>~$5B</td><td>0.9%</td></tr>
+          <tr><td>10</td><td>Belgium</td><td>~$3B</td><td>0.6%</td></tr>
+        </table>
+        <div class="info-box" style="margin-top:1rem;">
+          <p>No single non-US market exceeds <strong>5% of Canadian exports</strong>. The next five partners combined barely match Canada's exports to a single US state like Michigan. This monopartner concentration is unmatched among G7 nations.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Canada's Top Import Sources — Ranked</div>
+        <table class="est-table">
+          <tr><th>#</th><th>Partner</th><th>Imports</th><th>Share</th></tr>
+          <tr><td>1</td><td style="font-weight:600; color:var(--accent);">United States</td><td>~$235B</td><td style="font-weight:600; color:var(--accent);">62.2%</td></tr>
+          <tr><td>2</td><td>China</td><td>~$43B</td><td>11.5%</td></tr>
+          <tr><td>3</td><td>Mexico</td><td>~$17B</td><td>4.5%</td></tr>
+          <tr><td>4</td><td>Germany</td><td>~$8B</td><td>2.1%</td></tr>
+          <tr><td>5</td><td>United Kingdom</td><td>~$7B</td><td>1.8%</td></tr>
+          <tr><td>6</td><td>Japan</td><td>~$6B</td><td>1.6%</td></tr>
+          <tr><td>7</td><td>South Korea</td><td>~$5B</td><td>1.4%</td></tr>
+          <tr><td>8</td><td>Italy</td><td>~$4B</td><td>1.1%</td></tr>
+          <tr><td>9</td><td>France</td><td>~$4B</td><td>1.0%</td></tr>
+          <tr><td>10</td><td>India</td><td>~$3B</td><td>0.8%</td></tr>
+        </table>
+        <div class="verdict" style="margin-top:1rem;">
+          <div class="verdict-label">Import Concentration Risk</div>
+          <div class="verdict-text">Canada imports 62.2% from the US and 11.5% from China — the top two account for nearly 74% of all goods imports. Any US tariff disruption (as in 2025) creates immediate import price pressures across the entire Canadian economy.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== TAB 6: REGIONAL ANALYSIS ======== -->
+  <div id="regional" class="tab-content">
+    <div class="section-label">Subnational Exposure · States &amp; Provinces</div>
+    <div class="section-title">Geography Determines Vulnerability</div>
+    <p class="section-sub">The US–Canada relationship is not experienced uniformly. Border states like Michigan and Montana have economic profiles more akin to Canada than to the US average. On the Canadian side, the dependency is even starker — four provinces send over 40% of their GDP-equivalent output to the US market.</p>
+
+    <div class="kpi-grid" style="margin-bottom:2rem;">
+      <div class="kpi-card accent">
+        <div class="kpi-num">34 states</div>
+        <div class="kpi-label">Rank Canada as #1 Export Market</div>
+        <div class="kpi-sub">More than any other partner</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-num">24 states</div>
+        <div class="kpi-label">Rank Canada as Top Import Origin</div>
+        <div class="kpi-sub">Northern border belt + energy states</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-num">16%</div>
+        <div class="kpi-label">Montana State GDP — CA Trade</div>
+        <div class="kpi-sub">Highest single-state exposure</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-num">62%</div>
+        <div class="kpi-label">New Brunswick GDP from US Trade</div>
+        <div class="kpi-sub">Highest Canadian provincial exposure</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">US States — Canada Trade Exposure</div>
+        <table class="est-table">
+          <tr><th>State</th><th>CA as % of Economy</th><th>Exports to CA</th><th>Imports from CA</th></tr>
+          <tr><td style="font-weight:600;">Montana</td><td><span class="tag tag-red">16%</span></td><td>$2.1B</td><td>$4.3B</td></tr>
+          <tr><td style="font-weight:600;">Michigan</td><td><span class="tag tag-red">14%</span></td><td>$22B</td><td>$41B</td></tr>
+          <tr><td style="font-weight:600;">Vermont</td><td><span class="tag tag-red">14%</span></td><td>$1.8B</td><td>$3.5B</td></tr>
+          <tr><td style="font-weight:600;">North Dakota</td><td><span class="tag tag-amber">8%</span></td><td>$3.2B</td><td>$1.4B</td></tr>
+          <tr><td style="font-weight:600;">New Hampshire</td><td><span class="tag tag-amber">7%</span></td><td>$1.4B</td><td>$1.2B</td></tr>
+          <tr><td style="font-weight:600;">Illinois</td><td><span class="tag tag-amber">10%</span></td><td>$18B</td><td>$58B</td></tr>
+          <tr><td style="font-weight:600;">Ohio</td><td><span class="tag tag-amber">6%</span></td><td>$19B</td><td>$18B</td></tr>
+          <tr><td style="font-weight:600;">Indiana</td><td><span class="tag tag-amber">6%</span></td><td>$12B</td><td>$9B</td></tr>
+          <tr><td style="font-weight:600;">Maine</td><td><span class="tag tag-amber">6%</span></td><td>$1.2B</td><td>$4.8B</td></tr>
+          <tr><td style="font-weight:600;">Texas</td><td><span class="tag tag-blue">4%</span></td><td>$34B</td><td>$35B</td></tr>
+          <tr><td style="font-weight:600;">New York</td><td><span class="tag tag-blue">3%</span></td><td>$15B</td><td>$14B</td></tr>
+          <tr><td style="font-weight:600;">California</td><td><span class="tag tag-blue">2%</span></td><td>$16B</td><td>$8B</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Canadian Provinces — US Trade as Share of Provincial GDP</div>
+        <table class="est-table">
+          <tr><th>Province</th><th>US Trade / GDP</th><th>Primary Sector</th></tr>
+          <tr><td style="font-weight:600;">New Brunswick</td><td><span class="tag tag-red">62%</span></td><td>Petroleum refining, forestry</td></tr>
+          <tr><td style="font-weight:600;">Saskatchewan</td><td><span class="tag tag-red">45%</span></td><td>Potash, agriculture, oil</td></tr>
+          <tr><td style="font-weight:600;">Manitoba</td><td><span class="tag tag-red">42%</span></td><td>Agriculture, mining, electricity</td></tr>
+          <tr><td style="font-weight:600;">Alberta</td><td><span class="tag tag-red">42%</span></td><td>Crude oil, natural gas</td></tr>
+          <tr><td style="font-weight:600;">Ontario</td><td><span class="tag tag-amber">41%</span></td><td>Automotive, manufacturing, finance</td></tr>
+          <tr><td style="font-weight:600;">Quebec</td><td><span class="tag tag-amber">23%</span></td><td>Aluminum, aerospace, hydro</td></tr>
+          <tr><td style="font-weight:600;">Newfoundland &amp; Lab.</td><td><span class="tag tag-amber">32%</span></td><td>Offshore oil, fish products</td></tr>
+          <tr><td style="font-weight:600;">British Columbia</td><td><span class="tag tag-blue">18%</span></td><td>Lumber, coal, natural gas</td></tr>
+          <tr><td style="font-weight:600;">Nova Scotia</td><td><span class="tag tag-blue">15%</span></td><td>Fish, blueberries, manufacturing</td></tr>
+        </table>
+
+        <div class="info-box" style="margin-top:1rem;">
+          <p>Ontario and Alberta together account for <strong>60% of Canada's total exports to the US</strong>. Alberta supplies the energy; Ontario supplies the vehicles and manufactures. Remove either and the bilateral relationship restructures fundamentally.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:1rem;">Major Border Corridors</div>
+
+    <div class="corridor-card">
+      <div class="corridor-header">
+        <div>
+          <div class="corridor-title">Windsor–Detroit / Ontario–Michigan Corridor</div>
+          <div style="font-size:12px; color:var(--text-tertiary); margin-top:2px;">Ambassador Bridge · Detroit River International Crossing · 8 crossings</div>
+        </div>
+        <div class="corridor-val">$323M/day</div>
+      </div>
+      <div class="corridor-desc" style="margin-bottom:0.75rem;">The most active border crossing in North America. Michigan and Ontario together produce ~22% of all North American vehicles. The Ambassador Bridge alone facilitates $323 million in goods daily — primarily auto parts, assembled vehicles, and industrial components crossing 5–7 times before final vehicle completion. Ontario alone employs 100,000+ directly in auto assembly and parts manufacturing; Michigan employs over 20% of its workforce in automotive-related activity.</div>
+      <div>
+        <span class="sector-pill">Automotive Assembly</span>
+        <span class="sector-pill">Steel</span>
+        <span class="sector-pill">Auto Parts</span>
+        <span class="sector-pill">Machinery</span>
+        <span class="sector-pill">Electricity</span>
+      </div>
+    </div>
+
+    <div class="corridor-card">
+      <div class="corridor-header">
+        <div>
+          <div class="corridor-title">Alberta–Montana / Alberta–Midwest Energy Corridor</div>
+          <div style="font-size:12px; color:var(--text-tertiary); margin-top:2px;">Keystone pipeline system · Enbridge pipelines · 3 crossings</div>
+        </div>
+        <div class="corridor-val">~$340B/yr</div>
+      </div>
+      <div class="corridor-desc" style="margin-bottom:0.75rem;">Alberta's oil sands supply approximately 51% of all US crude oil imports. The Midwest refinery system — PADD 2 — is specifically engineered around heavy Canadian crude. Montana derives 16% of its entire economic output from Canada-linked trade, almost entirely through energy infrastructure. Oklahoma imports 50% of its goods from Canada, of which 79% are oil and gas products.</div>
+      <div>
+        <span class="sector-pill">Crude Oil</span>
+        <span class="sector-pill">Natural Gas</span>
+        <span class="sector-pill">Refined Products</span>
+        <span class="sector-pill">Petrochemicals</span>
+      </div>
+    </div>
+
+    <div class="corridor-card">
+      <div class="corridor-header">
+        <div>
+          <div class="corridor-title">Quebec–New York / Northeast Electricity &amp; Trade Corridor</div>
+          <div style="font-size:12px; color:var(--text-tertiary); margin-top:2px;">Champlain Bridge · Thousand Islands · Hydro-Quebec interconnections</div>
+        </div>
+        <div class="corridor-val">~$55B/yr</div>
+      </div>
+      <div class="corridor-desc" style="margin-bottom:0.75rem;">Hydro-Quebec exports electricity to New York, Vermont, and New England — providing low-carbon baseload power that anchors regional grid stability. Quebec's aerospace sector (Bombardier, Pratt &amp; Whitney Canada) supplies components into US civil aviation supply chains. Aluminum smelted in Quebec feeds US packaging, automotive, and aerospace manufacturers.</div>
+      <div>
+        <span class="sector-pill">Hydroelectric Power</span>
+        <span class="sector-pill">Aluminum</span>
+        <span class="sector-pill">Aerospace Parts</span>
+        <span class="sector-pill">Lumber</span>
+      </div>
+    </div>
+
+    <div class="corridor-card">
+      <div class="corridor-header">
+        <div>
+          <div class="corridor-title">British Columbia–Pacific Northwest Corridor</div>
+          <div style="font-size:12px; color:var(--text-tertiary); margin-top:2px;">Pacific Highway · Peace Arch · Douglas crossings</div>
+        </div>
+        <div class="corridor-val">~$35B/yr</div>
+      </div>
+      <div class="corridor-desc" style="margin-bottom:0.75rem;">BC supplies 38% of US softwood lumber imports — the primary input for residential construction framing. Lumber tariff disputes have been a perennial irritant since 2015. Potash exports from Saskatchewan transit through BC ports; Canada supplies over 30% of global potash, underpinning US and global fertilizer supply chains.</div>
+      <div>
+        <span class="sector-pill">Softwood Lumber</span>
+        <span class="sector-pill">Potash</span>
+        <span class="sector-pill">Natural Gas (LNG)</span>
+        <span class="sector-pill">Coal</span>
+        <span class="sector-pill">Agriculture</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== TAB 7: VALUE CHAIN DEEP DIVE ======== -->
+  <div id="value-chain" class="tab-content">
+    <div class="section-label">Sectoral Value Chain Analysis</div>
+    <div class="section-title">Where the Border Disappears: Three Integrated Systems</div>
+    <p class="section-sub">Three sectors define the structural backbone of US–Canada trade: automotive, energy, and agriculture. In each, the border is largely administrative — production systems, supply chains, and pricing mechanisms operate as if the two countries were a single economy.</p>
+
+    <hr class="divider" style="margin-top:0;">
+
+    <div style="margin-bottom:2.5rem;">
+      <div class="section-label" style="color:var(--blue);">Sector 01 — Automotive</div>
+      <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:400; margin-bottom:0.75rem; color:var(--text-primary);">The Most Integrated Manufacturing System in the World</h3>
+      <p style="font-size:14px; color:var(--text-secondary); line-height:1.7; margin-bottom:1.5rem; max-width:720px;">A single vehicle crosses the Canada–US border 5 to 7 times during production. 50% of parts in Canadian-built vehicles originate in US factories (Michigan, Ohio, Kentucky, Tennessee, Alabama). 55% of raw materials in Canadian vehicles come from the US. 80% of Canadian-built vehicles are exported to the US. The Auto Pact of 1965 seeded this system; NAFTA deepened it; USMCA's 75% regional content rule is now testing its resilience.</p>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:1.5rem;">
+        <div class="kpi-card blue">
+          <div class="kpi-num">$79B</div>
+          <div class="kpi-label">Total Auto Trade (Both Directions)</div>
+          <div class="kpi-sub">Vehicles + parts + accessories</div>
+        </div>
+        <div class="kpi-card accent">
+          <div class="kpi-num">22%</div>
+          <div class="kpi-label">N. American Vehicles — MI + ON</div>
+          <div class="kpi-sub">Combined production share</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-num">1.3M</div>
+          <div class="kpi-label">Vehicles Built in Ontario (2024)</div>
+          <div class="kpi-sub">#2 globally behind Michigan</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-num">5–7×</div>
+          <div class="kpi-label">Border Crossings per Vehicle</div>
+          <div class="kpi-sub">Before final completion</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="panel-title" style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding-bottom:0.75rem;border-bottom:1px solid var(--border);margin-bottom:1rem;">Automotive Value Chain Flow</div>
+          <div class="corridor-card" style="border-left:3px solid var(--blue);">
+            <div class="corridor-title">Stage 1: Raw Materials</div>
+            <div class="corridor-desc">Steel from Pennsylvania and Indiana, aluminum from Quebec, resins from Texas petrochemical corridor, rubber compounds from Ohio. ~55% of raw material inputs for Canadian vehicles originate in the US.</div>
+          </div>
+          <div class="corridor-card" style="border-left:3px solid var(--accent);">
+            <div class="corridor-title">Stage 2: Parts Manufacturing</div>
+            <div class="corridor-desc">Engine blocks, transmissions, body stampings, wire harnesses produced in both countries by Tier 1 suppliers (Magna International, Linamar, Martinrea in Ontario; BorgWarner, Dana, Aptiv in Michigan). Parts cross the border multiple times.</div>
+          </div>
+          <div class="corridor-card" style="border-left:3px solid var(--success);">
+            <div class="corridor-title">Stage 3: Sub-Assembly</div>
+            <div class="corridor-desc">Chassis, powertrains, and body modules assembled in Canada using US parts, shipped to Michigan for body-in-white work, returned to Canada for final trim. The Ambassador Bridge facilitates this daily throughput.</div>
+          </div>
+          <div class="corridor-card" style="border-left:3px solid var(--warning);">
+            <div class="corridor-title">Stage 4: Final Assembly &amp; Distribution</div>
+            <div class="corridor-desc">Ontario's five OEM plants (Ford, GM, Honda, Stellantis, Toyota) complete vehicles. 80% are exported directly to US consumers through a shared dealer network. US-built vehicles flow north into Canada's ~1.5M annual vehicle market.</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">CA → US Auto Trade: Key Categories (2024)</div>
+          <table class="est-table">
+            <tr><th>Category</th><th>Value</th><th>US Dependency</th></tr>
+            <tr><td>Passenger Vehicles</td><td>$28.4B</td><td>Critical import</td></tr>
+            <tr><td>Delivery Trucks / SUVs</td><td>$14.7B</td><td>~35% of US truck supply</td></tr>
+            <tr><td>Auto Parts &amp; Accessories</td><td>$12.8B</td><td>Feeds US assembly lines directly</td></tr>
+            <tr><td>Total Vehicles (all types)</td><td>$50.9B</td><td>~25% of US vehicle imports</td></tr>
+          </table>
+          <div class="verdict" style="margin-top:1rem;">
+            <div class="verdict-label">Vulnerability Point</div>
+            <div class="verdict-text">The 25% auto tariffs imposed in 2025 imposed costs on parts that cross the border multiple times — compounding the tariff effect exponentially. A single tariff-subject part crossing 6 times incurs the tariff 6 times, dramatically restructuring the economics of integrated production.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div style="margin-bottom:2.5rem;">
+      <div class="section-label" style="color:var(--accent);">Sector 02 — Energy</div>
+      <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:400; margin-bottom:0.75rem; color:var(--text-primary);">Canadian Crude, American Refineries: A One-Way Dependency</h3>
+      <p style="font-size:14px; color:var(--text-secondary); line-height:1.7; margin-bottom:1.5rem; max-width:720px;">Canada supplies 51% of all US crude oil imports — more than all OPEC nations combined sent to the US in 2024. The relationship is asymmetric by design: Alberta's heavy oil sands crude (WCS grade) is specifically matched to Midwest PADD 2 refineries that were purpose-built or retrofitted to process this feedstock. There is no quick substitution.</p>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:1.5rem;">
+        <div class="kpi-card accent">
+          <div class="kpi-num">$126B</div>
+          <div class="kpi-label">CA Energy Exports to US</div>
+          <div class="kpi-sub">Crude + refined + natural gas</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-num">51%</div>
+          <div class="kpi-label">US Crude Imports from Canada</div>
+          <div class="kpi-sub">Largest single supplier by far</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-num">4.6M</div>
+          <div class="kpi-label">Barrels/Day — CA to US</div>
+          <div class="kpi-sub">PADD 2 refinery throughput</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-num">1.5M</div>
+          <div class="kpi-label">US Homes Powered by ON Electricity</div>
+          <div class="kpi-sub">Ontario grid exports to MI, MN, NY</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">Energy Value Chain: Canada to US</div>
+          <table class="est-table">
+            <tr><th>Product</th><th>CA → US Value</th><th>Role in US System</th></tr>
+            <tr><td style="font-weight:600;">Crude Petroleum (WCS, WTI-blended)</td><td>$101B</td><td>Primary PADD 2 feedstock; no near substitute</td></tr>
+            <tr><td style="font-weight:600;">Refined Petroleum Products</td><td>$12.5B</td><td>Gasoline, diesel, jet fuel into US Northeast</td></tr>
+            <tr><td style="font-weight:600;">Natural Gas</td><td>~$8B</td><td>Grid balancing in Midwest and Northeast</td></tr>
+            <tr><td style="font-weight:600;">Electricity (Hydro)</td><td>~$2B</td><td>Baseload for NY, New England, Midwest</td></tr>
+            <tr><td style="font-weight:600;">Coal / Other</td><td>~$2B</td><td>Thermal generation and metallurgy</td></tr>
+          </table>
+          <div class="info-box" style="margin-top:1rem;">
+            <p><strong>PADD 2 lock-in:</strong> US Midwest refineries (Illinois, Michigan, Ohio, Minnesota) process Canadian heavy crude at a discount to WTI. Switching to light crude would require billions in refinery investment. The trade is structural, not strategic — it exists because the infrastructure was built around it.</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">US Energy Exports to Canada (2024)</div>
+          <p style="font-size:13px; color:var(--text-secondary); margin-bottom:1rem; line-height:1.6;">Despite being an energy exporter, Canada imports $28.1B in US energy — primarily refined products for Ontario and Quebec (which lack heavy refining capacity) and natural gas for eastern Canadian markets.</p>
+          <table class="est-table">
+            <tr><th>Product</th><th>US → CA Value</th><th>Rationale</th></tr>
+            <tr><td>Refined Petroleum</td><td>~$14B</td><td>Eastern Canada relies on US Gulf Coast refining</td></tr>
+            <tr><td>Natural Gas</td><td>~$8B</td><td>Ontario and Quebec import US Appalachian gas</td></tr>
+            <tr><td>Electricity</td><td>~$2B</td><td>Pacific Northwest and Northeast grid flows</td></tr>
+            <tr><td>Other Energy</td><td>~$4B</td><td>LPG, coal, petrochemical feedstocks</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div>
+      <div class="section-label" style="color:var(--success);">Sector 03 — Agriculture</div>
+      <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:400; margin-bottom:0.75rem; color:var(--text-primary);">A Deep, Bidirectional Intra-Industry Trade Relationship</h3>
+      <p style="font-size:14px; color:var(--text-secondary); line-height:1.7; margin-bottom:1.5rem; max-width:720px;">US–Canada agricultural trade reached $70+ billion in 2024 combined ($29.5B US→CA; $40B+ CA→US). Both countries export and import within the same sectors — the relationship is defined by intra-industry specialization, not simple comparative advantage.</p>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">Top Canadian Agricultural Exports to US</div>
+          <table class="est-table">
+            <tr><th>Product</th><th>Approx Value</th><th>Value Chain Role</th></tr>
+            <tr><td>Canola oil &amp; meal</td><td>~$5.5B</td><td>US food processing, biofuel input</td></tr>
+            <tr><td>Beef &amp; beef products</td><td>~$4.8B</td><td>US retail and restaurant supply</td></tr>
+            <tr><td>Pork &amp; pork products</td><td>~$3.2B</td><td>Feeds US processing and export</td></tr>
+            <tr><td>Fresh vegetables</td><td>~$2.8B</td><td>Seasonal complement to US production</td></tr>
+            <tr><td>Baked goods / cereals</td><td>~$2.5B</td><td>Branded consumer products</td></tr>
+            <tr><td>Potatoes &amp; processed</td><td>~$2.0B</td><td>Frozen fries (McCain) for US food service</td></tr>
+            <tr><td>Maple products &amp; honey</td><td>~$0.7B</td><td>Specialty retail, ingredient supply</td></tr>
+            <tr><td>Fish &amp; seafood</td><td>~$3.5B</td><td>Atlantic lobster, salmon, crab</td></tr>
+          </table>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Top US Agricultural Exports to Canada</div>
+          <table class="est-table">
+            <tr><th>Product</th><th>Approx Value</th><th>Value Chain Role</th></tr>
+            <tr><td>Baked goods &amp; cereals</td><td>~$4.2B</td><td>Branded US products dominate CA retail</td></tr>
+            <tr><td>Fresh &amp; frozen vegetables</td><td>~$3.5B</td><td>California winter produce into Canada</td></tr>
+            <tr><td>Fresh fruit</td><td>~$2.8B</td><td>Florida citrus, California stone fruit</td></tr>
+            <tr><td>Non-alcoholic beverages</td><td>~$2.5B</td><td>US branded soft drinks, juices</td></tr>
+            <tr><td>Ethanol (non-beverage)</td><td>~$2.1B</td><td>Canadian fuel blending mandates</td></tr>
+            <tr><td>Pet food</td><td>~$1.8B</td><td>US brands dominant in CA market</td></tr>
+            <tr><td>Chocolate &amp; cocoa</td><td>~$1.6B</td><td>Branded US confectionery</td></tr>
+            <tr><td>Pork products</td><td>~$1.4B</td><td>Cross-border processing cycle</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="success-box" style="margin-top:1.5rem;">
+        <p>The intra-industry pattern is sharpest in pork: the US exports pork cuts to Canada for processing and re-imports Canadian-processed products. Similar cycles operate in beef, fresh produce, and cereals — meaning bilateral agricultural trade is not competitive but <strong>complementary within integrated North American food supply chains</strong>. CAGR since 1988: US agricultural exports +7.7%, Canadian agricultural exports +8.1% — the most sustained bilateral growth of any sector pair.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== TAB 8: GEOPOLITICS ======== -->
+  <div id="geopolitics" class="tab-content">
+    <div class="section-label">Geopolitics, Agreements &amp; Outlook</div>
+    <div class="section-title">From NAFTA to USMCA — and Now Under Stress</div>
+    <p class="section-sub">The 35-year edifice of rule-based Canada–US trade integration is undergoing its most severe stress test since the Auto Pact. The 2025 tariff escalation has not yet unwound the underlying supply chain architecture — but it is restructuring pricing, investment decisions, and political relationships.</p>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">Trade Agreement Architecture</div>
+        <table class="est-table">
+          <tr><th>Agreement</th><th>In Force</th><th>Key Provision</th></tr>
+          <tr><td style="font-weight:600;">Canada–US Auto Pact</td><td>1965</td><td>Duty-free auto/parts trade; seeded Michigan–Ontario integration</td></tr>
+          <tr><td style="font-weight:600;">CUSTA</td><td>1989</td><td>Full bilateral tariff elimination; launched agri CAGR surge</td></tr>
+          <tr><td style="font-weight:600;">NAFTA</td><td>1994</td><td>Trilateral; added Mexico; 60% regional content for autos</td></tr>
+          <tr><td style="font-weight:600;">USMCA (CUSMA)</td><td>2020</td><td>75% automotive content; IP, digital trade, dairy TRQs</td></tr>
+          <tr><td style="font-weight:600;">USMCA Review</td><td>July 2026</td><td>First scheduled review; high uncertainty under current tensions</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">USMCA vs NAFTA: Key Changes</div>
+        <table class="est-table">
+          <tr><th>Dimension</th><th>NAFTA</th><th>USMCA</th></tr>
+          <tr><td>Auto Regional Content</td><td>60%</td><td>75% — drives reshoring pressure</td></tr>
+          <tr><td>Steel/Aluminum in Autos</td><td>No requirement</td><td>70% North American sourcing</td></tr>
+          <tr><td>Digital Trade</td><td>No chapter</td><td>Full e-commerce chapter</td></tr>
+          <tr><td>IP Term</td><td>50 yr post-death</td><td>70 yr post-death</td></tr>
+          <tr><td>Dairy Access (US→CA)</td><td>Limited TRQs</td><td>14 new US-specific TRQs</td></tr>
+          <tr><td>Sunset Clause</td><td>None</td><td>16-yr term; 6-yr joint review</td></tr>
+          <tr><td>State-Owned Enterprise</td><td>Limited rules</td><td>Stronger anti-subsidy rules</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:1rem;">2025 Tariff Escalation — The Current Crisis</div>
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div>
+        <div class="corridor-card" style="border-left:3px solid var(--warning);">
+          <div class="corridor-title" style="color:var(--warning);">US Actions (2025)</div>
+          <div class="corridor-desc">President Trump imposed 25% tariffs on most Canadian goods in early 2025. Additional sector-specific tariffs on steel and aluminum (25%) and automobiles were layered on. The IEEPA authority used to impose these tariffs is legally contested. USMCA-compliant goods receive partial exemptions — but "compliant" determination is complex for integrated supply chains where compliance was never tracked.</div>
+        </div>
+        <div class="corridor-card" style="border-left:3px solid var(--blue);">
+          <div class="corridor-title" style="color:var(--blue);">Canadian Retaliation</div>
+          <div class="corridor-desc">Canada responded with tariffs targeting politically sensitive US goods: orange juice (Florida), steel and aluminum products, agricultural goods. The retaliatory schedule was calibrated to maximize political pain in swing states. Counter-tariffs of 25% were applied to approximately $125 billion in US goods. Canadian provinces also threatened sub-federal retaliatory measures.</div>
+        </div>
+      </div>
+      <div>
+        <div class="corridor-card" style="border-left:3px solid var(--accent);">
+          <div class="corridor-title">Automotive Sector Impact</div>
+          <div class="corridor-desc">For vehicles crossing the border 6 times before completion, each crossing incurs the tariff — a compounding effect that dramatically alters assembly economics. Analysts estimate tariffs add $5,000–$15,000 per vehicle in production cost. OEMs face binary choices: absorb costs, raise prices, or restructure supply chains. The 5–10 year investment horizon for supply chain restructuring means short-term disruption is inevitable regardless of tariff outcome.</div>
+        </div>
+        <div class="corridor-card" style="border-left:3px solid var(--success);">
+          <div class="corridor-title">Energy Sector Resilience</div>
+          <div class="corridor-desc">Energy flows have proved most resilient to tariff pressure. Canadian crude WCS-grade oil has no near substitute for PADD 2 refineries in the Midwest — imposing tariffs raises US refinery input costs and gasoline prices. US energy imports from Canada face a 10% tariff vs 25% for goods, reflecting this dependency. Long-term pipeline contracts further insulate energy from trade policy volatility.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:1rem;">Outstanding Disputes &amp; Forward Issues</div>
+    <div class="milestone-grid">
+      <div class="milestone">
+        <div class="milestone-year" style="font-size:16px;">Softwood Lumber</div>
+        <div class="milestone-title">Perennial Dispute Since 1982</div>
+        <div class="milestone-text">Last agreement expired October 2015. US duties of 14–24% on Canadian lumber persist. Canada supplies 38% of US softwood — a tariff-driven shortage translates directly into US housing construction cost inflation.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year" style="font-size:16px;">Supply Management</div>
+        <div class="milestone-title">Dairy, Poultry, Eggs</div>
+        <div class="milestone-text">Canada's supply management system — production limits, controlled prices, import restrictions — is a recurring flashpoint. USMCA's 14 TRQs opened limited access; Trump has flagged this as a continued priority for the 2026 USMCA review.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year" style="font-size:16px;">Digital Services Tax</div>
+        <div class="milestone-title">2024 CRTC Streaming Rules</div>
+        <div class="milestone-text">Canada's requirement that streaming services with $18M+ revenues fund Canadian content (effective August 2025) has drawn US congressional scrutiny as a potential USMCA violation. Affects Netflix, Amazon, Disney+, and Apple TV.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year" style="font-size:16px;">Critical Minerals</div>
+        <div class="milestone-title">Emerging Strategic Tier</div>
+        <div class="milestone-text">Canada holds major reserves of lithium, cobalt, nickel, and rare earths. The US–Canada Critical Minerals Action Plan (2020) and IRA provisions create new incentives for Canadian mineral extraction feeding US EV battery supply chains — a structural growth vector.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year" style="font-size:16px;">EV Battery Chains</div>
+        <div class="milestone-title">$46B Ontario Investment Pipeline</div>
+        <div class="milestone-text">Ontario has attracted $46B+ in EV/battery investments since 2020: PowerCo (VW), NextStar (LG-Stellantis), Umicore CAM. These plants are being built to supply US-bound vehicles under USMCA content rules — the next chapter of Michigan–Ontario integration.</div>
+      </div>
+      <div class="milestone">
+        <div class="milestone-year" style="font-size:16px;">USMCA Review 2026</div>
+        <div class="milestone-title">First Joint Assessment</div>
+        <div class="milestone-text">Scheduled for July 2026 — the first mandatory six-year joint review. Under current tariff tensions, it is the highest-stakes USMCA moment since ratification. All three parties (US, Canada, Mexico) must agree to continue or trigger renegotiation procedures.</div>
+      </div>
+    </div>
+
+    <div class="verdict" style="margin-top:2rem;">
+      <div class="verdict-label">Structural Conclusion</div>
+      <div class="verdict-text">Three decades of supply chain integration cannot be unwound in one administration. The tariff escalation of 2025 raises costs, creates uncertainty, and redirects investment — but the physical infrastructure (pipelines, border crossings, refinery configurations, assembly plant tooling) was built around the assumption of open trade and cannot be redeployed quickly. The real test is not whether tariffs disrupt today's trade, but whether sustained uncertainty causes the next wave of investment to bypass North American integration entirely — tilting new battery, semiconductor, and clean energy supply chains toward domestic US production or alternative geographies. That decision horizon is 2026–2030.</div>
+    </div>
+
+    <div class="info-box" style="margin-top:1.5rem;">
+      <p><strong>Bottom line for both economies:</strong> Canada buys more from American businesses than the UK, France, China, and Japan combined. The US imports 51% of its crude oil from Canada. Neither economy has a credible short-run alternative to the other — which is precisely why bilateral tensions, while disruptive, have historically resolved before they permanently restructure the underlying production system.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  // === OVERVIEW: Composition Donut ===
+  new Chart(document.getElementById('compositionChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['US Goods Exports ($349B)', 'US Goods Imports ($422B)', 'US Services Exports ($90B)', 'US Services Imports ($57B)'],
+      datasets: [{
+        data: [349, 422, 90, 57],
+        backgroundColor: ['#2A6EBB', '#52B788', '#C8923A', '#9B2335'],
+        borderWidth: 2,
+        borderColor: '#FFFFFF'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: $${ctx.parsed}B`
+          }
+        }
+      },
+      cutout: '62%'
+    }
+  });
+
+  // === GROWTH: Line Chart ===
+  const years = ['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'];
+  const usExports = [178,163,161,170,190,211,230,249,261,204,249,281,292,300,312,280,266,282,299,292,256,308,358,349,349];
+  const usImports = [229,218,210,225,256,290,303,318,336,226,277,315,324,332,346,296,278,300,319,319,270,357,437,422,422];
+
+  new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          label: 'US Exports to Canada',
+          data: usExports,
+          borderColor: '#2A6EBB',
+          backgroundColor: 'rgba(42,110,187,0.06)',
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: '#2A6EBB',
+          fill: true,
+          tension: 0.3
+        },
+        {
+          label: 'US Imports from Canada',
+          data: usImports,
+          borderColor: '#52B788',
+          backgroundColor: 'rgba(82,183,136,0.06)',
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: '#52B788',
+          fill: true,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y}B`
+          }
+        },
+        annotation: {
+          annotations: {
+            usmca: {
+              type: 'line',
+              xMin: '2020', xMax: '2020',
+              borderColor: 'rgba(200,146,58,0.5)',
+              borderWidth: 1.5,
+              borderDash: [4, 4],
+              label: { content: 'USMCA', display: true, position: 'start', color: '#C8923A', font: { size: 10 } }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: '#F0F0F0' },
+          ticks: { font: { size: 11 }, color: '#999', maxRotation: 45, autoSkip: false,
+            callback: (val, idx) => ['2000','2004','2008','2009','2014','2019','2020','2022','2024'].includes(years[idx]) ? years[idx] : '' }
+        },
+        y: {
+          grid: { color: '#F0F0F0' },
+          ticks: { font: { size: 11 }, color: '#999', callback: v => '$' + v + 'B' },
+          title: { display: true, text: 'USD Billion', font: { size: 11 }, color: '#999' }
+        }
+      }
+    }
+  });
+
+  // === CA EXPORTS: Custom Bars ===
+  const caExportData = [
+    { label: 'Mineral Fuels & Oils', val: 125.68, color: '#C8923A', pct: 29.8, tag: 'Energy' },
+    { label: 'Vehicles (Cars, Trucks)', val: 50.95, color: '#2A6EBB', pct: 12.1, tag: 'Manuf.' },
+    { label: 'Machinery & Nuclear Reactors', val: 31.14, color: '#2A6EBB', pct: 7.4, tag: 'Manuf.' },
+    { label: 'Commodities NOS', val: 18.96, color: '#888888', pct: 4.5, tag: 'Other' },
+    { label: 'Plastics & Articles', val: 14.04, color: '#52B788', pct: 3.3, tag: 'Industrial' },
+    { label: 'Electrical & Electronic Equip.', val: 13.15, color: '#52B788', pct: 3.1, tag: 'Industrial' },
+    { label: 'Wood & Wood Articles', val: 11.27, color: '#52B788', pct: 2.7, tag: 'Industrial' },
+    { label: 'Aluminum & Aluminum Articles', val: 11.22, color: '#52B788', pct: 2.7, tag: 'Industrial' },
+    { label: 'Pearls, Precious Metals & Coins', val: 8.86, color: '#9B6B2E', pct: 2.1, tag: 'Other' },
+    { label: 'Pharmaceutical Products', val: 8.35, color: '#9B2335', pct: 2.0, tag: 'Health' }
+  ];
+  const caMax = caExportData[0].val;
+  const caContainer = document.getElementById('caExportBars');
+  caExportData.forEach((d, i) => {
+    caContainer.innerHTML += `
+      <div class="bar-row">
+        <div class="bar-label">${i+1}. ${d.label}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(d.val/caMax)*100}%;background:${d.color};"></div></div>
+        <div class="bar-val">$${d.val.toFixed(1)}B</div>
+        <div class="bar-pct">${d.pct}%</div>
+      </div>`;
+  });
+
+  // CA Value Chain Rows
+  const caVCData = [
+    { name: 'Mineral Fuels & Oils', val: '$125.7B', tag: 'Energy', tagColor: 'amber', desc: 'Canada supplies 51% of all US crude oil imports. Alberta\'s heavy WCS-grade crude is purpose-matched to PADD 2 Midwest refineries in Illinois, Michigan, Ohio, and Minnesota. There is no credible short-run substitute — refinery retooling costs billions and takes 5–10 years. Canada also supplies natural gas into US pipeline grids and electricity (Ontario, Quebec, Manitoba) into US state power systems.' },
+    { name: 'Vehicles (Cars, Trucks)', val: '$51.0B', tag: 'Auto', tagColor: 'blue', desc: 'Ontario\'s five OEM plants (Ford, GM, Honda, Stellantis, Toyota) export 80% of their production directly to US consumers. Canadian-built vehicles (1.3M/year) include full-size pickup trucks, SUVs, and minivans — high-value segments. The Michigan–Ontario automotive corridor is the most integrated bilateral manufacturing system in the world, with parts crossing the border 5–7 times before final completion.' },
+    { name: 'Machinery & Nuclear Reactors', val: '$31.1B', tag: 'Industrial', tagColor: 'green', desc: 'Encompasses industrial turbines, power generation equipment, pumps, compressors, and specialized manufacturing machinery. Canadian industrial machinery feeds directly into US manufacturing and energy infrastructure. CANDU reactor components and nuclear plant services are included. Ontario\'s machinery cluster in the Waterloo–Hamilton corridor is closely linked to US industrial buyers in Ohio and Pennsylvania.' },
+    { name: 'Plastics & Articles', val: '$14.0B', tag: 'Industrial', tagColor: 'green', desc: 'Canada exports polymer resins, plastic packaging, and semi-finished plastic articles into US manufacturing supply chains. Canadian plastics benefit from Alberta petrochemical feedstocks (ethane, propane) derived from oil sands processing. The plastics corridor flows bidirectionally — Canada also imports $15.4B from the US — reflecting a specialization-by-grade rather than substitute relationship.' },
+    { name: 'Electrical & Electronic Equip.', val: '$13.2B', tag: 'Industrial', tagColor: 'green', desc: 'Includes electrical switchgear, motors, transformers, and electronic control systems. Quebec and Ontario manufacturers supply components into US utility infrastructure, data center buildouts, and industrial automation. Hydro-Quebec\'s transmission equipment export cluster is particularly significant as US grid modernization drives demand for high-voltage equipment.' },
+    { name: 'Wood & Wood Articles', val: '$11.3B', tag: 'Forestry', tagColor: 'amber', desc: 'Canada supplies 38% of all US softwood lumber imports — the primary framing material for residential construction. Lumber is embedded in the US housing market: a supply shock raises construction costs directly. The ongoing softwood lumber dispute (since 1982) demonstrates how politically sensitive this product category is — and how structurally dependent US homebuilding is on Canadian supply.' },
+    { name: 'Aluminum & Aluminum Articles', val: '$11.2B', tag: 'Industrial', tagColor: 'green', desc: 'Quebec\'s smelters produce primary aluminum using Hydro-Quebec\'s low-cost hydroelectric power — giving Canadian aluminum a significant cost and carbon footprint advantage. This aluminum feeds directly into US automotive lightweighting programs, aerospace structures (Boeing, Lockheed supply chains), and beverage packaging. The US aluminum market would face significant upward price pressure without Canadian supply.' },
+    { name: 'Pearls, Precious Metals & Coins', val: '$8.9B', tag: 'Commodities', tagColor: 'amber', desc: 'Gold and silver refined in Canada flow to US financial markets, jewelry manufacturing, and electronics. Canada\'s precious metals output (Barrick, Kinross, Agnico Eagle mines) is processed at Ontario refineries (Royal Canadian Mint) and directly enters US supply chains. Gold bullion flows between the two countries also reflect financial cross-border investment activity.' },
+    { name: 'Pharmaceutical Products', val: '$8.4B', tag: 'Health', tagColor: 'blue', desc: 'Canada exports branded and generic pharmaceuticals, biologics, and active pharmaceutical ingredients into the US market. Ontario and Quebec host significant pharmaceutical manufacturing (Apotex, Bausch Health) oriented toward US pharmacy channels. Canada also re-exports globally sourced pharma products through its distribution network. US–Canada pharmaceutical pricing arbitrage is a long-standing bilateral policy tension.' }
+  ];
+  const vcContainer = document.getElementById('caVCRows');
+  caVCData.forEach(d => {
+    const tagClass = `tag-${d.tagColor}`;
+    vcContainer.innerHTML += `
+      <div class="vc-row">
+        <div><div class="vc-name">${d.name}</div><span class="tag ${tagClass}" style="margin-top:4px; display:inline-block;">${d.tag}</span></div>
+        <div class="vc-desc">${d.desc}</div>
+        <div class="vc-val">${d.val}</div>
+      </div>`;
+  });
+
+  // === US EXPORTS: Custom Bars ===
+  const usExportProductData = [
+    { label: 'Vehicles (Cars, Trucks)', val: 56.6, color: '#2A6EBB', pct: 16.2 },
+    { label: 'Machinery, Nuclear Reactors & Boilers', val: 53.2, color: '#2A6EBB', pct: 15.2 },
+    { label: 'Electrical Machinery & Equipment', val: 29.6, color: '#2A6EBB', pct: 8.5 },
+    { label: 'Agricultural Products (all)', val: 29.5, color: '#52B788', pct: 8.5 },
+    { label: 'Mineral Fuel & Oil', val: 28.1, color: '#C8923A', pct: 8.0 },
+    { label: 'Plastics & Articles', val: 15.4, color: '#9B2335', pct: 4.4 },
+    { label: 'Pharmaceutical Products', val: 12.0, color: '#9B2335', pct: 3.4 },
+    { label: 'Aircraft, Spacecraft & Parts', val: 8.0, color: '#9B2335', pct: 2.3 },
+    { label: 'Iron & Steel', val: 6.5, color: '#9B2335', pct: 1.9 },
+    { label: 'Organic Chemicals', val: 5.5, color: '#9B2335', pct: 1.6 }
+  ];
+  const usMax = usExportProductData[0].val;
+  const usContainer = document.getElementById('usExportBars');
+  usExportProductData.forEach((d, i) => {
+    usContainer.innerHTML += `
+      <div class="bar-row">
+        <div class="bar-label">${i+1}. ${d.label}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(d.val/usMax)*100}%;background:${d.color};"></div></div>
+        <div class="bar-val">$${d.val.toFixed(1)}B</div>
+        <div class="bar-pct">${d.pct}%</div>
+      </div>`;
+  });
+
+  // US Value Chain Rows
+  const usVCData = [
+    { name: 'Vehicles (Cars, Trucks)', val: '$56.6B', tag: 'Auto', tagColor: 'blue', desc: 'The US is Canada\'s largest vehicle supplier. American cars, delivery trucks, and pickup trucks feed Canada\'s $1.5M+ annual auto market. This mirrors the Canadian-to-US flow — both nations export assembled vehicles to each other — reflecting a market where brand relationships and model specialization determine bilateral flows more than comparative advantage.' },
+    { name: 'Machinery, Boilers & Reactors', val: '$53.2B', tag: 'Industrial', tagColor: 'green', desc: 'US-manufactured industrial machinery, turbines, pumps, and power equipment flow into Canadian manufacturing, energy extraction, and construction sectors. Alberta\'s oil sands operations are major buyers of US specialized mining and processing equipment. Canadian agriculture relies heavily on US-manufactured tractors and harvesting equipment. This is the largest single US export category to Canada by HS section.' },
+    { name: 'Electrical Machinery & Equipment', val: '$29.6B', tag: 'Industrial', tagColor: 'green', desc: 'US-manufactured semiconductors, integrated circuits, telecom equipment, and industrial electronics are essential inputs into Canadian manufacturing, finance, and technology sectors. Silicon Valley firms supply Canadian banks, telecoms, and manufacturers with hardware and embedded systems. This category also includes US-origin data center infrastructure serving Canada\'s growing cloud computing sector.' },
+    { name: 'Agricultural Products', val: '$29.5B', tag: 'Agri', tagColor: 'green', desc: 'Canada is the largest single market for US agricultural exports — absorbing 16.7% of all US agri-exports. Key products include baked goods and cereals (US brands dominant in Canadian grocery), fresh California and Florida produce (seasonal), ethanol (meeting Canadian blending mandates), and pet food. CAGR since 1988: +7.7% — the most sustained trade growth of any bilateral category.' },
+    { name: 'Mineral Fuel & Oil', val: '$28.1B', tag: 'Energy', tagColor: 'amber', desc: 'Despite being a net energy exporter, Canada imports $28.1B in US refined petroleum products. Eastern Canadian markets (Ontario, Quebec, Atlantic provinces) rely on US Gulf Coast refineries for gasoline, diesel, and jet fuel. New Brunswick\'s Irving Oil is the exception — Canada\'s largest refinery — but it refines imported crude and re-exports to the US Northeast, creating a refinery trade loop.' },
+    { name: 'Plastics & Articles', val: '$15.4B', tag: 'Industrial', tagColor: 'green', desc: 'US polymer resins from Texas and Gulf Coast petrochemical clusters feed Canadian plastic manufacturers. Specialty plastics for automotive (instrument panels, bumpers, seals) move from Ohio and Michigan suppliers into Ontario auto assembly. The bidirectional plastic trade ($14B CA→US, $15.4B US→CA) reflects complementary grade-level specialization rather than competitive substitution.' },
+    { name: 'Pharmaceutical Products', val: '$12.0B', tag: 'Health', tagColor: 'blue', desc: 'US pharmaceutical giants (Pfizer, J&J, Merck, Eli Lilly) supply branded drugs and biologics into Canada\'s public drug benefit programs and private insurance channels. US pharmaceutical pricing — significantly higher than in Canada — creates arbitrage pressure that has been a recurring US-Canada political tension. The US also supplies active pharmaceutical ingredients (APIs) to Canadian generics manufacturers.' },
+    { name: 'Aircraft, Spacecraft & Parts', val: '$8.0B', tag: 'Aerospace', tagColor: 'blue', desc: 'Boeing and US aerospace primes export completed aircraft and aircraft components into Canada\'s commercial aviation sector. Air Canada and WestJet are significant Boeing and Airbus customers — a bilateral aerospace relationship where Canada\'s own Bombardier (now Airbus) competes in regional jets while relying on US suppliers for avionics, engines (GE, P&W), and structures.' }
+  ];
+  const usVCContainer = document.getElementById('usVCRows');
+  usVCData.forEach(d => {
+    const tagClass = `tag-${d.tagColor}`;
+    usVCContainer.innerHTML += `
+      <div class="vc-row">
+        <div><div class="vc-name">${d.name}</div><span class="tag ${tagClass}" style="margin-top:4px; display:inline-block;">${d.tag}</span></div>
+        <div class="vc-desc">${d.desc}</div>
+        <div class="vc-val">${d.val}</div>
+      </div>`;
+  });
+
+  // === CONCENTRATION: Donut Charts ===
+  const mkDonut = (id, data, colors) => {
+    new Chart(document.getElementById(id), {
+      type: 'doughnut',
+      data: {
+        labels: data.map(d => d.l),
+        datasets: [{ data: data.map(d => d.v), backgroundColor: colors, borderWidth: 2, borderColor: '#FFFFFF' }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
+        },
+        cutout: '60%'
+      }
+    });
+  };
+  mkDonut('caExportPartners',
+    [{l:'US',v:75.9},{l:'China',v:4.8},{l:'UK',v:2.1},{l:'Japan',v:1.8},{l:'EU',v:3.5},{l:'Mexico',v:1.2},{l:'Other',v:10.7}],
+    ['#C8923A','#2A6EBB','#52B788','#9B2335','#6B5B95','#E8A44B','#CCCCCC']
+  );
+  mkDonut('caImportPartners',
+    [{l:'US',v:62.2},{l:'China',v:11.5},{l:'Mexico',v:4.5},{l:'Germany',v:2.1},{l:'UK',v:1.8},{l:'Japan',v:1.6},{l:'Other',v:16.3}],
+    ['#C8923A','#2A6EBB','#52B788','#9B2335','#6B5B95','#E8A44B','#CCCCCC']
+  );
+  mkDonut('usExportPartners',
+    [{l:'Canada',v:16.8},{l:'Mexico',v:15.7},{l:'China',v:7.0},{l:'UK',v:4.5},{l:'Japan',v:3.2},{l:'Germany',v:3.2},{l:'Other',v:49.6}],
+    ['#C8923A','#2A6EBB','#52B788','#9B2335','#6B5B95','#E8A44B','#CCCCCC']
+  );
+  mkDonut('usImportPartners',
+    [{l:'Mexico',v:15.5},{l:'Canada',v:13.5},{l:'China',v:13.5},{l:'Germany',v:4.6},{l:'Japan',v:4.5},{l:'Vietnam',v:3.5},{l:'Other',v:44.9}],
+    ['#C8923A','#2A6EBB','#52B788','#9B2335','#6B5B95','#E8A44B','#CCCCCC']
+  );
+});
+</script>
+</body>
+</html>
