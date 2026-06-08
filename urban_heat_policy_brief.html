@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heat as a Grid Emergency — Policy Brief</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --primary: #FFFFFF;
+  --secondary: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --success: #52B788;
+  --warning: #9B2335;
+  --lahore: #C8311A;
+  --karachi: #1A5FA5;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:#FFFFFF;color:#2D2D2D;line-height:1.7;font-size:15px}
+.container{max-width:1080px;margin:0 auto;padding:0 2rem}
+
+/* MASTHEAD */
+.masthead{border-bottom:3px solid var(--text-primary);padding:3rem 0 2rem;margin-bottom:0}
+.masthead-meta{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:1rem}
+.masthead-title{font-family:Georgia,serif;font-size:38px;font-weight:400;color:var(--text-primary);line-height:1.15;margin-bottom:1rem;max-width:820px}
+.masthead-sub{font-family:Georgia,serif;font-size:18px;font-weight:400;color:var(--text-secondary);line-height:1.4;max-width:740px;margin-bottom:2rem}
+.masthead-byline{display:flex;gap:2.5rem;flex-wrap:wrap;font-size:13px;color:var(--text-secondary)}
+.masthead-byline span{color:var(--text-primary);font-weight:500}
+
+/* NAVIGATION */
+.toc-bar{background:var(--secondary);border-bottom:1px solid var(--border);padding:0;position:sticky;top:0;z-index:100}
+.toc-inner{display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.toc-inner::-webkit-scrollbar{display:none}
+.toc-link{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-tertiary);text-decoration:none;padding:0.875rem 1.25rem;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s}
+.toc-link:hover{color:var(--text-primary);border-bottom-color:var(--text-primary)}
+
+/* KPI STRIP */
+.kpi-strip{padding:2.5rem 0;border-bottom:1px solid var(--border)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--border)}
+.kpi-cell{background:#fff;padding:1.5rem 1.25rem}
+.kpi-num{font-family:Georgia,serif;font-size:32px;font-weight:400;color:var(--text-primary);line-height:1}
+.kpi-lbl{font-size:12px;color:var(--text-secondary);margin-top:0.6rem;line-height:1.5}
+.kpi-src{font-size:11px;color:var(--text-tertiary);margin-top:0.3rem}
+.kpi-lahore .kpi-num{color:var(--lahore)}
+.kpi-karachi .kpi-num{color:var(--karachi)}
+.kpi-amber .kpi-num{color:var(--accent)}
+
+/* EXECUTIVE SUMMARY */
+.exec-summary{padding:3rem 0;border-bottom:1px solid var(--border)}
+.section-label{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:0.75rem}
+.section-title{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--text-primary);margin-bottom:1.5rem;line-height:1.25}
+.exec-body{max-width:820px}
+.exec-body p{margin-bottom:1.25rem;font-size:15px;line-height:1.75;color:#2D2D2D}
+.exec-body p:last-child{margin-bottom:0}
+.quotable{border-left:3px solid var(--accent);padding:1.25rem 1.5rem;margin:2rem 0;font-family:Georgia,serif;font-size:17px;font-weight:400;color:var(--text-primary);line-height:1.5;font-style:italic}
+
+/* SECTION */
+.section{padding:3rem 0;border-bottom:1px solid var(--border)}
+.section-body{max-width:820px}
+.section-body p{margin-bottom:1.25rem;font-size:15px;line-height:1.75;color:#2D2D2D}
+.section-body p:last-child{margin-bottom:0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin:2rem 0}
+
+/* EXHIBITS */
+.exhibit{background:var(--secondary);border:1px solid var(--border);padding:1.75rem;margin:2.5rem 0}
+.exhibit-label{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:0.375rem}
+.exhibit-title{font-family:Georgia,serif;font-size:17px;font-weight:400;color:var(--text-primary);margin-bottom:0.375rem}
+.exhibit-sub{font-size:12px;color:var(--text-secondary);margin-bottom:1.25rem;line-height:1.5}
+.chart-wrap{position:relative;width:100%}
+.exhibit-note{font-size:11px;color:var(--text-tertiary);margin-top:1rem;line-height:1.6;border-top:1px solid var(--border);padding-top:0.75rem}
+.legend-row{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1rem}
+.leg-item{display:flex;align-items:center;gap:0.4rem;font-size:12px;color:var(--text-secondary)}
+.leg-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* INSIGHT BOXES */
+.insight-box{background:#fff;border:1px solid var(--border);border-top:3px solid var(--success);padding:1.5rem}
+.insight-box.amber{border-top-color:var(--accent)}
+.insight-box.red{border-top-color:var(--warning)}
+.insight-box.lahore{border-top-color:var(--lahore)}
+.insight-box.karachi{border-top-color:var(--karachi)}
+.insight-num{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--text-primary);line-height:1}
+.insight-text{font-size:12px;color:var(--text-secondary);margin-top:0.625rem;line-height:1.5}
+
+/* STAT TABLE */
+.stat-table{width:100%;border-collapse:collapse;font-size:13px;margin:1.5rem 0}
+.stat-table th{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);text-align:left;padding:0.625rem 0.75rem;border-bottom:2px solid var(--border);background:#fff}
+.stat-table td{padding:0.625rem 0.75rem;border-bottom:1px solid var(--border);color:#2D2D2D;vertical-align:top}
+.stat-table tr:last-child td{border-bottom:none}
+.stat-table tr:hover td{background:var(--secondary)}
+.td-l{color:var(--lahore);font-weight:500}
+.td-k{color:var(--karachi);font-weight:500}
+.td-est{color:var(--text-tertiary);font-style:italic}
+
+/* CALLOUT */
+.callout{background:var(--secondary);border-left:4px solid var(--accent);padding:1.5rem;margin:1.5rem 0}
+.callout.info{border-left-color:var(--karachi)}
+.callout.warning{border-left-color:var(--warning)}
+.callout-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:0.5rem}
+.callout p{font-size:14px;color:#2D2D2D;line-height:1.7}
+
+/* RECOMMENDATIONS */
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);margin:2rem 0}
+.rec-card{background:#fff;padding:1.5rem}
+.rec-num{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text-tertiary);margin-bottom:0.5rem}
+.rec-title{font-family:Georgia,serif;font-size:16px;font-weight:400;color:var(--text-primary);margin-bottom:0.75rem;line-height:1.3}
+.rec-body{font-size:13px;color:var(--text-secondary);line-height:1.65}
+.rec-impact{font-size:12px;font-weight:600;color:var(--success);margin-top:0.75rem}
+.rec-impact.amber{color:var(--accent)}
+.rec-impact.red{color:var(--warning)}
+
+/* METHODOLOGY */
+.method-box{background:var(--secondary);border:1px solid var(--border);padding:1.5rem;margin:1.5rem 0}
+.method-box h4{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem}
+.method-box p,
+.method-box li{font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:0.375rem}
+.method-box ul{padding-left:1.25rem}
+
+/* FOOTER */
+.footer{padding:2.5rem 0;border-top:2px solid var(--text-primary);margin-top:0}
+.footer-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.5rem}
+.footer-left{font-family:Georgia,serif;font-size:16px;color:var(--text-primary)}
+.footer-right{font-size:12px;color:var(--text-tertiary);text-align:right;line-height:1.7}
+
+/* VERDICT */
+.verdict{background:var(--secondary);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.5rem;margin:2rem 0}
+.verdict-label{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:0.5rem}
+.verdict-text{font-size:14px;font-weight:500;color:#2D2D2D;line-height:1.7}
+
+/* DATA FLAGS */
+.flag{display:inline-block;font-size:10px;font-weight:600;padding:2px 6px;border-radius:3px;letter-spacing:0.04em;text-transform:uppercase;vertical-align:middle;margin-left:4px}
+.flag-est{background:#FFF3CD;color:#856404}
+.flag-q{background:#FFE2E2;color:#721c24}
+
+@media(max-width:768px){
+  .two-col,.three-col,.rec-grid{grid-template-columns:1fr}
+  .masthead-title{font-size:28px}
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .exhibit{padding:1.25rem}
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+<div class="container">
+  <div class="masthead-meta">Policy Brief &nbsp;·&nbsp; Power Sector &nbsp;·&nbsp; June 2026</div>
+  <h1 class="masthead-title">Heat as a Grid Emergency: What Pakistan's Electricity Data Tells Us About Urban Thermal Risk</h1>
+  <p class="masthead-sub">A quantitative assessment of heat-driven demand patterns across LESCO and K-Electric — and what 26 months of ISMO operational data reveal about the per-consumer, per-degree electricity burden of a warming country.</p>
+  <div class="masthead-byline">
+    <div>Author &nbsp;<span>Ammar H. Khan</span></div>
+    <div>Data period &nbsp;<span>February 2024 – April 2026</span></div>
+    <div>Source &nbsp;<span>ISMO (CPPA-G) Operational Reports + NEPRA FCA Decisions</span></div>
+  </div>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<nav class="toc-bar">
+<div class="container">
+  <div class="toc-inner">
+    <a class="toc-link" href="#summary">Summary</a>
+    <a class="toc-link" href="#context">The Heat Problem</a>
+    <a class="toc-link" href="#profiles">Load Shapes</a>
+    <a class="toc-link" href="#ke-correction">KE Correction</a>
+    <a class="toc-link" href="#per-consumer">Per-Consumer Burden</a>
+    <a class="toc-link" href="#regression">Temperature Coefficient</a>
+    <a class="toc-link" href="#policy">Policy Levers</a>
+    <a class="toc-link" href="#methodology">Methodology</a>
+  </div>
+</div>
+</nav>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+<div class="container">
+  <div class="kpi-row">
+    <div class="kpi-cell kpi-lahore">
+      <div class="kpi-num">+1,559 MW</div>
+      <div class="kpi-lbl">LESCO heat delta — peak vs non-summer avg</div>
+      <div class="kpi-src">Jun-24 vs Feb–Apr, Oct–Nov 2024 avg</div>
+    </div>
+    <div class="kpi-cell kpi-lahore">
+      <div class="kpi-num">+216 kWh</div>
+      <div class="kpi-lbl">Per LESCO domestic consumer per peak month</div>
+      <div class="kpi-src">5.2 million domestic consumers</div>
+    </div>
+    <div class="kpi-cell kpi-karachi">
+      <div class="kpi-num">+557 MW</div>
+      <div class="kpi-lbl">KE total heat delta <span class="flag flag-est">Est.</span></div>
+      <div class="kpi-src">CPPA + own gen + private; Jun-24 vs non-summer</div>
+    </div>
+    <div class="kpi-cell kpi-karachi">
+      <div class="kpi-num">+125 kWh</div>
+      <div class="kpi-lbl">Per KE domestic consumer per peak month</div>
+      <div class="kpi-src">3.2 million domestic consumers</div>
+    </div>
+    <div class="kpi-cell kpi-amber">
+      <div class="kpi-num">13.9 kWh</div>
+      <div class="kpi-lbl">Marginal electricity per consumer per °C per month</div>
+      <div class="kpi-src">Both cities — OLS regression, 2024 monthly data</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num">47.2°C</div>
+      <div class="kpi-lbl">Karachi peak recorded temperature, Jun 25 2024</div>
+      <div class="kpi-src">Pakistan Met Dept · 568+ deaths in 2024 heatwave</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<section id="summary" class="exec-summary">
+<div class="container">
+  <div class="section-label">Executive Summary</div>
+  <h2 class="section-title">The electricity system has a heat problem that tariff policy pretends does not exist.</h2>
+  <div class="exec-body">
+    <p>Pakistan's two largest urban electricity systems — LESCO serving Lahore and K-Electric serving Karachi — are running at their structural limits during summer. Twenty-six months of ISMO operational data, combined with NEPRA's fuel cost adjustment decisions, allow us to quantify what the grid absorbs during extreme heat and express it in terms that matter for policy: megawatts, consumers, and degrees Celsius.</p>
+    <p>The headline number is 1,559 MW — the difference between LESCO's average demand during the June 2024 heatwave month and its non-summer baseline. That is the energy equivalent of 1.5 Tarbela units running continuously, consumed almost entirely by residential and commercial air conditioning. Expressed per consumer, it translates to 216 additional kWh in a single peak month — roughly doubling the electricity bill for a typical Lahore household compared to February.</p>
+    <p>Karachi's picture is more complex and was, until this analysis, understated. ISMO data captures only what K-Electric purchases from the national grid (CPPA imports), ignoring KE's own gas and coal generation — roughly 1,447 MW in peak summer 2024, from NEPRA's own fuel cost adjustment data. The corrected KE total system demand peaks at approximately 2,651 MW in June 2024, with a heat-driven uplift of 557 MW over baseline. This generates an additional 125 kWh per domestic consumer per peak month.</p>
+    <p>The marginal temperature coefficient — how much additional electricity each degree of heat demands — converges to the same value for both cities: 13.9 kWh per domestic consumer per month per °C. This is not a coincidence. It is the signature of a common AC physics that transcends city, climate zone, and income group. What differs between Lahore and Karachi is not the slope of the heat response but the intercept: Karachi's year-round warmth means consumers draw 4–5 kWh more per day at any given temperature, because air conditioning is a baseline load, not a seasonal surge.</p>
+
+    <div class="quotable">"Pakistan's summers are becoming grid emergencies — not slowly, but in 48-hour heat spikes that expose every planning gap simultaneously: insufficient distribution headroom, absent demand-response signals, and a tariff structure that treats July and January as equivalent."</div>
+
+    <p>The policy response — Time-of-Use tariffs, DSM programs quantified in megawatts rather than aspiration, and a cooling infrastructure investment framework — is technically straightforward. What has been missing is the analytical foundation to force the conversation. This brief provides it.</p>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 1 -->
+<section id="context" class="section">
+<div class="container">
+  <div class="section-label">Section 1</div>
+  <h2 class="section-title">The heat problem is worsening and the grid is absorbing costs it was not designed to carry.</h2>
+  <div class="section-body">
+    <p>In June 2024, temperatures in Karachi reached 47.2°C on June 25 — driving a heatwave that killed 568 people and hospitalised 7,905 across Sindh. In June 2025, Lahore recorded 46°C on June 9, its hottest day in 18 years. These are not statistical anomalies; they are a trend. Pakistan was its ninth warmest year on record in 2024, and July 2024 was the second-hottest July in 64 years of recorded data.</p>
+    <p>The electricity grid absorbs the thermal stress that buildings cannot. Where houses lack insulation, where urban heat islands concentrate in dense low-income settlements, where refrigerative cooling is the only mechanism available — every degree of additional heat becomes a grid problem. The demand surge is not gradual; it arrives within hours as temperatures cross the 40°C threshold and AC units switch from cycling to continuous operation.</p>
+    <p>Pakistan's installed generation capacity of 46.6 GW sounds adequate against a peak demand of roughly 30,000 MW. But capacity numbers hide the distribution problem: not enough power reaches Lahore feeders at the right voltage when LESCO is drawing 4,077 MW on a June midnight. The constraint is not national — it is urban and locational, and it has been getting worse every year that the heat season extends earlier in the calendar.</p>
+    <p>This brief is grounded in the only operational data that captures this reality at hourly resolution: 26 months of ISMO market statistics covering every hour from February 2024 through April 2026. The data is not perfect — May through September 2025 is missing from the CPPA-G public database, and K-Electric's own-generation is not captured in ISMO records. But the available data is sufficient to establish the quantitative case.</p>
+  </div>
+
+  <!-- EXHIBIT 1 -->
+  <div class="exhibit" id="ex1">
+    <div class="exhibit-label">Exhibit 1</div>
+    <div class="exhibit-title">Monthly demand profiles — LESCO (Lahore) and K-Electric (Karachi), 2024</div>
+    <div class="exhibit-sub">Monthly average system demand (MW) · LESCO = 100% CPPA-measured · KE = CPPA + own generation estimate + private suppliers · Grey = non-summer months, coloured = summer</div>
+    <div class="legend-row">
+      <span class="leg-item"><span class="leg-swatch" style="background:#C8311A"></span>LESCO summer (May–Sep 2024)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#f4bfb6"></span>LESCO non-summer</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#1A5FA5"></span>KE total system summer (est.)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#b8d0eb"></span>KE total non-summer (est.)</span>
+    </div>
+    <div class="chart-wrap" style="height:300px"><canvas id="ex1chart" role="img" aria-label="Bar chart of 2024 monthly demand for LESCO and KE showing summer peaks in June">LESCO peaks at 3,817 MW in June 2024 vs 1,942 MW in February. KE total peaks at approximately 2,651 MW in June vs 1,782 MW in February.</canvas></div>
+    <div class="exhibit-note">Data: ISMO market statistics (Marginal Price vs Demand files, Feb–Nov 2024). KE total = CPPA import (ISMO) + own generation estimate (NEPRA FCA Jul-24 = 1,076 GWh/month) + private suppliers (~200 MW). May–Sep 2025 absent from ISMO public database. Jun-24 and Jul-24 LESCO/KE data are identical in source files (known copy-paste anomaly); Jul-24 excluded from analysis.</div>
+  </div>
+
+  <div class="section-body" style="margin-top:0">
+    <p>Two structural facts are immediately visible. First, LESCO's summer-to-winter swing (1,942 MW in February to 3,817 MW in June) is extreme by any standard — a 97% increase driven almost entirely by air conditioning. Second, KE's swing is more muted in absolute terms (1,782 MW to 2,651 MW, a 49% increase) but this understates the heat effect because Karachi consumers use AC year-round and the city's mild winters mask the marginal summer addition.</p>
+    <p>The non-summer months are not neutral either. October 2024 draws 2,850 MW for LESCO — still 47% above February — as the grid transitions out of peak cooling season. And the April 2026 readings (LESCO 2,578 MW, KE CPPA alone at 2,064 MW) show spring demand rising structurally across both territories, likely as heat events push earlier into the calendar year.</p>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 2 -->
+<section id="profiles" class="section">
+<div class="container">
+  <div class="section-label">Section 2</div>
+  <h2 class="section-title">Extreme heat produces a flat-to-inverted load curve. The grid is busiest at midnight, not at noon.</h2>
+  <div class="section-body">
+    <p>The most counter-intuitive finding in the ISMO data is the shape of the load profile during the June 2024 heatwave month. In a normal grid, peak demand tracks the working day — morning ramp, afternoon plateau, evening peak, overnight trough. What the June 2024 LESCO data shows is the opposite: demand peaks at midnight (H00: 4,077 MW) and barely dips to a trough at noon (H11: 3,559 MW). The difference between the highest and lowest hour is just 518 MW — a 13% swing across 24 hours.</p>
+    <p>This is the AC-all-night signature of sustained extreme heat. When outdoor temperatures remain above 38°C at 2 AM, air conditioning units never cycle off. The behavioural response — "set the thermostat and leave it" — turns a diurnal demand pattern into a near-constant block load. Load factor (the ratio of minimum to maximum hourly demand) climbs from 62% in February to 87% in June. The grid that was sized for peaks now must run at peak continuously.</p>
+  </div>
+
+  <!-- EXHIBIT 2 -->
+  <div class="exhibit" id="ex2">
+    <div class="exhibit-label">Exhibit 2</div>
+    <div class="exhibit-title">Hourly load profile: LESCO peak summer (Jun-24) vs winter baseline (Feb-24)</div>
+    <div class="exhibit-sub">Monthly average demand (MW) per hour of day · H00 = midnight · H12 = noon · Shaded band shows heat uplift over baseline</div>
+    <div class="legend-row">
+      <span class="leg-item"><span class="leg-swatch" style="background:#C8311A"></span>LESCO Jun-24 (monthly avg)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#D3D1C7"></span>LESCO Feb-24 (winter baseline)</span>
+    </div>
+    <div class="chart-wrap" style="height:300px"><canvas id="ex2chart" role="img" aria-label="Line chart showing LESCO hourly demand flat and high in June 2024 versus a peaky morning/evening pattern in February">June 2024 is flat at 3,559 to 4,077 MW across all 24 hours. February 2024 shows a clear morning and evening peak pattern ranging from 1,462 to 2,357 MW.</canvas></div>
+    <div class="exhibit-note">Load factor Jun-24: 87% (min 3,559 MW H11 / max 4,077 MW H00). Load factor Feb-24: 62% (min 1,462 MW H03 / max 2,357 MW H18). The shaded fill between lines represents the heat-driven increment — 1,117 MW at minimum (H11), 1,875 MW at maximum (H05).</div>
+  </div>
+
+  <div class="section-body" style="margin-top:0">
+    <p>The equivalent KE picture for Karachi — using CPPA imports alone — tells a similar structural story but at lower absolute levels because KE was meeting two-thirds of its summer 2024 demand from its own generation fleet. The corrected total system profile is addressed in Section 3.</p>
+
+    <div class="two-col">
+      <div class="insight-box lahore">
+        <div class="insight-num">87%</div>
+        <div class="insight-text">LESCO load factor in June 2024 — versus 62% in February. A flat, near-constant demand block is operationally far more costly to supply reliably than a peaked profile.</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">+1,875 MW</div>
+        <div class="insight-text">Maximum heat increment — Jun-24 peak hour vs Feb-24 same hour. Equivalent to the output of two medium-size gas power plants running 24/7, for an entire month.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 3 -->
+<section id="ke-correction" class="section">
+<div class="container">
+  <div class="section-label">Section 3</div>
+  <h2 class="section-title">ISMO data captured one-third of Karachi's summer demand. The corrected picture changes the policy calculus entirely.</h2>
+  <div class="section-body">
+    <p>K-Electric is Pakistan's only vertically integrated utility — it generates its own power, operates its own grid, and purchases the balance from the national CPPA pool. ISMO's market statistics only record the CPPA purchase side. In summer 2024, that was roughly 1,004 MW per hour on average — a number that, in isolation, suggested Karachi was drawing trivially from the national grid compared to Lahore's 3,817 MW.</p>
+    <p>That reading is deeply misleading. NEPRA's fuel cost adjustment decision for July 2024 records 1,076 GWh of KE's own generation dispatched that month — an average of 1,447 MW per hour from KE's gas and coal plants (BQPS-I, BQPS-II, BQPS-III). Adding private supplier capacity of approximately 200 MW, KE's total system demand in peak summer 2024 was approximately 2,651 MW — not 1,004 MW. The CPPA-only reading understated Karachi's heat burden by a factor of 2.6.</p>
+    <p>The supply mix is also shifting structurally. By April 2026, KE's CPPA imports had risen to 2,064 MW on average — nearly double the summer 2024 average — as NTDC interconnection capacity expanded from 1,600 MW toward 2,050 MW and KE substituted costlier own-generation with cheaper national-grid supply. In FY 2023-24, KE's own generation was 42% of total system dispatch; by early 2026 the CPPA share had likely crossed 65%. This transition is commercially rational but introduces new transmission risk on NTDC's southwestern corridors.</p>
+  </div>
+
+  <!-- EXHIBIT 3 -->
+  <div class="exhibit" id="ex3">
+    <div class="exhibit-label">Exhibit 3</div>
+    <div class="exhibit-title">K-Electric total system vs LESCO — Jun-24 hourly profile (corrected)</div>
+    <div class="exhibit-sub">KE shown as stacked area: CPPA import (measured) + own generation (estimated) + private suppliers (estimated). LESCO as line. Dual Y-axis: LESCO left (red), KE right (blue). Monthly average MW per hour.</div>
+    <div class="legend-row">
+      <span class="leg-item"><span class="leg-swatch" style="background:#C8311A"></span>LESCO (measured, 100% CPPA)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#1A5FA5"></span>KE — CPPA import (measured)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#7ab0d8"></span>KE — own generation (~1,447 MW, est.)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#c5dff0"></span>KE — private suppliers (~200 MW, est.)</span>
+    </div>
+    <div class="chart-wrap" style="height:320px"><canvas id="ex3chart" role="img" aria-label="Dual-axis chart showing LESCO at 3500-4000 MW versus KE total stacked at around 2600 MW in June 2024">LESCO peaks at 4,077 MW at midnight. KE total peaks at approximately 2,750 MW with CPPA component of 1,102 MW at 2 AM.</canvas></div>
+    <div class="exhibit-note">KE own generation estimate from NEPRA Provisional FCA for Jul-24 (1,076 GWh own-gen sent out). Private supplier estimate from NEPRA MYT determination for KE FY2023-24 (9.9% of 17,768 GWh total dispatch = ~201 MW annual average). Both KE components are estimates; CPPA data is ISMO-measured.</div>
+  </div>
+
+  <div class="section-body" style="margin-top:0">
+    <table class="stat-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>LESCO Jun-24</th>
+          <th>KE Jun-24</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CPPA import (peak hr)</td>
+          <td class="td-l">4,077 MW (H00)</td>
+          <td class="td-k">1,102 MW (H02)</td>
+          <td>ISMO market statistics</td>
+        </tr>
+        <tr>
+          <td>Own generation</td>
+          <td class="td-est">N/A (pure DISCO)</td>
+          <td class="td-est">~1,447 MW (est.)</td>
+          <td>NEPRA FCA Jul-24</td>
+        </tr>
+        <tr>
+          <td>Private suppliers</td>
+          <td class="td-est">N/A</td>
+          <td class="td-est">~200 MW (est.)</td>
+          <td>NEPRA MYT FY24</td>
+        </tr>
+        <tr>
+          <td><strong>Total system (est. peak)</strong></td>
+          <td class="td-l"><strong>4,077 MW</strong></td>
+          <td class="td-k"><strong>~2,750 MW</strong></td>
+          <td>Composite</td>
+        </tr>
+        <tr>
+          <td>Domestic consumers</td>
+          <td>5.2 million</td>
+          <td>3.2 million</td>
+          <td>NEPRA / Grokipedia / Wikipedia</td>
+        </tr>
+        <tr>
+          <td>Non-summer system avg</td>
+          <td class="td-l">2,258 MW</td>
+          <td class="td-k">~2,094 MW (est.)</td>
+          <td>2024 non-summer months</td>
+        </tr>
+        <tr>
+          <td>Heat delta (peak − avg)</td>
+          <td class="td-l">+1,559 MW</td>
+          <td class="td-k">+557 MW (est.)</td>
+          <td>Derived</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 4 -->
+<section id="per-consumer" class="section">
+<div class="container">
+  <div class="section-label">Section 4</div>
+  <h2 class="section-title">The heat burden per household: 216 kWh in Lahore, 125 kWh in Karachi — a divergence that reflects climate, not comfort.</h2>
+  <div class="section-body">
+    <p>Translating grid megawatts into household kWh is the step most policy documents skip. The arithmetic is straightforward but the implications are not. LESCO's 1,559 MW heat delta, run across 720 hours in a 30-day peak month and distributed over 5.2 million domestic consumers, produces an incremental 216 kWh per household in June versus the non-summer average. At current domestic tariff rates of approximately Rs. 35–50/kWh in the upper slabs, that is Rs. 7,560–10,800 of additional electricity cost in a single month — on top of an already elevated baseline bill.</p>
+    <p>KE's 125 kWh per-consumer heat increment is smaller in absolute terms, but the correct comparison must account for Karachi's structurally higher baseline. The average non-summer KE consumption per domestic consumer is approximately 471 kWh/month (against 313 kWh for LESCO), because Karachi is warm year-round and AC runs even in January. The heat uplift for Karachi (+27% above baseline) is smaller than Lahore's (+69%) not because Karachi is less affected by heat — the 47.2°C June 2024 peak disproves that — but because Lahore households start from a much lower winter base and then spike violently.</p>
+    <p>The implication for affordability is severe. The consumer who reduces consumption in winter to manage bills has nowhere to hide in summer: demand is not discretionary when temperatures are 44°C and dwelling in an unventilated house carries genuine health risk. Pakistan's lifeline and protected consumer categories provide some tariff shielding for sub-200-unit monthly users, but those thresholds are systematically breached in peak summer months even by lower-middle-income households.</p>
+  </div>
+
+  <!-- EXHIBIT 4 -->
+  <div class="exhibit" id="ex4">
+    <div class="exhibit-label">Exhibit 4</div>
+    <div class="exhibit-title">Per domestic consumer heat uplift — peak month vs non-summer average</div>
+    <div class="exhibit-sub">Monthly kWh per consumer split between non-summer baseline (grey) and heat increment (coloured). Peak month = Jun-24. Non-summer avg = Feb, Mar, Apr, Oct, Nov 2024. Energy is at system generation level, pre-T&D losses (~15% lower at consumer meter).</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="ex4chart" role="img" aria-label="Horizontal stacked bar showing LESCO consumer uses 313 kWh baseline plus 216 kWh heat increment equaling 529 kWh. KE consumer uses 471 kWh baseline plus 125 kWh heat increment equaling 596 kWh.">LESCO: 313 kWh baseline + 216 kWh heat uplift = 529 kWh total per consumer in peak month. KE: 471 kWh baseline + 125 kWh heat uplift = 596 kWh total.</canvas></div>
+    <div class="exhibit-note">Consumer count sources: LESCO 5.9M total (Grokipedia, Oct 2025) × 88% domestic = 5.2M. KE 3.7M total (Wikipedia / NEPRA MYT) × 87% domestic = 3.2M. At NEPRA applicable tariff rates (Rs. 35–50/kWh upper slabs), LESCO heat increment = Rs. 7,560–10,800/consumer; KE heat increment = Rs. 4,375–6,250/consumer per peak month.</div>
+  </div>
+
+  <div class="section-body" style="margin-top:0">
+    <div class="three-col">
+      <div class="insight-box lahore">
+        <div class="insight-num">+69%</div>
+        <div class="insight-text">LESCO consumer heat uplift over non-summer avg. Lahore winters are genuinely cold (12°C January mean), so the summer spike is explosive relative to baseline.</div>
+      </div>
+      <div class="insight-box karachi">
+        <div class="insight-num">+27%</div>
+        <div class="insight-text">KE consumer heat uplift. Smaller in percentage terms only because Karachi's baseline already includes year-round cooling — not because the heat is milder.</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">Rs. 9,200</div>
+        <div class="insight-text">Estimated average additional electricity bill for a Lahore domestic consumer in peak summer month (mid-point, Rs. 42.5/kWh × 216 kWh increment).</div>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-label">Affordability pressure</div>
+      <p>Pakistan's lifeline consumer threshold is 200 kWh/month. A typical LESCO domestic consumer averaging 313 kWh in non-summer months is already above protected status. In June, the same household draws 529 kWh — consuming at rates that incur the upper residential slab charges. Heat is not a choice; the tariff structure does not recognise that distinction.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 5 -->
+<section id="regression" class="section">
+<div class="container">
+  <div class="section-label">Section 5</div>
+  <h2 class="section-title">The temperature coefficient: both cities respond at the same rate — 13.9 kWh per consumer per degree per month.</h2>
+  <div class="section-body">
+    <p>Running an OLS regression of monthly average system demand against climatological monthly mean temperatures for 2024 yields a result that is striking for its symmetry. LESCO produces a slope of 100 MW per degree Celsius (R² = 0.86, p = 0.0003 — strongly significant). Normalised to per-consumer terms over a 30-day month, the coefficient is 13.9 kWh per domestic consumer per degree.</p>
+    <p>KE's regression is weaker by conventional measures (R² = 0.41, p = 0.064) — not because the heat response is absent but because Karachi's monthly temperature range is only 10°C (20–31°C) versus Lahore's 21°C swing (15–36°C). When temperature barely varies across months, the regression has little leverage to isolate the signal. But normalising KE's slope to per-consumer terms produces the same number: 13.9 kWh per consumer per °C per month, or 0.46 kWh per consumer per day per °C.</p>
+    <p>This convergence is the most important single finding in this analysis. Two cities with entirely different climates, utility structures, and demand levels arrive at the same marginal AC response per household. The mechanism is universal: a degree of additional heat demands approximately 20–25 minutes of extra runtime from a 1-ton air conditioner. That translates directly to 0.46 kWh regardless of geography. What differs is the intercept — at any given temperature, Karachi consumers draw 4–5 kWh per day more than Lahore consumers, because cooling is a baseline function rather than a seasonal surge in the coastal city.</p>
+  </div>
+
+  <!-- EXHIBIT 5 -->
+  <div class="exhibit" id="ex5">
+    <div class="exhibit-label">Exhibit 5</div>
+    <div class="exhibit-title">Temperature vs per-consumer daily demand — OLS regression, 2024</div>
+    <div class="exhibit-sub">Monthly mean temperature (°C, Pakistan Met Dept climatological normals) vs system demand per domestic consumer (kWh/day). OLS regression lines shown as dashed. Both slopes converge at 0.46 kWh/consumer/day per °C. Parallel lines, different intercepts.</div>
+    <div class="legend-row">
+      <span class="leg-item"><span class="leg-swatch" style="background:#C8311A"></span>LESCO monthly data (circles)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#C8311A;opacity:0.5"></span>LESCO OLS fit (R² = 0.86)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#1A5FA5"></span>KE total est. (triangles)</span>
+      <span class="leg-item"><span class="leg-swatch" style="background:#1A5FA5;opacity:0.5"></span>KE OLS fit (R² = 0.41)</span>
+    </div>
+    <div class="chart-wrap" style="height:360px"><canvas id="ex5chart" role="img" aria-label="Scatter chart with regression lines. LESCO points range from 8 to 18 kWh per consumer per day across 15 to 36 degrees. KE points range from 13 to 20 kWh across 20 to 31 degrees. Both regression lines have the same slope of 0.46.">LESCO R-squared 0.86, highly significant. KE R-squared 0.41, marginal significance. Both slopes 0.46 kWh per consumer per degree per day. KE intercept higher by 4 kWh reflecting year-round baseline AC load.</canvas></div>
+    <div class="exhibit-note">Regression equations: LESCO demand = 0.83 + 0.463 × T kWh/consumer/day (p = 0.0003). KE demand = 4.93 + 0.463 × T kWh/consumer/day (p = 0.064). Temperature = monthly climatological mean (Pakistan Met Dept). LESCO April 2024 residual: −648 MW below fit, reflecting "thermal comfort inertia" — consumers delay switching on AC even as temperatures warm toward the threshold. KE November 2024 residual: +368 MW above fit, reflecting structural increase in CPPA imports unrelated to heat.</div>
+  </div>
+
+  <div class="section-body" style="margin-top:0">
+    <div class="callout info">
+      <div class="callout-label">Interpretation note</div>
+      <p>The April 2024 LESCO outlier — actual demand 648 MW below the regression line — is analytically significant. It demonstrates that demand does not respond linearly to temperature in real time. At 28°C, many households have not yet switched AC units to continuous operation; the behavioural trigger appears to be somewhere between 30°C and 33°C. This implies that a 1°C increase near the 32–35°C range (the threshold zone) produces a larger marginal response than the regression slope suggests — demand is convex in temperature near the thermal stress threshold.</p>
+    </div>
+
+    <table class="stat-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>LESCO (Lahore)</th>
+          <th>KE Total (Karachi)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OLS slope (MW / °C, system)</td>
+          <td class="td-l">100.3 MW/°C</td>
+          <td class="td-k">61.7 MW/°C (est.)</td>
+        </tr>
+        <tr>
+          <td>OLS slope per consumer (kWh/day/°C)</td>
+          <td class="td-l">0.463</td>
+          <td class="td-k">0.463 (est.)</td>
+        </tr>
+        <tr>
+          <td>OLS slope per consumer (kWh/month/°C)</td>
+          <td class="td-l">13.9</td>
+          <td class="td-k">13.9 (est.)</td>
+        </tr>
+        <tr>
+          <td>R² (goodness of fit)</td>
+          <td class="td-l">0.859</td>
+          <td class="td-k">0.407</td>
+        </tr>
+        <tr>
+          <td>p-value</td>
+          <td class="td-l">0.0003</td>
+          <td class="td-k">0.064</td>
+        </tr>
+        <tr>
+          <td>Temperature range in dataset</td>
+          <td>15–36°C (21°C span)</td>
+          <td>20–31°C (10°C span)</td>
+        </tr>
+        <tr>
+          <td>Intercept (kWh/consumer/day)</td>
+          <td>0.83</td>
+          <td class="td-est">4.93 (est.)</td>
+        </tr>
+        <tr>
+          <td>Notable outlier</td>
+          <td>Apr-24 (−648 MW, thermal inertia)</td>
+          <td class="td-est">Nov-24 (+368 MW, structural NTDC shift)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 6 -->
+<section id="policy" class="section">
+<div class="container">
+  <div class="section-label">Section 6</div>
+  <h2 class="section-title">Four interventions — priced, sequenced, and expressed in megawatts rather than aspiration.</h2>
+
+  <div class="rec-grid">
+    <div class="rec-card">
+      <div class="rec-num">Recommendation 01</div>
+      <div class="rec-title">Introduce summer Time-of-Use tariffs for peak night hours</div>
+      <div class="rec-body">Both LESCO and KE show demand peaking at midnight, not noon, during heat months. A summer peak window surcharge of Rs. 8–12/kWh for 10 PM to 2 AM (June–August) would create the first honest price signal for heat-driven consumption. The objective is not revenue — it is to shift pre-cooling, smart AC scheduling, and discretionary loads away from the hours when the grid is most constrained. India's ToU pilots in Maharashtra produced 8–12% peak hour load reduction within two years of rollout.</div>
+      <div class="rec-impact">Target: 200–350 MW peak demand reduction in Year 1</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-num">Recommendation 02</div>
+      <div class="rec-title">Quantify the DSM program in MW, not in households</div>
+      <div class="rec-body">LESCO's 1,559 MW heat delta is operationally equivalent to 1.5 Tarbela units running around the clock for the entire summer. If NEPRA-approved DSM programs — efficient fan replacement, inverter AC subsidies, cool-roof incentives — could shave 20% of this heat delta, that is 312 MW of avoided peak capacity. At standard NEPRA capacity cost benchmarks of Rs. 80,000–120,000/kW, deferring 312 MW of new capacity investment represents Rs. 25–37 billion in avoided cost. The business case exists; the institutional mandate for DSM to quantify itself in these terms does not yet.</div>
+      <div class="rec-impact amber">Target: 300–400 MW demand reduction from efficiency programs over 3 years</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-num">Recommendation 03</div>
+      <div class="rec-title">Mandate heat-season transmission planning for NTDC southwestern corridor</div>
+      <div class="rec-body">KE's CPPA imports nearly doubled between summer 2024 (~1,004 MW average) and April 2026 (~2,064 MW average) as NTDC interconnection expanded. May–September 2025 ISMO data is absent from the public database — we do not know what KE's peak summer 2025 import looked like at the height of the 46°C June 2025 heat wave in Lahore. NTDC must publish a confirmed peak import record for the Karachi corridor and conduct a heat-season stress test of the 500kV and 220kV links against worst-case KE demand. The current gap in public data is itself a governance failure.</div>
+      <div class="rec-impact red">Risk: NTDC corridor constraint during coincident heatwave in Lahore and Karachi</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-num">Recommendation 04</div>
+      <div class="rec-title">Revise the protected consumer threshold with a heat-season carve-out</div>
+      <div class="rec-body">The 200-unit protected consumer threshold is built for a normal climate that no longer exists in Pakistani summers. A household consuming 200 kWh in February can breach the threshold in June without any change in its economic circumstances — purely because of mandatory cooling loads. A heat-season adjustment that raises the protected consumer threshold to 350 kWh for June, July, and August, or that treats heat-increment consumption at protected rates, would cost the system relatively little in revenue terms while meaningfully protecting lower-income households from tariff shock. NEPRA should commission an affordability analysis using the 0.46 kWh/°C/consumer coefficient as the technical basis for threshold setting.</div>
+      <div class="rec-impact">Revenue cost estimate: [REQUIRES NEPRA CONSUMER DATABASE MODELLING]</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">The forcing close</div>
+    <div class="verdict-text">Pakistan's electricity infrastructure is not designed for the summers it now routinely experiences. The 13.9 kWh-per-consumer-per-degree coefficient documented here will not decrease on its own — urbanisation, rising incomes, and a warming climate ensure it moves only in one direction. The question is whether the planning system runs ahead of the demand curve or continues to discover constraints at 2 AM in June when Lahore hits 47°C and the grid is drawing 4,100 MW at midnight with no room to flex.</div>
+  </div>
+</div>
+</section>
+
+<!-- METHODOLOGY -->
+<section id="methodology" class="section">
+<div class="container">
+  <div class="section-label">Section 7</div>
+  <h2 class="section-title">Methodology and data quality notes</h2>
+
+  <div class="method-box">
+    <h4>Primary data sources</h4>
+    <ul>
+      <li>ISMO (CPPA-G) monthly operational reports: "Marginal Price/Cost vs Demand" files, covering Feb 2024 – Apr 2026 (26 months). Contains hourly LESCO demand, KE CPPA demand, system marginal cost, and generation mix.</li>
+      <li>NEPRA Fuel Cost Adjustment decisions: July 2024 FCA for KE (KE own generation 1,076 GWh/month). KE Multi-Year Tariff determination FY2023-24 (17,768 GWh total KE dispatch: 48% CPPA, 42% own gen, 9.9% private).</li>
+      <li>Climatological monthly mean temperatures: Pakistan Met Dept long-run averages for Lahore and Karachi (stable proxies; actual 2024 monthly means within 1–2°C of normals).</li>
+    </ul>
+  </div>
+
+  <div class="method-box">
+    <h4>Known data quality issues</h4>
+    <ul>
+      <li><strong>Jun-24 / Jul-24 identical:</strong> ISMO source files show identical data for June and July 2024 across LESCO and KE demand sheets — a copy-paste anomaly in the upstream file. Jul-24 is excluded from analysis; Jun-24 is used as the single summer 2024 peak representation.</li>
+      <li><strong>May–Sep 2025 missing:</strong> ISMO public database does not contain these five months. This gap omits the June 2025 Lahore extreme heat event (46°C on June 9 — hottest in 18 years). Analysis is limited to 2024 summer data as the peak heat proxy.</li>
+      <li><strong>KE own generation estimated:</strong> KE own-gen figures (1,447 MW Jun-24) are derived from NEPRA FCA data, not metered directly. Seasonal profile estimated from the known annual average (851 MW from NEPRA MYT) and the July 2024 peak (1,447 MW). Marked [Est.] throughout.</li>
+      <li><strong>Consumer counts:</strong> LESCO 5.9M total (Grokipedia, Oct 2025 AMI procurement document) × 88% = 5.2M domestic. KE 3.7M total (Wikipedia, NEPRA MYT) × 87% = 3.2M domestic. Exact category breakdown unavailable without full NEPRA SoI 2024 consumer census.</li>
+    </ul>
+  </div>
+
+  <div class="method-box">
+    <h4>Regression methodology</h4>
+    <p>OLS regression of monthly average system demand (MW) against monthly climatological mean temperature (°C) for nine 2024 months (Feb, Mar, Apr, May, Jun, Aug, Sep, Oct, Nov). Conversion to per-consumer: slope (MW/°C) × 1,000 kW/MW × 720 hrs/month ÷ domestic consumer count. Per-day equivalent: ÷ 30 days. Jul-24 excluded (duplicate). Energy delta at system generation level; actual consumer meter readings are ~15–16% lower after T&D losses (LESCO 15.92% T&D loss rate per NEPRA PER FY2024-25; KE 14.73%).</p>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+<div class="container">
+  <div class="footer-inner">
+    <div class="footer-left">Heat as a Grid Emergency</div>
+    <div class="footer-right">
+      Data: ISMO (CPPA-G) · NEPRA FCA Decisions · Pakistan Met Dept<br>
+      Analysis period: February 2024 – April 2026<br>
+      Prepared: June 2026
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ─── SHARED COLOURS ───────────────────────────────────────────────────────────
+const LH='#C8311A', LHL='#f4bfb6';
+const KA='#1A5FA5', KAL='#b8d0eb';
+const GR='#D3D1C7';
+const AM='#C8923A';
+
+// ─── EXHIBIT 1: Monthly demand bar chart 2024 ─────────────────────────────────
+(function(){
+  const labels=['Feb-24','Mar-24','Apr-24','May-24','Jun-24','Aug-24','Sep-24','Oct-24','Nov-24'];
+  const lesco= [1942,2076,2341,3492,3817,3653,3549,2850,2079];
+  const ke=    [1782,1894,2086,2419,2651,2662,2619,2264,2444];
+  const isSummer=[false,false,false,true,true,true,true,false,false];
+  const lBg=lesco.map((_,i)=>isSummer[i]?LH:LHL);
+  const kBg=ke.map((_,i)=>isSummer[i]?KA:KAL);
+  new Chart(document.getElementById('ex1chart'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'LESCO',data:lesco,backgroundColor:lBg,borderRadius:3},
+      {label:'KE total (est.)',data:ke,backgroundColor:kBg,borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${Math.round(c.parsed.y).toLocaleString()} MW`}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:11},color:'#666'}},
+        y:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{font:{size:11},color:'#666',callback:v=>Math.round(v/1000*10)/10+'k'},min:0,max:4500,
+          title:{display:true,text:'MW',font:{size:11},color:'#999'}}
+      }
+    }
+  });
+})();
+
+// ─── EXHIBIT 2: LESCO hourly Jun-24 vs Feb-24 ─────────────────────────────────
+(function(){
+  const hrs=['H00','H01','H02','H03','H04','H05','H06','H07','H08','H09','H10','H11','H12','H13','H14','H15','H16','H17','H18','H19','H20','H21','H22','H23'];
+  const jun=[4076.9,4036.2,3970.5,3909.6,3923.4,3863.2,3813.5,3711.3,3639.4,3590.1,3563.8,3559.3,3644,3659.1,3782.5,3885.4,4023.7,3995.8,3764.1,3761.2,3790.6,3736.8,3872.7,4032.1];
+  const feb=[1639.1,1546.9,1496.1,1462.2,1464.8,1613.9,1913.6,2088,2153.9,2083.4,2024.4,2008,2029.1,2002.7,2107.4,2229.6,2291.2,2291.6,2356.5,2174.3,2056.5,1967.1,1862.8,1749.1];
+  new Chart(document.getElementById('ex2chart'),{
+    type:'line',
+    data:{labels:hrs,datasets:[
+      {label:'Jun-24 (peak heat)',data:jun,borderColor:LH,backgroundColor:'rgba(200,49,26,0.08)',fill:true,tension:0.3,borderWidth:2.5,pointRadius:0,pointHoverRadius:4},
+      {label:'Feb-24 (winter baseline)',data:feb,borderColor:GR,backgroundColor:'rgba(211,209,199,0.12)',fill:true,tension:0.3,borderWidth:1.5,pointRadius:0,borderDash:[5,4]}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${Math.round(c.parsed.y).toLocaleString()} MW`}}},
+      scales:{
+        x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10},color:'#666',maxTicksLimit:12}},
+        y:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{font:{size:11},color:'#666',callback:v=>Math.round(v/1000*10)/10+'k'},min:0,max:4800,
+          title:{display:true,text:'MW',font:{size:11},color:'#999'}}
+      }
+    }
+  });
+})();
+
+// ─── EXHIBIT 3: KE stacked vs LESCO dual axis ─────────────────────────────────
+(function(){
+  const hrs=['H00','H01','H02','H03','H04','H05','H06','H07','H08','H09','H10','H11','H12','H13','H14','H15','H16','H17','H18','H19','H20','H21','H22','H23'];
+  const lesco=[4076.9,4036.2,3970.5,3909.6,3923.4,3863.2,3813.5,3711.3,3639.4,3590.1,3563.8,3559.3,3644,3659.1,3782.5,3885.4,4023.7,3995.8,3764.1,3761.2,3790.6,3736.8,3872.7,4032.1];
+  const ke_cppa=[1014.7,1065,1101.5,1053.3,1049.7,1034.2,1008.8,967.8,921.2,985.4,960.6,983.3,951.5,940,1016.9,1015.4,1017.9,1017.5,966.7,993.3,1031.5,1032.8,970,993];
+  const ke_own=Array(24).fill(1447);
+  const ke_prv=Array(24).fill(200);
+  new Chart(document.getElementById('ex3chart'),{
+    type:'line',
+    data:{labels:hrs,datasets:[
+      {label:'LESCO (measured)',data:lesco,borderColor:LH,backgroundColor:'transparent',fill:false,tension:0.3,borderWidth:2.5,pointRadius:0,yAxisID:'yL'},
+      {label:'KE CPPA (measured)',data:ke_cppa,borderColor:KA,backgroundColor:'rgba(26,95,165,0.55)',fill:true,stack:'ke',tension:0.3,borderWidth:2,pointRadius:0,yAxisID:'yK'},
+      {label:'KE own gen (est.)',data:ke_own,borderColor:'#7ab0d8',backgroundColor:'rgba(122,176,216,0.5)',fill:true,stack:'ke',tension:0,borderWidth:1.5,borderDash:[4,3],pointRadius:0,yAxisID:'yK'},
+      {label:'KE private (est.)',data:ke_prv,borderColor:'#c5dff0',backgroundColor:'rgba(197,223,240,0.5)',fill:true,stack:'ke',tension:0,borderWidth:1,pointRadius:0,yAxisID:'yK'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${Math.round(c.parsed.y).toLocaleString()} MW`}}},
+      scales:{
+        x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:10},color:'#666',maxTicksLimit:12}},
+        yL:{position:'left',grid:{color:'rgba(0,0,0,0.06)'},ticks:{font:{size:11},color:LH,callback:v=>Math.round(v/1000*10)/10+'k'},min:0,max:5200,title:{display:true,text:'LESCO (MW)',font:{size:10},color:LH}},
+        yK:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:11},color:KA,callback:v=>Math.round(v)},min:0,max:3200,title:{display:true,text:'KE total (MW)',font:{size:10},color:KA}}
+      }
+    }
+  });
+})();
+
+// ─── EXHIBIT 4: Per-consumer bar chart ────────────────────────────────────────
+(function(){
+  new Chart(document.getElementById('ex4chart'),{
+    type:'bar',
+    data:{
+      labels:['LESCO (Lahore)','K-Electric (Karachi)'],
+      datasets:[
+        {label:'Non-summer avg (kWh/consumer)',data:[313,471],backgroundColor:GR,borderRadius:3,borderSkipped:false},
+        {label:'Heat uplift (kWh/consumer)',data:[216,125],backgroundColor:[LH,KA],borderRadius:3,borderSkipped:false}
+      ]
+    },
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${Math.round(c.parsed.x)} kWh`}}},
+      scales:{
+        x:{stacked:true,grid:{color:'rgba(0,0,0,0.06)'},ticks:{font:{size:11},color:'#666',callback:v=>v+' kWh'},max:750,title:{display:true,text:'kWh per consumer per month',font:{size:11},color:'#999'}},
+        y:{stacked:true,grid:{display:false},ticks:{font:{size:12},color:'#444'}}
+      }
+    }
+  });
+})();
+
+// ─── EXHIBIT 5: Temperature regression scatter ────────────────────────────────
+(function(){
+  const lpts=[
+    {x:15.4,y:8.96,m:'Feb-24'},{x:21.2,y:9.58,m:'Mar-24'},{x:28.0,y:10.80,m:'Apr-24'},
+    {x:33.5,y:16.11,m:'May-24'},{x:35.7,y:17.62,m:'Jun-24'},{x:32.8,y:16.86,m:'Aug-24'},
+    {x:30.6,y:16.38,m:'Sep-24'},{x:25.1,y:13.15,m:'Oct-24'},{x:18.7,y:9.60,m:'Nov-24'}
+  ];
+  const kpts=[
+    {x:20.5,y:13.37,m:'Feb-24'},{x:24.9,y:14.21,m:'Mar-24'},{x:28.4,y:15.65,m:'Apr-24'},
+    {x:30.8,y:18.14,m:'May-24'},{x:30.4,y:19.88,m:'Jun-24'},{x:28.0,y:19.97,m:'Aug-24'},
+    {x:28.2,y:19.64,m:'Sep-24'},{x:27.4,y:16.98,m:'Oct-24'},{x:23.0,y:18.33,m:'Nov-24'}
+  ];
+  const lLine=[{x:13,y:0.831+0.463*13},{x:38,y:0.831+0.463*38}];
+  const kLine=[{x:13,y:4.928+0.463*13},{x:38,y:4.928+0.463*38}];
+  new Chart(document.getElementById('ex5chart'),{
+    type:'scatter',
+    data:{datasets:[
+      {label:'LESCO monthly',data:lpts.map(p=>({x:p.x,y:Math.round(p.y*100)/100,month:p.m})),backgroundColor:LH,pointRadius:7,pointHoverRadius:9,pointStyle:'circle'},
+      {label:'KE total (est.)',data:kpts.map(p=>({x:p.x,y:Math.round(p.y*100)/100,month:p.m})),backgroundColor:KA,pointRadius:7,pointHoverRadius:9,pointStyle:'triangle'},
+      {label:'LESCO OLS',type:'line',data:lLine,borderColor:LH,backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,4],pointRadius:0},
+      {label:'KE OLS',type:'line',data:kLine,borderColor:KA,backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,4],pointRadius:0}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{
+          title:items=>{const r=items[0].raw;return r.month?r.month:items[0].dataset.label+' regression line'},
+          label:items=>{const r=items[0].raw;return r.month?[` Temperature: ${r.x}°C`,` Demand: ${r.y.toFixed(2)} kWh/consumer/day`]:[` Regression`]}
+        }}},
+      scales:{
+        x:{title:{display:true,text:'Monthly mean temperature (°C)',font:{size:11},color:'#999'},grid:{color:'rgba(0,0,0,0.06)'},ticks:{font:{size:11},color:'#666',callback:v=>v+'°C'},min:13,max:38},
+        y:{title:{display:true,text:'System demand / domestic consumers (kWh/day)',font:{size:11},color:'#999'},grid:{color:'rgba(0,0,0,0.06)'},ticks:{font:{size:11},color:'#666',callback:v=>v.toFixed(0)+' kWh'},min:6,max:24}
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
