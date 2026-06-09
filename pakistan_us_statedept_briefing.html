@@ -1,0 +1,2344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan: Strategic & Commercial Briefing — U.S. State Department</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --white: #FFFFFF;
+  --offwhite: #FAFAFA;
+  --border: #E5E5E5;
+  --amber: #C8923A;
+  --amber-light: #F5E6CE;
+  --text: #1A1A1A;
+  --text-sec: #666666;
+  --text-ter: #999999;
+  --green: #52B788;
+  --red: #9B2335;
+  --blue: #2563EB;
+  --blue-light: #EFF6FF;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: var(--white);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 14px;
+}
+a { color: inherit; text-decoration: none; }
+
+/* HEADER */
+.site-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-brand {
+  display: flex;
+  flex-direction: column;
+}
+.header-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-ter);
+  text-transform: uppercase;
+}
+.header-title {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.2;
+}
+.header-meta {
+  text-align: right;
+  font-size: 12px;
+  color: var(--text-ter);
+  line-height: 1.8;
+}
+.header-meta strong {
+  color: var(--amber);
+  font-weight: 600;
+}
+
+/* MAIN NAV */
+.main-nav {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  gap: 0;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.875rem 1.25rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-ter);
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active {
+  color: var(--text);
+  border-bottom-color: var(--amber);
+}
+
+/* CONTENT */
+.page { display: none; }
+.page.active { display: block; }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+/* SECTION */
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-ter);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+.section-subtitle {
+  font-size: 15px;
+  color: var(--text-sec);
+  line-height: 1.7;
+  max-width: 820px;
+  margin-bottom: 2.5rem;
+}
+.divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+/* GRIDS */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+.g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; }
+.g3-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+.g1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; }
+
+/* PANEL */
+.panel {
+  background: var(--offwhite);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+.panel-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-ter);
+  margin-bottom: 1rem;
+}
+.panel-headline {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+/* KPI CARDS */
+.kpi {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.2s;
+}
+.kpi:hover { border-color: var(--amber); }
+.kpi-num {
+  font-family: Georgia, serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.kpi-num.green { color: var(--green); }
+.kpi-num.amber { color: var(--amber); }
+.kpi-num.red { color: var(--red); }
+.kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-ter);
+}
+.kpi-sub {
+  font-size: 12px;
+  color: var(--text-sec);
+  margin-top: 0.3rem;
+}
+
+/* INSIGHT BOX */
+.insight {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--green);
+  background: var(--white);
+  padding: 1.25rem;
+  border-radius: 0 0 6px 6px;
+}
+.insight.amber { border-top-color: var(--amber); }
+.insight.red { border-top-color: var(--red); }
+.insight.blue { border-top-color: var(--blue); }
+.insight-num {
+  font-family: Georgia, serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+}
+.insight-text {
+  font-size: 12px;
+  color: var(--text-sec);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+/* CALLOUT */
+.callout {
+  background: var(--offwhite);
+  border-left: 4px solid var(--amber);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 6px 6px 0;
+  margin: 1.5rem 0;
+}
+.callout.green { border-left-color: var(--green); }
+.callout.red { border-left-color: var(--red); }
+.callout.blue { border-left-color: var(--blue); }
+.callout-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-ter);
+  margin-bottom: 0.4rem;
+}
+.callout p {
+  font-size: 14px;
+  color: #2D2D2D;
+  line-height: 1.7;
+}
+.callout strong { color: var(--text); }
+
+/* TABLE */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.data-table th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-align: left;
+  padding: 0.7rem 0.875rem;
+  border-bottom: 2px solid var(--border);
+  background: var(--white);
+}
+.data-table td {
+  padding: 0.65rem 0.875rem;
+  border-bottom: 1px solid var(--border);
+  color: #2D2D2D;
+  line-height: 1.5;
+}
+.data-table tr:hover td { background: var(--offwhite); }
+.data-table .highlight-row td { background: var(--amber-light); font-weight: 600; }
+
+/* PROGRESS BAR */
+.bar-row { margin-bottom: 1rem; }
+.bar-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-sec);
+  margin-bottom: 0.3rem;
+}
+.bar-track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--amber);
+  transition: width 1s ease;
+}
+.bar-fill.green { background: var(--green); }
+.bar-fill.red { background: var(--red); }
+.bar-fill.blue { background: var(--blue); }
+
+/* TAGS/BADGES */
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  margin: 0 0.2rem 0.2rem 0;
+}
+.tag-green { background: #E8F5EF; color: #2D7A55; }
+.tag-amber { background: #FEF3E2; color: #A0682A; }
+.tag-red { background: #FCE8EA; color: #7A1E2B; }
+.tag-blue { background: var(--blue-light); color: #1E40AF; }
+.tag-gray { background: #F0F0F0; color: #555; }
+
+/* NUMBERED LIST */
+.numbered-list { counter-reset: item; list-style: none; padding: 0; }
+.numbered-list li {
+  counter-increment: item;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #2D2D2D;
+}
+.numbered-list li::before {
+  content: counter(item);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--amber);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+/* QUOTE BLOCK */
+.quote-block {
+  border-left: 3px solid var(--amber);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  font-family: Georgia, serif;
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.7;
+  font-style: italic;
+}
+.quote-source {
+  font-style: normal;
+  font-family: -apple-system, sans-serif;
+  font-size: 11px;
+  color: var(--text-ter);
+  margin-top: 0.5rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* HERO SECTION */
+.hero {
+  background: linear-gradient(135deg, #0A2E1E 0%, #0F3D28 50%, #133322 100%);
+  padding: 3.5rem 0;
+  border-bottom: 3px solid #C8923A;
+}
+.hero .container { padding: 0 2rem; }
+.hero-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #7EC8A0;
+  margin-bottom: 1rem;
+}
+.hero-title {
+  font-family: Georgia, serif;
+  font-size: 42px;
+  font-weight: 400;
+  color: #FFFFFF;
+  line-height: 1.2;
+  max-width: 700px;
+  margin-bottom: 1rem;
+}
+.hero-subtitle {
+  font-size: 16px;
+  color: rgba(255,255,255,0.72);
+  max-width: 620px;
+  line-height: 1.75;
+  margin-bottom: 2rem;
+}
+.hero-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.hero-pill {
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.82);
+  padding: 0.3rem 0.875rem;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* SCENARIO BOX */
+.scenario-box {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.scenario-header {
+  padding: 0.875rem 1.25rem;
+  background: var(--text);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.scenario-header.green { background: var(--green); }
+.scenario-header.amber { background: var(--amber); }
+.scenario-header.red { background: var(--red); }
+.scenario-body { padding: 1.25rem; background: var(--white); }
+.scenario-title {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+.scenario-text { font-size: 13px; color: var(--text-sec); line-height: 1.6; }
+
+/* CHART WRAPPER */
+.chart-wrap {
+  position: relative;
+  height: 280px;
+  margin-top: 1rem;
+}
+.chart-wrap-tall { height: 320px; }
+
+/* TIMELINE */
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.tl-item { position: relative; margin-bottom: 1.5rem; }
+.tl-dot {
+  position: absolute;
+  left: -1.75rem;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--amber);
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px var(--border);
+}
+.tl-dot.green { background: var(--green); }
+.tl-dot.red { background: var(--red); }
+.tl-date {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-ter);
+  margin-bottom: 0.2rem;
+}
+.tl-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+.tl-text { font-size: 13px; color: var(--text-sec); line-height: 1.55; }
+
+/* ICON BOX */
+.icon-row { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+.icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: var(--amber-light);
+  color: var(--amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.icon-box.green { background: #E8F5EF; color: var(--green); }
+.icon-box.red { background: #FCE8EA; color: var(--red); }
+.icon-box.blue { background: var(--blue-light); color: var(--blue); }
+.icon-content { flex: 1; }
+.icon-title { font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; }
+.icon-text { font-size: 12.5px; color: var(--text-sec); line-height: 1.55; }
+
+/* TWO-PANE LAYOUT */
+.two-pane { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; }
+
+/* FOOTER */
+.site-footer {
+  background: var(--offwhite);
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  margin-top: 4rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-ter);
+}
+
+/* COMPARISON BADGE */
+.vs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 12px;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+}
+.vs-up { background: #E8F5EF; color: #2D7A55; }
+.vs-down { background: #FCE8EA; color: #7A1E2B; }
+.vs-neutral { background: #F0F0F0; color: #555; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .g2, .g3, .g4, .g3-1, .g1-2, .two-pane { grid-template-columns: 1fr; }
+  .hero-title { font-size: 28px; }
+  .header-meta { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-eyebrow">U.S. State Department Commercial Briefing</div>
+      <div class="header-title">Pakistan: Economy, Trade & Strategic Opportunity</div>
+    </div>
+    <div class="header-meta">
+      <div>Prepared by <strong>Ammar H. Khan</strong></div>
+      <div>CEO, NCGCL &nbsp;|&nbsp; June 2026</div>
+      <div>45-Minute Briefing — Six Sections</div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN NAV -->
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showPage('overview')">Overview</button>
+    <button class="nav-btn" onclick="showPage('economy')">Economic Structure</button>
+    <button class="nav-btn" onclick="showPage('power')">Power & Energy</button>
+    <button class="nav-btn" onclick="showPage('trade')">US–Pakistan Trade</button>
+    <button class="nav-btn" onclick="showPage('business')">US Business Environment</button>
+    <button class="nav-btn" onclick="showPage('emerging')">Emerging Cooperation</button>
+  </div>
+</nav>
+
+<!-- ==================== PAGE 1: OVERVIEW ==================== -->
+<div id="overview" class="page active">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">Strategic Briefing — U.S. Department of State</div>
+      <h1 class="hero-title">Pakistan at the Inflection Point</h1>
+      <p class="hero-subtitle">A 240-million-person economy with a $373 billion GDP, the world's 5th-largest population, a nuclear-armed strategic partner, and a resource endowment that makes it indispensable to 21st-century critical mineral supply chains — Pakistan is simultaneously the most under-leveraged and most consequential relationship in South Asia for US commercial diplomacy.</p>
+      <div class="hero-pills">
+        <span class="hero-pill">5th Largest Population Globally</span>
+        <span class="hero-pill">$8.7B US Bilateral Trade (2025)</span>
+        <span class="hero-pill">$74B Reko Diq Free Cash Flow</span>
+        <span class="hero-pill">$3.8B IT Exports FY25</span>
+        <span class="hero-pill">July 2025 Trade Agreement</span>
+        <span class="hero-pill">IMF EFF Program Active</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- TOP KPIs -->
+    <div class="section-eyebrow" style="margin-top:0;">Macroeconomic Snapshot — 2025/2026</div>
+    <div class="g4" style="margin-bottom:2.5rem;">
+      <div class="kpi">
+        <div class="kpi-num">$452B</div>
+        <div class="kpi-label">GDP (Nominal 2026)</div>
+        <div class="kpi-sub">$2.17T PPP · 40th globally</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num amber">3.7%</div>
+        <div class="kpi-label">GDP Growth FY26</div>
+        <div class="kpi-sub">Recovering from 2.5% in FY24</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num red">14.5%</div>
+        <div class="kpi-label">Investment / GDP</div>
+        <div class="kpi-sub">Needs 25–27% for middle income</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num green">3.0%</div>
+        <div class="kpi-label">Inflation (CPI 2026)</div>
+        <div class="kpi-sub">Down from 38% peak in 2023</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">$40.8B</div>
+        <div class="kpi-label">Total Merchandise Exports</div>
+        <div class="kpi-sub">Textiles $16.3B · IT $3.8B</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num amber">$31B+</div>
+        <div class="kpi-label">Remittances (2025)</div>
+        <div class="kpi-sub">3rd-largest FX source globally</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num green">$8.7B</div>
+        <div class="kpi-label">US Bilateral Goods Trade</div>
+        <div class="kpi-sub">US = Pakistan's #1 export market</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num red">71%</div>
+        <div class="kpi-label">Debt / GDP</div>
+        <div class="kpi-sub">IMF EFF $7B · 37% primary balance</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- NARRATIVE FRAMING -->
+    <div class="g2">
+      <div>
+        <div class="section-eyebrow">The Structural Argument</div>
+        <h2 class="section-title" style="font-size:24px;">Why Pakistan is at an Inflection Point</h2>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75; margin-bottom:1rem;">Pakistan is a lower-middle-income country that has been structurally trapped at that threshold for thirty years. The trap is self-reinforcing: low investment → low productivity → low exports → fiscal stress → sovereign borrowing crowds out private credit → lower investment. The country has averaged 4.7% annual GDP growth since 1952, but has never sustained the 6–7% growth required to transition income classes.</p>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75; margin-bottom:1rem;">Three things are different in 2025–2026. First, the macroeconomic stabilization is real — inflation has collapsed from 38% to 3%, the policy rate has dropped from 22% to 11%, and IMF program discipline has restored a degree of fiscal credibility. Second, the geopolitical context has shifted: India–Pakistan tensions, the India–US trade crisis, and the Trump administration's strategic recalibration have all elevated Pakistan's commercial significance to Washington. Third, the resource opportunity is now financeable: Reko Diq's $74B in free cash flow over 37 years, Pakistan's critical minerals endowment, and a July 2025 US–Pakistan trade framework all point toward a qualitatively different bilateral commercial relationship.</p>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75;">The question for US commercial diplomats is not whether Pakistan is worth engaging. The question is <em>how</em> — which sectors, which instruments, which institutional mechanisms, and which conditions must be in place for US businesses to operate at scale.</p>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-title">Six Core Tensions Shaping the Engagement Calculus</div>
+          <div style="margin-top:0.5rem;">
+            <div class="icon-row">
+              <div class="icon-box">⚡</div>
+              <div class="icon-content">
+                <div class="icon-title">Energy Cost vs. Industrial Competitiveness</div>
+                <div class="icon-text">Industrial power tariffs at Rs. 50–60/kWh ($0.18/kWh) are among Asia's highest, driven by Rs. 2.5 trillion in annual capacity charges. Manufacturing cannot scale at these costs.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box amber">💰</div>
+              <div class="icon-content">
+                <div class="icon-title">Investment Deficit vs. Savings Mobilization</div>
+                <div class="icon-text">Investment/GDP of 14.5% is a 50-year low. Every peer that achieved middle-income status ran 25–33%. The gap is financed by consumption, remittances, and debt — not productive capital formation.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box red">⚖️</div>
+              <div class="icon-content">
+                <div class="icon-title">Regulatory Unpredictability vs. Capital Attraction</div>
+                <div class="icon-text">Five regime changes in ten years, retroactive taxation, and policy reversals have made Pakistan a high-discount-rate jurisdiction. US businesses systematically under-invest relative to their risk appetite.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box blue">🌐</div>
+              <div class="icon-content">
+                <div class="icon-title">China Dependency vs. Western Alignment</div>
+                <div class="icon-text">CPEC has created deep infrastructure and institutional dependency on China. Pakistan is navigating both — seeking US investment as a balancing force while protecting existing Chinese relationships.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box">🪨</div>
+              <div class="icon-content">
+                <div class="icon-title">Mineral Wealth vs. Extraction Readiness</div>
+                <div class="icon-text">Reko Diq (copper-gold), Thar Coal, lithium deposits in Gilgit-Baltistan, and rare earth elements represent a mineral endowment worth hundreds of billions. Governance, security, and infrastructure are the binding constraints.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box green">💻</div>
+              <div class="icon-content">
+                <div class="icon-title">Digital Talent vs. Structural Enablement</div>
+                <div class="icon-text">Pakistan is the 4th-largest freelance market globally with $3.8B in IT exports growing at 18% YoY. The constraint is not talent — it is tax stability, broadband infrastructure, and banking access for digital workers.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- DASHBOARD ROAD MAP -->
+    <div class="section-eyebrow">Presentation Roadmap — 45-Minute Structure</div>
+    <h2 class="section-title" style="font-size:22px;">How This Briefing Is Organized</h2>
+    <div class="g3" style="margin-top:1rem;">
+      <div class="scenario-box">
+        <div class="scenario-header">Section 1 — 8 Minutes</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Economic Structure</div>
+          <div class="scenario-text">GDP composition, sectoral analysis, investment deficit diagnosis, and the path to middle-income status. Anchored in peer comparisons with Vietnam, India, Indonesia, and Bangladesh.</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header amber">Section 2 — 6 Minutes</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Power & Energy</div>
+          <div class="scenario-text">The circular debt crisis, industrial tariff competitiveness, capacity charge architecture, and the energy affordability imperative for manufacturing-led growth.</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header green">Section 3 — 8 Minutes</div>
+        <div class="scenario-body">
+          <div class="scenario-title">US–Pakistan Trade</div>
+          <div class="scenario-text">Current bilateral flows, the July 2025 trade agreement, Trump administration strategic priorities, tariff dynamics, and the investment-to-trade conversion roadmap.</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header">Section 4 — 8 Minutes</div>
+        <div class="scenario-body">
+          <div class="scenario-title">US Business Environment</div>
+          <div class="scenario-text">ABC's 60+ Fortune 500 presence, regulatory landscape, key friction points, ABC pre-budget proposals, and what needs to change to scale and de-risk American commercial operations.</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header amber">Section 5 — 10 Minutes</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Emerging Cooperation</div>
+          <div class="scenario-text">Digital commerce, critical minerals (Reko Diq deep dive), logistics infrastructure, manufacturing GVC integration, and regional connectivity as the frontier of US–Pakistan economic partnership.</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header green">Section 6 — 5 Minutes</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Policy Recommendations</div>
+          <div class="scenario-text">A prioritized set of commercial diplomacy actions, institutional mechanisms, and sector-specific interventions that the State Department can deploy to deepen and de-risk US–Pakistan commercial engagement.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:2.5rem;">
+      <div class="callout-label">Analyst's Frame</div>
+      <p>The July 2025 US–Pakistan trade agreement — covering energy co-development, tariff reduction on Pakistani textiles, zero-tariff concessions on key US agricultural imports, and mining sector access — represents the most significant bilateral economic instrument since the 2004 Strategic Partnership. The opportunity for US businesses is real. The constraints are institutional, not commercial. This briefing is organized around converting that institutional gap into an actionable diplomatic agenda.</p>
+    </div>
+
+  </div><!-- /container -->
+</div><!-- /overview page -->
+
+
+<!-- ==================== PAGE 2: ECONOMIC STRUCTURE ==================== -->
+<div id="economy" class="page">
+  <div class="container">
+    <div class="section-eyebrow">Section I — Economic Structure</div>
+    <h2 class="section-title">Pakistan's Economy: Composition, Constraints & the Middle-Income Gap</h2>
+    <p class="section-subtitle">A 257-million-person lower-middle-income economy growing at 3.7% — structurally trapped by low investment, inadequate savings mobilization, fiscal dominance, and an export base too narrow to generate the foreign exchange required for industrial upgrading.</p>
+
+    <!-- GDP COMPOSITION ROW -->
+    <div class="g4" style="margin-bottom:2rem;">
+      <div class="insight">
+        <div class="insight-num">$452B</div>
+        <div class="insight-text">Nominal GDP 2026 · $1,901 per capita · 160th globally by per-capita income</div>
+      </div>
+      <div class="insight amber">
+        <div class="insight-num">58.4%</div>
+        <div class="insight-text">Services share of GDP — dominated by wholesale trade, finance, government services, and telecoms</div>
+      </div>
+      <div class="insight">
+        <div class="insight-num">23.4%</div>
+        <div class="insight-text">Agriculture share of GDP — yet employs 37.4% of the labor force, signaling a 14% productivity gap</div>
+      </div>
+      <div class="insight red">
+        <div class="insight-num">18.1%</div>
+        <div class="insight-text">Industry share of GDP (Manufacturing 13.6%) — well below Vietnam (24%), Bangladesh (22%), or Indonesia (40%)</div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <!-- GDP COMPONENTS CHART -->
+      <div class="panel">
+        <div class="panel-title">GDP by Expenditure — Pakistan vs. Peer Economies (% of GDP)</div>
+        <div class="chart-wrap">
+          <canvas id="gdpChart"></canvas>
+        </div>
+      </div>
+      <!-- INVESTMENT COMPARISON -->
+      <div class="panel">
+        <div class="panel-title">Investment / GDP Ratio — Pakistan vs. Peers (2024)</div>
+        <div style="margin-top:0.5rem;">
+          <div class="bar-row">
+            <div class="bar-label-row"><span>Vietnam</span><span>33%</span></div>
+            <div class="bar-track"><div class="bar-fill green" style="width:66%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>Bangladesh</span><span>30%</span></div>
+            <div class="bar-track"><div class="bar-fill green" style="width:60%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>India</span><span>29%</span></div>
+            <div class="bar-track"><div class="bar-fill green" style="width:58%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>Indonesia</span><span>29%</span></div>
+            <div class="bar-track"><div class="bar-fill green" style="width:58%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>Egypt</span><span>18%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:36%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span style="color:var(--red);font-weight:600;">Pakistan (Current)</span><span style="color:var(--red);font-weight:600;">14.5%</span></div>
+            <div class="bar-track"><div class="bar-fill red" style="width:29%"></div></div>
+          </div>
+          <div class="bar-row" style="margin-top:1rem;">
+            <div class="bar-label-row"><span style="color:var(--green);font-weight:600;">Pakistan (Target 2035)</span><span style="color:var(--green);font-weight:600;">25%</span></div>
+            <div class="bar-track"><div class="bar-fill blue" style="width:50%"></div></div>
+          </div>
+        </div>
+        <div class="callout red" style="margin-top:1rem;">
+          <div class="callout-label">Investment Indictment</div>
+          <p><strong>No country has ever achieved middle-income status at a 14% investment/GDP ratio.</strong> The gap between Pakistan's 14.5% and the 25% required is not a financing gap — it is a structural failure of the private credit market, caused by fiscal crowding out and regulatory uncertainty.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SECTOR DEEP DIVE -->
+    <div class="section-eyebrow">Sectoral Analysis</div>
+    <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1.5rem;">Key Sectors Driving Pakistan's Economy</h3>
+
+    <div class="g3">
+      <!-- TEXTILES -->
+      <div class="panel">
+        <div class="panel-title">Textiles & Apparel</div>
+        <div class="panel-headline">$16.3B in exports · 40% of industrial workforce</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin:0.75rem 0;">Pakistan is the world's 4th-largest cotton producer and 3rd-largest cotton yarn exporter. Textiles account for ~57% of total merchandise exports. The sector employs approximately 15 million people directly and 20 million indirectly — making it Pakistan's most consequential industrial engine.</p>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-bottom:0.75rem;">Key subsectors: bed linen ($948M to US), knitwear ($444M), woven garments. The US is Pakistan's single largest export market for textiles (17.5% of total exports). Post-July 2025 agreement, Pakistani textile tariffs are set to decline from 29% to 19%.</p>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="tag tag-green">Competitive Advantage</span>
+          <span class="tag tag-amber">Energy Cost Risk</span>
+          <span class="tag tag-blue">US Deal Beneficiary</span>
+        </div>
+      </div>
+
+      <!-- AGRICULTURE -->
+      <div class="panel">
+        <div class="panel-title">Agriculture & Agro-Processing</div>
+        <div class="panel-headline">23.4% of GDP · $7B in food exports</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin:0.75rem 0;">Pakistan is among the world's top 10 producers of wheat, cotton, sugarcane, mangoes, and onions. Food exports reached $7B in 2025 — the second-largest export category. Yet post-harvest losses of 25–40% deplete roughly $4–6B in exportable value annually due to inadequate cold storage, logistics, and processing infrastructure.</p>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-bottom:0.75rem;">US engagement opportunity: precision agriculture technology, cold chain logistics, food processing equipment, and agri-finance. Crop yield gaps vs. global benchmarks are 40–60% — engineering and agri-tech can unlock this.</p>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="tag tag-green">Massive Yield Gap</span>
+          <span class="tag tag-amber">Value Chain Underdeveloped</span>
+          <span class="tag tag-blue">US Agri-Tech Entry Point</span>
+        </div>
+      </div>
+
+      <!-- IT/TECH -->
+      <div class="panel">
+        <div class="panel-title">Information Technology & Digital Services</div>
+        <div class="panel-headline">$3.8B exports FY25 · 18% YoY growth</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin:0.75rem 0;">Pakistan's IT sector is the fastest-growing foreign exchange earner, now the 3rd-largest after textiles and rice. Monthly IT exports crossed $437M in December 2025 — a historic first. Pakistan is the 4th-largest freelance market globally with 6,000+ registered IT firms operating in 100+ countries.</p>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-bottom:0.75rem;">Government target: $15B IT exports by 2030 (requiring sustained 20%+ CAGR). US firms have extensive outsourcing exposure but limited formal investment presence. Special Technology Zones (STZs) offer tax exemptions and infrastructure support.</p>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="tag tag-green">Fastest Growing Sector</span>
+          <span class="tag tag-amber">Policy Stability Required</span>
+          <span class="tag tag-blue">US Outsourcing Partner</span>
+        </div>
+      </div>
+
+      <!-- ENERGY -->
+      <div class="panel">
+        <div class="panel-title">Energy Sector</div>
+        <div class="panel-headline">$15.1B petroleum import bill · 46,605 MW installed</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin:0.75rem 0;">Pakistan imports $15.1B in petroleum annually — the single largest import category. Installed generation capacity is 46,605 MW against a peak demand of ~32,000 MW. The paradox: surplus capacity yet daily load shedding due to circular debt (estimated Rs. 2.3 trillion) preventing DISCOs from purchasing power.</p>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-bottom:0.75rem;">US engagement: the July 2025 trade deal includes US co-development of Pakistan's offshore and onshore oil/gas reserves. Offshore exploration in the Arabian Sea and Balochistan's hydrocarbon potential are now open to US majors.</p>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="tag tag-red">Circular Debt Crisis</span>
+          <span class="tag tag-amber">$11.3B Import Bill</span>
+          <span class="tag tag-blue">US Energy Deal Active</span>
+        </div>
+      </div>
+
+      <!-- FINANCE -->
+      <div class="panel">
+        <div class="panel-title">Financial Services & Banking</div>
+        <div class="panel-headline">PSX market cap $85B · Banking dominated by 5 banks</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin:0.75rem 0;">Pakistan's banking sector is dominated by five large commercial banks holding 60%+ of assets. Private credit-to-GDP is among Asia's lowest (~17%), with the sector heavily invested in government securities. The Pakistan Stock Exchange (KSE-100) has been one of the world's top-performing indices in 2024–2025 on a USD basis.</p>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-bottom:0.75rem;">US financial sector presence: Citi, MCB (Mastercard partnership), PayPal (limited), and growing fintech activity. Islamic finance is the fastest-growing segment. NCGCL (credit guarantee) and PMIC (SME lending) represent institutional de-risking infrastructure for US investors.</div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="tag tag-amber">Low Private Credit</span>
+          <span class="tag tag-green">PSX Strong Performance</span>
+          <span class="tag tag-blue">Fintech Opportunity</span>
+        </div>
+      </div>
+
+      <!-- MANUFACTURING -->
+      <div class="panel">
+        <div class="panel-title">Manufacturing & Industrial Base</div>
+        <div class="panel-headline">13.6% of GDP · Below potential by design</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin:0.75rem 0;">Pakistan's manufacturing base is narrow and energy-intensive. Major sectors: textiles, sugar, cement, fertilizer, chemicals, pharmaceuticals, and steel. The sector's share of GDP has been declining since the 1990s due to high energy costs, unreliable supply, and import competition.</p>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-bottom:0.75rem;">The structural problem: Pakistan's electricity tariff for industry ($0.18/kWh) is 2–3x that of Bangladesh ($0.08) and Vietnam ($0.07). At these costs, no export-oriented manufacturing is competitive. Resolving the circular debt and energy cost crisis is a precondition for industrial growth.</p>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <span class="tag tag-red">Energy Cost Uncompetitive</span>
+          <span class="tag tag-amber">Supply Chain Potential</span>
+          <span class="tag tag-blue">SEZ Framework Exists</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- THE MIDDLE INCOME GAP -->
+    <div class="section-eyebrow">Middle Income Transition</div>
+    <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">What Pakistan Needs to Do to Cross the Threshold</h3>
+
+    <div class="g3-1">
+      <div>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75; margin-bottom:1rem;">The World Bank's upper-middle-income threshold is approximately $4,465 GNI per capita. Pakistan's current per capita income is $1,901 — meaning the country needs to roughly triple per-capita income to graduate. At 7.5% annual GDP growth with 2% population growth (net per-capita growth of ~5.5%), Pakistan could achieve upper-middle-income status by 2048–2050.</p>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75; margin-bottom:1.5rem;">The challenge is that Pakistan has never sustained 7%+ growth for more than 3–4 consecutive years. The structural requirements are clear: raise investment/GDP from 14.5% to 25%+, expand merchandise exports from $40.8B to $130B+ by 2035, and build a manufacturing base capable of absorbing 5–7 million new workers annually.</p>
+
+        <div class="panel">
+          <div class="panel-title">Required Structural Changes for Middle-Income Transition</div>
+          <table class="data-table" style="margin-top:0.5rem;">
+            <tr>
+              <th>Metric</th>
+              <th>Current (2025)</th>
+              <th>Required (2035)</th>
+            </tr>
+            <tr>
+              <td>Investment / GDP</td>
+              <td style="color:var(--red);">14.5%</td>
+              <td style="color:var(--green);">25–27%</td>
+            </tr>
+            <tr>
+              <td>Tax / GDP Ratio</td>
+              <td style="color:var(--red);">10.5%</td>
+              <td style="color:var(--green);">15–17%</td>
+            </tr>
+            <tr>
+              <td>Exports / GDP</td>
+              <td style="color:var(--red);">9%</td>
+              <td style="color:var(--green);">18–20%</td>
+            </tr>
+            <tr>
+              <td>FDI Inflows ($B/yr)</td>
+              <td style="color:var(--red);">$2.1B</td>
+              <td style="color:var(--green);">$8–10B</td>
+            </tr>
+            <tr>
+              <td>Industry / GDP</td>
+              <td style="color:var(--amber);">18%</td>
+              <td style="color:var(--green);">26–28%</td>
+            </tr>
+            <tr>
+              <td>Fiscal Deficit / GDP</td>
+              <td style="color:var(--amber);">~6%</td>
+              <td style="color:var(--green);">&lt;3%</td>
+            </tr>
+            <tr>
+              <td>Private Credit / GDP</td>
+              <td style="color:var(--red);">~17%</td>
+              <td style="color:var(--green);">35–40%</td>
+            </tr>
+            <tr class="highlight-row">
+              <td>Annual GDP Growth Required</td>
+              <td>3.7% (current)</td>
+              <td>6.5–7.5%</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel" style="margin-bottom:1.5rem;">
+          <div class="panel-title">GDP Growth Scenario Analysis</div>
+          <div class="chart-wrap">
+            <canvas id="growthChart"></canvas>
+          </div>
+        </div>
+        <div class="callout" style="background:var(--amber-light);">
+          <div class="callout-label">The Crowding-Out Mechanism</div>
+          <p>Government borrowing from the commercial banking sector consumed <strong>72% of total bank lending in FY2023</strong>. With the sovereign offering T-bill yields that dwarf risk-adjusted returns on industrial lending, banks have rationally exited private credit. Private credit as a share of GDP is significantly below the regional average — and declining. <strong>Pakistan's banking system is financing the government's consumption deficit with capital that should be building factories.</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- EXTERNAL SECTOR -->
+    <div class="section-eyebrow">Trade & External Sector</div>
+    <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1.5rem;">Pakistan's Export Structure and Import Dependence</h3>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="panel-title">Export Composition (2025 — $40.8B Total)</div>
+        <div class="chart-wrap">
+          <canvas id="exportChart"></canvas>
+        </div>
+        <p style="font-size:12px; color:var(--text-ter); margin-top:0.75rem;">Pakistan's export base is dangerously concentrated in low value-added textile products. IT services ($3.8B) represent the fastest-growing category but are still a relatively small share of total exports.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Import Composition (2025 — $78B Total)</div>
+        <div class="chart-wrap">
+          <canvas id="importChart"></canvas>
+        </div>
+        <p style="font-size:12px; color:var(--text-ter); margin-top:0.75rem;">Petroleum dominates at $15.1B — 19% of the import bill. The July 2025 US deal aims to redirect some of this toward American suppliers, reducing the trade deficit while diversifying energy supply chains.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ==================== PAGE 3: POWER & ENERGY ==================== -->
+<div id="power" class="page">
+  <div class="container">
+    <div class="section-eyebrow">Section II — Power & Energy</div>
+    <h2 class="section-title">Pakistan's Energy Crisis: Circular Debt, Industrial Costs & the Reform Imperative</h2>
+    <p class="section-subtitle">Pakistan's power sector is the single largest structural constraint on industrial competitiveness. With Rs. 2.5 trillion in annual capacity charges, industrial tariffs at $0.18/kWh (2–3x regional peers), and a circular debt stock approaching Rs. 2.5 trillion, the sector has become a fiscal vortex rather than an economic enabler.</p>
+
+    <div class="g4" style="margin-bottom:2rem;">
+      <div class="insight red">
+        <div class="insight-num">₨2.5T</div>
+        <div class="insight-text">Annual capacity charges — paid regardless of actual electricity consumed (up from Rs. 793B in FY2021 — 215% rise in 4 years)</div>
+      </div>
+      <div class="insight amber">
+        <div class="insight-num">46,605 MW</div>
+        <div class="insight-text">Installed generation capacity against peak demand of ~32,000 MW — structural over-procurement driving capacity payment crisis</div>
+      </div>
+      <div class="insight red">
+        <div class="insight-num">$0.18</div>
+        <div class="insight-text">Industrial power tariff per kWh — vs. Bangladesh $0.08, Vietnam $0.07, India $0.09. Pakistan is 2–3x more expensive than export-competing peers</div>
+      </div>
+      <div class="insight">
+        <div class="insight-num">₨2.5T</div>
+        <div class="insight-text">Circular debt stock in transmission system (CPPA-G) — with late-payment interest (LPI) compounding annually at ~17%</div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div>
+        <div class="section-eyebrow" style="margin-bottom:0.5rem;">The Circular Debt Machine</div>
+        <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:400; margin-bottom:1rem;">How Private Power Became Public Debt</h3>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75; margin-bottom:1rem;">Pakistan's power sector crisis is routinely described as a supply problem that became a financing problem. This framing is wrong. The correct sequence: a <strong>contract design problem</strong> — dollar-denominated, return-of-equity-guaranteed IPP agreements signed in the 1990s and 2000s — created sovereign risk that was misclassified as commercial risk, accumulated into a liability stock, and now constrains every macro policy option available.</p>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75; margin-bottom:1rem;">Capacity charges — the guaranteed payments to Independent Power Producers (IPPs) regardless of dispatch — rose from Rs. 793B in FY2021 to Rs. 1.9T in FY2024, a 140% increase against nominal GDP growth of ~57%. Coal and nuclear capacity charges alone grew from 37% to 59% of total capacity charges, creating an FCY-exposed liability structure that Pakistan neither controls nor can hedge.</p>
+        <div class="callout red">
+          <div class="callout-label">The Arithmetic</div>
+          <p>Pakistan's average industrial electricity tariff of <strong>Rs. 50–60/kWh</strong> makes export-oriented manufacturing structurally uncompetitive. A textile mill in Faisalabad pays 2.3x more per kWh than its counterpart in Dhaka. A steel mill pays 2.7x more than in Vietnam. No amount of labor cost advantage, tariff preference, or proximity to port compensates for this differential at scale.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Capacity Charges Growth vs. GDP (Rs. Billion)</div>
+        <div class="chart-wrap">
+          <canvas id="capacityChart"></canvas>
+        </div>
+        <div style="margin-top:1rem;">
+          <div class="bar-row">
+            <div class="bar-label-row"><span>Pakistan Industrial Tariff</span><span style="color:var(--red);">$0.18/kWh</span></div>
+            <div class="bar-track"><div class="bar-fill red" style="width:90%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>India Industrial Average</span><span>$0.09/kWh</span></div>
+            <div class="bar-track"><div class="bar-fill amber" style="width:45%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>Bangladesh</span><span style="color:var(--green);">$0.08/kWh</span></div>
+            <div class="bar-track"><div class="bar-fill green" style="width:40%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>Vietnam</span><span style="color:var(--green);">$0.07/kWh</span></div>
+            <div class="bar-track"><div class="bar-fill green" style="width:35%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>China (industrial avg)</span><span>$0.08/kWh</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:40%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="g3">
+      <div class="panel">
+        <div class="panel-title">Generation Mix (Installed Capacity)</div>
+        <div class="chart-wrap" style="height:220px;">
+          <canvas id="genMixChart"></canvas>
+        </div>
+        <p style="font-size:12px; color:var(--text-ter); margin-top:0.75rem;">Hydro (27%) and RLNG/Gas (25%) dominate. Nuclear (5%) and solar (6%) are growing. The 2025–2030 plan targets 60% renewables in new additions — but without circular debt resolution, no new investment will close.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Reform Prescription — What Must Change</div>
+        <ul class="numbered-list" style="margin-top:0.5rem;">
+          <li><strong>IPP Contract Renegotiation:</strong> Convert remaining dollar-linked capacity payments to PKR, reduce guaranteed ROEs from 15–17% to 12–14%, align with actual dispatch economics.</li>
+          <li><strong>Circular Debt Resolution Vehicle:</strong> Establish a Power Sector Debt Resolution Authority (PSDRA) to consolidate PHPL liabilities, issue 15-year amortization bonds with a dedicated levy.</li>
+          <li><strong>Competitive Procurement:</strong> Replace negotiated capacity contracts with transparent auction-based procurement — NEPRA already has the framework; political will is the constraint.</li>
+          <li><strong>Energy Cross-Subsidy Rationalization:</strong> Phase out general subsidies; target direct income support to vulnerable consumers, not tariff suppression that distorts the entire sector.</li>
+          <li><strong>Renewable Fast-Track:</strong> Solar and wind at $0.025–0.035/kWh landed cost are the fastest path to affordable industrial electricity. Remove grid access barriers and wheeling restrictions.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title">US Commercial Opportunity in Pakistan's Energy Sector</div>
+        <div class="timeline" style="margin-top:0.5rem;">
+          <div class="tl-item">
+            <div class="tl-dot green"></div>
+            <div class="tl-date">July 2025 Trade Deal</div>
+            <div class="tl-title">Offshore Oil & Gas Exploration</div>
+            <div class="tl-text">US firms granted preferential access to co-develop Pakistan's offshore oil reserves (Arabian Sea) and onshore fields in Balochistan. Reduces Pakistan's $15.1B petroleum import bill.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-date">Active Opportunity</div>
+            <div class="tl-title">LNG Supply & Regasification</div>
+            <div class="tl-text">Pakistan's two operating LNG terminals (PGPCL, EETL) import ~750 mmcfd. US LNG (JBIC/EXIM-financed) can compete with Qatari and Emirati supply on spot and term basis.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot amber"></div>
+            <div class="tl-date">2025–2030 Pipeline</div>
+            <div class="tl-title">Utility-Scale Solar & Wind</div>
+            <div class="tl-text">Pakistan targets 60% renewables in new generation additions. US developers (GE Vernova, First Solar) and project finance from EXIM Bank are well-positioned for greenfield solar in Sindh and Punjab.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-date">Near-Term</div>
+            <div class="tl-title">Smart Grid & BESS Technology</div>
+            <div class="tl-text">Distribution utility (DISCO) modernization — smart meters, AI-driven load management, battery storage — represent a $2–3B addressable market over the next decade. US tech companies have a strong advantage here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="callout">
+      <div class="callout-label">Strategic Frame for US Commercial Diplomats</div>
+      <p>Pakistan's energy sector is simultaneously its greatest structural liability and greatest commercial opportunity for US businesses. The July 2025 trade deal explicitly unlocks US participation in oil and gas development — but the bigger prize is the power sector reform dividend. <strong>Every percentage point reduction in industrial electricity tariffs translates directly into manufacturing competitiveness</strong>: at $0.10/kWh, Pakistan's textile and light manufacturing sectors become globally competitive. US investors in renewable energy, smart grid, and LNG supply chains are not just commercial participants — they are structural reform agents enabling Pakistan's industrial transition.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ==================== PAGE 4: US-PAKISTAN TRADE ==================== -->
+<div id="trade" class="page">
+  <div class="container">
+    <div class="section-eyebrow">Section III — US–Pakistan Trade</div>
+    <h2 class="section-title">The Bilateral Relationship: From Transactional to Strategic</h2>
+    <p class="section-subtitle">US–Pakistan goods trade reached $8.7B in 2025. The US is Pakistan's single-largest export destination. A landmark July 2025 trade agreement on energy, textiles, and mining has reset the commercial architecture — creating the most significant bilateral economic instrument in two decades.</p>
+
+    <div class="g4" style="margin-bottom:2rem;">
+      <div class="insight">
+        <div class="insight-num">$8.7B</div>
+        <div class="insight-text">Total US-Pakistan bilateral goods trade in 2025 — up from $7.3B in 2024</div>
+      </div>
+      <div class="insight amber">
+        <div class="insight-num">$5.4B</div>
+        <div class="insight-text">US imports from Pakistan (2025) — textiles, apparel, home linens dominate</div>
+      </div>
+      <div class="insight green">
+        <div class="insight-num">$3.3B</div>
+        <div class="insight-text">US exports to Pakistan (2025) — up 56.6% ($1.2B) from 2024. Cotton, machinery, energy products.</div>
+      </div>
+      <div class="insight red">
+        <div class="insight-num">$2.1B</div>
+        <div class="insight-text">US trade deficit with Pakistan (2025) — down 29.6% from 2024 following deal concessions</div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="panel">
+        <div class="panel-title">US–Pakistan Trade Flow (2024–2025, $B)</div>
+        <div class="chart-wrap">
+          <canvas id="tradeFlowChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Pakistan's Top Exports to the US (2024)</div>
+        <table class="data-table">
+          <tr><th>Product</th><th>Value</th><th>% of Total</th></tr>
+          <tr><td>House Linens & Bedding</td><td>$948M</td><td>18.6%</td></tr>
+          <tr><td>Non-Knit Women's Suits</td><td>$487M</td><td>9.6%</td></tr>
+          <tr><td>Knit Sweaters</td><td>$444M</td><td>8.7%</td></tr>
+          <tr><td>Non-Knit Men's Suits</td><td>$380M</td><td>7.5%</td></tr>
+          <tr><td>Cotton Towels</td><td>$320M</td><td>6.3%</td></tr>
+          <tr><td>Knit T-Shirts</td><td>$290M</td><td>5.7%</td></tr>
+          <tr><td>Leather Goods</td><td>$195M</td><td>3.8%</td></tr>
+          <tr><td>Surgical Instruments</td><td>$180M</td><td>3.5%</td></tr>
+          <tr class="highlight-row"><td><strong>Total Textiles & Apparel</strong></td><td><strong>~$3.8B</strong></td><td><strong>~75%</strong></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- JULY 2025 TRADE DEAL -->
+    <div class="section-eyebrow">The July 2025 Bilateral Trade Agreement</div>
+    <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">"A Mutually Transformative Energy Partnership" — President Trump, July 31, 2025</h3>
+
+    <div class="g3">
+      <div class="scenario-box">
+        <div class="scenario-header green">Concession: Pakistan to US</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Zero-Tariff Concessions on US Imports</div>
+          <div class="scenario-text">Pakistan offered zero-tariff concessions on key American imports including raw cotton, edible oils, soybean products, and certain machinery categories — a significant market access gain for US exporters that had faced 10–20% tariff barriers.</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header amber">Concession: US to Pakistan</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Textile Tariff Reduction: 29% → 19%</div>
+          <div class="scenario-text">US reciprocal tariffs on Pakistani textile exports, which had threatened Pakistan's $5.1B export market in the US, were negotiated down from 29% to 19% — protecting Pakistan's most important export relationship while addressing the bilateral surplus.</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header">Strategic Dimension</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Energy & Mining Co-Development</div>
+          <div class="scenario-text">The deal's centerpiece: US firms gain preferential access to co-develop Pakistan's offshore oil reserves, joint mining projects in resource-rich provinces (especially Balochistan), and LNG supply arrangements reducing Pakistan's import bill from Gulf sources.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout blue" style="margin-top:1.5rem;">
+      <div class="callout-label">Geopolitical Context</div>
+      <p>The July 2025 deal did not emerge in a commercial vacuum. It was preceded by Pakistan Army Chief Field Marshal Asim Munir's White House visit, US mediation of the India-Pakistan Pahalgam crisis, India-US trade tensions (50% US tariffs on Indian goods), and a deliberate Trump administration strategy to position Pakistan as a balancing partner in South Asia. <strong>Commercial diplomacy has become strategic diplomacy by another name</strong> — and US businesses are the beneficiaries of a geopolitical realignment that has dramatically elevated Pakistan's commercial importance to Washington.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SERVICES TRADE -->
+    <div class="g2">
+      <div>
+        <div class="section-eyebrow">Services Trade</div>
+        <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:400; margin-bottom:1rem;">The Invisible $2.9B Relationship</h3>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75; margin-bottom:1rem;">US total services trade with Pakistan was $2.9B in 2024 — with US services exports of $1.7B (up 20.2% from 2023) and services imports from Pakistan of $1.1B. This growing services channel reflects Pakistan's expanding role as a software outsourcing, BPO, and remote-work partner for US firms.</p>
+        <div class="panel">
+          <div class="panel-title">US Services Exports to Pakistan (2024, $1.7B)</div>
+          <div class="icon-row">
+            <div class="icon-box green">📱</div>
+            <div class="icon-content">
+              <div class="icon-title">Financial & Insurance Services (~$400M)</div>
+              <div class="icon-text">Citi, financial advisory, insurance products, reinsurance from US carriers</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box">🎓</div>
+            <div class="icon-content">
+              <div class="icon-title">Education Services (~$350M)</div>
+              <div class="icon-text">University tuition (Pakistan is a top-10 source of US university international students), online learning platforms</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box amber">💼</div>
+            <div class="icon-content">
+              <div class="icon-title">Business & Professional Services (~$300M)</div>
+              <div class="icon-text">Management consulting (McKinsey, BCG active), legal, accounting, and technical services</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box blue">✈️</div>
+            <div class="icon-content">
+              <div class="icon-title">Travel & Tourism (~$250M)</div>
+              <div class="icon-text">Pakistani diaspora travel to the US; business travel. Pakistan's 6–7M diaspora in the US is the primary driver.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-eyebrow">Investment Flows</div>
+        <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:400; margin-bottom:1rem;">FDI Underperformance vs. Potential</h3>
+        <p style="font-size:14px; color:#2D2D2D; line-height:1.75; margin-bottom:1rem;">Pakistan attracted $2.1B in annual FDI on average between 2023–2025 — concentrated in telecoms, energy, and financial services. This is dramatically below the $8–10B annual FDI that Pakistan's peer economies attract at comparable income levels. The US, despite being Pakistan's largest export market, is not among the top 5 sources of FDI.</p>
+        <div class="panel" style="margin-bottom:1.5rem;">
+          <div class="panel-title">Pakistan FDI by Source Country (FY2024–25)</div>
+          <div class="bar-row" style="margin-top:0.75rem;">
+            <div class="bar-label-row"><span>China</span><span>$745M</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:85%;background:#555;"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>Netherlands</span><span>$280M</span></div>
+            <div class="bar-track"><div class="bar-fill blue" style="width:32%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>UAE</span><span>$230M</span></div>
+            <div class="bar-track"><div class="bar-fill amber" style="width:26%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span>United Kingdom</span><span>$180M</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:20%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label-row"><span style="color:var(--amber); font-weight:600;">United States</span><span style="color:var(--amber); font-weight:600;">~$160M</span></div>
+            <div class="bar-track"><div class="bar-fill amber" style="width:18%"></div></div>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="callout-label">The Investment Gap</div>
+          <p>The US accounts for <strong>~8% of Pakistan's FDI</strong> despite being Pakistan's largest export market and most important diplomatic partner. China accounts for ~35%. This inversion — where America buys Pakistan's exports but China builds Pakistan's infrastructure — is the core commercial diplomacy problem that the July 2025 agreement is designed to reverse.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- TRUMP ADMIN DYNAMICS -->
+    <div class="section-eyebrow">Commercial Diplomacy Context</div>
+    <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1.5rem;">The Trump Administration's Pakistan Calculus</h3>
+
+    <div class="g3">
+      <div class="panel">
+        <div class="panel-title">Trade Surplus Correction Imperative</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-top:0.5rem;">Pakistan's $3B trade surplus with the US in 2024 triggered a 29% reciprocal tariff under Trump's April 2025 measures. Unlike with India (50% tariff), the Pakistan negotiation concluded favorably — a function of Pakistan's strategic cooperation on regional security, willingness to offer energy sector access, and reduced strategic confrontation posture.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">India–Pakistan Realignment Dividend</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-top:0.5rem;">The May 2025 India-Pakistan ceasefire, US mediation role, and subsequent India-US trade rupture (50% tariffs on Indian goods) have created a window. Pakistan has positioned itself as a cooperative, pliable partner for US strategic interests — translating diplomatic capital into commercial concessions in the July 2025 deal.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Critical Mineral Supply Chain Security</div>
+        <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-top:0.5rem;">Trump administration's critical minerals strategy treats Pakistan as a priority supply chain diversification partner — an alternative to China-dominated supply chains for copper, lithium, rare earths, and antimony. The $500M US Strategic Metals–FWO deal (September 2025) and Reko Diq financing interest are both products of this strategic frame.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ==================== PAGE 5: US BUSINESS ENVIRONMENT ==================== -->
+<div id="business" class="page">
+  <div class="container">
+    <div class="section-eyebrow">Section IV — US Business Environment in Pakistan</div>
+    <h2 class="section-title">Operating in Pakistan: Challenges, Constraints & the ABC Reform Agenda</h2>
+    <p class="section-subtitle">The American Business Council of Pakistan represents 60+ Fortune 500 companies with $600B+ in cumulative global revenue and 130,000+ direct employees in Pakistan. Their presence is significant. Their frustrations are structural. Their proposals provide the clearest roadmap for what US commercial diplomats should prioritize.</p>
+
+    <div class="g4" style="margin-bottom:2rem;">
+      <div class="insight green">
+        <div class="insight-num">60+</div>
+        <div class="insight-text">Fortune 500 companies operating in Pakistan through the American Business Council</div>
+      </div>
+      <div class="insight">
+        <div class="insight-num">130K</div>
+        <div class="insight-text">Direct employees of US companies in Pakistan — 1M+ indirect employment in supply chains</div>
+      </div>
+      <div class="insight amber">
+        <div class="insight-num">$600B+</div>
+        <div class="insight-text">Cumulative global revenue of ABC member companies — demonstrating scale of US corporate presence</div>
+      </div>
+      <div class="insight red">
+        <div class="insight-num">~$160M</div>
+        <div class="insight-text">Annual US FDI inflows to Pakistan — dramatically below potential given scale of US commercial presence</div>
+      </div>
+    </div>
+
+    <!-- US COMPANIES PRESENT -->
+    <div class="panel" style="margin-bottom:2rem;">
+      <div class="panel-title">Major US Companies Operating in Pakistan — Sector Overview</div>
+      <div class="g3" style="margin-top:1rem;">
+        <div>
+          <div style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-ter); margin-bottom:0.75rem;">Consumer Goods & FMCG</div>
+          <div class="icon-row">
+            <div class="icon-box green">🏪</div>
+            <div class="icon-content">
+              <div class="icon-title">P&G, Unilever, Colgate-Palmolive</div>
+              <div class="icon-text">Deep market penetration in 200M+ consumer market. Face illicit/smuggled competition, high turnover taxes on profits rather than income.</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box green">🍔</div>
+            <div class="icon-content">
+              <div class="icon-title">McDonald's, KFC, Pizza Hut (Yum!)</div>
+              <div class="icon-text">Franchised model; expanding middle class drives strong unit economics. Supply chain localization requirement creates challenges.</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-ter); margin-bottom:0.75rem;">Pharma, Technology & Finance</div>
+          <div class="icon-row">
+            <div class="icon-box amber">💊</div>
+            <div class="icon-content">
+              <div class="icon-title">Abbott, Pfizer, Johnson & Johnson</div>
+              <div class="icon-text">Drug pricing controlled by DRAP; profit repatriation delays are a persistent friction point. Strong demand growth from urbanization and non-communicable disease rise.</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box blue">💳</div>
+            <div class="icon-content">
+              <div class="icon-title">Citi, Visa, Mastercard, Microsoft</div>
+              <div class="icon-text">Citi has a long institutional history; Microsoft, Google, and Amazon provide cloud services but face Digital Presence Proceeds Tax (2025). Mastercard has a major local banking partnership.</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-ter); margin-bottom:0.75rem;">Energy, Agriculture & Logistics</div>
+          <div class="icon-row">
+            <div class="icon-box red">⛽</div>
+            <div class="icon-content">
+              <div class="icon-title">Chevron (Caltex), ExxonMobil</div>
+              <div class="icon-text">Downstream petroleum presence; upstream engagement through July 2025 deal opening. LNG supply opportunity under active development.</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box">🌾</div>
+            <div class="icon-content">
+              <div class="icon-title">Bayer CropScience, Monsanto (BASF), DHL</div>
+              <div class="icon-text">Agri-chemicals with strong market presence; DHL and FedEx in logistics. Seed and precision agriculture markets under-developed but growing.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- BUSINESS ENVIRONMENT -->
+    <div class="g2">
+      <div>
+        <div class="section-eyebrow">Business Environment Analysis</div>
+        <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:400; margin-bottom:1rem;">Key Friction Points for US Companies</h3>
+
+        <div style="margin-bottom:1.5rem;">
+          <div class="icon-row">
+            <div class="icon-box red">⚖️</div>
+            <div class="icon-content">
+              <div class="icon-title">Tax on Turnover, Not Profit</div>
+              <div class="icon-text">Pakistan's minimum tax regime imposes 1.25–1.5% tax on gross revenue regardless of profitability. US companies operating at thin margins or in startup mode are disproportionately impacted. ABC's core demand: shift to profit-based taxation.</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box red">🔄</div>
+            <div class="icon-content">
+              <div class="icon-title">Profit Repatriation Delays</div>
+              <div class="icon-text">State Bank of Pakistan historically imposed caps and delays on dividend repatriation. While improved under IMF program conditions, uncertainty persists. US companies require formal statutory guarantees on repatriation timelines.</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box red">🏗️</div>
+            <div class="icon-content">
+              <div class="icon-title">Illicit Trade & Counterfeit Competition</div>
+              <div class="icon-text">Estimated 30–40% of Pakistan's consumer goods market is supplied by smuggled or counterfeit goods — particularly electronics, tobacco, cosmetics, and pharmaceuticals. US brands lose significant market share to unregulated, tariff-evading competitors.</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box amber">💻</div>
+            <div class="icon-content">
+              <div class="icon-title">Digital Presence Proceeds Tax (2025)</div>
+              <div class="icon-text">Pakistan's 2025 budget introduced a tax on digital services revenues from companies without a physical presence — directly targeting US tech firms (Google, Meta, Microsoft, Amazon). The US-Pakistan Business Council formally objected. Status: under active renegotiation.</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box amber">📋</div>
+            <div class="icon-content">
+              <div class="icon-title">Super Tax & Policy Instability</div>
+              <div class="icon-text">Pakistan's 10% super tax on large companies (imposed 2022) remains in effect with only marginal reduction promised in FY25–26 budget. Combined with minimum tax, effective rates on US companies often exceed 40–45%. ABC proposes broader, faster reduction.</div>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-box blue">🛃</div>
+            <div class="icon-content">
+              <div class="icon-title">Regulatory Fragmentation & Provincial Complexity</div>
+              <div class="icon-text">Post-18th Amendment devolution created provincial regulatory regimes across labor, environment, and land. US companies operating nationally face 4 provincial + federal compliance requirements — each with different standards and enforcement approaches.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-eyebrow">ABC Budget Proposals FY2025–26</div>
+        <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:400; margin-bottom:1rem;">What US Business is Demanding from Government</h3>
+
+        <div class="panel" style="margin-bottom:1rem;">
+          <div class="panel-title">ABC's Priority Reform Demands (Submitted Pre-Budget 2025-26)</div>
+          <ol class="numbered-list" style="margin-top:0.75rem;">
+            <li><strong>Profit-Based Taxation:</strong> Replace minimum tax on turnover with profit-based corporate tax. US companies with high capex and thin margins are disproportionately penalized under turnover-based regimes — explicitly discouraging capital-intensive investment.</li>
+            <li><strong>Super Tax Phase-Out:</strong> Reduce and eventually eliminate the 10% super tax on large corporates; apply relief across the corporate sector (not just below a revenue threshold as currently structured). ABCs concern: limited relief does not restore investor confidence at scale.</li>
+            <li><strong>Counterfeit/Illicit Trade Enforcement:</strong> Strengthen customs enforcement, establish a dedicated Anti-Illicit Trade Authority with US technical assistance, implement track-and-trace for pharmaceuticals and electronics. Level the playing field for legitimate US brands.</li>
+            <li><strong>Long-Term Tax Certainty:</strong> Hard-code 5-year tax policy stability windows for new investments above $100M. "Every serious investor asks: what will my tax exposure be, and will the rules change after I invest?" (P@SHA Chairman, 2025). Policy-coded continuity is the precondition for capital.</li>
+            <li><strong>High Tariff Rationalization:</strong> High import tariffs on finished goods (cosmetics, electronics, medical devices) have created incentives for smuggling rather than legal import. US firms with branded products lose to unregulated channels. Reducing tariffs to revenue-neutral levels cuts smuggling while improving compliance.</li>
+            <li><strong>Digital Services Tax Reconsideration:</strong> Digital Presence Proceeds Tax treats foreign digital services companies as if they have physical nexus — without providing commensurate protections. Aligned with OECD Pillar One framework would be preferable and would not drive US tech firms away from Pakistan's market.</li>
+          </ol>
+        </div>
+
+        <div class="callout green">
+          <div class="callout-label">Government Response (June 2025)</div>
+          <p>Finance Minister Aurangzeb's response to the ABC delegation: acknowledged the scale and depth of US investment as "significant and valuable," committed to a structured Tax Policy Office with an Advisory Panel for ongoing consultation. <strong>The Finance Minister explicitly welcomed ABC's input and acknowledged accommodation of some proposals in the FY25–26 budget.</strong> The institutional channel is working — but execution pace remains the constraint.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- POLITICAL RISK -->
+    <div class="section-eyebrow">Risk Assessment</div>
+    <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1.5rem;">Political Risk, Security & Market Potential — The Balanced View</h3>
+
+    <div class="g3">
+      <div class="scenario-box">
+        <div class="scenario-header red">Risk Category: High</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Security Environment</div>
+          <div class="scenario-text">Balochistan insurgency has directly impacted Reko Diq (Barrick slowed development in April 2026 citing security escalation). Khyber Pakhtunkhwa faces TTP-linked activity. Karachi, Lahore, Islamabad — where 90% of US businesses operate — are categorically safer. Risk is geographic, not systemic.</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header amber">Risk Category: Medium</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Regulatory & Policy Risk</div>
+          <div class="scenario-text">Pakistan has had 5 regime changes in 10 years, each bringing policy reversals. IMF program conditionality has introduced a discipline floor, but retroactive taxation, SRO-based regulatory changes, and regulatory capture remain material risks that require contractual mitigation (ICSID clauses, investment protection agreements).</div>
+        </div>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-header green">Opportunity: Significant</div>
+        <div class="scenario-body">
+          <div class="scenario-title">Market Size & Demographics</div>
+          <div class="scenario-text">257 million population with median age of 22. Urban middle class of 40–50 million growing at 3–4% annually. Smartphone penetration at 65%+ creates a digital-native consumer base. Pakistan is the 5th-largest country in the world — the consumer market opportunity is fundamentally under-appreciated by US businesses.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ==================== PAGE 6: EMERGING COOPERATION ==================== -->
+<div id="emerging" class="page">
+  <div class="container">
+    <div class="section-eyebrow">Section V — Emerging Areas for US–Pakistan Economic Cooperation</div>
+    <h2 class="section-title">The Frontier: Digital Commerce, Critical Minerals, Logistics, Manufacturing & Regional Connectivity</h2>
+    <p class="section-subtitle">The next phase of US–Pakistan economic cooperation extends well beyond textiles and energy. Five structural sectors — digital commerce, critical minerals (led by Reko Diq), logistics infrastructure, light manufacturing GVC integration, and regional connectivity — represent a combined investment opportunity of $80–120B over the next decade.</p>
+
+    <!-- NAV WITHIN PAGE -->
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
+      <button onclick="showSubSection('digital')" id="btn-digital" style="padding:0.6rem 1.2rem; background:var(--amber); color:white; border:none; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; letter-spacing:0.05em;">💻 Digital Commerce</button>
+      <button onclick="showSubSection('minerals')" id="btn-minerals" style="padding:0.6rem 1.2rem; background:var(--offwhite); color:var(--text-sec); border:1px solid var(--border); border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; letter-spacing:0.05em;">🪨 Critical Minerals</button>
+      <button onclick="showSubSection('rekodiq')" id="btn-rekodiq" style="padding:0.6rem 1.2rem; background:var(--offwhite); color:var(--text-sec); border:1px solid var(--border); border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; letter-spacing:0.05em;">⛏️ Reko Diq Deep Dive</button>
+      <button onclick="showSubSection('logistics')" id="btn-logistics" style="padding:0.6rem 1.2rem; background:var(--offwhite); color:var(--text-sec); border:1px solid var(--border); border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; letter-spacing:0.05em;">🚢 Logistics</button>
+      <button onclick="showSubSection('manufacturing')" id="btn-manufacturing" style="padding:0.6rem 1.2rem; background:var(--offwhite); color:var(--text-sec); border:1px solid var(--border); border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; letter-spacing:0.05em;">🏭 Manufacturing</button>
+      <button onclick="showSubSection('connectivity')" id="btn-connectivity" style="padding:0.6rem 1.2rem; background:var(--offwhite); color:var(--text-sec); border:1px solid var(--border); border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; letter-spacing:0.05em;">🌐 Regional Connectivity</button>
+    </div>
+
+    <!-- DIGITAL COMMERCE -->
+    <div id="sub-digital" class="subsection">
+      <div class="section-eyebrow">Digital Commerce & Technology</div>
+      <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">Pakistan's $3.8B IT Sector and the Path to $15B by 2030</h3>
+
+      <div class="g4" style="margin-bottom:1.5rem;">
+        <div class="insight green">
+          <div class="insight-num">$3.8B</div>
+          <div class="insight-text">IT & ITeS exports FY2025 — 18% YoY growth. 3rd-largest FX earner after textiles and rice.</div>
+        </div>
+        <div class="insight amber">
+          <div class="insight-num">$437M</div>
+          <div class="insight-text">Monthly IT exports December 2025 — first time crossing $400M threshold. 26% YoY increase.</div>
+        </div>
+        <div class="insight">
+          <div class="insight-num">6,000+</div>
+          <div class="insight-text">Registered IT firms in Pakistan operating in 100+ countries. 4th-largest freelance market globally.</div>
+        </div>
+        <div class="insight blue">
+          <div class="insight-num">$15B</div>
+          <div class="insight-text">Government IT export target by 2030 — requiring sustained 20%+ CAGR. STZs and NICs actively supporting.</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div>
+          <div class="panel" style="margin-bottom:1.5rem;">
+            <div class="panel-title">IT Sector Growth Trajectory ($B)</div>
+            <div class="chart-wrap">
+              <canvas id="itChart"></canvas>
+            </div>
+          </div>
+          <div class="callout blue">
+            <div class="callout-label">Freelance Revolution</div>
+            <p>Pakistan's freelance and remote work segment recorded a <strong>90% surge to $779M</strong> in FY2025, reflecting the country's expanding pool of digital talent. Pakistan ranks 4th globally on major freelancing platforms (Fiverr, Upwork, Freelancer.com), with specializations in software development, graphic design, content creation, and data science.</p>
+          </div>
+        </div>
+        <div>
+          <div class="panel">
+            <div class="panel-title">US–Pakistan Digital Commerce Opportunities</div>
+            <div class="timeline" style="margin-top:0.5rem;">
+              <div class="tl-item">
+                <div class="tl-dot green"></div>
+                <div class="tl-date">Near-Term (2025–2026)</div>
+                <div class="tl-title">US Tech Firm Expansion & R&D Centers</div>
+                <div class="tl-text">Google, Meta, Amazon, Microsoft, and Oracle all have limited-to-growing footprints. Pakistan's engineer supply (130,000 CS graduates/year) at $800–1500/month fully-loaded costs represents one of the strongest cost-quality ratios globally. Formal R&D center investment (following Indian model) would be transformative.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot amber"></div>
+                <div class="tl-date">Medium-Term (2026–2028)</div>
+                <div class="tl-title">Special Technology Zone (STZ) Development</div>
+                <div class="tl-text">Pakistan's STZA has designated 24+ STZs with 10-year tax exemptions for IT companies. US investors can establish facilities with zero income tax, zero import duty on equipment. Islamabad Technology Park and NUST STZ are the most advanced — representing a real estate and technology investment opportunity.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot blue"></div>
+                <div class="tl-date">Structural Issue</div>
+                <div class="tl-title">Digital Payments & E-Commerce Infrastructure</div>
+                <div class="tl-text">Pakistan's e-commerce market is ~$6B and growing at 35%+ annually. US payment processors (Visa, Mastercard, PayPal) have limited formal access. A US-backed fintech framework — covering cross-border payments, KYC/AML harmonization, and digital banking access — would unlock this channel for US firms and Pakistani exporters simultaneously.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"></div>
+                <div class="tl-date">Policy Priority</div>
+                <div class="tl-title">Digital Presence Tax Resolution</div>
+                <div class="tl-text">The 2025 Digital Presence Proceeds Tax Act threatens to drive US tech firms toward reduced engagement. State Department advocacy for a OECD-aligned Pillar One approach would protect US firm interests while giving Pakistan a legitimate international revenue framework — a win-win that the Finance Ministry has signaled openness to.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITICAL MINERALS -->
+    <div id="sub-minerals" class="subsection" style="display:none;">
+      <div class="section-eyebrow">Critical Minerals — Strategic Overview</div>
+      <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">Pakistan's Mineral Endowment: The Resource Base for 21st-Century Supply Chain Security</h3>
+
+      <div class="g4" style="margin-bottom:1.5rem;">
+        <div class="insight">
+          <div class="insight-num">$500B+</div>
+          <div class="insight-text">Estimated total mineral resource value — copper, gold, lithium, rare earths, coal, and antimony across Balochistan, KPK, and Gilgit-Baltistan</div>
+        </div>
+        <div class="insight amber">
+          <div class="insight-num">5.9Bn T</div>
+          <div class="insight-text">Copper-gold resource at Reko Diq — one of the world's largest undeveloped copper-gold deposits in the Tethyan Belt</div>
+        </div>
+        <div class="insight green">
+          <div class="insight-num">$500M</div>
+          <div class="insight-text">US Strategic Metals–FWO critical minerals agreement (September 2025) — first significant US-Pakistan minerals investment</div>
+        </div>
+        <div class="insight blue">
+          <div class="insight-num">Oct 2025</div>
+          <div class="insight-text">First shipment of rare earth elements and critical minerals to the US — neodymium, praseodymium, and antimony</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="panel">
+          <div class="panel-title">Pakistan's Critical Mineral Portfolio</div>
+          <table class="data-table" style="margin-top:0.5rem;">
+            <tr><th>Mineral</th><th>Location</th><th>Estimated Resource</th><th>US Strategic Value</th></tr>
+            <tr><td><strong>Copper</strong></td><td>Chagai, Balochistan</td><td>15M tonnes (Reko Diq alone)</td><td>EV batteries, electrical infrastructure, defense</td></tr>
+            <tr><td><strong>Gold</strong></td><td>Reko Diq, Saindak</td><td>26M ounces (Reko Diq)</td><td>Monetary reserves, electronics</td></tr>
+            <tr><td><strong>Lithium</strong></td><td>Gilgit-Baltistan, Balochistan</td><td>Comparable to Chilean deposits</td><td>EV batteries, grid storage (critical shortage)</td></tr>
+            <tr><td><strong>Rare Earth Elements</strong></td><td>KPK, Balochistan</td><td>Neodymium, praseodymium deposits</td><td>Defense systems, EVs, wind turbines</td></tr>
+            <tr><td><strong>Antimony</strong></td><td>Chitral, Dir</td><td>Significant deposits</td><td>Flame retardants, semiconductors, batteries</td></tr>
+            <tr><td><strong>Chromite</strong></td><td>Balochistan, Zhob</td><td>World's largest reserves</td><td>Stainless steel, chemicals, refractory</td></tr>
+            <tr><td><strong>Coal (Thar)</strong></td><td>Sindh</td><td>175 billion tonnes</td><td>Energy transition bridge fuel (controversial)</td></tr>
+            <tr class="highlight-row"><td><strong>Iron Ore</strong></td><td>Punjab, Balochistan</td><td>Multiple deposits</td><td>Steel manufacturing inputs</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="panel" style="margin-bottom:1.5rem;">
+            <div class="panel-title">The US Critical Minerals Engagement Timeline</div>
+            <div class="timeline" style="margin-top:0.5rem;">
+              <div class="tl-item">
+                <div class="tl-dot amber"></div>
+                <div class="tl-date">April 2025</div>
+                <div class="tl-title">State Department Engagement Begins</div>
+                <div class="tl-text">Eric Meyer (State Dept Bureau of South & Central Asian Affairs) visits Islamabad specifically to advance US interests in Pakistan's critical minerals sector. Virtual forum co-hosted by US Chargé d'Affaires Natalie Baker.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot green"></div>
+                <div class="tl-date">July 2025</div>
+                <div class="tl-title">Trade Deal — Mining Access Unlocked</div>
+                <div class="tl-text">Pakistan offers zero-tariff concessions on joint mining projects in resource-rich provinces as part of bilateral trade agreement. US firms gain preferential market access for exploration, extraction, and offtake arrangements.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot green"></div>
+                <div class="tl-date">September 2025</div>
+                <div class="tl-title">$500M US Strategic Metals–FWO Agreement</div>
+                <div class="tl-text">Missouri-based US Strategic Metals and Pakistan's Frontier Works Organization sign landmark agreement covering exploration, development, and poly-metallic refinery. First phase: $500M. Envisions full value-chain development including domestic refining.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot green"></div>
+                <div class="tl-date">October 2025</div>
+                <div class="tl-title">First REE Shipment to the US</div>
+                <div class="tl-text">Pakistan dispatches inaugural shipment of neodymium, praseodymium (REEs), copper concentrate, and strategic antimony to US Strategic Metals — a symbolic breakthrough for both governments.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"></div>
+                <div class="tl-date">Ongoing Constraint</div>
+                <div class="tl-title">Midstream Gap: No Processing Infrastructure</div>
+                <div class="tl-text">Pakistan's REE sector currently limited to raw mineral extraction with virtually no functioning midstream processing infrastructure. Building a poly-metallic refinery is Phase 2 of the USSM deal — but requires 3–5 years and $300–500M in capex.</div>
+              </div>
+            </div>
+          </div>
+          <div class="callout">
+            <div class="callout-label">Policy Recommendation for State Dept</div>
+            <p>Push for a Minerals Development Framework Agreement (MDFA) — a bilateral treaty that locks in investor protections, royalty rates, environmental standards, and dispute resolution mechanisms for the entire minerals sector. The current ad hoc deal-by-deal approach creates reputational and legal risks for US firms. A formal framework, modeled on US–DRC minerals agreement discussions, would give US investors the certainty to commit capital at scale to Pakistan's mineral sector.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REKO DIQ DEEP DIVE -->
+    <div id="sub-rekodiq" class="subsection" style="display:none;">
+      <div class="section-eyebrow">Reko Diq — Deep Dive</div>
+      <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">The World's Largest Undeveloped Copper-Gold Deposit: $74B Free Cash Flow Over 37 Years</h3>
+
+      <div class="g4" style="margin-bottom:1.5rem;">
+        <div class="insight red">
+          <div class="insight-num">$74B</div>
+          <div class="insight-text">Estimated free cash flow over 37-year mine life at consensus long-term prices (Barrick, January 2025)</div>
+        </div>
+        <div class="insight amber">
+          <div class="insight-num">$5.5–6.0B</div>
+          <div class="insight-text">Phase 1 capital cost (100% basis) — targeting 200K tonnes copper concentrate + 250K oz gold annually</div>
+        </div>
+        <div class="insight green">
+          <div class="insight-num">15M T</div>
+          <div class="insight-text">Proven and probable copper reserves — with 26M oz gold. 0.53% copper grade — among best globally for a large open-pit mine</div>
+        </div>
+        <div class="insight blue">
+          <div class="insight-num">50%/25%/25%</div>
+          <div class="insight-text">Ownership: Barrick Gold / Govt of Pakistan / Govt of Balochistan (Saudi Manara Minerals seeking 10–20% stake from Pakistan govt)</div>
+        </div>
+      </div>
+
+      <div class="g3-1">
+        <div>
+          <div class="panel" style="margin-bottom:1.5rem;">
+            <div class="panel-title">Project Structure & Economics</div>
+            <table class="data-table">
+              <tr><th>Parameter</th><th>Phase 1</th><th>Phase 2 (Expansion)</th></tr>
+              <tr><td>Throughput</td><td>45 Mtpa</td><td>90 Mtpa</td></tr>
+              <tr><td>Copper Output</td><td>200,000 t/yr</td><td>400,000 t/yr</td></tr>
+              <tr><td>Gold Output</td><td>250,000 oz/yr</td><td>500,000 oz/yr</td></tr>
+              <tr><td>Capital Cost</td><td>$5.5–6.0B</td><td>$3.3–3.6B additional</td></tr>
+              <tr><td>Target Production</td><td>Originally 2028–29</td><td>Post-2030</td></tr>
+              <tr><td>EPCM Contractor</td><td>Fluor Corporation (US)</td><td>TBD</td></tr>
+              <tr><td>Financing Target</td><td>$3B limited recourse</td><td>Separate round</td></tr>
+              <tr class="highlight-row"><td><strong>Total Free Cash Flow</strong></td><td colspan="2"><strong>$74B over 37 years</strong></td></tr>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">US Financial Exposure — The EXIM Opportunity</div>
+            <div class="icon-row" style="margin-top:0.75rem;">
+              <div class="icon-box green">🏦</div>
+              <div class="icon-content">
+                <div class="icon-title">US Export-Import Bank ($500M–$1B)</div>
+                <div class="icon-text">EXIM Bank is reviewing financing proposals of $500M–$1B for Reko Diq Phase 1. This would be one of EXIM's largest-ever single-project commitments in South Asia — and directly supports Fluor Corporation (US EPCM contractor) engagement.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box amber">🌍</div>
+              <div class="icon-content">
+                <div class="icon-title">IFC ($300–650M) & DFI Stack</div>
+                <div class="icon-text">IFC providing $300M in debt financing; additional DFI stack from ADB, Export Development Canada, and JBIC. Total project financing: $3B target (close expected Q3 2025 — now delayed due to security review).</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box">🏗️</div>
+              <div class="icon-content">
+                <div class="icon-title">Fluor Corporation (US EPCM)</div>
+                <div class="icon-text">Selected April 2025 as lead Engineering, Procurement and Construction Management contractor — a major US industrial company's largest active contract in Pakistan. Fluor's involvement creates a strong US commercial anchor for the entire project.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="callout red" style="margin-bottom:1.5rem;">
+            <div class="callout-label">April 2026 — Security Crisis</div>
+            <p>Barrick Mining (renamed from Barrick Gold) announced in April 2026 that it is <strong>slowing development activity until mid-2027</strong> citing "escalation of security risks and increased security incidents" in Pakistan and the region. The previously targeted first production date of end-2028 will be significantly delayed. Capital budget estimates are expected to increase substantially. <strong>This is the single most critical risk issue for US commercial diplomacy on critical minerals</strong> — resolving the Balochistan security environment is a prerequisite for Reko Diq's commercial viability.</p>
+          </div>
+
+          <div class="panel" style="margin-bottom:1.5rem;">
+            <div class="panel-title">Critical Path for Reko Diq Success</div>
+            <ul class="numbered-list" style="margin-top:0.5rem;">
+              <li><strong>Security Framework:</strong> Pakistan Army must establish a dedicated security perimeter and protocol for the mine site — comparable to Saindak's operational security model. US diplomatic pressure for military commitment to project security is essential.</li>
+              <li><strong>Project Finance Close:</strong> $3B limited recourse financing must close before major construction can recommence. EXIM Bank's $500M–$1B tranche is the keystone — without it, the DFI stack does not assemble.</li>
+              <li><strong>Balochistan Compact:</strong> Provincial government's 25% stake must be accompanied by a genuine social compact — royalties to local communities, employment quotas for Baloch workers, and transparent revenue sharing to prevent political sabotage of project.</li>
+              <li><strong>Saudi Manara Stake:</strong> Saudi Manara Minerals is seeking 10–20% from Pakistan government's 25% stake. Completing this transaction would provide Pakistan with $500M–$1B in upfront proceeds while bringing a GCC strategic partner into the project — reducing geopolitical risk.</li>
+              <li><strong>Value Chain Development:</strong> Pakistan should negotiate offtake arrangements that include a commitment to midstream processing — copper concentrate smelting and refining — rather than exporting raw concentrate. This doubles Pakistan's revenue per tonne.</li>
+            </ul>
+          </div>
+
+          <div class="callout">
+            <div class="callout-label">Macro Impact of Full Reko Diq Development</div>
+            <p>At full Phase 1 production (2029+), Reko Diq would generate <strong>~$3–4B in annual export revenues</strong> — adding 7–10% to Pakistan's total merchandise export base. Phase 2 doubles this to $6–8B/year. The mine could become Pakistan's largest single source of foreign exchange earnings within a decade, fundamentally altering the country's structural balance of payments position.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGISTICS -->
+    <div id="sub-logistics" class="subsection" style="display:none;">
+      <div class="section-eyebrow">Logistics & Infrastructure</div>
+      <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">Pakistan's Logistics Deficit and the Infrastructure Investment Opportunity</h3>
+
+      <div class="g4" style="margin-bottom:1.5rem;">
+        <div class="insight red">
+          <div class="insight-num">47th</div>
+          <div class="insight-text">World Bank Logistics Performance Index ranking (2023) — Pakistan scores particularly low on customs (2.6/5) and infrastructure (2.5/5)</div>
+        </div>
+        <div class="insight amber">
+          <div class="insight-num">~15%</div>
+          <div class="insight-text">Share of GDP spent on logistics costs — vs. 8–10% in ASEAN and South Asian peers. Inefficiency is a hidden tax on all traded goods.</div>
+        </div>
+        <div class="insight">
+          <div class="insight-num">3 Ports</div>
+          <div class="insight-text">Karachi Port, Port Qasim, Gwadar — handling 65M+ tonnes annually. Gwadar underdeveloped at &lt;2% of capacity despite CPEC investment.</div>
+        </div>
+        <div class="insight blue">
+          <div class="insight-num">$0.5–1B</div>
+          <div class="insight-text">Annual post-harvest losses in food supply chains alone — driven by inadequate cold storage (capacity: 0.7M tonnes vs. India's 30M tonnes)</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div>
+          <div class="panel" style="margin-bottom:1.5rem;">
+            <div class="panel-title">US Logistics & Infrastructure Opportunities</div>
+            <div class="icon-row" style="margin-top:0.75rem;">
+              <div class="icon-box green">🏗️</div>
+              <div class="icon-content">
+                <div class="icon-title">Cold Chain Infrastructure</div>
+                <div class="icon-text">Pakistan's 0.7M tonne cold storage capacity vs. India's 30M tonnes and Vietnam's 5M tonnes. A $500M investment in cold storage infrastructure would reduce post-harvest losses by $2–3B annually, directly increasing exportable surplus in agriculture — Pakistan's second-largest export category.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box amber">🚢</div>
+              <div class="icon-content">
+                <div class="icon-title">Port Modernization</div>
+                <div class="icon-text">Port Qasim expansion and Karachi container terminal modernization require $1–2B in investment. US port operators (Dubai-based DP World has existing presence) and equipment providers have strong opportunities. A US-backed counter to CPEC port infrastructure would carry strategic weight.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box blue">🚛</div>
+              <div class="icon-content">
+                <div class="icon-title">Last-Mile & Warehousing</div>
+                <div class="icon-text">Pakistan's e-commerce boom ($6B+, growing 35%/yr) is constrained by last-mile logistics. Amazon Logistics (in India), FedEx, and DHL can all significantly expand Pakistan operations. Warehousing and fulfillment infrastructure investment in Lahore, Karachi, and Faisalabad are near-term opportunities.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box red">🛤️</div>
+              <div class="icon-content">
+                <div class="icon-title">Rail Modernization — ML-1 Opportunity</div>
+                <div class="icon-text">Pakistan Railways' Main Line 1 (ML-1) — 1,872 km Karachi to Peshawar — is the backbone of freight movement. US firms can compete with Chinese financing for ML-1 upgrades using US EXIM Bank + DFC (Development Finance Corporation) instruments, particularly for signaling, rolling stock, and bridge rehabilitation.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">CPEC vs. US Counter-Infrastructure Framework</div>
+          <p style="font-size:13px; color:var(--text-sec); line-height:1.65; margin-bottom:1rem;">China-Pakistan Economic Corridor has committed $62B+ in infrastructure across energy, roads, and port development. This creates deep infrastructure dependency. The US Infrastructure Investment framework (via DFC, EXIM Bank, and USAID trade finance) can offer a complementary — not confrontational — alternative, focused on commercial sustainability, transparent procurement, and technology transfer.</p>
+          <table class="data-table">
+            <tr><th>Parameter</th><th>CPEC Model</th><th>US/DFC Model</th></tr>
+            <tr><td>Financing Structure</td><td>Concessional loans (2–3%)</td><td>DFC equity + EXIM loans</td></tr>
+            <tr><td>Technology Transfer</td><td>Limited</td><td>Strong contractual requirement</td></tr>
+            <tr><td>Procurement</td><td>Majority Chinese EPC</td><td>Competitive tendering</td></tr>
+            <tr><td>Revenue Sharing</td><td>Fixed return to Chinese investors</td><td>Market-based returns</td></tr>
+            <tr><td>Debt Sustainability</td><td>Sovereign debt concern</td><td>Project-finance ring-fenced</td></tr>
+            <tr class="highlight-row"><td><strong>Strategic Anchor</strong></td><td>Beijing</td><td>Washington</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANUFACTURING -->
+    <div id="sub-manufacturing" class="subsection" style="display:none;">
+      <div class="section-eyebrow">Manufacturing & GVC Integration</div>
+      <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">Light Manufacturing, Global Value Chains & the China+1 Opportunity</h3>
+
+      <div class="g4" style="margin-bottom:1.5rem;">
+        <div class="insight amber">
+          <div class="insight-num">$800–1,200</div>
+          <div class="insight-text">Monthly fully-loaded engineering/tech worker cost — 60–70% cheaper than Vietnam for equivalent skill levels</div>
+        </div>
+        <div class="insight">
+          <div class="insight-num">$0.18</div>
+          <div class="insight-text">Industrial electricity cost per kWh — the primary competitiveness barrier that must fall to $0.08–0.10 for manufacturing to compete regionally</div>
+        </div>
+        <div class="insight green">
+          <div class="insight-num">9 SEZs</div>
+          <div class="insight-text">Special Economic Zones with tax exemptions (5 years for existing businesses, 10 years for new enterprises). Utility-grade electricity, custom clearance, single-window platforms.</div>
+        </div>
+        <div class="insight red">
+          <div class="insight-num">10M</div>
+          <div class="insight-text">Annual new labor market entrants requiring formal employment — manufacturing expansion is the only credible absorption mechanism at this scale</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div>
+          <div class="panel" style="margin-bottom:1.5rem;">
+            <div class="panel-title">Manufacturing Sectors with US Partnership Potential</div>
+            <div class="icon-row" style="margin-top:0.75rem;">
+              <div class="icon-box green">🧵</div>
+              <div class="icon-content">
+                <div class="icon-title">Technical Textiles & Advanced Apparel</div>
+                <div class="icon-text">Pakistan's textile base can be upgraded from commodity garments to technical textiles (performance fabrics, medical textiles, defense textiles). US firms like DuPont, Honeywell, and 3M have material inputs that could anchor a higher-value textile chain. Requires energy cost normalization.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box amber">💊</div>
+              <div class="icon-content">
+                <div class="icon-title">Pharmaceutical Manufacturing</div>
+                <div class="icon-text">Pakistan is one of Asia's largest generic drug manufacturers with FDA-recognized facilities. US pharma companies can use Pakistan as a low-cost manufacturing base for generics exported to Africa and other emerging markets. Active US pharma (Abbott) presence creates a quality anchor.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box blue">🏗️</div>
+              <div class="icon-content">
+                <div class="icon-title">Construction Materials & Cement</div>
+                <div class="icon-text">Pakistan's cement sector (capacity: 80M tonnes) exports to Afghanistan, Central Asia, and East Africa. US construction technology firms (Caterpillar, Bechtel's engineering services) can provide equipment modernization and energy efficiency upgrades to cement plants.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box">🔋</div>
+              <div class="icon-content">
+                <div class="icon-title">Copper & Battery Material Processing</div>
+                <div class="icon-text">If Reko Diq Phase 2 develops, Pakistan would become a top-10 global copper producer. The strategic prize: a US-backed copper smelter and cathode refinery in Pakistan would create a domestic value chain that converts ore to cathode copper — roughly 5x more value per tonne than raw concentrate exports.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="callout amber" style="margin-bottom:1.5rem;">
+            <div class="callout-label">China+1 Thesis</div>
+            <p>The global "China+1" diversification strategy — driven by US tariffs, supply chain risk mitigation, and ESG considerations — has primarily benefited Vietnam, Mexico, India, and Bangladesh. <strong>Pakistan is structurally eligible but operationally excluded</strong> due to energy costs, security perceptions, and regulatory friction. If energy tariffs normalize to $0.08–0.10/kWh and policy stability is codified, Pakistan's labor cost advantage (40–50% below Vietnam, 60% below India for semi-skilled manufacturing) would make it one of the most compelling China+1 destinations globally.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-title">SEZ Framework — What's Available for US Investors</div>
+            <table class="data-table">
+              <tr><th>SEZ</th><th>Location</th><th>Focus Sector</th></tr>
+              <tr><td>Rashakai SEZ</td><td>KPK</td><td>Light industry, logistics</td></tr>
+              <tr><td>Allama Iqbal Industrial City</td><td>Punjab</td><td>Auto parts, engineering goods</td></tr>
+              <tr><td>Dhabeji SEZ</td><td>Sindh</td><td>Export manufacturing, port-adjacent</td></tr>
+              <tr><td>Gwadar Free Zone</td><td>Balochistan</td><td>Trade, logistics, energy</td></tr>
+              <tr><td>SIFC Fast-Track Zones</td><td>National</td><td>Priority investor single window</td></tr>
+            </table>
+            <p style="font-size:12px; color:var(--text-ter); margin-top:0.75rem;">The Special Investment Facilitation Council (SIFC) — chaired jointly by PM and Army Chief — has become the primary fast-track mechanism for foreign investors, with statutory processing timelines and at least 9 SEZs offering 10-year tax holidays on enterprise income.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGIONAL CONNECTIVITY -->
+    <div id="sub-connectivity" class="subsection" style="display:none;">
+      <div class="section-eyebrow">Regional Connectivity</div>
+      <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1rem;">Pakistan as a Strategic Corridor: CPEC, Central Asia & the India-US Trade Realignment</h3>
+
+      <div class="g4" style="margin-bottom:1.5rem;">
+        <div class="insight">
+          <div class="insight-num">$62B+</div>
+          <div class="insight-text">CPEC committed investment — creating a China-linked corridor from Gwadar to Kashgar, bypassing the Malacca Strait for Chinese trade</div>
+        </div>
+        <div class="insight amber">
+          <div class="insight-num">3 Billion</div>
+          <div class="insight-text">Population in Pakistan's immediate commercial hinterland — Afghanistan, Central Asia, Iran, India. Pakistan is geographically the nexus point</div>
+        </div>
+        <div class="insight green">
+          <div class="insight-num">CASA-1000</div>
+          <div class="insight-text">Central Asia–South Asia electricity interconnect (1,300 MW) — US-supported. Connects Kyrgyzstan and Tajikistan power surplus to Pakistan and Afghanistan</div>
+        </div>
+        <div class="insight blue">
+          <div class="insight-num">TAPI</div>
+          <div class="insight-text">Turkmenistan–Afghanistan–Pakistan–India gas pipeline (33 Bcm/yr capacity) — stalled but strategically critical; US backing would catalyze it</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div>
+          <div class="panel" style="margin-bottom:1.5rem;">
+            <div class="panel-title">Pakistan's Regional Connectivity Architecture</div>
+            <div class="timeline" style="margin-top:0.5rem;">
+              <div class="tl-item">
+                <div class="tl-dot green"></div>
+                <div class="tl-date">Active</div>
+                <div class="tl-title">CASA-1000 Power Trade</div>
+                <div class="tl-text">US-supported $1.17B transmission project connecting Central Asian hydropower to Pakistan. 1,300 MW imported during summer months. US firms (USAID technical assistance, World Bank co-financing) are already embedded in this corridor.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot amber"></div>
+                <div class="tl-date">Stalled — US Can Unlock</div>
+                <div class="tl-title">TAPI Pipeline</div>
+                <div class="tl-text">33 Bcm/year Turkmenistan gas pipeline through Afghanistan and Pakistan to India — reduces Pakistan's LNG import dependency and creates a Central Asia–South Asia energy corridor. US backing (EXIM, DFC) and security guarantee framework is the missing catalyst.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot blue"></div>
+                <div class="tl-date">Strategic Opportunity</div>
+                <div class="tl-title">India-Pakistan Trade Normalization</div>
+                <div class="tl-text">The May 2025 ceasefire opened a geopolitical window. Trump hinted at facilitating Pakistani oil exports to India. Normalized India-Pakistan trade ($15–20B potential) would make Pakistan a transit corridor and unlock value chains across the subcontinent — US firms operating in both markets would be the first beneficiaries.</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"></div>
+                <div class="tl-date">Long-Term Vision</div>
+                <div class="tl-title">Gwadar as Indian Ocean Hub</div>
+                <div class="tl-text">Gwadar port (Balochistan), developed under CPEC, has 2,000+ acres of free zone. While currently Chinese-linked, US engagement in Gwadar's industrial zone (logistics, processing, re-export) would provide a strategic counter-presence in a critical chokepoint adjacent to the Persian Gulf.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="panel" style="margin-bottom:1.5rem;">
+            <div class="panel-title">US Strategic Interests in Pakistan's Connectivity</div>
+            <div class="icon-row" style="margin-top:0.75rem;">
+              <div class="icon-box green">🛡️</div>
+              <div class="icon-content">
+                <div class="icon-title">Counter-CPEC Infrastructure Positioning</div>
+                <div class="icon-text">The Blue Dot Network (US-Japan-Australia infrastructure certification) and Lobito Corridor model provide templates for US-backed connectivity corridors in Pakistan. A US-certified, commercially sustainable transport and logistics corridor through Pakistan diversifies away from CPEC dependency without confrontational displacement.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box amber">🌾</div>
+              <div class="icon-content">
+                <div class="icon-title">Afghanistan Agricultural Trade Corridor</div>
+                <div class="icon-text">Pakistan is the primary transit route for Afghan agricultural products (dried fruits, nuts, saffron). A US-supported agri-logistics corridor through Pakistan's border regions creates economic incentives for border stability while enabling US agricultural technology transfer.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box blue">⚡</div>
+              <div class="icon-content">
+                <div class="icon-title">SAARC Energy Grid Revival</div>
+                <div class="icon-text">The stalled SAARC (South Asian Association for Regional Cooperation) electricity interconnection would allow Pakistan to export hydropower surplus to India and import during deficit periods. US grid technology, smart grid systems, and DFC financing for cross-border transmission lines represent a major commercial opportunity.</div>
+              </div>
+            </div>
+            <div class="icon-row">
+              <div class="icon-box">🌐</div>
+              <div class="icon-content">
+                <div class="icon-title">Digital Silk Road Alternative</div>
+                <div class="icon-text">China's Digital Silk Road has laid fiber optic cables, 5G infrastructure, and cloud data centers across Pakistan. US digital infrastructure players (Google Subsea cables, Amazon Cloud, Microsoft Azure) can establish countervailing presence — particularly in data center, cloud computing, and 5G spectrum infrastructure. The STZA provides the regulatory framework.</div>
+              </div>
+            </div>
+          </div>
+          <div class="callout green">
+            <div class="callout-label">The Overarching Opportunity</div>
+            <p>Pakistan is the only country in the world that simultaneously borders China, India, Iran, Afghanistan, and has maritime access to the Persian Gulf and Indian Ocean. <strong>Its geography is a strategic multiplier</strong>. A US-Pakistan commercial partnership that is anchored in energy, minerals, digital infrastructure, and logistics does not just generate bilateral trade flows — it restructures the economic geography of South Asia in ways that align with American strategic priorities for the next 25 years.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- POLICY RECOMMENDATIONS -->
+      <div class="section-eyebrow">Consolidated Recommendations</div>
+      <h3 style="font-family:Georgia,serif; font-size:22px; font-weight:400; margin-bottom:1.5rem;">A Prioritized Commercial Diplomacy Agenda for the State Department</h3>
+
+      <div class="g3">
+        <div class="scenario-box">
+          <div class="scenario-header green">Immediate (0–12 Months)</div>
+          <div class="scenario-body">
+            <div class="scenario-title">Quick Wins & Institutional Anchoring</div>
+            <ol class="numbered-list" style="margin-top:0.75rem; font-size:12.5px;">
+              <li>Complete Reko Diq EXIM Bank financing ($500M–$1B) — signal US commitment to Pakistan's mineral sector and catalyze DFI stack</li>
+              <li>Negotiate resolution of Digital Presence Proceeds Tax — protect US tech firms while offering Pakistan an OECD-aligned alternative</li>
+              <li>Establish US–Pakistan Bilateral Investment Treaty (BIT) — provide investor protections comparable to Pakistan's BITs with other partners</li>
+              <li>DFC energy facility — $500M blended finance facility for renewable energy projects, specifically grid-scale solar in Pakistan's industrial zones</li>
+            </ol>
+          </div>
+        </div>
+        <div class="scenario-box">
+          <div class="scenario-header amber">Medium-Term (1–3 Years)</div>
+          <div class="scenario-body">
+            <div class="scenario-title">Structural Deepening</div>
+            <ol class="numbered-list" style="margin-top:0.75rem; font-size:12.5px;">
+              <li>Minerals Development Framework Agreement (MDFA) — bilateral treaty locking royalties, investor protections, and environmental standards</li>
+              <li>US-Pakistan STZ Development Partnership — co-develop 2–3 Special Technology Zones with US university linkages and American tech firm anchor tenants</li>
+              <li>Cold Chain Infrastructure Finance — DFC-backed $500M cold chain investment reducing Pakistan's post-harvest losses and increasing US agri-tech market</li>
+              <li>ML-1 Rail Financing — EXIM Bank + DFC package for Main Line 1 rail modernization as a counter-CPEC infrastructure commitment</li>
+            </ol>
+          </div>
+        </div>
+        <div class="scenario-box">
+          <div class="scenario-header">Long-Term (3–10 Years)</div>
+          <div class="scenario-body">
+            <div class="scenario-title">Strategic Transformation</div>
+            <ol class="numbered-list" style="margin-top:0.75rem; font-size:12.5px;">
+              <li>Reko Diq full-phase development with US smelting JV — copper cathode refinery with US operator creates domestic value chain</li>
+              <li>TAPI Pipeline US Backing — DFC financing guarantee + US diplomatic engagement with Turkmenistan and Afghanistan stakeholders</li>
+              <li>US-Pakistan Free Trade Agreement — the long-term prize, eliminating the remaining textile tariff barriers and creating a comprehensive services and investment framework</li>
+              <li>Pakistan as a critical minerals hub for US supply chains — formalize long-term offtake agreements for copper, lithium, and REEs that insulate US manufacturers from China supply chain disruption</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /connectivity -->
+
+  </div>
+</div><!-- /emerging page -->
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <strong style="font-family:Georgia, serif; font-size:14px;">Pakistan: Strategic & Commercial Briefing</strong>
+      <div>Prepared for U.S. Department of State Commercial Diplomacy Cohort · June 2026</div>
+    </div>
+    <div style="text-align:right;">
+      Ammar H. Khan · CEO, National Credit Guarantee Company Limited (NCGCL)<br>
+      Advisor, Federal Ministry of Power · Visiting Professor, IBA Karachi
+    </div>
+  </div>
+</footer>
+
+
+<script>
+// ============================
+// NAV & TAB LOGIC
+// ============================
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['overview','economy','power','trade','business','emerging'].indexOf(id);
+  document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  window.scrollTo(0, 0);
+  if(id === 'economy') initEconomyCharts();
+  if(id === 'power') initPowerCharts();
+  if(id === 'trade') initTradeCharts();
+  if(id === 'emerging') initEmergingCharts();
+}
+
+function showSubSection(id) {
+  document.querySelectorAll('.subsection').forEach(s => s.style.display = 'none');
+  document.getElementById('sub-'+id).style.display = 'block';
+  const btns = document.querySelectorAll('#emerging .subsection ~ * button, #emerging > .container > div > button');
+  document.querySelectorAll('[id^="btn-"]').forEach(b => {
+    b.style.background = 'var(--offwhite)';
+    b.style.color = 'var(--text-sec)';
+    b.style.border = '1px solid var(--border)';
+  });
+  const activeBtn = document.getElementById('btn-'+id);
+  if(activeBtn) {
+    activeBtn.style.background = 'var(--amber)';
+    activeBtn.style.color = 'white';
+    activeBtn.style.border = '1px solid var(--amber)';
+  }
+  if(id === 'digital') initEmergingCharts();
+}
+
+// ============================
+// CHARTS
+// ============================
+const AMBER = '#C8923A';
+const GREEN = '#52B788';
+const RED = '#9B2335';
+const BLUE = '#2563EB';
+const GRAY = '#999999';
+const DARK = '#1A1A1A';
+
+let chartsInit = {};
+
+function initEconomyCharts() {
+  if(chartsInit.economy) return;
+  chartsInit.economy = true;
+
+  // GDP by expenditure
+  new Chart(document.getElementById('gdpChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pakistan', 'Vietnam', 'Bangladesh', 'India', 'Indonesia'],
+      datasets: [
+        { label: 'Private Consumption', data: [82, 63, 71, 59, 54], backgroundColor: AMBER },
+        { label: 'Govt Consumption', data: [11, 6, 5, 11, 9], backgroundColor: BLUE },
+        { label: 'Investment', data: [14.5, 33, 30, 29, 29], backgroundColor: GREEN },
+        { label: 'Net Exports', data: [-7.5, -2, -6, 1, 8], backgroundColor: RED }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+      scales: {
+        x: { stacked: true, grid: { display: false } },
+        y: { stacked: true, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  // GDP growth scenarios
+  const years = [];
+  for(let y = 2024; y <= 2050; y++) years.push(y);
+  const base = [375], optimistic = [375], target = [375];
+  for(let i = 1; i < years.length; i++) {
+    base.push(+(base[base.length-1]*1.037).toFixed(1));
+    optimistic.push(+(optimistic[optimistic.length-1]*1.055).toFixed(1));
+    target.push(+(target[target.length-1]*1.075).toFixed(1));
+  }
+  new Chart(document.getElementById('growthChart'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        { label: 'Current Trajectory (3.7%)', data: base, borderColor: RED, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0 },
+        { label: 'Reform Path (5.5%)', data: optimistic, borderColor: AMBER, backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0 },
+        { label: 'Middle-Income Target (7.5%)', data: target, borderColor: GREEN, backgroundColor: 'transparent', borderWidth: 2, borderDash: [5,3], pointRadius: 0 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 8, font: { size: 10 } }, grid: { display: false } },
+        y: { ticks: { font: { size: 10 }, callback: v => '$'+Math.round(v/1000*10)/10+'T' } }
+      }
+    }
+  });
+
+  // Export chart
+  new Chart(document.getElementById('exportChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Textiles & Apparel', 'Food & Agriculture', 'IT Services', 'Leather & Footwear', 'Chemicals & Pharma', 'Other'],
+      datasets: [{ data: [16.3, 7.0, 3.8, 1.5, 1.4, 10.8], backgroundColor: [AMBER, GREEN, BLUE, '#8B5CF6', '#EC4899', GRAY] }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { font: { size: 11 }, boxWidth: 12 } } }
+    }
+  });
+
+  // Import chart
+  new Chart(document.getElementById('importChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Petroleum & Energy', 'Machinery & Equipment', 'Food & Agriculture', 'Chemicals', 'Metals', 'Textiles Raw', 'Transport', 'Other'],
+      datasets: [{ data: [15.1, 7.4, 7.1, 6.0, 4.6, 3.9, 1.6, 32.3], backgroundColor: [RED, AMBER, GREEN, BLUE, '#8B5CF6', '#EC4899', '#F59E0B', GRAY] }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { font: { size: 11 }, boxWidth: 12 } } }
+    }
+  });
+}
+
+function initPowerCharts() {
+  if(chartsInit.power) return;
+  chartsInit.power = true;
+
+  new Chart(document.getElementById('capacityChart'), {
+    type: 'bar',
+    data: {
+      labels: ['FY2021', 'FY2022', 'FY2023', 'FY2024', 'FY2025E'],
+      datasets: [
+        { label: 'Capacity Charges (Rs. B)', data: [793, 1050, 1450, 1900, 2300], backgroundColor: RED, yAxisID: 'y' },
+        { label: 'GDP Nominal (Rs. T)', data: [47.4, 54.1, 76.5, 84.0, 95.0], backgroundColor: AMBER, type: 'line', yAxisID: 'y2', borderWidth: 2, pointRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+      scales: {
+        y: { position: 'left', ticks: { font: { size: 10 }, callback: v => 'Rs.'+v+'B' }, grid: { display: false } },
+        y2: { position: 'right', ticks: { font: { size: 10 }, callback: v => 'Rs.'+v+'T' }, grid: { display: false } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('genMixChart'), {
+    type: 'pie',
+    data: {
+      labels: ['Hydro', 'RLNG/Gas', 'Coal', 'Nuclear', 'Solar/Wind', 'Furnace Oil', 'Other'],
+      datasets: [{ data: [27, 25, 18, 5, 6, 15, 4], backgroundColor: [BLUE, AMBER, DARK, GREEN, '#F59E0B', RED, GRAY] }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { font: { size: 10 }, boxWidth: 12 } } }
+    }
+  });
+}
+
+function initTradeCharts() {
+  if(chartsInit.trade) return;
+  chartsInit.trade = true;
+
+  new Chart(document.getElementById('tradeFlowChart'), {
+    type: 'bar',
+    data: {
+      labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+      datasets: [
+        { label: 'US Exports to Pakistan ($B)', data: [1.4, 1.7, 2.2, 2.0, 2.1, 3.3], backgroundColor: BLUE },
+        { label: 'US Imports from Pakistan ($B)', data: [3.8, 4.2, 5.1, 4.9, 5.1, 5.4], backgroundColor: AMBER }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { ticks: { font: { size: 10 }, callback: v => '$'+v+'B' } }
+      }
+    }
+  });
+}
+
+function initEmergingCharts() {
+  if(chartsInit.emerging) return;
+  chartsInit.emerging = true;
+
+  new Chart(document.getElementById('itChart'), {
+    type: 'bar',
+    data: {
+      labels: ['FY20', 'FY21', 'FY22', 'FY23', 'FY24', 'FY25', 'FY27F', 'FY30T'],
+      datasets: [
+        { label: 'IT Exports ($B)', data: [1.8, 2.1, 2.6, 2.6, 3.2, 3.8, 5.5, 15.0], backgroundColor: [BLUE,BLUE,BLUE,BLUE,BLUE,BLUE,GREEN,AMBER] }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+        y: { ticks: { font: { size: 10 }, callback: v => '$'+v+'B' } }
+      }
+    }
+  });
+}
+
+// Init on load
+document.addEventListener('DOMContentLoaded', () => {
+  showSubSection('digital');
+});
+</script>
+</body>
+</html>
