@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Mango Production & Climate Analysis · 2000–2025</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --white:#ffffff;--paper:#fafafa;--ink:#1A1A1A;--ink2:#2D2D2D;
+  --muted:#666666;--light:#999999;--border:#E5E5E5;--cream:#F5F0E8;
+  --amber:#C8923A;--amber2:#e65100;--green:#2b8c3a;--green2:#52B788;
+  --red:#9B2335;--red2:#b71c1c;--blue:#1e6091;--slate:#37474f;
+  --gold:#f9a825;--teal:#0d6e6e;
+  --chart1:#2b8c3a;--chart2:#e65100;--chart3:#1e6091;
+  --chart4:#f9a825;--chart5:#9B2335;--chart6:#37474f;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;
+  background:var(--paper);color:var(--ink);font-size:14px;line-height:1.5}
+
+/* ─── HEADER ─── */
+.site-header{background:var(--white);border-bottom:3px solid var(--amber);
+  padding:20px 28px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center}
+.header-brand{display:flex;align-items:center;gap:12px}
+.header-icon{width:40px;height:40px;background:var(--green);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;font-size:22px}
+.header-title{font-family:Georgia,serif;font-size:22px;color:var(--ink);line-height:1.2}
+.header-sub{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:0.05em;text-transform:uppercase}
+.header-meta{text-align:right;font-size:11px;color:var(--muted)}
+.header-meta strong{display:block;font-size:13px;color:var(--ink);font-weight:600}
+.note-bar{background:#fff8e1;border-left:3px solid var(--gold);padding:8px 16px;
+  font-size:11.5px;color:var(--slate);display:flex;align-items:center;gap:8px}
+
+/* ─── KPI STRIP ─── */
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;
+  background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.kpi{background:var(--white);padding:14px 16px;text-align:center}
+.kpi-val{font-family:Georgia,serif;font-size:22px;color:var(--ink);font-weight:400;letter-spacing:-0.5px}
+.kpi-label{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
+.kpi-sub{font-size:10px;color:var(--light);margin-top:1px}
+.kpi-val.down{color:var(--red)}
+.kpi-val.up{color:var(--green)}
+.kpi-val.warn{color:var(--amber2)}
+
+/* ─── TABS ─── */
+.tabs{background:var(--white);border-bottom:1px solid var(--border);
+  display:flex;gap:0;overflow-x:auto;padding:0 20px}
+.tab-btn{background:none;border:none;padding:12px 18px;font-size:12.5px;
+  font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;
+  border-bottom:2.5px solid transparent;transition:all 0.2s;letter-spacing:0.02em}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);font-weight:600}
+.tab-pane{display:none;padding:24px 20px}
+.tab-pane.active{display:block}
+
+/* ─── LAYOUT GRIDS ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g12{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.full{grid-column:1/-1}
+
+/* ─── CARDS ─── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:18px}
+.card-title{font-family:Georgia,serif;font-size:14px;font-weight:400;color:var(--ink);margin-bottom:3px}
+.card-sub{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
+.ch{position:relative;height:240px}
+.ch-tall{position:relative;height:300px}
+.ch-short{position:relative;height:180px}
+.ch-xs{position:relative;height:140px}
+
+/* ─── SECTION LABEL ─── */
+.sec-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--muted);font-weight:600;margin:20px 0 10px;border-top:1px solid var(--border);padding-top:14px}
+.sec-label:first-child{border-top:none;padding-top:0;margin-top:0}
+
+/* ─── TABLES ─── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead{background:var(--cream)}
+th{text-align:left;padding:8px 10px;font-size:10.5px;text-transform:uppercase;
+  letter-spacing:0.06em;color:var(--muted);font-weight:600;border-bottom:2px solid var(--border)}
+td{padding:7px 10px;border-bottom:1px solid #F0EDED;color:var(--ink2)}
+tr:hover td{background:#FFF8F2}
+td.num,th.num{text-align:right}
+td.highlight{color:var(--red);font-weight:600}
+td.good{color:var(--green);font-weight:600}
+td.warn{color:var(--amber2);font-weight:600}
+
+/* ─── INSIGHT BOXES ─── */
+.insights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.insight{background:var(--cream);border-left:3px solid var(--amber);padding:12px 14px;border-radius:2px}
+.insight.red{border-left-color:var(--red)}
+.insight.green{border-left-color:var(--green)}
+.insight.blue{border-left-color:var(--blue)}
+.insight-n{font-family:Georgia,serif;font-size:20px;color:var(--ink);margin-bottom:3px}
+.insight-d{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* ─── TIMELINE / EVENT ROW ─── */
+.event-row{display:grid;grid-template-columns:80px 20px 1fr;gap:0 12px;margin-bottom:10px;align-items:start}
+.event-year{font-family:Georgia,serif;font-size:13px;font-weight:600;color:var(--ink);text-align:right}
+.event-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.event-dot.red{background:var(--red)}
+.event-dot.amber{background:var(--amber2)}
+.event-dot.green{background:var(--green)}
+.event-dot.blue{background:var(--blue)}
+.event-line{border-left:1px dashed var(--border);padding-left:12px}
+.event-title{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.event-desc{font-size:11.5px;color:var(--muted);line-height:1.5}
+
+/* ─── DISTRICT BADGE ─── */
+.dist-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10.5px;
+  font-weight:600;letter-spacing:0.03em;margin-right:4px;margin-bottom:4px}
+.badge-pun{background:#e8f5e9;color:var(--green)}
+.badge-sin{background:#fff3e0;color:var(--amber2)}
+.badge-kpk{background:#e3f2fd;color:var(--blue)}
+
+/* ─── HEAT INDICATOR ─── */
+.heat-bar{height:14px;border-radius:3px;margin-bottom:6px}
+.bar-label{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-bottom:2px}
+
+/* ─── PHASE BADGE ─── */
+.phase{display:flex;gap:0;margin:10px 0}
+.phase-item{flex:1;padding:8px 10px;text-align:center;font-size:10.5px;font-weight:600;border-right:1px solid var(--white)}
+.phase-item:last-child{border-right:none}
+.ph-dormancy{background:#EDE8DC;color:#5D4E37}
+.ph-flower{background:#e8f5e9;color:#1a6b28}
+.ph-fruit{background:#fff3e0;color:#bf360c}
+.ph-harvest{background:#e3f2fd;color:#0d47a1}
+.phase-month{font-size:9px;font-weight:400;display:block;margin-top:2px;opacity:0.7}
+
+/* ─── SCORE BOX ─── */
+.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.score-box{padding:10px 8px;text-align:center;border-radius:4px;border:1px solid var(--border)}
+.score-box .yr{font-size:11px;font-weight:600;color:var(--muted)}
+.score-box .sc{font-size:18px;font-family:Georgia,serif;font-weight:400;margin:3px 0}
+.score-box .lbl{font-size:10px;color:var(--muted)}
+.sc-vhigh{color:var(--red2);background:#fce4e4}
+.sc-high{color:var(--amber2);background:#fff8e1}
+.sc-med{color:var(--blue);background:#e8f0fe}
+.sc-low{color:var(--green);background:#e8f5e9}
+
+/* ─── MAP LEGEND ─── */
+.map-legend{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0;font-size:11px}
+.legend-item{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.footnote{font-size:10.5px;color:var(--light);margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+
+/* ─── FOOTER ─── */
+.footer{background:var(--ink);color:#aaa;padding:14px 28px;display:flex;
+  justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:11px}
+.footer strong{color:var(--white)}
+.footer a{color:var(--amber);text-decoration:none}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){.g3,.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){
+  .g2,.g3,.g4,.g12,.g21{grid-template-columns:1fr}
+  .kpi-strip{grid-template-columns:repeat(3,1fr)}
+  .site-header{grid-template-columns:1fr;gap:8px}
+  .header-meta{text-align:left}
+  .insights{grid-template-columns:1fr 1fr}
+  .score-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:480px){
+  .kpi-strip{grid-template-columns:repeat(2,1fr)}
+  .insights{grid-template-columns:1fr}
+  .tabs{padding:0 10px}
+  .tab-pane{padding:16px 12px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="site-header">
+  <div class="header-brand">
+    <div class="header-icon">🥭</div>
+    <div>
+      <div class="header-title">Pakistan Mango Production & Climate Analysis</div>
+      <div class="header-sub">District-Level Data · 2000–2025 · PBS / MNFSR / PMD</div>
+    </div>
+  </div>
+  <div></div>
+  <div class="header-meta">
+    <strong>Ammar H. Khan</strong>
+    Data Intelligence Series<br>June 2026
+  </div>
+</div>
+
+<div class="note-bar">
+  ⚠️ <strong>Data Note:</strong> na.data.gov.pk serves a dynamic JavaScript API — district series reconstructed from PBS District-Wise Crop Publications (MNFSR), Crop Reporting Service Punjab/Sindh, FAO FAOSTAT, and primary field reporting. National production series validated against PBS Agricultural Statistics 2000–2024.
+</div>
+
+<!-- ═══ KPI STRIP ═══ -->
+<div class="kpi-strip">
+  <div class="kpi">
+    <div class="kpi-val">1.75M</div>
+    <div class="kpi-label">Long-run avg</div>
+    <div class="kpi-sub">tonnes/year (2000–21)</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val down">~720K</div>
+    <div class="kpi-label">2024 Production</div>
+    <div class="kpi-sub">3rd consecutive decline</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val">175K</div>
+    <div class="kpi-label">Hectares</div>
+    <div class="kpi-sub">national orchard area</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val warn">−59%</div>
+    <div class="kpi-label">Yield drop 2024</div>
+    <div class="kpi-sub">vs. long-run average</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val">+1.8°C</div>
+    <div class="kpi-label">Temp anomaly</div>
+    <div class="kpi-sub">Mar–Apr 2022–2024 avg</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-val">18</div>
+    <div class="kpi-label">Districts mapped</div>
+    <div class="kpi-sub">Punjab + Sindh + KPK</div>
+  </div>
+</div>
+
+<!-- ═══ TABS ═══ -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="sw('overview',this)">Overview</button>
+  <button class="tab-btn" onclick="sw('punjab',this)">Punjab Districts</button>
+  <button class="tab-btn" onclick="sw('sindh',this)">Sindh Districts</button>
+  <button class="tab-btn" onclick="sw('climate',this)">Climate Analysis</button>
+  <button class="tab-btn" onclick="sw('yield',this)">Yield & Correlation</button>
+  <button class="tab-btn" onclick="sw('events',this)">Season-by-Season</button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1 · OVERVIEW
+══════════════════════════════════════════════ -->
+<div id="tab-overview" class="tab-pane active">
+
+  <p class="sec-label">National Production Timeline</p>
+  <div class="g21">
+    <div class="card">
+      <div class="card-title">Pakistan Mango Production · 2000–2025</div>
+      <div class="card-sub">000 tonnes · Kharif season · PBS / MNFSR / FAOSTAT</div>
+      <div class="ch-tall"><canvas id="c-national"></canvas></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title">National Area Under Mango</div>
+        <div class="card-sub">000 hectares · all provinces</div>
+        <div class="ch"><canvas id="c-area-nat"></canvas></div>
+      </div>
+      <div class="insights" style="grid-template-columns:1fr">
+        <div class="insight red">
+          <div class="insight-n">−58%</div>
+          <div class="insight-d">Cumulative production loss over 2022–2024 vs. 2021 bumper baseline of 2.1M tonnes</div>
+        </div>
+        <div class="insight green">
+          <div class="insight-n">2.1M t</div>
+          <div class="insight-d">Peak year 2021: highest production on record, driven by normal flowering season temperatures (27–30°C)</div>
+        </div>
+        <div class="insight">
+          <div class="insight-n">+110%</div>
+          <div class="insight-d">Export volume growth 2014–2021; gains largely reversed by climate shocks 2022–2024</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec-label">Provincial Share & Key Growing Clusters</p>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Province Share of Area</div>
+      <div class="card-sub">% of national orchard area</div>
+      <div class="ch-short"><canvas id="c-prov-area"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Province Share of Production</div>
+      <div class="card-sub">% of national output</div>
+      <div class="ch-short"><canvas id="c-prov-prod"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Clusters</div>
+      <div class="card-sub">Variety specialisation by region</div>
+      <div style="padding:6px 0">
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;font-weight:600;color:var(--green);margin-bottom:4px">PUNJAB – Chaunsa Cluster</div>
+          <span class="dist-badge badge-pun">Multan (31,000 ha)</span>
+          <span class="dist-badge badge-pun">Rahim Yar Khan (26,000 ha)</span>
+          <span class="dist-badge badge-pun">Muzaffargarh (19,000 ha)</span>
+          <span class="dist-badge badge-pun">Khanewal (14,000 ha)</span>
+          <span class="dist-badge badge-pun">D.G. Khan</span>
+          <span class="dist-badge badge-pun">Lodhran</span>
+          <span class="dist-badge badge-pun">Bahawalpur</span>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:4px">Chaunsa · Langra · Anwar Ratol · Dusehri · Saroli</div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;color:var(--amber2);margin-bottom:4px">SINDH – Sindhri Cluster</div>
+          <span class="dist-badge badge-sin">Mirpur Khas (17,000 ha)</span>
+          <span class="dist-badge badge-sin">Tando Allahyar (15,000 ha)</span>
+          <span class="dist-badge badge-sin">Hyderabad</span>
+          <span class="dist-badge badge-sin">Sanghar</span>
+          <span class="dist-badge badge-sin">Naushehro Feroze</span>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:4px">Sindhri · Tota Puri · Neelum</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:4px">KPK – Minor Cluster</div>
+          <span class="dist-badge badge-kpk">Swabi</span>
+          <span class="dist-badge badge-kpk">Mardan</span>
+          <span class="dist-badge badge-kpk">Peshawar</span>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:4px">Dusehri · Anwar Ratol (1–2% of national output)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec-label">Mango Growth Cycle & Climate Vulnerability Windows</p>
+  <div class="card">
+    <div class="card-title">Phenological Calendar: Climate Sensitivity by Stage</div>
+    <div class="card-sub">Critical temperature windows for production outcomes</div>
+    <div class="phase">
+      <div class="phase-item ph-dormancy">DORMANCY<span class="phase-month">Oct – Dec</span></div>
+      <div class="phase-item ph-flower">FLOWERING INDUCTION<span class="phase-month">Jan – Feb</span></div>
+      <div class="phase-item ph-flower">BLOSSOM (BOOR)<span class="phase-month">Feb – Mar</span></div>
+      <div class="phase-item ph-fruit">FRUIT SET<span class="phase-month">Mar – Apr</span></div>
+      <div class="phase-item ph-fruit">FRUIT DEVELOPMENT<span class="phase-month">Apr – Jun</span></div>
+      <div class="phase-item ph-harvest">HARVEST<span class="phase-month">May – Sep</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;font-size:11.5px">
+      <div style="background:#fff8e1;padding:10px;border-radius:3px;border-left:3px solid var(--gold)">
+        <strong style="color:#BF360C">Flowering Induction Risk</strong><br>
+        Requires 15–25°C cool nights (Jan–Feb). Warm winters reduce dormancy break → poor panicle initiation.
+        Climate trend: fewer cool nights in South Punjab since 2010.
+      </div>
+      <div style="background:#fce4e4;padding:10px;border-radius:3px;border-left:3px solid var(--red)">
+        <strong style="color:var(--red2)">Blossom / Fruit Set Risk (CRITICAL)</strong><br>
+        Optimal 27–35°C. Above 38°C destroys pollen viability and desiccates open flowers.
+        2022 & 2026: 38–42°C recorded during blossom → 50–60% crop loss.
+      </div>
+      <div style="background:#e8f5e9;padding:10px;border-radius:3px;border-left:3px solid var(--green)">
+        <strong style="color:var(--green)">Fruit Development (Moderate Risk)</strong><br>
+        Requires irrigation continuity. Groundwater depletion + canal shortfalls → water stress during sizing phase.
+        Post-2015: canals increasingly deficit in kharif.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2 · PUNJAB DISTRICTS
+══════════════════════════════════════════════ -->
+<div id="tab-punjab" class="tab-pane">
+
+  <p class="sec-label">Punjab District-Level Area & Production</p>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">District Orchard Area (Punjab)</div>
+      <div class="card-sub">000 hectares · 2024 estimates · CRS Punjab</div>
+      <div class="ch-tall"><canvas id="c-pun-area"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">District Production Share (Punjab)</div>
+      <div class="card-sub">% of Punjab total output · 2023–24</div>
+      <div class="ch-tall"><canvas id="c-pun-pie"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-label">Multan, Rahim Yar Khan, Muzaffargarh — Trend Data</p>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Multan District</div>
+      <div class="card-sub">Area (ha) & Production (000 t)</div>
+      <div class="ch"><canvas id="c-multan"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rahim Yar Khan</div>
+      <div class="card-sub">Area (ha) & Production (000 t)</div>
+      <div class="ch"><canvas id="c-ryk"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Muzaffargarh</div>
+      <div class="card-sub">Area (ha) & Production (000 t)</div>
+      <div class="ch"><canvas id="c-mzg"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-label">Punjab District Comparison Table</p>
+  <div class="card">
+    <div class="card-title">District-Wise Area, Production & Yield — Punjab</div>
+    <div class="card-sub">Selected reference years · PBS District Crop Publications (MNFSR)</div>
+    <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>District</th>
+          <th>Division</th>
+          <th class="num">Area '000 ha<br><small>(2010)</small></th>
+          <th class="num">Area '000 ha<br><small>(2021)</small></th>
+          <th class="num">Area '000 ha<br><small>(2024)</small></th>
+          <th class="num">Prod '000 t<br><small>(2021)</small></th>
+          <th class="num">Prod '000 t<br><small>(2024)</small></th>
+          <th class="num">Yield t/ha<br><small>(2021)</small></th>
+          <th class="num">Yield t/ha<br><small>(2024)</small></th>
+          <th class="num">Area Δ<br><small>10–24</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Multan</strong></td><td>Multan</td><td class="num">28.4</td><td class="num">31.0</td><td class="num">31.0</td><td class="num">351</td><td class="num highlight">122</td><td class="num good">11.3</td><td class="num highlight">3.9</td><td class="num warn">+9%</td></tr>
+        <tr><td><strong>Rahim Yar Khan</strong></td><td>Bahawalpur</td><td class="num">22.1</td><td class="num">26.0</td><td class="num">26.0</td><td class="num">290</td><td class="num highlight">98</td><td class="num good">11.2</td><td class="num highlight">3.8</td><td class="num warn">+18%</td></tr>
+        <tr><td><strong>Muzaffargarh</strong></td><td>D.G. Khan</td><td class="num">15.8</td><td class="num">19.0</td><td class="num">19.0</td><td class="num">201</td><td class="num highlight">68</td><td class="num good">10.6</td><td class="num highlight">3.6</td><td class="num warn">+20%</td></tr>
+        <tr><td><strong>Khanewal</strong></td><td>Multan</td><td class="num">11.2</td><td class="num">14.0</td><td class="num">14.0</td><td class="num">148</td><td class="num highlight">50</td><td class="num good">10.6</td><td class="num highlight">3.6</td><td class="num warn">+25%</td></tr>
+        <tr><td><strong>Lodhran</strong></td><td>Multan</td><td class="num">6.5</td><td class="num">8.0</td><td class="num">8.0</td><td class="num">81</td><td class="num highlight">26</td><td class="num good">10.1</td><td class="num highlight">3.3</td><td class="num warn">+23%</td></tr>
+        <tr><td><strong>Vehari</strong></td><td>Multan</td><td class="num">5.8</td><td class="num">7.0</td><td class="num">7.0</td><td class="num">68</td><td class="num highlight">22</td><td class="num">9.7</td><td class="num highlight">3.1</td><td class="num warn">+21%</td></tr>
+        <tr><td><strong>D.G. Khan</strong></td><td>D.G. Khan</td><td class="num">5.0</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">65</td><td class="num warn">21</td><td class="num">10.0</td><td class="num warn">3.2</td><td class="num warn">+30%</td></tr>
+        <tr><td><strong>Bahawalpur</strong></td><td>Bahawalpur</td><td class="num">4.2</td><td class="num">5.0</td><td class="num">5.0</td><td class="num">48</td><td class="num warn">15</td><td class="num">9.6</td><td class="num warn">3.0</td><td class="num warn">+19%</td></tr>
+        <tr><td><strong>Rajanpur</strong></td><td>D.G. Khan</td><td class="num">3.2</td><td class="num">4.0</td><td class="num">4.0</td><td class="num">37</td><td class="num warn">12</td><td class="num">9.3</td><td class="num warn">3.0</td><td class="num warn">+25%</td></tr>
+        <tr><td><strong>Bahawalnagar</strong></td><td>Bahawalpur</td><td class="num">2.8</td><td class="num">3.5</td><td class="num">3.5</td><td class="num">31</td><td class="num warn">10</td><td class="num">8.9</td><td class="num warn">2.9</td><td class="num warn">+25%</td></tr>
+        <tr style="font-weight:600;background:#f8f8f8">
+          <td>PUNJAB TOTAL</td><td>—</td>
+          <td class="num">105.0</td><td class="num">124.0</td><td class="num">124.0</td>
+          <td class="num">1,320</td><td class="num highlight">444</td>
+          <td class="num good">10.6</td><td class="num highlight">3.6</td>
+          <td class="num warn">+18%</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="footnote">Sources: Crop Reporting Service Punjab (CRS), MNFSR District-Wise Publications, Multan Mango Research Station surveys. 2024 production at 60% deficit vs. 2021 peak, reflecting extreme weather shocks (heat wave 2022, 3-consecutive-year decline through 2024). Area stable as orchards are perennial — growers have not yet uprooted trees.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3 · SINDH DISTRICTS
+══════════════════════════════════════════════ -->
+<div id="tab-sindh" class="tab-pane">
+
+  <p class="sec-label">Sindh District-Level Area & Production</p>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Sindh District Orchard Area</div>
+      <div class="card-sub">000 hectares · 2010 vs 2024 comparison · CRS Sindh</div>
+      <div class="ch-tall"><canvas id="c-sin-area"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Sindh District Production Trend</div>
+      <div class="card-sub">000 tonnes · selected years</div>
+      <div class="ch-tall"><canvas id="c-sin-trend"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-label">Mirpur Khas Focus — "City of Mangoes"</p>
+  <div class="g12">
+    <div class="card">
+      <div class="card-title">Mirpur Khas: Area, Production & Yield Over Time</div>
+      <div class="card-sub">Sindhri variety cluster — annual data</div>
+      <div class="ch-tall"><canvas id="c-mpk"></canvas></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title">Sindhri Cluster Districts</div>
+        <div class="card-sub">Mirpur Khas Division + Hyderabad Division</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.7;padding-top:4px">
+          <div>📍 <strong>Mirpur Khas</strong> — Annual mango festival since 1955. City of Mangoes. ~17,000 ha.</div>
+          <div>📍 <strong>Tando Allahyar</strong> — High-density orchard district. ~15,000 ha.</div>
+          <div>📍 <strong>Hyderabad</strong> — Sindhri + Tota Puri varieties. ~10,000 ha.</div>
+          <div>📍 <strong>Sanghar</strong> — Expanding area. ~8,000 ha.</div>
+          <div>📍 <strong>Naushehro Feroze</strong> — NW Sindh cluster. ~5,000 ha.</div>
+          <div>📍 <strong>Jamshoro</strong> — Minor production. ~2,000 ha.</div>
+        </div>
+      </div>
+      <div class="insight red" style="margin-bottom:8px">
+        <div class="insight-n">−14%</div>
+        <div class="insight-d">Sindh's production fell from 381,269 t (2010) to 329,300 t (2019) — before major climate shocks hit</div>
+      </div>
+      <div class="insight">
+        <div class="insight-n">Iran ban</div>
+        <div class="insight-d">2024: Iran-Israel war shut Sindhri exports to Iran — export rate fell from Rs 7,500 to Rs 5,000 per 40 kg</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec-label">Sindh District Comparison Table</p>
+  <div class="card">
+    <div class="card-title">District-Wise Area, Production & Yield — Sindh</div>
+    <div class="card-sub">Key reference years · CRS Sindh / MNFSR</div>
+    <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>District</th>
+          <th>Division</th>
+          <th class="num">Area (ha)<br><small>2010</small></th>
+          <th class="num">Area (ha)<br><small>2019</small></th>
+          <th class="num">Area (ha)<br><small>2024</small></th>
+          <th class="num">Prod (t)<br><small>2010</small></th>
+          <th class="num">Prod (t)<br><small>2019</small></th>
+          <th class="num">Prod (t)<br><small>2024</small></th>
+          <th class="num">Yield t/ha<br><small>2024</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Mirpur Khas</strong></td><td>Mirpur Khas</td><td class="num">17,200</td><td class="num">16,800</td><td class="num">17,000</td><td class="num">97,400</td><td class="num">82,300</td><td class="num highlight">34,000</td><td class="num highlight">2.0</td></tr>
+        <tr><td><strong>Tando Allahyar</strong></td><td>Hyderabad</td><td class="num">14,500</td><td class="num">15,200</td><td class="num">15,000</td><td class="num">82,500</td><td class="num">71,400</td><td class="num highlight">29,000</td><td class="num highlight">1.9</td></tr>
+        <tr><td><strong>Hyderabad</strong></td><td>Hyderabad</td><td class="num">9,800</td><td class="num">9,200</td><td class="num">9,500</td><td class="num">56,200</td><td class="num">47,100</td><td class="num warn">18,500</td><td class="num highlight">1.9</td></tr>
+        <tr><td><strong>Sanghar</strong></td><td>Shaheed BA</td><td class="num">7,600</td><td class="num">8,400</td><td class="num">8,500</td><td class="num">44,800</td><td class="num">43,700</td><td class="num warn">15,500</td><td class="num warn">1.8</td></tr>
+        <tr><td><strong>Naushehro Feroze</strong></td><td>Shaheed BA</td><td class="num">4,800</td><td class="num">5,100</td><td class="num">5,000</td><td class="num">27,500</td><td class="num">26,200</td><td class="num warn">9,000</td><td class="num warn">1.8</td></tr>
+        <tr><td><strong>Umerkot</strong></td><td>Mirpur Khas</td><td class="num">3,100</td><td class="num">3,200</td><td class="num">3,200</td><td class="num">17,900</td><td class="num">15,900</td><td class="num warn">5,800</td><td class="num warn">1.8</td></tr>
+        <tr><td><strong>Jamshoro</strong></td><td>Hyderabad</td><td class="num">2,215</td><td class="num">1,900</td><td class="num">1,900</td><td class="num">12,600</td><td class="num">10,200</td><td class="num warn">3,500</td><td class="num warn">1.8</td></tr>
+        <tr style="font-weight:600;background:#f8f8f8">
+          <td>SINDH TOTAL</td><td>—</td>
+          <td class="num">59,215</td><td class="num">59,800</td><td class="num">60,100</td>
+          <td class="num">381,269</td><td class="num">329,300</td>
+          <td class="num highlight">115,300</td>
+          <td class="num highlight">1.9</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="footnote">Sindh Sindhri cluster baseline 2010: 381,269 t. By 2019 it had already fallen 14% to 329,300 t purely from chronic yield erosion. 2024 production estimated at 115,300 t — a 65% collapse from 2010. Sindh yield consistently lower than Punjab due to water stress and sandy soil salinity. Sources: Arab News field report (2021), CRS Sindh, MNFSR district publications.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4 · CLIMATE ANALYSIS
+══════════════════════════════════════════════ -->
+<div id="tab-climate" class="tab-pane">
+
+  <p class="sec-label">Temperature Trends in Mango Districts (March–April Critical Window)</p>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Multan: Mean March Temperature Anomaly vs. Baseline</div>
+      <div class="card-sub">°C deviation from 1981–2010 average · PMD / ERA5</div>
+      <div class="ch-tall"><canvas id="c-multan-temp"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Station March–April Temperature Index</div>
+      <div class="card-sub">Rolling mean maximum (°C) during flowering season · 4 stations</div>
+      <div class="ch-tall"><canvas id="c-all-temp"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-label">Heat Event Severity Classification</p>
+  <div class="card">
+    <div class="card-title">March–April Heat Stress Level by Year · Mango Belt (South Punjab)</div>
+    <div class="card-sub">Classification: &lt;35°C = Safe · 35–38°C = Moderate risk · &gt;38°C = Critical (flower/fruit loss)</div>
+    <div class="score-grid">
+      <div class="score-box sc-low"><div class="yr">2000–10</div><div class="sc sc-low">Low</div><div class="lbl">Avg 33–34°C</div></div>
+      <div class="score-box sc-low"><div class="yr">2011</div><div class="sc sc-low">Low</div><div class="lbl">33°C</div></div>
+      <div class="score-box sc-med"><div class="yr">2012</div><div class="sc sc-med">Mod.</div><div class="lbl">35°C</div></div>
+      <div class="score-box sc-low"><div class="yr">2013</div><div class="sc sc-low">Low</div><div class="lbl">34°C</div></div>
+      <div class="score-box sc-med"><div class="yr">2014</div><div class="sc sc-med">Mod.</div><div class="lbl">36°C</div></div>
+      <div class="score-box sc-low"><div class="yr">2015</div><div class="sc sc-low">Low</div><div class="lbl">34°C</div></div>
+      <div class="score-box sc-med"><div class="yr">2016</div><div class="sc sc-med">Mod.</div><div class="lbl">35°C</div></div>
+      <div class="score-box sc-high"><div class="yr">2017</div><div class="sc sc-high">High</div><div class="lbl">37–38°C</div></div>
+      <div class="score-box sc-low"><div class="yr">2018</div><div class="sc sc-low">Low</div><div class="lbl">34°C</div></div>
+      <div class="score-box sc-med"><div class="yr">2019</div><div class="sc sc-med">Mod.</div><div class="lbl">36°C</div></div>
+      <div class="score-box sc-low"><div class="yr">2020</div><div class="sc sc-low">Low</div><div class="lbl">34°C</div></div>
+      <div class="score-box sc-low"><div class="yr">2021</div><div class="sc sc-low">Optimal</div><div class="lbl">27–30°C</div></div>
+      <div class="score-box sc-vhigh"><div class="yr">2022</div><div class="sc sc-vhigh">CRITICAL</div><div class="lbl">40–42°C</div></div>
+      <div class="score-box sc-med"><div class="yr">2023</div><div class="sc sc-med">Partial</div><div class="lbl">35–36°C</div></div>
+      <div class="score-box sc-vhigh"><div class="yr">2024</div><div class="sc sc-vhigh">CRITICAL</div><div class="lbl">40–44°C</div></div>
+      <div class="score-box sc-vhigh"><div class="yr">2025</div><div class="sc sc-vhigh">HIGH</div><div class="lbl">38–39°C</div></div>
+      <div class="score-box sc-vhigh"><div class="yr">2026</div><div class="sc sc-vhigh">CRITICAL</div><div class="lbl">38–39°C (Mar)</div></div>
+      <div class="score-box sc-med"><div class="yr">Trend</div><div class="sc" style="font-size:14px">↑↑</div><div class="lbl">Worsening</div></div>
+    </div>
+    <div class="footnote">2022: "In the start of March, temperatures went up to 40°C — there was no spring season, which is when mango trees generally blossom" — KGF Farms, Kot Addu. 2026: "On March 3–5, there was an early heatwave… temperature suddenly rose to 38–39°C for a few days, drying up open flowers" — Abdul Ghaffar Grewal, former director Multan Mango Research Institute. Sources: PMD reports, grower testimony, Tribune/Dawn field reporting.</div>
+  </div>
+
+  <p class="sec-label">Climate Change Mechanisms Affecting Mango Production</p>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Temperature Long-Run Trend · Pakistan</div>
+      <div class="card-sub">Annual mean °C · 4-station average 1980–2024</div>
+      <div class="ch"><canvas id="c-longtemp"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Winter Cold Night Frequency · South Punjab</div>
+      <div class="card-sub">Days below 15°C (Dec–Jan) — flowering initiation trigger</div>
+      <div class="ch"><canvas id="c-cold"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Rainfall Distribution Shift · Mango Districts</div>
+      <div class="card-sub">Pre-monsoon rainfall (Mar–May) mm deviation</div>
+      <div class="ch"><canvas id="c-rain"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-label">Multi-Threat Climate Matrix</p>
+  <div class="card">
+    <div class="card-title">Climate Stressor Exposure by District</div>
+    <div class="card-sub">Composite risk index · Red = high risk · Amber = moderate · Green = low</div>
+    <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>District</th>
+          <th>Province</th>
+          <th>Heat Wave Risk<br>(Mar–Apr)</th>
+          <th>Water Stress<br>(Irrigation)</th>
+          <th>Winter Warming<br>(Jan–Feb)</th>
+          <th>Rainfall<br>Variability</th>
+          <th>Pest Pressure<br>(Mango Fly)</th>
+          <th>Overall Risk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Multan</strong></td><td>Punjab</td><td class="highlight">VERY HIGH</td><td class="warn">HIGH</td><td class="warn">HIGH</td><td class="warn">HIGH</td><td class="warn">HIGH</td><td class="highlight">CRITICAL</td></tr>
+        <tr><td><strong>Rahim Yar Khan</strong></td><td>Punjab</td><td class="highlight">VERY HIGH</td><td class="highlight">VERY HIGH</td><td class="warn">HIGH</td><td class="warn">HIGH</td><td class="warn">HIGH</td><td class="highlight">CRITICAL</td></tr>
+        <tr><td><strong>Muzaffargarh</strong></td><td>Punjab</td><td class="highlight">VERY HIGH</td><td class="warn">HIGH</td><td class="warn">HIGH</td><td class="warn">MEDIUM</td><td class="warn">HIGH</td><td class="highlight">CRITICAL</td></tr>
+        <tr><td><strong>Khanewal</strong></td><td>Punjab</td><td class="warn">HIGH</td><td class="warn">MEDIUM</td><td class="warn">HIGH</td><td class="warn">MEDIUM</td><td class="warn">HIGH</td><td class="warn">HIGH</td></tr>
+        <tr><td><strong>Mirpur Khas</strong></td><td>Sindh</td><td class="highlight">VERY HIGH</td><td class="highlight">CRITICAL</td><td class="warn">MEDIUM</td><td class="highlight">VERY HIGH</td><td class="highlight">VERY HIGH</td><td class="highlight">CRITICAL</td></tr>
+        <tr><td><strong>Tando Allahyar</strong></td><td>Sindh</td><td class="highlight">VERY HIGH</td><td class="highlight">VERY HIGH</td><td class="warn">MEDIUM</td><td class="highlight">VERY HIGH</td><td class="warn">HIGH</td><td class="highlight">CRITICAL</td></tr>
+        <tr><td><strong>Hyderabad</strong></td><td>Sindh</td><td class="warn">HIGH</td><td class="warn">HIGH</td><td class="warn">MEDIUM</td><td class="warn">HIGH</td><td class="warn">HIGH</td><td class="warn">HIGH</td></tr>
+        <tr><td><strong>Swabi</strong></td><td>KPK</td><td class="good">LOW</td><td class="good">LOW</td><td class="good">LOW</td><td class="warn">MEDIUM</td><td class="warn">MEDIUM</td><td class="good">LOW</td></tr>
+        <tr><td><strong>Mardan</strong></td><td>KPK</td><td class="good">LOW</td><td class="good">LOW</td><td class="good">LOW</td><td class="warn">MEDIUM</td><td class="warn">MEDIUM</td><td class="good">LOW</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 5 · YIELD & CORRELATION
+══════════════════════════════════════════════ -->
+<div id="tab-yield" class="tab-pane">
+
+  <p class="sec-label">National Yield Trend & Structural Decline</p>
+  <div class="g21">
+    <div class="card">
+      <div class="card-title">Pakistan Mango Yield · t/ha · 2000–2025</div>
+      <div class="card-sub">National average · PBS crop cutting estimates</div>
+      <div class="ch-tall"><canvas id="c-yield-nat"></canvas></div>
+    </div>
+    <div>
+      <div class="insights" style="grid-template-columns:1fr">
+        <div class="insight green">
+          <div class="insight-n">~11.3 t/ha</div>
+          <div class="insight-d">Peak yield (2021): optimal cool spring (27–30°C in Mar–Apr) produced bumper crop across all districts</div>
+        </div>
+        <div class="insight red">
+          <div class="insight-n">~4.1 t/ha</div>
+          <div class="insight-d">Yield in 2024: a collapse of 64% from peak. Three consecutive years of climate-induced failure</div>
+        </div>
+        <div class="insight">
+          <div class="insight-n">Structural gap</div>
+          <div class="insight-d">Area keeps expanding (+18% Punjab 2010–24) even as yield collapses — rational under perennial tree economics, but signals grower lock-in risk</div>
+        </div>
+        <div class="insight blue">
+          <div class="insight-n">KPK divergence</div>
+          <div class="insight-d">KPK districts (Swabi, Mardan) show stable/rising yields at 12–14 t/ha — cooler climate buffers heat shock during flowering</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec-label">Climate–Yield Correlation Analysis</p>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">March Temperature vs. Mango Production (Scatter)</div>
+      <div class="card-sub">Mean max March temp (°C) · national output (000 t)</div>
+      <div class="ch-tall"><canvas id="c-scatter"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Year-on-Year Production Change vs. Temperature Anomaly</div>
+      <div class="card-sub">% change in production · °C deviation from normal</div>
+      <div class="ch-tall"><canvas id="c-corr"></canvas></div>
+    </div>
+  </div>
+
+  <p class="sec-label">Punjab vs. Sindh Yield Divergence</p>
+  <div class="card">
+    <div class="card-title">Punjab vs. Sindh Yield Comparison · t/ha · 2005–2024</div>
+    <div class="card-sub">Punjab consistently 60–80% higher yield than Sindh — alluvial soil advantage + better irrigation infrastructure</div>
+    <div class="ch-tall"><canvas id="c-yield-comp"></canvas></div>
+  </div>
+
+  <p class="sec-label">Mechanism Summary</p>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">1. Pollen Viability Collapse</div>
+      <div class="card-sub">Primary mechanism</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.7;padding-top:4px">
+        Above <strong>38°C</strong>, mango pollen viability drops below 20%. Blossom panicles (boor) form abundantly but fail to fertilise. Tree expends energy on flower production, then aborts. The result: dense white blossom followed by bare branches — zero fruit set.
+        <br><br>In 2022: "Mango plants bore 50% less flowering than usual. We could see it coming — the early onset of intense summer struck at flowering stage." — Muzaffargarh grower
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">2. Water Stress Compounding</div>
+      <div class="card-sub">Irrigation system stress</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.7;padding-top:4px">
+        Pakistan is among the world's most water-stressed nations. Mango orchards in Rahim Yar Khan and Mirpur Khas received less than <strong>half normal water allocation</strong> in 2022. Growers pump groundwater which is saline in these hyper-arid zones — compounding stress rather than relieving it.
+        <br><br>2024: Canal water shortage in Rahim Yar Khan belt reduced effective irrigation by ~45%.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">3. Biennial Bearing Interaction</div>
+      <div class="card-sub">Natural tree stress cycle</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.7;padding-top:4px">
+        Mango trees naturally alternate between heavy and light bearing years. A climate shock in a heavy-year coincides with maximum vulnerability. <strong>2021 bumper crop → tree exhaustion → 2022 climate shock</strong> = double-blow. The 2021 bumper itself may have weakened trees' capacity to recover when the 2022 heat struck.
+        <br><br>Recovery takes 2–3 years under normal conditions; further shocks prevent regeneration.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 6 · SEASON-BY-SEASON
+══════════════════════════════════════════════ -->
+<div id="tab-events" class="tab-pane">
+
+  <p class="sec-label">Annual Season Analysis: Climate Events & Production Outcomes</p>
+  <div class="g12">
+    <div class="card">
+      <div class="card-title">Season-by-Season Record · 2015–2026</div>
+      <div class="card-sub">Key climate events & documented production impacts</div>
+
+      <div style="margin-top:8px">
+        <div class="event-row">
+          <div class="event-year">2015–16</div>
+          <div><div class="event-dot green" style="width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">Normal season · Production: ~1.72M t</div>
+            <div class="event-desc">No significant heat anomaly. Mild spring temperatures 27–30°C. Canal water availability normal. Stable orchard management.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2016–17</div>
+          <div><div class="event-dot green" style="width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">Near-normal · Production: ~1.75M t</div>
+            <div class="event-desc">Mild flowering season. Punjab records stable bloom. Sindhri in Sindh shows early signs of yield erosion from structural water stress.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2017–18</div>
+          <div><div class="event-dot amber" style="width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">Moderate heat event · Production: ~1.65M t</div>
+            <div class="event-desc">Late-season heatwave (37–38°C) in May–June. Fruit had already developed, limiting damage vs. a March hit. ~6% production decline. First documented temperature shock since 2000s.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2018–19</div>
+          <div><div class="event-dot green" style="width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">Recovery year · Production: ~1.70M t</div>
+            <div class="event-desc">Moderate spring temperatures allowed recovery. Water availability improved. Growers noted improved bloom, especially in Multan belt.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2019–20</div>
+          <div><div class="event-dot amber" style="width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">Moderate climate stress · Production: ~1.75M t</div>
+            <div class="event-desc">Sindh reports structural yield decline continuing (329,300 t vs 381,269 t in 2010). Pre-monsoon deficit noted. Some locust activity in Balochistan affecting regional agriculture.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2020–21</div>
+          <div><div class="event-dot green" style="width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">BUMPER YEAR · Production: ~2.1M t (record)</div>
+            <div class="event-desc">Optimal temperatures 27–30°C throughout March–April. Excellent blossom set in both Punjab and Sindh. Punjab alone producing 1.47M t. Export volumes up 110% vs. 2014. Mango exports contributed $100M+ in forex.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2021–22</div>
+          <div><div class="event-dot" style="background:var(--red2);width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">CLIMATE CRISIS — 50% Production Collapse · ~0.9M t</div>
+            <div class="event-desc"><strong>March 2022: temperatures hit 40°C in mango belt — 3–8°C above average during flowering.</strong> Pakistan's worst pre-summer heat wave on record at that point. Open flowers desiccated. Pollinator (honeybee) activity collapsed. Water shortage compounded by canal deficit. PFVA cut export target by 25,000 t. Muzaffargarh grower: "Mango plants bore 50% less flowering than usual." Exact same phenomenon hit Sindh — Mirpur Khas water allocation halved.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2022–23</div>
+          <div><div class="event-dot amber" style="width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">Partial recovery · ~1.08M t · Only 60% of expected yield</div>
+            <div class="event-desc">March–April temperatures moderate at 27–30°C — experts initially optimistic. But cumulative tree stress from 2022, plus August floods, reduced recovery. Only 60% of expected yield reached markets. Export target 125,000 t; achieved ~100,000 t. Mango exports collapsed 42% YoY in fruit export revenues.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2023–24</div>
+          <div><div class="event-dot" style="background:var(--red2);width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">THIRD CONSECUTIVE DECLINE · ~720K t · −60% from long-run avg</div>
+            <div class="event-desc"><strong>Heat wave: May–June 2024 recorded 49°C in Sindh.</strong> Punjab production down 40%, Sindh 20%. Iran-Israel war halted Sindhri exports (Rs 7,500→5,000/40kg). Growers unable to export what little was produced. Total output ~600,000 t shortfall vs. expectation. Third consecutive year of failure triggering discussion of "agricultural emergency."</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2024–25</div>
+          <div><div class="event-dot amber" style="width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">Guarded recovery · ~1.4M t (projected −20% from baseline)</div>
+            <div class="event-desc">PFVA projects 125,000 t exports. EU granted direct market access — first-ever 120 t direct shipment to Netherlands (Chaunsa). But climate uncertainty remains high; production forecast at 1.4M t. India-Pakistan tensions increased shipping costs 15%.</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-year">2025–26</div>
+          <div><div class="event-dot" style="background:var(--red2);width:10px;height:10px;border-radius:50%;margin-top:4px"></div></div>
+          <div class="event-line">
+            <div class="event-title">Early March heatwave · Serious crop damage expected</div>
+            <div class="event-desc"><strong>March 3–5, 2026: 38–39°C in Rahim Yar Khan belt — unprecedented early March heat.</strong> "I have never observed [this] in my life" — Abdul Ghaffar Grewal (ex-Director, Multan Mango Research Institute). Cold snap followed to 15°C, destroying pollinators. Khanewal (previously stable) suffered heavy damage. Mango malformation disease increased due to cold-hot cycling. Fourth year of serious climate stress.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title">Production vs. Mar Temp: 2017–2026</div>
+        <div class="card-sub">Clear inverse relationship</div>
+        <div class="ch"><canvas id="c-season-bar"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Key Structural Finding</div>
+        <div class="card-sub">Beyond weather shocks</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.8;padding:6px 0">
+          The climate impact on mangoes is not merely episodic heatwave damage. There is a structural shift underway:
+          <br><br>
+          <strong>1. Baseline creep:</strong> Average March temperatures in South Punjab rose ~1.5°C since 2000 — the safe window for flowering is narrowing.
+          <br><br>
+          <strong>2. Volatility:</strong> Year-to-year temperature variance is increasing — growers cannot plan.
+          <br><br>
+          <strong>3. Compounding:</strong> Canal water deficit, groundwater salinity, and pest pressure all intensify with warming.
+          <br><br>
+          <strong>4. Irreversibility:</strong> Growers affected since 2013 (PFVA). Three consecutive crisis years (2022–24) suggest the industry is in structural decline without adaptation.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer">
+  <div><strong>Pakistan Mango Production & Climate Dashboard</strong> · Ammar H. Khan · June 2026</div>
+  <div>Sources: PBS / MNFSR District Crop Publications · CRS Punjab/Sindh · PMD Climate Summaries · FAOSTAT · PFVA · na.data.gov.pk (portal reference)</div>
+  <div style="color:var(--amber)">Data Intelligence · NCGCL</div>
+</div>
+
+<script>
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 11;
+
+const AMBER='#C8923A', GREEN='#2b8c3a', RED='#9B2335', BLUE='#1e6091',
+      SLATE='#37474f', GOLD='#f9a825', RED2='#b71c1c', TEAL='#0d6e6e',
+      GRN2='#52B788', AMB2='#e65100';
+
+const YEARS_00_25 = [2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,
+                     2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,
+                     2020,2021,2022,2023,2024,2025];
+
+// ─── DATA ───
+const NAT_PROD = [1380,1420,1460,1500,1560,1754,1820,1680,1740,1800,
+                  1850,1780,1830,1680,1680,1720,1750,1650,1700,1750,
+                  1800,2100,900,1080,720,1400]; // 000 t
+
+const NAT_AREA = [150,152,154,155,156,156.6,158,159,161,163,
+                  165,167,168,168,170,172,173,174,175,175,
+                  175,176,175,175,175,175]; // 000 ha
+
+const NAT_YIELD= NAT_PROD.map((p,i)=> (p/NAT_AREA[i]).toFixed(2)*1); // t/ha
+
+// March temperature anomaly index (deviation from 1981-2010 baseline ~33°C)
+const MARCH_ANOM=[0.1,0.2,-0.1,0.0,0.3,0.2,0.4,0.1,0.3,0.2,
+                  0.4,0.3,0.7,0.5,0.8,0.4,0.7,1.2,0.6,0.9,
+                  0.5,-0.5,4.2,1.2,3.8,2.1];
+
+const MARCH_ABS = MARCH_ANOM.map(x=>(33+x).toFixed(1)*1);
+
+const LONG_TEMP=[24.1,24.2,24.0,24.3,24.5,24.4,24.6,24.5,24.8,24.7,
+                 24.9,25.0,25.2,25.1,25.3,25.2,25.4,25.5,25.3,25.6,
+                 25.4,25.2,25.9,25.7,26.1,26.3]; // annual mean
+
+const COLD_DAYS=[42,41,40,43,38,37,36,35,34,33,
+                 32,31,30,29,28,29,27,26,25,24,
+                 25,28,20,22,18,19]; // Dec-Jan cold nights below 15°C
+
+const PRE_RAIN= [12,10,8,15,-5,-8,5,-2,3,-6,-12,-5,-15,-20,
+                 -8,-18,-22,-25,-10,-28,-15,5,-30,-18,-35,-20]; // deviation mm
+
+// District data arrays
+const PUN_DIST = ['Multan','Rahim Yar Khan','Muzaffargarh','Khanewal',
+                  'Lodhran','Vehari','D.G. Khan','Bahawalpur','Rajanpur','Bahawalnagar'];
+const PUN_AREA = [31.0, 26.0, 19.0, 14.0, 8.0, 7.0, 6.5, 5.0, 4.0, 3.5];
+const PUN_PROD_2021=[351,290,201,148,81,68,65,48,37,31]; // 000 t
+const PUN_PROD_2024=[122,98,68,50,26,22,21,15,12,10];
+
+const SIN_DIST=['Mirpur Khas','Tando Allahyar','Hyderabad','Sanghar','Naushehro Feroze','Umerkot','Jamshoro'];
+const SIN_AREA_10=[17200,14500,9800,7600,4800,3100,2215];
+const SIN_AREA_24=[17000,15000,9500,8500,5000,3200,1900];
+const SIN_PROD_10=[97400,82500,56200,44800,27500,17900,12600];
+const SIN_PROD_24=[34000,29000,18500,15500,9000,5800,3500];
+
+const PROV_AREA_PCT =[63,36,1];
+const PROV_PROD_PCT =[70,29,1];
+
+// Years for district trend
+const TREND_YRS=[2000,2003,2006,2010,2013,2016,2019,2021,2022,2023,2024];
+
+// Multan trend
+const MULTAN_AREA=[28000,28500,29000,28400,29000,30000,30500,31000,31000,31000,31000];
+const MULTAN_PROD=[320,330,345,321,312,340,345,351,148,210,122]; // 000 t
+
+const RYK_AREA=[20000,21000,22000,22100,23000,24000,25000,26000,26000,26000,26000];
+const RYK_PROD=[226,232,248,247,225,264,270,290,120,175,98];
+
+const MZG_AREA=[14000,14500,15000,15800,16000,17500,18000,19000,19000,19000,19000];
+const MZG_PROD=[147,152,160,167,147,185,190,201,84,120,68];
+
+// MPK Mirpur Khas
+const MPK_YRS=[2005,2008,2010,2013,2015,2017,2019,2021,2022,2023,2024];
+const MPK_AREA=[16500,16800,17200,17000,16900,16800,16800,16900,17000,17000,17000];
+const MPK_PROD=[103,96,97,84,82,80,82,88,38,50,34]; // 000 t
+const MPK_YIELD=MPK_PROD.map((p,i)=>((p*1000)/MPK_AREA[i]).toFixed(2)*1);
+
+// ─── CHART FACTORY ───
+function barChart(id,labels,datasets,opts={}){
+  const ctx=document.getElementById(id);
+  if(!ctx) return;
+  new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:datasets.map(d=>({borderRadius:3,borderSkipped:false,...d}))},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10,padding:8}},
+               tooltip:{backgroundColor:'rgba(13,27,42,0.93)'}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},
+        y:{beginAtZero:true,grid:{color:'#f0ebe0'},ticks:{font:{size:10}},
+           ...(opts.yTitle?{title:{display:true,text:opts.yTitle,font:{size:10}}}:{})}},...opts.extra}});
+}
+function lineChart(id,labels,datasets,opts={}){
+  const ctx=document.getElementById(id);
+  if(!ctx) return;
+  new Chart(ctx,{
+    type:'line',
+    data:{labels,datasets:datasets.map(d=>({fill:false,tension:0.35,pointRadius:3,
+          borderWidth:2,...d}))},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10,padding:8}},
+               tooltip:{backgroundColor:'rgba(13,27,42,0.93)'}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},
+        y:{beginAtZero:opts.zero!==false,grid:{color:'#f0ebe0'},ticks:{font:{size:10}}}},
+      ...opts.extra}});
+}
+function doughnut(id,labels,data,colors){
+  const ctx=document.getElementById(id);
+  if(!ctx) return;
+  new Chart(ctx,{type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:1,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+      plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10}}}}});
+}
+
+// ═══ TAB 1: OVERVIEW ═══
+// National production line
+lineChart('c-national',
+  YEARS_00_25,
+  [{label:'Production (000 t)',data:NAT_PROD,borderColor:GREEN,backgroundColor:'rgba(43,140,58,0.1)',fill:true},
+   {label:'Reference avg 1,750',data:YEARS_00_25.map(()=>1750),borderColor:'#ccc',borderDash:[5,4],
+    borderWidth:1,pointRadius:0,borderDashOffset:0}],
+  {zero:true}
+);
+
+// Area chart
+barChart('c-area-nat',
+  YEARS_00_25.filter((_,i)=>i%3===0),
+  [{label:'Area (000 ha)',data:NAT_AREA.filter((_,i)=>i%3===0),
+    backgroundColor:BLUE+'80',borderColor:BLUE,borderWidth:1}]
+);
+
+// Province area
+doughnut('c-prov-area',['Punjab (63%)','Sindh (36%)','KPK/Other (1%)'],
+  PROV_AREA_PCT,[GREEN,AMB2,BLUE]);
+doughnut('c-prov-prod',['Punjab (70%)','Sindh (29%)','KPK/Other (1%)'],
+  PROV_PROD_PCT,[GREEN,AMB2,BLUE]);
+
+// ═══ TAB 2: PUNJAB ═══
+barChart('c-pun-area',PUN_DIST,
+  [{label:'Area 000 ha',data:PUN_AREA,backgroundColor:GREEN+'90',borderColor:GREEN,borderWidth:1}]
+);
+
+barChart('c-pun-pie',PUN_DIST,
+  [{label:'2021 (peak)',data:PUN_PROD_2021,backgroundColor:GRN2+'90',borderColor:GRN2,borderWidth:1},
+   {label:'2024 (crisis)',data:PUN_PROD_2024,backgroundColor:RED+'90',borderColor:RED,borderWidth:1}]
+);
+
+// Multan multi-axis
+(function(){
+  const ctx=document.getElementById('c-multan');
+  if(!ctx)return;
+  new Chart(ctx,{
+    data:{labels:TREND_YRS,datasets:[
+      {type:'bar',label:'Production 000 t',data:MULTAN_PROD,backgroundColor:GREEN+'70',
+       borderColor:GREEN,borderWidth:1,yAxisID:'y'},
+      {type:'line',label:'Area (ha)',data:MULTAN_AREA,borderColor:AMBER,borderWidth:2,
+       tension:0.3,pointRadius:3,fill:false,yAxisID:'y2'}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:10}}},
+        y:{position:'left',beginAtZero:true,grid:{color:'#f0ebe0'},ticks:{font:{size:10}}},
+        y2:{position:'right',beginAtZero:false,grid:{display:false},ticks:{font:{size:10}}}}}});
+})();
+
+(function(){
+  const ctx=document.getElementById('c-ryk');
+  if(!ctx)return;
+  new Chart(ctx,{data:{labels:TREND_YRS,datasets:[
+    {type:'bar',label:'Production 000 t',data:RYK_PROD,backgroundColor:AMBER+'70',
+     borderColor:AMBER,borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'Area (ha)',data:RYK_AREA,borderColor:BLUE,borderWidth:2,
+     tension:0.3,pointRadius:3,fill:false,yAxisID:'y2'}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+        y:{position:'left',beginAtZero:true,grid:{color:'#f0ebe0'},ticks:{font:{size:10}}},
+        y2:{position:'right',beginAtZero:false,grid:{display:false},ticks:{font:{size:10}}}}}});
+})();
+
+(function(){
+  const ctx=document.getElementById('c-mzg');
+  if(!ctx)return;
+  new Chart(ctx,{data:{labels:TREND_YRS,datasets:[
+    {type:'bar',label:'Production 000 t',data:MZG_PROD,backgroundColor:RED+'70',
+     borderColor:RED,borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'Area (ha)',data:MZG_AREA,borderColor:SLATE,borderWidth:2,
+     tension:0.3,pointRadius:3,fill:false,yAxisID:'y2'}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+        y:{position:'left',beginAtZero:true,grid:{color:'#f0ebe0'},ticks:{font:{size:10}}},
+        y2:{position:'right',beginAtZero:false,grid:{display:false},ticks:{font:{size:10}}}}}});
+})();
+
+// ═══ TAB 3: SINDH ═══
+barChart('c-sin-area',SIN_DIST,
+  [{label:'Area 2010',data:SIN_AREA_10.map(x=>x/1000),backgroundColor:AMB2+'70',borderColor:AMB2,borderWidth:1},
+   {label:'Area 2024',data:SIN_AREA_24.map(x=>x/1000),backgroundColor:BLUE+'70',borderColor:BLUE,borderWidth:1}]
+);
+
+barChart('c-sin-trend',SIN_DIST,
+  [{label:'Production 2010 (t)',data:SIN_PROD_10.map(x=>x/1000),backgroundColor:GRN2+'80',borderColor:GRN2,borderWidth:1},
+   {label:'Production 2024 (t)',data:SIN_PROD_24.map(x=>x/1000),backgroundColor:RED+'80',borderColor:RED,borderWidth:1}]
+);
+
+(function(){
+  const ctx=document.getElementById('c-mpk');
+  if(!ctx)return;
+  new Chart(ctx,{data:{labels:MPK_YRS,datasets:[
+    {type:'bar',label:'Production 000 t',data:MPK_PROD,backgroundColor:AMB2+'70',borderColor:AMB2,borderWidth:1,yAxisID:'y'},
+    {type:'line',label:'Yield t/ha',data:MPK_YIELD,borderColor:RED,borderWidth:2,tension:0.3,pointRadius:4,fill:false,yAxisID:'y2'}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+        y:{position:'left',beginAtZero:true,grid:{color:'#f0ebe0'},ticks:{font:{size:10}}},
+        y2:{position:'right',beginAtZero:false,grid:{display:false},ticks:{font:{size:10},
+          title:{display:true,text:'t/ha',font:{size:10}}}}}}});
+})();
+
+// ═══ TAB 4: CLIMATE ═══
+// Multan March temp anomaly
+(function(){
+  const ctx=document.getElementById('c-multan-temp');
+  if(!ctx)return;
+  new Chart(ctx,{type:'bar',
+    data:{labels:YEARS_00_25,datasets:[{
+      label:'March Temp Anomaly (°C)',
+      data:MARCH_ANOM,
+      backgroundColor:MARCH_ANOM.map(x=>x>1.5?'rgba(155,35,53,0.8)':x>0.5?'rgba(230,81,0,0.7)':'rgba(43,140,58,0.6)'),
+      borderColor:MARCH_ANOM.map(x=>x>1.5?RED2:x>0.5?AMB2:GREEN),
+      borderWidth:1,borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}},
+               tooltip:{callbacks:{label:c=>`+${c.raw}°C above 1981–2010 mean`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},
+        y:{grid:{color:'#f0ebe0'},ticks:{font:{size:10}},
+          title:{display:true,text:'Anomaly (°C)',font:{size:10}}}}}});
+})();
+
+// All stations rolling March temp
+lineChart('c-all-temp',
+  YEARS_00_25,
+  [{label:'Multan March avg max',data:MARCH_ABS,borderColor:RED2,fill:false},
+   {label:'Ref line 35°C (moderate risk)',data:YEARS_00_25.map(()=>35),borderColor:'#aaa',borderDash:[4,3],borderWidth:1,pointRadius:0},
+   {label:'Critical threshold 38°C',data:YEARS_00_25.map(()=>38),borderColor:RED2,borderDash:[6,3],borderWidth:1.5,pointRadius:0}],
+  {zero:false}
+);
+
+// Long run temp
+lineChart('c-longtemp',
+  YEARS_00_25,
+  [{label:'Annual mean temp (°C)',data:LONG_TEMP,borderColor:AMB2,
+    backgroundColor:'rgba(230,81,0,0.07)',fill:true}],
+  {zero:false}
+);
+
+// Cold nights
+barChart('c-cold',
+  YEARS_00_25.filter((_,i)=>i%2===0),
+  [{label:'Days below 15°C (Dec–Jan)',data:COLD_DAYS.filter((_,i)=>i%2===0),
+    backgroundColor:BLUE+'80',borderColor:BLUE,borderWidth:1}]
+);
+
+// Rainfall deviation
+(function(){
+  const ctx=document.getElementById('c-rain');
+  if(!ctx)return;
+  const yrs=YEARS_00_25.filter((_,i)=>i%2===0);
+  const dt=PRE_RAIN.filter((_,i)=>i%2===0);
+  new Chart(ctx,{type:'bar',
+    data:{labels:yrs,datasets:[{
+      label:'Pre-monsoon rainfall dev. (mm)',
+      data:dt,
+      backgroundColor:dt.map(x=>x<0?'rgba(155,35,53,0.7)':'rgba(43,140,58,0.7)'),
+      borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},
+        y:{grid:{color:'#f0ebe0'},ticks:{font:{size:10}}}}}});
+})();
+
+// ═══ TAB 5: YIELD ═══
+lineChart('c-yield-nat',
+  YEARS_00_25,
+  [{label:'National avg yield (t/ha)',data:NAT_YIELD,borderColor:GREEN,
+    backgroundColor:'rgba(43,140,58,0.1)',fill:true,pointRadius:4,
+    pointBackgroundColor:NAT_YIELD.map(y=>y<6?RED2:y>10?GRN2:AMBER)}],
+  {zero:false}
+);
+
+// Scatter: March temp vs production
+(function(){
+  const ctx=document.getElementById('c-scatter');
+  if(!ctx)return;
+  const scatter=YEARS_00_25.map((yr,i)=>({x:MARCH_ABS[i],y:NAT_PROD[i],yr}));
+  new Chart(ctx,{type:'scatter',
+    data:{datasets:[{
+      label:'Year (temp vs production)',
+      data:scatter,
+      backgroundColor:scatter.map(d=>d.y<900?RED2+'cc':d.y>1800?GRN2+'cc':AMBER+'cc'),
+      pointRadius:6,pointHoverRadius:8}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}},
+               tooltip:{callbacks:{label:d=>`${d.raw.yr}: ${d.raw.y}K t @ ${d.raw.x}°C`}}},
+      scales:{
+        x:{grid:{color:'#f0ebe0'},title:{display:true,text:'Mean March max temp (°C)',font:{size:10}},
+           min:28,max:44,ticks:{font:{size:10}}},
+        y:{beginAtZero:false,grid:{color:'#f0ebe0'},title:{display:true,text:'Production (000 t)',font:{size:10}},
+           ticks:{font:{size:10}}}}}});
+})();
+
+// YoY change vs anomaly
+(function(){
+  const ctx=document.getElementById('c-corr');
+  if(!ctx)return;
+  const yoy=NAT_PROD.slice(1).map((p,i)=>Math.round((p-NAT_PROD[i])/NAT_PROD[i]*100));
+  const anom=MARCH_ANOM.slice(1);
+  const yrs=YEARS_00_25.slice(1);
+  new Chart(ctx,{type:'scatter',
+    data:{datasets:[{
+      label:'YoY prod change vs temp anomaly',
+      data:yrs.map((_,i)=>({x:anom[i],y:yoy[i],yr:yrs[i]})),
+      backgroundColor:yoy.map(y=>y<-20?RED2+'bb':y>10?GRN2+'bb':AMBER+'bb'),
+      pointRadius:7,pointHoverRadius:9}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10}}},
+               tooltip:{callbacks:{label:d=>`${d.raw.yr}: Δ${d.raw.y}%, anom +${d.raw.x}°C`}}},
+      scales:{
+        x:{grid:{color:'#f0ebe0'},title:{display:true,text:'March temp anomaly (°C)',font:{size:10}},ticks:{font:{size:10}}},
+        y:{grid:{color:'#f0ebe0'},title:{display:true,text:'YoY production change (%)',font:{size:10}},ticks:{font:{size:10}}}}}});
+})();
+
+// Punjab vs Sindh yield
+const YLD_YRS=[2005,2008,2010,2013,2015,2017,2019,2021,2022,2023,2024];
+const PUN_YIELD=[11.5,11.2,11.3,10.8,11.0,10.5,11.1,11.8,4.8,6.9,3.6];
+const SIN_YIELD=[6.5,6.1,6.4,5.5,5.3,5.2,5.6,5.9,2.5,3.5,1.9];
+lineChart('c-yield-comp',YLD_YRS,
+  [{label:'Punjab yield t/ha',data:PUN_YIELD,borderColor:GREEN,fill:false},
+   {label:'Sindh yield t/ha',data:SIN_YIELD,borderColor:AMB2,fill:false},
+   {label:'National average',data:YLD_YRS.map(y=>{const i=YEARS_00_25.indexOf(y);return NAT_YIELD[i]||null}),
+    borderColor:'#999',borderDash:[4,3],borderWidth:1.5,pointRadius:0,fill:false}],
+  {zero:false}
+);
+
+// ═══ TAB 6: SEASON BAR ═══
+(function(){
+  const ctx=document.getElementById('c-season-bar');
+  if(!ctx)return;
+  const sy=[2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
+  const sp=[1650,1700,1750,1780,2100,900,1080,720,1400,null]; // 000 t (2026 TBD)
+  const st=[37.5,34.0,36.0,34.0,28.5,41.5,35.5,42.0,38.5,38.5]; // °C
+  new Chart(ctx,{
+    data:{labels:sy,datasets:[
+      {type:'bar',label:'Production 000 t',data:sp,
+       backgroundColor:sp.map(x=>!x?'#ddd':x<1000?RED+'90':x>2000?GRN2+'90':AMB2+'70'),
+       borderWidth:1,yAxisID:'y'},
+      {type:'line',label:'March max temp (°C)',data:st,borderColor:RED2,borderWidth:2,
+       tension:0.3,pointRadius:5,fill:false,yAxisID:'y2',
+       pointBackgroundColor:st.map(x=>x>38?RED2:x>35?AMBER:GREEN)}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:10}}},
+        y:{position:'left',beginAtZero:true,grid:{color:'#f0ebe0'},ticks:{font:{size:10}},
+          title:{display:true,text:'Prod (000 t)',font:{size:10}}},
+        y2:{position:'right',beginAtZero:false,grid:{display:false},ticks:{font:{size:10}},
+          title:{display:true,text:'°C',font:{size:10}},min:25,max:47}}}});
+})();
+
+// ─── TAB SWITCH ───
+function sw(id,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
