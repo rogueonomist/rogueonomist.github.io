@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pakistan Pharmaceutical Industry — Analytical Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #FFFFFF;
+      --secondary: #FAFAFA;
+      --border: #E5E5E5;
+      --accent: #C8923A;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --success: #52B788;
+      --warning: #9B2335;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: var(--primary);
+      color: #2D2D2D;
+      line-height: 1.6;
+    }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Header */
+    .doc-header {
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 0 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .doc-meta {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .doc-title {
+      font-family: Georgia, serif; font-size: 34px; font-weight: 400;
+      color: var(--text-primary); line-height: 1.15; margin-bottom: 0.75rem;
+    }
+    .doc-subtitle { font-size: 15px; color: var(--text-secondary); max-width: 680px; line-height: 1.6; }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 0; border-bottom: 1px solid var(--border);
+      margin-bottom: 0; overflow-x: auto;
+    }
+    .tab-btn {
+      background: none; border: none; padding: 0.875rem 1.25rem;
+      font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+      cursor: pointer; border-bottom: 2px solid transparent;
+      margin-bottom: -1px; transition: all 0.2s; white-space: nowrap;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+    .tab-content { display: none; padding: 2rem 0; }
+    .tab-content.active { display: block; }
+
+    /* Grid layouts */
+    .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .two-col-wide { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .full-col { margin-bottom: 1.5rem; }
+
+    /* KPI cards */
+    .kpi-card {
+      background: var(--primary); border: 1px solid var(--border);
+      padding: 1.25rem 1.5rem; border-top: 3px solid var(--border);
+    }
+    .kpi-card.amber { border-top-color: var(--accent); }
+    .kpi-card.green { border-top-color: var(--success); }
+    .kpi-card.red { border-top-color: var(--warning); }
+    .kpi-card.blue { border-top-color: #4A90D9; }
+    .kpi-num {
+      font-family: Georgia, serif; font-size: 28px; font-weight: 400;
+      color: var(--text-primary); line-height: 1; margin-bottom: 0.4rem;
+    }
+    .kpi-label {
+      font-size: 11px; color: var(--text-tertiary);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.25rem;
+    }
+    .kpi-sub { font-size: 12px; color: var(--text-secondary); margin-top: 0.25rem; }
+
+    /* Panels */
+    .panel {
+      background: var(--secondary); border: 1px solid var(--border);
+      padding: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .panel-title {
+      font-family: Georgia, serif; font-size: 16px; font-weight: 400;
+      color: var(--text-primary); margin-bottom: 0.25rem;
+    }
+    .panel-sub {
+      font-size: 12px; color: var(--text-tertiary); margin-bottom: 1.25rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* Section headers */
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      color: var(--text-tertiary); text-transform: uppercase;
+      margin-bottom: 0.5rem; margin-top: 2rem;
+    }
+    .section-title {
+      font-family: Georgia, serif; font-size: 22px; font-weight: 400;
+      color: var(--text-primary); margin-bottom: 1.25rem; line-height: 1.2;
+    }
+
+    /* Tables */
+    .est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .est-table th {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      color: var(--text-primary); text-align: left; padding: 0.6rem 0.75rem;
+      border-bottom: 2px solid var(--border); background: #fff;
+      text-transform: uppercase;
+    }
+    .est-table th.right { text-align: right; }
+    .est-table td {
+      padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border);
+      color: #2D2D2D; vertical-align: middle;
+    }
+    .est-table td.right { text-align: right; font-variant-numeric: tabular-nums; }
+    .est-table tr:hover td { background: #F5F5F5; }
+    .est-table tr.industry-row td { background: #fff; font-weight: 600; border-top: 2px solid var(--border); }
+
+    /* Badges */
+    .badge {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 0.15rem 0.5rem; border-radius: 3px; letter-spacing: 0.02em;
+    }
+    .badge-green { background: #E8F5EE; color: #2E7D55; }
+    .badge-red { background: #FBEAEA; color: #9B2335; }
+    .badge-amber { background: #FDF3E6; color: #9A6420; }
+    .badge-blue { background: #EBF3FC; color: #2563A8; }
+
+    /* Insight boxes */
+    .insight-box {
+      background: var(--secondary); border: 1px solid var(--border);
+      border-left: 4px solid var(--accent); padding: 1rem 1.25rem;
+      margin: 1rem 0; font-size: 13px; color: #3D3D3D; line-height: 1.7;
+    }
+    .insight-box.green { border-left-color: var(--success); }
+    .insight-box.red { border-left-color: var(--warning); }
+
+    /* Bar chart wrappers */
+    .chart-wrap { position: relative; }
+    .chart-wrap canvas { max-height: 320px; }
+    .chart-wrap-tall canvas { max-height: 420px; }
+    .chart-wrap-xl canvas { max-height: 500px; }
+
+    /* Growth bar inline */
+    .growth-bar-wrap { display: flex; align-items: center; gap: 0.5rem; }
+    .growth-bar { height: 6px; border-radius: 3px; min-width: 2px; }
+    .growth-bar.pos { background: var(--success); }
+    .growth-bar.neg { background: var(--warning); }
+    .growth-val { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .growth-val.pos { color: var(--success); }
+    .growth-val.neg { color: var(--warning); }
+
+    /* Rank badge */
+    .rank-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      font-size: 11px; font-weight: 700; background: var(--secondary);
+      border: 1px solid var(--border); color: var(--text-secondary);
+    }
+    .rank-badge.top3 { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* Verdict */
+    .verdict {
+      background: var(--secondary); border: 1px solid var(--border);
+      border-left: 4px solid var(--accent); padding: 1.25rem 1.5rem; margin: 1.5rem 0;
+    }
+    .verdict-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .verdict-text { font-size: 14px; color: #2D2D2D; line-height: 1.7; }
+
+    /* Stacked decomp bars */
+    .decomp-bar { display: flex; height: 22px; border-radius: 3px; overflow: hidden; margin: 0.25rem 0; }
+    .decomp-seg { height: 100%; transition: width 0.3s; }
+    .seg-price { background: #C8923A; }
+    .seg-volume { background: #52B788; }
+    .seg-newprod { background: #4A90D9; }
+    .seg-lineext { background: #9B59B6; }
+
+    /* Ticker strip */
+    .ticker-strip {
+      background: var(--secondary); border: 1px solid var(--border);
+      padding: 0.75rem 1.25rem; display: flex; gap: 2rem;
+      overflow-x: auto; margin-bottom: 1.5rem; font-size: 12px;
+    }
+    .ticker-item { white-space: nowrap; }
+    .ticker-item .t-name { color: var(--text-tertiary); font-weight: 600; letter-spacing: 0.04em; }
+    .ticker-item .t-val { font-family: Georgia, serif; font-size: 14px; color: var(--text-primary); }
+    .ticker-item .t-chg { font-size: 11px; font-weight: 600; }
+    .ticker-item .t-chg.up { color: var(--success); }
+    .ticker-item .t-chg.dn { color: var(--warning); }
+
+    /* Two-period compare */
+    .compare-row { display: flex; align-items: center; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+    .compare-label { flex: 1; font-size: 13px; color: var(--text-secondary); }
+    .compare-val { font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+    /* Product card */
+    .prod-card {
+      background: #fff; border: 1px solid var(--border); padding: 1rem;
+      display: flex; flex-direction: column; gap: 0.25rem;
+    }
+    .prod-name { font-family: Georgia, serif; font-size: 15px; font-weight: 400; color: var(--text-primary); }
+    .prod-company { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.04em; }
+    .prod-sales { font-size: 18px; font-family: Georgia, serif; color: var(--text-primary); }
+    .prod-meta { display: flex; gap: 0.5rem; margin-top: 0.25rem; flex-wrap: wrap; }
+
+    @media (max-width: 900px) {
+      .four-col { grid-template-columns: 1fr 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .two-col-wide { grid-template-columns: 1fr; }
+      .doc-title { font-size: 26px; }
+    }
+    @media (max-width: 560px) {
+      .four-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="doc-header">
+    <div class="doc-meta">Analytical Dashboard &nbsp;|&nbsp; Pakistan Pharmaceutical Industry &nbsp;|&nbsp; June 2026</div>
+    <h1 class="doc-title">Pakistan Pharmaceutical Industry<br>Market Intelligence Dashboard</h1>
+    <p class="doc-subtitle">Moving Annual Total (MAT) analysis covering 103 active companies and 200 top products — Apr-25 and Apr-26 periods. Data sourced from IMS/IQVIA market audit. Compiled by Ammar Habib Khan.</p>
+  </div>
+
+  <!-- Ticker strip -->
+  <div class="ticker-strip">
+    <div class="ticker-item">
+      <div class="t-name">MARKET SIZE</div>
+      <div class="t-val">Rs. 1,225 Bn</div>
+      <div class="t-chg up">▲ MAT Apr-26</div>
+    </div>
+    <div class="ticker-item">
+      <div class="t-name">YOY GROWTH</div>
+      <div class="t-val">14.9%</div>
+      <div class="t-chg dn">▼ from 19.7% (Apr-25)</div>
+    </div>
+    <div class="ticker-item">
+      <div class="t-name">CAGR (3-YR)</div>
+      <div class="t-val">17.4%</div>
+      <div class="t-chg up">▲ sustained</div>
+    </div>
+    <div class="ticker-item">
+      <div class="t-name">PRICE CONTRIBUTION</div>
+      <div class="t-val">63.6%</div>
+      <div class="t-chg dn">▼ from 71.1%</div>
+    </div>
+    <div class="ticker-item">
+      <div class="t-name">VOLUME CONTRIBUTION</div>
+      <div class="t-val">20.1%</div>
+      <div class="t-chg up">▲ from 15.4%</div>
+    </div>
+    <div class="ticker-item">
+      <div class="t-name">MARKET LEADER</div>
+      <div class="t-val">GETZ PHARMA</div>
+      <div class="t-chg">6.70% share</div>
+    </div>
+    <div class="ticker-item">
+      <div class="t-name">TOP PRODUCT</div>
+      <div class="t-val">PANADOL</div>
+      <div class="t-chg">Rs. 17.9 Bn</div>
+    </div>
+    <div class="ticker-item">
+      <div class="t-name">COMPANIES TRACKED</div>
+      <div class="t-val">103</div>
+      <div class="t-chg">Top 100 Corps</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-overview">Market Overview</button>
+    <button class="tab-btn" data-tab="tab-companies">Companies</button>
+    <button class="tab-btn" data-tab="tab-products">Products</button>
+    <button class="tab-btn" data-tab="tab-growth">Growth Anatomy</button>
+    <button class="tab-btn" data-tab="tab-concentration">Concentration</button>
+    <button class="tab-btn" data-tab="tab-policy">Policy Context</button>
+    <button class="tab-btn" data-tab="tab-india-compare">India Price Benchmark</button>
+  </div>
+
+  <!-- TAB 1: OVERVIEW -->
+  <div id="tab-overview" class="tab-content active">
+
+    <div class="section-label">Market Size &amp; Momentum</div>
+    <div class="four-col">
+      <div class="kpi-card amber">
+        <div class="kpi-label">MAT Market Size (Apr-26)</div>
+        <div class="kpi-num">Rs. 1,225 Bn</div>
+        <div class="kpi-sub">vs Rs. 1,063 Bn (Apr-25) · +14.9% YoY</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Absolute Growth Added (Apr-26)</div>
+        <div class="kpi-num">Rs. 159 Bn</div>
+        <div class="kpi-sub">New incremental value in the MAT period</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-label">3-Year CAGR</div>
+        <div class="kpi-num">17.4%</div>
+        <div class="kpi-sub">Sustained above nominal GDP growth rate</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Active Companies Ranked</div>
+        <div class="kpi-num">103</div>
+        <div class="kpi-sub">Out of ~750–800 licensed manufacturers</div>
+      </div>
+    </div>
+
+    <div class="four-col">
+      <div class="kpi-card">
+        <div class="kpi-label">Price-Driven Growth Share</div>
+        <div class="kpi-num">63.6%</div>
+        <div class="kpi-sub">Down from 71.1% — positive deceleration</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Volume-Driven Growth Share</div>
+        <div class="kpi-num">20.1%</div>
+        <div class="kpi-sub">Up from 15.4% — market recovery signal</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">New Product Contribution</div>
+        <div class="kpi-num">10.5%</div>
+        <div class="kpi-sub">Up from 5.0% — innovation accelerating</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Companies in Decline</div>
+        <div class="kpi-num">11</div>
+        <div class="kpi-sub">Negative YoY growth (Apr-26 MAT)</div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Key Finding</div>
+      <div class="verdict-text">Pakistan's pharmaceutical market crossed Rs. 1,225 billion in Moving Annual Total sales as of April 2026, growing at 14.9% — a deceleration from 19.7% the prior year but still well above nominal GDP. Critically, the <strong>growth quality is improving</strong>: price contribution declined from 71% to 64% while volume contribution rose from 15% to 20%, signalling that market recovery is increasingly demand-driven rather than purely inflationary. New product launches now contribute 10.5% of growth, up from 5%, suggesting a pipeline revival after the 2022–24 shortage cycle.</div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Industry Growth Decomposition — Apr-26 vs Apr-25</div>
+        <div class="panel-sub">% contribution to total MAT growth by driver (industry level)</div>
+        <div class="chart-wrap">
+          <canvas id="decompCompare"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Market Size Trajectory</div>
+        <div class="panel-sub">MAT Pharma sales (Rs. Billion), estimated trend</div>
+        <div class="chart-wrap">
+          <canvas id="mktSizeChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Growth Driver Breakdown</div>
+    <div class="three-col">
+      <div class="kpi-card amber">
+        <div class="kpi-label">Price Change (Rs. Bn)</div>
+        <div class="kpi-num">Rs. 101 Bn</div>
+        <div class="kpi-sub">63.6% of Rs. 159Bn absolute growth</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Volume Change (Rs. Bn)</div>
+        <div class="kpi-num">Rs. 32 Bn</div>
+        <div class="kpi-sub">20.1% of total absolute growth</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-label">New Products (Rs. Bn)</div>
+        <div class="kpi-num">Rs. 17 Bn</div>
+        <div class="kpi-sub">10.5% of total — nearly doubled from Apr-25</div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>Context:</strong> The 2022–24 PKR depreciation (Rs. 220 → Rs. 285 per USD) forced DRAP to approve 20–60% price corrections across hundreds of medicines. This drove the 19.7% growth spike in Apr-25 and elevated the Rs. 375Bn GST concession. By Apr-26, price inflation is moderating — volume and new product growth are now the dominant engines — suggesting the industry has normalised post-crisis and is growing on more defensible grounds.
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Growth Quality: Price vs Volume Mix</div>
+        <div class="panel-sub">Industry-level decomposition shift — a structural improvement</div>
+        <div class="chart-wrap">
+          <canvas id="qualityRadar"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Companies by Growth Rate Bucket</div>
+        <div class="panel-sub">Distribution across Top 103 companies (Apr-26)</div>
+        <div class="chart-wrap">
+          <canvas id="growthDist"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB 2: COMPANIES -->
+  <div id="tab-companies" class="tab-content">
+
+    <div class="section-label">Company Ranking &amp; Performance</div>
+
+    <div class="full-col panel">
+      <div class="panel-title">Top 20 Companies — MAT Sales, Growth &amp; CAGR (Apr-26)</div>
+      <div class="panel-sub">Moving Annual Total · Ranked by absolute market value</div>
+      <div class="chart-wrap-xl">
+        <canvas id="top20BarChart"></canvas>
+      </div>
+    </div>
+
+    <div class="full-col panel">
+      <div class="panel-title">Top 30 Companies — Full Scorecard (Apr-26 MAT)</div>
+      <div class="panel-sub">ABS Value, YoY Growth, MAT CAGR, Market Share, and Growth Drivers</div>
+      <table class="est-table" id="companyTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Company</th>
+            <th class="right">Sales (Rs. Bn)</th>
+            <th class="right">YoY GR%</th>
+            <th class="right">CAGR%</th>
+            <th class="right">Mkt Share</th>
+            <th class="right">Price%</th>
+            <th class="right">Volume%</th>
+            <th class="right">New Prod%</th>
+          </tr>
+        </thead>
+        <tbody id="companyTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">CAGR Leaders (Top 20 Companies, Apr-26)</div>
+        <div class="panel-sub">3-Year Compound Annual Growth Rate — structural momentum</div>
+        <div class="chart-wrap-tall">
+          <canvas id="cagrChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Companies in Decline (Apr-26 MAT)</div>
+        <div class="panel-sub">Negative YoY growth — 11 companies impacted</div>
+        <table class="est-table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th class="right">Sales (Rs. Bn)</th>
+              <th class="right">YoY GR%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>SEARLE PAK LTD</td><td class="right">6.4</td><td class="right"><span class="badge badge-red">−29.3%</span></td></tr>
+            <tr><td>PFIZER INC</td><td class="right">4.7</td><td class="right"><span class="badge badge-red">−26.7%</span></td></tr>
+            <tr><td>ELI LILLY</td><td class="right">4.0</td><td class="right"><span class="badge badge-red">−13.2%</span></td></tr>
+            <tr><td>BAYER PAK PVT LTD</td><td class="right">3.5</td><td class="right"><span class="badge badge-red">−17.5%</span></td></tr>
+            <tr><td>HIMONT PHARMA</td><td class="right">2.2</td><td class="right"><span class="badge badge-red">−17.0%</span></td></tr>
+            <tr><td>GLOBAL PHARMA</td><td class="right">10.0</td><td class="right"><span class="badge badge-red">−3.6%</span></td></tr>
+            <tr><td>OPAL</td><td class="right">1.7</td><td class="right"><span class="badge badge-red">−10.7%</span></td></tr>
+            <tr><td>WELNOX LIMITED</td><td class="right">1.1</td><td class="right"><span class="badge badge-red">−11.5%</span></td></tr>
+            <tr><td>WOODWARDS</td><td class="right">1.2</td><td class="right"><span class="badge badge-red">−8.1%</span></td></tr>
+            <tr><td>WERRICK PHARMA</td><td class="right">4.1</td><td class="right"><span class="badge badge-red">−0.9%</span></td></tr>
+            <tr><td>HAKIMSONS (IMPEX)</td><td class="right">1.1</td><td class="right"><span class="badge badge-red">−6.9%</span></td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box red" style="margin-top:1rem;">
+          Multinationals — Pfizer, Eli Lilly, Bayer, Searle — are significantly declining. This reflects FX headwinds on import-heavy portfolios, DRAP-regulated price ceilings limiting margin recovery, and domestic manufacturers capturing market share.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Rank Movement Analysis (Apr-25 → Apr-26)</div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Biggest Rank Climbers</div>
+        <div class="panel-sub">Companies moving up in absolute rank position</div>
+        <table class="est-table">
+          <thead>
+            <tr><th>Company</th><th class="right">Apr-25 Rank</th><th class="right">Apr-26 Rank</th><th class="right">Change</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>RECKITT BENCKISER</td><td class="right">94</td><td class="right">42</td><td class="right"><span class="badge badge-green">▲ 52</span></td></tr>
+            <tr><td>DONVALLEY</td><td class="right">98</td><td class="right">69</td><td class="right"><span class="badge badge-green">▲ 29</span></td></tr>
+            <tr><td>PACIFIC</td><td class="right">65</td><td class="right">50</td><td class="right"><span class="badge badge-green">▲ 15</span></td></tr>
+            <tr><td>NUTRICIA</td><td class="right">96</td><td class="right">81</td><td class="right"><span class="badge badge-green">▲ 15</span></td></tr>
+            <tr><td>EVOLUTION PHARMA</td><td class="right">85</td><td class="right">72</td><td class="right"><span class="badge badge-green">▲ 13</span></td></tr>
+            <tr><td>JENPHARM</td><td class="right">99</td><td class="right">87</td><td class="right"><span class="badge badge-green">▲ 12</span></td></tr>
+            <tr><td>PLATINUM PHARMA</td><td class="right">49</td><td class="right">38</td><td class="right"><span class="badge badge-green">▲ 11</span></td></tr>
+            <tr><td>NESTLE PAKISTAN LT</td><td class="right">22</td><td class="right">18</td><td class="right"><span class="badge badge-green">▲ 4</span></td></tr>
+            <tr><td>FEROZSONS</td><td class="right">23</td><td class="right">20</td><td class="right"><span class="badge badge-green">▲ 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Biggest Rank Decliners</div>
+        <div class="panel-sub">Companies falling in absolute rank position</div>
+        <table class="est-table">
+          <thead>
+            <tr><th>Company</th><th class="right">Apr-25 Rank</th><th class="right">Apr-26 Rank</th><th class="right">Change</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>WELNOX LIMITED</td><td class="right">81</td><td class="right">102</td><td class="right"><span class="badge badge-red">▼ 21</span></td></tr>
+            <tr><td>BAYER PAK PVT LTD</td><td class="right">45</td><td class="right">66</td><td class="right"><span class="badge badge-red">▼ 21</span></td></tr>
+            <tr><td>WOODWARDS</td><td class="right">79</td><td class="right">97</td><td class="right"><span class="badge badge-red">▼ 18</span></td></tr>
+            <tr><td>ELI LILLY</td><td class="right">43</td><td class="right">59</td><td class="right"><span class="badge badge-red">▼ 16</span></td></tr>
+            <tr><td>HAKIMSONS (IMPEX)</td><td class="right">87</td><td class="right">103</td><td class="right"><span class="badge badge-red">▼ 16</span></td></tr>
+            <tr><td>ADAMJEE</td><td class="right">78</td><td class="right">92</td><td class="right"><span class="badge badge-red">▼ 14</span></td></tr>
+            <tr><td>BRISTOL MAYER BIOT</td><td class="right">76</td><td class="right">90</td><td class="right"><span class="badge badge-red">▼ 14</span></td></tr>
+            <tr><td>HIMONT PHARMA</td><td class="right">63</td><td class="right">77</td><td class="right"><span class="badge badge-red">▼ 14</span></td></tr>
+            <tr><td>EFROZE</td><td class="right">80</td><td class="right">93</td><td class="right"><span class="badge badge-red">▼ 13</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB 3: PRODUCTS -->
+  <div id="tab-products" class="tab-content">
+
+    <div class="section-label">Product-Level Market Intelligence</div>
+
+    <div class="four-col">
+      <div class="kpi-card amber">
+        <div class="kpi-label">Top Product (Panadol)</div>
+        <div class="kpi-num">Rs. 17.9 Bn</div>
+        <div class="kpi-sub">1.54% market share · +7.3% YoY</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Top 10 Products Combined</div>
+        <div class="kpi-num">Rs. 93 Bn</div>
+        <div class="kpi-sub">8.0% of total pharma market</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Top 25 Products Combined</div>
+        <div class="kpi-num">Rs. 168 Bn</div>
+        <div class="kpi-sub">14.5% of total market (Apr-26)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Top 50 Products Combined</div>
+        <div class="kpi-num">Rs. 251 Bn</div>
+        <div class="kpi-sub">21.6% of total market — fragmented</div>
+      </div>
+    </div>
+
+    <div class="full-col panel">
+      <div class="panel-title">Top 15 Products by MAT Sales (Apr-26)</div>
+      <div class="panel-sub">Moving Annual Total revenue in Rs. Billion</div>
+      <div class="chart-wrap-xl">
+        <canvas id="prodBarChart"></canvas>
+      </div>
+    </div>
+
+    <div class="full-col panel">
+      <div class="panel-title">Top 25 Products — Full Profile (Apr-26 MAT)</div>
+      <div class="panel-sub">Sales, growth, market share, and dominant growth driver</div>
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Company</th>
+            <th class="right">Sales (Rs. Bn)</th>
+            <th class="right">YoY GR%</th>
+            <th class="right">Mkt Share%</th>
+            <th class="right">Price Driver%</th>
+            <th>Trend</th>
+          </tr>
+        </thead>
+        <tbody id="prodTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Product Growth Rate Comparison — Apr-25 vs Apr-26</div>
+    <div class="full-col panel">
+      <div class="panel-title">Top 15 Product YoY Growth — Period Comparison</div>
+      <div class="panel-sub">Apr-25 vs Apr-26 growth rates showing product-level evolution</div>
+      <div class="chart-wrap-tall">
+        <canvas id="prodCompareChart"></canvas>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>Product Market Structure:</strong> Pakistan's pharmaceutical market is highly fragmented at the product level. Even the #1 product (Panadol) commands only 1.54% share. The top 200 products collectively cover roughly 92% of the market tracked. This fragmentation reflects the generic-dominated nature of the market — thousands of formulations, multiple manufacturers per molecule, and aggressive price competition at the generic tier. The branded originator segment (e.g., Augmentin, Brufen, Flagyl) remains the most revenue-intensive but faces increasing generic pressure.
+    </div>
+
+  </div>
+
+  <!-- TAB 4: GROWTH ANATOMY -->
+  <div id="tab-growth" class="tab-content">
+
+    <div class="section-label">What Is Driving Growth?</div>
+
+    <div class="verdict">
+      <div class="verdict-label">Central Finding</div>
+      <div class="verdict-text">Pakistan's pharmaceutical growth is undergoing a structural transition: from crisis-price-inflation (2022–25) to volume-and-innovation-led expansion (2025–26). Price contribution to industry growth declined from 71% to 64% in one year. Volume contribution rose from 15% to 20%. New product launches nearly doubled their growth share (5% → 10.5%). This transition is meaningful — it implies that companies growing fastest in the new period are those capturing genuine demand, not merely riding price corrections.</div>
+    </div>
+
+    <div class="full-col panel">
+      <div class="panel-title">Growth Driver Decomposition — Top 10 Companies (Apr-26)</div>
+      <div class="panel-sub">% of each company's growth attributable to: Price, Volume, New Products, Line Extensions</div>
+      <div class="chart-wrap-xl">
+        <canvas id="growthDecompChart"></canvas>
+      </div>
+    </div>
+
+    <div class="section-label">Company-Level Growth Strategies</div>
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Price-Led Strategy (&gt;80% price)</div>
+        <div class="panel-sub">Growth primarily from price increases</div>
+        <table class="est-table">
+          <thead><tr><th>Company</th><th class="right">Price%</th><th class="right">Vol%</th></tr></thead>
+          <tbody>
+            <tr><td>GLAXOSMITHKLINE</td><td class="right">278%</td><td class="right">−178%</td></tr>
+            <tr><td>HALEON PAK LTD.</td><td class="right">136%</td><td class="right">−60%</td></tr>
+            <tr><td>HOECHST PAK. LTD.</td><td class="right">135%</td><td class="right">−50%</td></tr>
+            <tr><td>NESTLE PAKISTAN LT</td><td class="right">139%</td><td class="right">−39%</td></tr>
+            <tr><td>THE SEARLE CO.</td><td class="right">121%</td><td class="right">−46%</td></tr>
+            <tr><td>OBS</td><td class="right">91%</td><td class="right">−7%</td></tr>
+            <tr><td>MARTIN DOW MARKER</td><td class="right">89%</td><td class="right">−3%</td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box red" style="margin-top:0.75rem;">Negative volume in high-price companies signals consumer substitution — patients switching to generics.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Volume-Led Strategy (&gt;30% volume)</div>
+        <div class="panel-sub">Growth driven by actual unit demand increase</div>
+        <table class="est-table">
+          <thead><tr><th>Company</th><th class="right">Vol%</th><th class="right">Price%</th></tr></thead>
+          <tbody>
+            <tr><td>HIGH-Q INTL</td><td class="right">64.5%</td><td class="right">18.5%</td></tr>
+            <tr><td>FEROZSONS</td><td class="right">65.1%</td><td class="right">11.1%</td></tr>
+            <tr><td>PHARMEVO PVT.</td><td class="right">59.5%</td><td class="right">38.2%</td></tr>
+            <tr><td>GETZ PHARMA</td><td class="right">42.0%</td><td class="right">30.6%</td></tr>
+            <tr><td>HILTON</td><td class="right">39.0%</td><td class="right">49.7%</td></tr>
+            <tr><td>CCL</td><td class="right">45.7%</td><td class="right">47.8%</td></tr>
+            <tr><td>BOSCH</td><td class="right">37.9%</td><td class="right">54.9%</td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box green" style="margin-top:0.75rem;">These companies are gaining real market share — volume growth above 30% signals demand-pull, not just price-push.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Innovation-Led Strategy (&gt;15% new products)</div>
+        <div class="panel-sub">Growth from new launches &amp; pipeline</div>
+        <table class="est-table">
+          <thead><tr><th>Company</th><th class="right">New Prod%</th><th class="right">GR%</th></tr></thead>
+          <tbody>
+            <tr><td>HIGHNOON</td><td class="right">33.5%</td><td class="right">+7.5%</td></tr>
+            <tr><td>FEROZSONS</td><td class="right">23.3%</td><td class="right">+34.1%</td></tr>
+            <tr><td>GETZ PHARMA</td><td class="right">21.5%</td><td class="right">+14.7%</td></tr>
+            <tr><td>HIGH-Q INTL</td><td class="right">16.6%</td><td class="right">+14.5%</td></tr>
+            <tr><td>THE SEARLE CO.</td><td class="right">13.8%</td><td class="right">+8.0%</td></tr>
+            <tr><td>MARTIN DOW GROUP</td><td class="right">13.0%</td><td class="right">+15.0%</td></tr>
+            <tr><td>MARTIN DOW MARKER</td><td class="right">12.9%</td><td class="right">+16.2%</td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box amber" style="margin-top:0.75rem;">Ferozsons and Getz are innovating aggressively — new products adding Rs. 3–5 Bn each annually.</div>
+      </div>
+    </div>
+
+    <div class="section-label">Price vs Volume Evolution (Apr-25 to Apr-26)</div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Industry Growth Quality Shift</div>
+        <div class="panel-sub">Price-driven vs Volume-driven proportion</div>
+        <div class="chart-wrap">
+          <canvas id="pvShiftChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Growth Rate Distribution (Top 103 Companies, Apr-26)</div>
+        <div class="panel-sub">Histogram of YoY growth rates — 11 companies negative</div>
+        <div class="chart-wrap">
+          <canvas id="growthHistChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB 5: CONCENTRATION -->
+  <div id="tab-concentration" class="tab-content">
+
+    <div class="section-label">Market Concentration &amp; Structure</div>
+
+    <div class="four-col">
+      <div class="kpi-card amber">
+        <div class="kpi-label">Top 5 Market Share (Apr-26)</div>
+        <div class="kpi-num">27.4%</div>
+        <div class="kpi-sub">Rs. 335.8 Bn combined · down from 28.9%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Top 10 Market Share (Apr-26)</div>
+        <div class="kpi-num">44.3%</div>
+        <div class="kpi-sub">Rs. 542.5 Bn combined · down from 47.4%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Top 20 Market Share (Apr-26)</div>
+        <div class="kpi-num">66.8%</div>
+        <div class="kpi-sub">Rs. 818.1 Bn combined · down from 70.1%</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Market Leader (Getz Pharma)</div>
+        <div class="kpi-num">6.70%</div>
+        <div class="kpi-sub">Rs. 82.0 Bn · Rank #1 both periods</div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Concentration Trend</div>
+      <div class="verdict-text">Market concentration is <strong>declining</strong> across all tiers — Top 5 share fell from 28.9% to 27.4%, Top 10 from 47.4% to 44.3%, Top 20 from 70.1% to 66.8%. This signals genuine competitive democratisation: mid-tier and emerging companies (CCL +21%, PharmEvo +27%, Ferozsons +34%, Nabiqasim +22%) are outgrowing the incumbents. The long tail of 80+ smaller companies is collectively gaining share, likely driven by generic formulary penetration in price-sensitive segments.</div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Market Share Concentration — Apr-25 vs Apr-26</div>
+        <div class="panel-sub">Cumulative market share by company tier</div>
+        <div class="chart-wrap">
+          <canvas id="concentrationChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Market Share Bubble — Top 20 Companies</div>
+        <div class="panel-sub">Size = market share, Y-axis = YoY growth</div>
+        <div class="chart-wrap">
+          <canvas id="bubbleChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Market Share Detail — Top 20 (Apr-26)</div>
+    <div class="full-col panel">
+      <div class="panel-title">Individual Company Share vs Growth Matrix</div>
+      <div class="panel-sub">Share % and YoY growth rate — sorted by market share</div>
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Company</th>
+            <th class="right">Sales (Rs. Bn)</th>
+            <th class="right">Share (Apr-26)</th>
+            <th class="right">Share (Apr-25)</th>
+            <th class="right">Share Δ</th>
+            <th class="right">YoY GR%</th>
+          </tr>
+        </thead>
+        <tbody id="shareTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Product Concentration</div>
+    <div class="three-col">
+      <div class="kpi-card">
+        <div class="kpi-label">Top Product Share (Panadol)</div>
+        <div class="kpi-num">1.54%</div>
+        <div class="kpi-sub">Rs. 17.9 Bn of Rs. 1,159 Bn product market</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Top 25 Products Share</div>
+        <div class="kpi-num">14.5%</div>
+        <div class="kpi-sub">Highly fragmented — no dominant SKUs</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Top 50 Products Share</div>
+        <div class="kpi-num">21.6%</div>
+        <div class="kpi-sub">Rest of market: thousands of SKUs sharing 78%</div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>Implication for GST Reform:</strong> The declining concentration means that a tiered GST structure would spread its incidence more broadly than previously. The top 5 companies (where branded premiums dominate) would bear most of Tier 3 GST, while the long tail of generic manufacturers (Tier 1, 0% rate) would be protected. The structural shift toward mid-tier domestic companies strengthens the viability case for GST reform.
+    </div>
+
+  </div>
+
+  <!-- TAB 6: POLICY CONTEXT -->
+  <div id="tab-policy" class="tab-content">
+
+    <div class="section-label">GST Reform Context</div>
+
+    <div class="four-col">
+      <div class="kpi-card red">
+        <div class="kpi-label">GST Concession (Serial 81, FY25)</div>
+        <div class="kpi-num">Rs. 375 Bn</div>
+        <div class="kpi-sub">+136% from Rs. 159 Bn in FY24</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">As % of Total Tax Expenditure</div>
+        <div class="kpi-num">15.9%</div>
+        <div class="kpi-sub">Largest single item in Pakistan's tax expenditures</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">vs Federal Health Budget</div>
+        <div class="kpi-num">20.6×</div>
+        <div class="kpi-sub">Serial 81 is 20.6× the federal health development budget</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Potential Annual Recovery</div>
+        <div class="kpi-num">Rs. 118–157 Bn</div>
+        <div class="kpi-sub">Under central scenario of 3-tier GST reform</div>
+      </div>
+    </div>
+
+    <div class="full-col panel">
+      <div class="panel-title">Proposed Three-Tier GST Structure</div>
+      <div class="panel-sub">Reform design with revenue impact and viability assessment per tier</div>
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Category</th>
+            <th>Criteria</th>
+            <th class="right">Current Rate</th>
+            <th class="right">Proposed Rate</th>
+            <th class="right">Market Base [E]</th>
+            <th class="right">Revenue Recovery [E]</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-green">Tier 1</span></td>
+            <td><strong>Essential Medicines</strong></td>
+            <td>WHO EML 2023 (~400 medicines) + DRAP Schedule I generics &lt;Rs.300/unit</td>
+            <td class="right">~1%</td>
+            <td class="right"><strong>0%</strong></td>
+            <td class="right">Rs. 450 Bn</td>
+            <td class="right">Nil (protected)</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-amber">Tier 2</span></td>
+            <td><strong>Formulary Medicines</strong></td>
+            <td>DRAP-registered non-Tier-1; generics &gt;Rs.300/unit; branded essential molecules</td>
+            <td class="right">~1%</td>
+            <td class="right"><strong>5%</strong></td>
+            <td class="right">Rs. 1,350 Bn</td>
+            <td class="right">+Rs. 67.5 Bn</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Tier 3</span></td>
+            <td><strong>Non-Essential / Premium</strong></td>
+            <td>Branded originators w/ generic equiv. &lt;30% price; OTC non-therapeutics; cosmeceuticals</td>
+            <td class="right">~1%</td>
+            <td class="right"><strong>12%</strong></td>
+            <td class="right">Rs. 400 Bn</td>
+            <td class="right">+Rs. 48 Bn</td>
+          </tr>
+          <tr class="industry-row">
+            <td colspan="6"><strong>Central Scenario — Total Annual Recovery</strong></td>
+            <td class="right"><strong>+Rs. 137 Bn</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Revenue Recovery Scenarios</div>
+        <div class="panel-sub">Conservative, Central, Optimistic annual recovery estimates</div>
+        <div class="chart-wrap">
+          <canvas id="scenarioChart"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Manufacturer Viability by Tier</div>
+        <div class="panel-sub">Can the industry absorb the proposed GST rates?</div>
+        <table class="est-table">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th class="right">Gross Margin [E]</th>
+              <th class="right">5% Tier 2</th>
+              <th class="right">12% Tier 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Large (Top 20)</td>
+              <td class="right">25–35%</td>
+              <td class="right"><span class="badge badge-green">Yes, easily</span></td>
+              <td class="right"><span class="badge badge-green">Yes (non-essential brands)</span></td>
+            </tr>
+            <tr>
+              <td>Mid-size (21–100)</td>
+              <td class="right">15–22%</td>
+              <td class="right"><span class="badge badge-green">Yes + DRAP adjust</span></td>
+              <td class="right"><span class="badge badge-amber">Selective</span></td>
+            </tr>
+            <tr>
+              <td>Small (~500)</td>
+              <td class="right">8–14%</td>
+              <td class="right"><span class="badge badge-amber">Transition support</span></td>
+              <td class="right"><span class="badge badge-blue">N/A (mostly Tier 1)</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="insight-box green" style="margin-top:0.75rem;">
+          Key insight: Small manufacturers are predominantly in the generic-essential segment that would receive full exemption under Tier 1. The GST incidence falls on large companies, which have the highest margins and are best positioned to absorb it.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">DRAP Reform — Reference Pricing vs Cost-Plus</div>
+    <div class="full-col panel">
+      <div class="panel-title">Current DRAP Model vs Proposed Reference Pricing</div>
+      <div class="panel-sub">Structural comparison of the two regulatory frameworks</div>
+      <table class="est-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Current: Cost-Plus Ceiling</th>
+            <th>Proposed: Reference Pricing</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Price-setting basis</td>
+            <td>Declared manufacturing cost + DRAP-allowed margin</td>
+            <td>Median price in basket of reference countries</td>
+          </tr>
+          <tr>
+            <td>Adjustment frequency</td>
+            <td><span class="badge badge-red">12–24 months (application-dependent)</span></td>
+            <td><span class="badge badge-green">Quarterly (formula-driven, automatic)</span></td>
+          </tr>
+          <tr>
+            <td>Shortage risk</td>
+            <td><span class="badge badge-red">High — lag between cost rise and approval</span></td>
+            <td><span class="badge badge-green">Low — automatic adjustment removes lag</span></td>
+          </tr>
+          <tr>
+            <td>Transparency</td>
+            <td>Low — cost declarations not audited</td>
+            <td>High — reference basket publicly observable</td>
+          </tr>
+          <tr>
+            <td>Consumer price effect</td>
+            <td>Volatile: freezes then large corrections</td>
+            <td>Stable: quarterly micro-adjustments</td>
+          </tr>
+          <tr>
+            <td>Reference basket</td>
+            <td>N/A</td>
+            <td>India 40%, Bangladesh 20%, Egypt 15%, Vietnam 15%, Indonesia 10%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Policy Fiscal Impact</div>
+    <div class="three-col">
+      <div class="kpi-card amber">
+        <div class="kpi-label">GST Reform Recovery (Central)</div>
+        <div class="kpi-num">Rs. 137 Bn/yr</div>
+        <div class="kpi-sub">Structural, permanent — implementable in 18 months</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Counterfeit Reduction Potential</div>
+        <div class="kpi-num">Rs. 10–20 Bn/yr</div>
+        <div class="kpi-sub">Via track-and-trace serialisation enforcement</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">API PLI Scheme (Year 5 FX Saving)</div>
+        <div class="kpi-num">Rs. 30–50 Bn/yr</div>
+        <div class="kpi-sub">Import substitution for 30 priority API molecules</div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Policy Conclusion</div>
+      <div class="verdict-text">The Rs. 375 billion pharmaceutical GST concession is the largest single tax expenditure in Pakistan's federal system — 20.6× the health development budget — yet it is structured with zero conditionality on pricing, access, or patient outcomes. It is not a health subsidy; it is a margin protector. The market data confirms this: Pakistan's pharmaceutical companies are posting 14–20% CAGRs. Getz Pharma, the market leader, generated Rs. 82 billion in annual revenue, growing at 14.7%. A 5% GST on Tier 2 medicines, paired with automatic reference pricing adjustment rights, is not an existential threat to an industry with 15–35% gross margins. It is a reallocation of Rs. 137 billion annually from an untargeted blanket concession to recoverable fiscal space that can fund genuine access interventions.</div>
+    </div>
+
+  </div>
+
+  <!-- TAB 7: INDIA PRICE BENCHMARK -->
+  <div id="tab-india-compare" class="tab-content">
+
+    <div class="section-label">India vs Pakistan Drug Price Benchmark — June 2026</div>
+
+    <div class="verdict">
+      <div class="verdict-label">Methodology</div>
+      <div class="verdict-text">India prices sourced from NPPA (National Pharmaceutical Pricing Authority) DPCO 2026 ceiling prices effective April 1, 2026 (Gazette S.O. 1575(E)), and from Indian online pharmacy retail data (1mg, PharmEasy). Pakistan prices are DRAP-notified MRP estimates from Pakistani online pharmacies (Shafayab, Dawa Healthcare, Healthwire) and published DRAP SROs. Exchange rate used: <strong>1 INR = 2.93 PKR</strong> (June 2026, interbank mid-market rate). India prices cited in two tiers: NPPA regulatory ceiling (DPCO-controlled generic) and branded retail MRP.</div>
+    </div>
+
+    <div class="four-col">
+      <div class="kpi-card amber">
+        <div class="kpi-label">Exchange Rate (June 2026)</div>
+        <div class="kpi-num">1 INR = 2.93 PKR</div>
+        <div class="kpi-sub">Interbank mid-market · PKR strengthened vs INR YTD</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">India NPPA Ceiling (DPCO 2026)</div>
+        <div class="kpi-num">907 molecules</div>
+        <div class="kpi-sub">Regulated max price, WPI-linked · +0.65% Apr 2026</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Median Pak vs India NPPA Premium</div>
+        <div class="kpi-num">+245%</div>
+        <div class="kpi-sub">Pakistan branded prices median 2.45× India ceiling</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Median Pak vs India Branded</div>
+        <div class="kpi-num">+9%</div>
+        <div class="kpi-sub">Pakistan branded roughly parity with India branded MRP</div>
+      </div>
+    </div>
+
+    <div class="insight-box amber">
+      <strong>Two-tier comparison:</strong> India operates two price layers — (1) NPPA DPCO ceiling for NLEM-listed generics (the regulatory floor) and (2) branded retail MRP which can exceed the ceiling for non-NLEM products or for the brand premium. Pakistan's market operates primarily at the branded MRP tier. Comparing Pakistan's DRAP MRP against India's NPPA ceiling shows Pakistan is significantly higher. Comparing against India's branded retail shows near-parity or slight premium — confirming that Pakistan's pricing regime, while tighter than branded India, is dramatically above India's generic access floor.
+    </div>
+
+    <!-- Main comparison table -->
+    <div class="full-col panel">
+      <div class="panel-title">Drug Price Comparison — Pakistan DRAP MRP vs India NPPA &amp; Branded (Top 20 Molecules, Jun 2026)</div>
+      <div class="panel-sub">All prices per tablet/unit · India NPPA = DPCO 2026 ceiling (excl. 5% GST) · India Branded = retail MRP incl. GST · PKR equivalent at 1 INR = 2.93</div>
+      <table class="est-table" id="priceCompareTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pakistan Brand</th>
+            <th>Indian Equivalent</th>
+            <th>Molecule / Strength</th>
+            <th class="right">Pak MRP (PKR)</th>
+            <th class="right">India NPPA (₹)</th>
+            <th class="right">NPPA in PKR</th>
+            <th class="right">India Branded (₹)</th>
+            <th class="right">Branded in PKR</th>
+            <th class="right">Pak vs NPPA</th>
+            <th class="right">Pak vs Branded</th>
+          </tr>
+        </thead>
+        <tbody id="priceTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Chart: price comparison bar -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Pakistan MRP vs India NPPA Ceiling (PKR Equivalent)</div>
+        <div class="panel-sub">Side-by-side for 12 key molecules — logarithmic scale due to range</div>
+        <div class="chart-wrap-tall">
+          <canvas id="priceCompBar"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Pakistan Premium Over India NPPA Ceiling (%)</div>
+        <div class="panel-sub">How much more Pakistan charges vs India's regulated price</div>
+        <div class="chart-wrap-tall">
+          <canvas id="premiumBar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Pakistan vs India Branded Retail (PKR Equivalent)</div>
+        <div class="panel-sub">Branded-to-branded comparison — closer to parity</div>
+        <div class="chart-wrap">
+          <canvas id="brandedCompBar"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Pakistan vs India: Premium Distribution</div>
+        <div class="panel-sub">% of molecules where Pakistan is cheaper vs more expensive</div>
+        <div class="chart-wrap">
+          <canvas id="premiumDist"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extended analysis section -->
+    <div class="section-label">Category Analysis</div>
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Antibiotics — Biggest Price Gaps</div>
+        <div class="panel-sub">Pakistan branded vs India NPPA ceiling in PKR</div>
+        <table class="est-table">
+          <thead><tr><th>Drug</th><th class="right">Pak (PKR)</th><th class="right">India NPPA→PKR</th><th class="right">Pak Premium</th></tr></thead>
+          <tbody>
+            <tr><td>Ciprofloxacin 500mg</td><td class="right">35</td><td class="right">19.9</td><td class="right"><span class="badge badge-red">+76%</span></td></tr>
+            <tr><td>Azithromycin 500mg</td><td class="right">55</td><td class="right">34.2</td><td class="right"><span class="badge badge-red">+61%</span></td></tr>
+            <tr><td>Amox+Clav 625mg</td><td class="right">115</td><td class="right">46.9</td><td class="right"><span class="badge badge-red">+145%</span></td></tr>
+            <tr><td>Cefixime 200mg</td><td class="right">52</td><td class="right">58.6</td><td class="right"><span class="badge badge-green">−11%</span></td></tr>
+            <tr><td>Metronidazole 400mg</td><td class="right">12</td><td class="right">3.2</td><td class="right"><span class="badge badge-red">+275%</span></td></tr>
+            <tr><td>Cephradine 500mg</td><td class="right">70</td><td class="right">41.0</td><td class="right"><span class="badge badge-red">+71%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Analgesics / Fever</div>
+        <div class="panel-sub">Pakistan vs India price per tablet (PKR)</div>
+        <table class="est-table">
+          <thead><tr><th>Drug</th><th class="right">Pak (PKR)</th><th class="right">India NPPA→PKR</th><th class="right">Pak Premium</th></tr></thead>
+          <tbody>
+            <tr><td>Paracetamol 500mg</td><td class="right">3.0</td><td class="right">2.7</td><td class="right"><span class="badge badge-amber">+10%</span></td></tr>
+            <tr><td>Ibuprofen 400mg</td><td class="right">25</td><td class="right">2.1</td><td class="right"><span class="badge badge-red">+1,090%</span></td></tr>
+            <tr><td>Paracetamol+Ibuprofen (Arinac)</td><td class="right">28</td><td class="right">8.5</td><td class="right"><span class="badge badge-red">+229%</span></td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box red" style="margin-top:0.75rem;">Ibuprofen 400mg in Pakistan is 10× the India NPPA ceiling price in PKR equivalent — the most extreme single price differential in the dataset. NPPA caps Ibuprofen at ₹0.71/tablet; Pakistan's Brufen retails at ~Rs. 25-28/tablet.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Chronic Disease Medicines</div>
+        <div class="panel-sub">Pakistan vs India for diabetes, neurology, gastro</div>
+        <table class="est-table">
+          <thead><tr><th>Drug</th><th class="right">Pak (PKR)</th><th class="right">India NPPA→PKR</th><th class="right">Pak Premium</th></tr></thead>
+          <tbody>
+            <tr><td>Omeprazole 20mg</td><td class="right">20</td><td class="right">8.2</td><td class="right"><span class="badge badge-red">+143%</span></td></tr>
+            <tr><td>Gabapentin 300mg</td><td class="right">40</td><td class="right">16.1</td><td class="right"><span class="badge badge-red">+148%</span></td></tr>
+            <tr><td>Metf+Sita 500+50mg</td><td class="right">65</td><td class="right">40.1</td><td class="right"><span class="badge badge-red">+62%</span></td></tr>
+            <tr><td>Mecobalamin 500mcg</td><td class="right">28</td><td class="right">20.5</td><td class="right"><span class="badge badge-amber">+37%</span></td></tr>
+            <tr><td>Dydrogesterone 10mg</td><td class="right">60</td><td class="right">N/A</td><td class="right"><span class="badge badge-blue">vs ₹38 branded</span></td></tr>
+            <tr><td>Clobetasol cream 30g</td><td class="right">200</td><td class="right">87.9</td><td class="right"><span class="badge badge-red">+127%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-label">Policy Implications of the Price Gap</div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Why Pakistan is Higher than India's NPPA Floor</div>
+        <div class="panel-sub">Structural factors driving the price differential</div>
+        <table class="est-table">
+          <thead><tr><th>Factor</th><th>India</th><th>Pakistan</th></tr></thead>
+          <tbody>
+            <tr><td>Price control regime</td><td>DPCO 2013 — hard ceiling on 907+ NLEM molecules; automatic WPI adjustment</td><td>DRAP cost-plus — ad hoc, application-driven, 12-24 month lag</td></tr>
+            <tr><td>Generic market depth</td><td>Deep — thousands of manufacturers; >50 brands per molecule</td><td>Thin — limited generic competition; 5-15 brands per molecule</td></tr>
+            <tr><td>API manufacturing</td><td>~35% domestic API production · major API exporter</td><td>&lt;10% domestic API; 80-90% imported</td></tr>
+            <tr><td>Market scale</td><td>Rs. 2.2 trillion ($26 Bn) — 2× Pakistan</td><td>Rs. 1.2 trillion ($4.4 Bn) — smaller scale</td></tr>
+            <tr><td>GST on medicines</td><td>5% on scheduled; 12% on non-scheduled; NLEM essentials 5%</td><td>Currently 0% (Serial 81 concession) — no incentive to lower pre-tax price</td></tr>
+            <tr><td>Reference pricing</td><td>Basket pricing via DPCO cost-build-up formula + market share weighted avg</td><td>Not implemented — reform proposal pending</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Patient Affordability Impact</div>
+        <div class="panel-sub">Treatment cost comparison: full antibiotic course (7 days) in PKR</div>
+        <table class="est-table">
+          <thead><tr><th>Antibiotic / Regimen</th><th class="right">Pakistan (PKR)</th><th class="right">India NPPA (PKR equiv)</th><th class="right">Pak excess cost</th></tr></thead>
+          <tbody>
+            <tr><td>Ciprofloxacin 500mg × 14 tabs</td><td class="right">490</td><td class="right">279</td><td class="right"><span class="badge badge-red">+211 PKR</span></td></tr>
+            <tr><td>Augmentin 625mg × 14 tabs</td><td class="right">1,610</td><td class="right">657</td><td class="right"><span class="badge badge-red">+953 PKR</span></td></tr>
+            <tr><td>Azithromycin 500mg × 5 tabs</td><td class="right">275</td><td class="right">171</td><td class="right"><span class="badge badge-red">+104 PKR</span></td></tr>
+            <tr><td>Metronidazole 400mg × 21 tabs</td><td class="right">252</td><td class="right">67</td><td class="right"><span class="badge badge-red">+185 PKR</span></td></tr>
+            <tr><td>Ibuprofen 400mg × 21 tabs (week)</td><td class="right">525</td><td class="right">44</td><td class="right"><span class="badge badge-red">+481 PKR</span></td></tr>
+            <tr><td>Omeprazole 20mg × 30 tabs (month)</td><td class="right">600</td><td class="right">246</td><td class="right"><span class="badge badge-red">+354 PKR</span></td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box" style="margin-top:0.75rem;">Against Pakistan's minimum wage of ~Rs. 37,000/month, a 7-day Augmentin course costs 4.4% of monthly income in Pakistan vs ~1.8% in India (at NPPA prices). For unskilled workers, this affordability gap is material — often driving incomplete treatment courses and antimicrobial resistance.</div>
+      </div>
+    </div>
+
+    <div class="full-col panel">
+      <div class="panel-title">Price Ratio: Pakistan MRP ÷ India NPPA (both in PKR) — Lower is Better for Patients</div>
+      <div class="panel-sub">1.0x = same as India NPPA · Above 1x = Pakistan is more expensive · Reference pricing at India basket level would reduce these ratios toward 1.0x</div>
+      <div class="chart-wrap-tall">
+        <canvas id="ratioChart"></canvas>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Policy Conclusion — India Benchmark</div>
+      <div class="verdict-text">Pakistan's pharmaceutical prices are <strong>60–1,090% above India's NPPA-regulated ceiling prices</strong> when converted to PKR. Against India's branded retail (the more comparable metric), Pakistan is at rough parity or modest premium (+9% median). The critical policy insight is that <strong>India's DPCO system — which covers 907 essential molecules, automatically adjusts prices via WPI, and is administered digitally through the IPDMS portal — has achieved genuine price discipline</strong>. Pakistan's DRAP cost-plus regime, by contrast, allows each price increase to be administered on application, with 12-24 month lags, and has no automatic pass-through mechanism. The proposed shift to reference pricing (with India at 40% weight in the basket) would bring Pakistan's ceiling prices meaningfully closer to India's levels for the overlapping molecules — generating both fiscal savings on the GST concession and tangible affordability gains for patients.</div>
+    </div>
+
+  </div>
+
+</div><!-- end container -->
+
+
+<script>
+// ===== DATA =====
+const top20Names = ["GETZ PHARMA","ABBOTT LAB","SAMI","GSK","MARTIN DOW GRP","HILTON","OBS","HIGH-Q INTL","SEARLE CO.","HALEON","BOSCH","MD MARKER","CCL","HIGHNOON","HOECHST","ATCO","PHARMEVO","NESTLE PAK","L.C.I","FEROZSONS"];
+const top20NamesF = ["GETZ PHARMA","ABBOTT LAB PAK LTD","SAMI","GLAXOSMITHKLINE","MARTIN DOW GROUP","HILTON","OBS","HIGH-Q INTL","THE SEARLE COMPANY","HALEON PAK LTD.","BOSCH","MARTIN DOW MARKER","CCL","HIGHNOON","HOECHST PAK. LTD.","ATCO","PHARMEVO PVT. LTD.","NESTLE PAKISTAN LT","L.C.I","FEROZSONS"];
+const top20Sales = [82.0,69.0,68.5,64.9,51.2,45.6,42.8,42.5,38.1,37.8,35.0,31.9,31.4,30.5,29.0,27.4,24.1,23.0,23.0,20.3];
+const top20Sales25 = [71.5,62.7,63.7,61.2,44.5,39.8,39.4,37.1,47.9,35.7,31.6,27.4,25.4,28.4,27.3,25.3,19.0,15.4,21.4,15.1];
+const top20Gr = [14.7,10.2,7.6,6.2,15.0,10.4,8.4,14.5,8.0,5.9,10.8,16.2,21.4,7.5,6.0,8.2,26.9,49.5,4.1,34.1];
+const top20Cagr = [19.7,16.0,15.9,13.6,18.5,20.5,16.6,21.7,13.1,14.6,16.8,19.1,25.9,20.0,16.6,19.7,26.9,18.4,10.8,37.4];
+const top20Share26 = [6.70,5.64,5.60,5.30,4.18,3.72,3.49,3.47,3.11,3.09,2.86,2.60,2.56,2.49,2.37,2.24,1.97,1.88,1.88,1.66];
+const top20Share25 = [6.73,5.89,5.99,5.75,4.19,3.74,3.71,3.49,4.51,3.36,2.97,2.58,2.39,2.67,2.57,2.38,1.78,1.45,2.02,1.42];
+
+const top10Names = ["GETZ PHARMA","ABBOTT LAB","SAMI","GSK","MARTIN DOW GRP","HILTON","OBS","HIGH-Q INTL","SEARLE CO.","HALEON"];
+const pricePct = [30.6,82.4,63.8,278.4,78.0,49.7,91.0,18.5,121.3,135.6];
+const volPct = [42.0,11.5,18.3,-178.4,6.6,39.0,-6.6,64.5,-46.4,-60.0];
+const newProdPct = [21.5,0.0,9.9,0.0,13.0,9.6,8.4,16.6,13.8,10.3];
+const lineExtPct = [5.9,6.0,8.0,0.0,2.3,1.7,7.2,0.4,11.3,14.1];
+
+const prodNames = ["PANADOL","AUGMENTIN","RISEK","BRUFEN","METHYCOBAL","CAC 1000+","OXIDIL","CALAMOX","SURBEX Z","FLAGYL","NOVIDAT","GABICA","CLOBEVATE","VELOSEF","DUPHASTON"];
+const prodSales = [17.86,10.90,10.58,10.29,8.15,7.72,7.30,6.85,6.70,6.62,5.96,5.76,5.76,5.75,5.55];
+const prodGr26 = [7.3,5.5,8.0,8.0,11.5,-4.1,1.3,10.5,18.6,-9.5,-2.2,15.2,29.9,1.6,-0.8];
+const prodGr25 = [19.0,-2.5,9.7,12.4,3.9,51.1,3.8,14.2,19.9,32.8,11.4,31.7,35.1,18.5,18.5];
+
+const amber = '#C8923A', green = '#52B788', red = '#9B2335', blue = '#4A90D9', purple = '#7B5EA7';
+const lightAmber = '#F5DFB6', lightGreen = '#C3E8D4', lightRed = '#EEC8C8', lightBlue = '#C5DCF5';
+
+// ===== TAB LOGIC =====
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ===== POPULATE TABLES =====
+const compData = [
+  ["GETZ PHARMA",82.0,14.7,19.7,6.70,30.6,42.0,21.5],
+  ["ABBOTT LAB PAK LTD",69.0,10.2,16.0,5.64,82.4,11.5,0.0],
+  ["SAMI",68.5,7.6,15.9,5.60,63.8,18.3,9.9],
+  ["GLAXOSMITHKLINE",64.9,6.2,13.6,5.30,278.4,-178.4,0.0],
+  ["MARTIN DOW GROUP",51.2,15.0,18.5,4.18,78.0,6.6,13.0],
+  ["HILTON",45.6,10.4,20.5,3.72,49.7,39.0,9.6],
+  ["OBS",42.8,8.4,16.6,3.49,91.0,-6.6,8.4],
+  ["HIGH-Q INTL",42.5,14.5,21.7,3.47,18.5,64.5,16.6],
+  ["THE SEARLE COMPANY",38.1,8.0,13.1,3.11,121.3,-46.4,13.8],
+  ["HALEON PAK LTD.",37.8,5.9,14.6,3.09,135.6,-60.0,10.3],
+  ["BOSCH",35.0,10.8,16.8,2.86,54.9,37.9,1.7],
+  ["MARTIN DOW MARKER",31.9,16.2,19.1,2.60,88.5,-3.1,12.9],
+  ["CCL",31.4,21.4,25.9,2.56,47.8,45.7,6.3],
+  ["HIGHNOON",30.5,7.5,20.0,2.49,86.8,-79.2,33.5],
+  ["HOECHST PAK. LTD.",29.0,6.0,16.6,2.37,135.4,-50.0,9.6],
+  ["ATCO",27.4,8.2,19.7,2.24,52.7,24.5,11.7],
+  ["PHARMEVO PVT. LTD.",24.1,26.9,26.9,1.97,38.2,59.5,2.2],
+  ["NESTLE PAKISTAN LT",23.0,49.5,18.4,1.88,139.3,-39.3,0.0],
+  ["L.C.I",23.0,4.1,10.8,1.88,419.0,-482.9,4.8],
+  ["FEROZSONS",20.3,34.1,37.4,1.66,11.1,65.1,23.3],
+  ["NABIQASIM",19.8,22.3,22.1,1.62,41.0,48.1,5.7],
+  ["BARRETT HODGSON",20.2,3.6,12.4,1.65,97.6,-96.9,17.0],
+  ["MARTIN DOW LIMITED",18.2,15.2,17.4,1.48,52.7,32.5,12.4],
+  ["FISONS",17.3,12.9,17.4,1.41,57.6,27.9,12.9],
+  ["GENIX PHARMA",11.9,22.9,22.8,0.97,58.6,25.6,14.2],
+  ["MEIJI PAKISTAN",10.5,17.8,16.9,0.86,67.4,19.4,11.2],
+  ["MORINAGA",11.4,17.3,8.3,0.93,62.5,24.3,9.5],
+  ["GLOBAL PHARMA",10.0,-3.6,8.0,0.81,102.1,-23.5,3.1],
+  ["PLATINUM PHARMA",7.8,18.4,19.2,0.64,55.3,31.2,8.9],
+  ["SEARLE PAK LTD",6.4,-29.3,4.1,0.52,210.5,-134.2,5.8],
+];
+
+const tbody = document.getElementById('companyTableBody');
+compData.forEach((d, i) => {
+  const grClass = d[2] >= 0 ? 'badge-green' : 'badge-red';
+  const rank = i + 1;
+  const rankBadgeClass = rank <= 3 ? 'top3' : '';
+  tbody.innerHTML += `
+    <tr>
+      <td><span class="rank-badge ${rankBadgeClass}">${rank}</span></td>
+      <td>${d[0]}</td>
+      <td class="right">Rs. ${d[1].toFixed(1)} Bn</td>
+      <td class="right"><span class="badge ${grClass}">${d[2] >= 0 ? '+' : ''}${d[2].toFixed(1)}%</span></td>
+      <td class="right">${d[3].toFixed(1)}%</td>
+      <td class="right">${d[4].toFixed(2)}%</td>
+      <td class="right">${d[5].toFixed(1)}%</td>
+      <td class="right">${d[6].toFixed(1)}%</td>
+      <td class="right">${d[7].toFixed(1)}%</td>
+    </tr>`;
+});
+
+// Product table
+const prodData = [
+  ["PANADOL","HALEON",17.86,7.3,1.54,84],["AUGMENTIN","GSK",10.90,5.5,0.94,90],
+  ["RISEK","GETZ",10.58,8.0,0.91,62],["BRUFEN","ABBOTT",10.29,8.0,0.89,42],
+  ["METHYCOBAL","HILTON",8.15,11.5,0.70,31],["CAC 1000+","HALEON",7.72,-4.1,0.67,-243],
+  ["OXIDIL","SAMI",7.30,1.3,0.63,402],["CALAMOX","BOSCH",6.85,10.5,0.59,46],
+  ["SURBEX Z","ABBOTT",6.70,18.6,0.58,71],["FLAGYL","HHHK",6.62,-9.5,0.57,-67],
+  ["NOVIDAT","SAMI",5.96,-2.2,0.51,-162],["GABICA","GETZ",5.76,15.2,0.50,11],
+  ["CLOBEVATE","STIEFEL",5.76,29.9,0.50,104],["VELOSEF","GSK",5.75,1.6,0.50,1045],
+  ["DUPHASTON","SOLVAY",5.55,-0.8,0.48,-0],["INS MIXTARD","NOVO",5.17,-1.0,0.45,-657],
+  ["ARINAC","ABBOTT",5.08,19.5,0.44,63],["NUBEROL","SEARLE",4.92,27.1,0.42,33],
+  ["EXTOR","SEARLE",4.86,50.6,0.42,26],["AZOMAX","OAL",4.80,9.5,0.41,38],
+  ["EVION","MDM",4.41,18.4,0.38,106],["RIGIX","AG",4.37,19.9,0.38,107],
+  ["SITAMET","CCL",4.27,8.3,0.37,142],["OZEMPIC","NOVO",4.21,13.2,0.36,52],
+  ["CEFSPAN","BOSCH",4.17,4.5,0.36,119]
+];
+const ptbody = document.getElementById('prodTableBody');
+prodData.forEach((d,i) => {
+  const grClass = d[3] >= 0 ? 'badge-green' : 'badge-red';
+  const rank = i + 1;
+  const rankBadgeClass = rank <= 3 ? 'top3' : '';
+  ptbody.innerHTML += `
+    <tr>
+      <td><span class="rank-badge ${rankBadgeClass}">${rank}</span></td>
+      <td><strong>${d[0]}</strong></td>
+      <td>${d[1]}</td>
+      <td class="right">Rs. ${d[2]} Bn</td>
+      <td class="right"><span class="badge ${grClass}">${d[3] >= 0 ? '+' : ''}${d[3]}%</span></td>
+      <td class="right">${d[4].toFixed(2)}%</td>
+      <td class="right">${d[5]}%</td>
+      <td><div class="growth-bar-wrap"><div class="growth-bar ${d[3]>=0?'pos':'neg'}" style="width:${Math.min(Math.abs(d[3])*2,100)}px"></div><span class="growth-val ${d[3]>=0?'pos':'neg'}">${d[3]>=0?'▲':'▼'}</span></div></td>
+    </tr>`;
+});
+
+// Share table
+const shbody = document.getElementById('shareTableBody');
+top20NamesF.forEach((name, i) => {
+  const delta = (top20Share26[i] - top20Share25[i]).toFixed(2);
+  const deltaClass = parseFloat(delta) >= 0 ? 'badge-green' : 'badge-red';
+  const grClass = top20Gr[i] >= 0 ? 'badge-green' : 'badge-red';
+  shbody.innerHTML += `
+    <tr>
+      <td>${i+1}</td>
+      <td>${name}</td>
+      <td class="right">Rs. ${top20Sales[i]} Bn</td>
+      <td class="right">${top20Share26[i].toFixed(2)}%</td>
+      <td class="right">${top20Share25[i].toFixed(2)}%</td>
+      <td class="right"><span class="badge ${deltaClass}">${parseFloat(delta)>=0?'+':''}${delta}pp</span></td>
+      <td class="right"><span class="badge ${grClass}">${top20Gr[i]>=0?'+':''}${top20Gr[i]}%</span></td>
+    </tr>`;
+});
+
+// ===== CHARTS =====
+
+// 1. Growth Decomposition Compare (grouped bar)
+new Chart(document.getElementById('decompCompare'), {
+  type: 'bar',
+  data: {
+    labels: ['Price Change', 'Volume Change', 'New Products', 'Line Extension'],
+    datasets: [
+      { label: 'Apr-25', data: [71.1, 15.4, 5.0, 8.5], backgroundColor: lightAmber, borderColor: amber, borderWidth: 1.5 },
+      { label: 'Apr-26', data: [63.6, 20.1, 10.5, 5.8], backgroundColor: lightBlue, borderColor: blue, borderWidth: 1.5 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 12 }, boxWidth: 12 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => v+'%' }, title: { display: true, text: '% of Total Growth', font: { size: 11 }, color: '#999' } }
+    }
+  }
+});
+
+// 2. Market size trajectory (estimated)
+new Chart(document.getElementById('mktSizeChart'), {
+  type: 'line',
+  data: {
+    labels: ['FY2021', 'FY2022', 'FY2023', 'FY2024', 'Apr-25 MAT', 'Apr-26 MAT'],
+    datasets: [{
+      label: 'Market Size (Rs. Bn)',
+      data: [492, 570, 698, 895, 1063, 1225],
+      borderColor: amber, backgroundColor: 'rgba(200,146,58,0.08)',
+      fill: true, tension: 0.4, borderWidth: 2, pointRadius: 4,
+      pointBackgroundColor: amber
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => 'Rs.'+v } }
+    }
+  }
+});
+
+// 3. Top 20 bar chart (horizontal)
+new Chart(document.getElementById('top20BarChart'), {
+  type: 'bar',
+  data: {
+    labels: top20Names,
+    datasets: [
+      { label: 'Apr-26 Sales (Rs. Bn)', data: top20Sales, backgroundColor: top20Gr.map(g => g >= 20 ? amber : g >= 10 ? 'rgba(200,146,58,0.55)' : 'rgba(200,146,58,0.3)'), borderColor: amber, borderWidth: 1 },
+      { label: 'Apr-25 Sales (Rs. Bn)', data: top20Sales25, backgroundColor: 'rgba(82,183,136,0.25)', borderColor: green, borderWidth: 1 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 12 }, boxWidth: 12 } },
+      tooltip: { callbacks: { afterLabel: (ctx) => ctx.datasetIndex === 0 ? `YoY Growth: ${top20Gr[ctx.dataIndex]}%` : '' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 35 } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => 'Rs.'+v+'Bn' }, title: { display: true, text: 'Rs. Billion', font: { size: 11 }, color: '#999' } }
+    }
+  }
+});
+
+// 4. CAGR chart
+new Chart(document.getElementById('cagrChart'), {
+  type: 'bar',
+  data: {
+    labels: top20Names.slice(0, 20),
+    datasets: [{ label: 'MAT CAGR% (Apr-26)', data: top20Cagr.slice(0,20), backgroundColor: top20Cagr.slice(0,20).map(c => c >= 25 ? amber : c >= 20 ? 'rgba(200,146,58,0.6)' : 'rgba(200,146,58,0.35)'), borderColor: amber, borderWidth: 1 }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 10 }, callback: v => v+'%' } },
+      y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// 5. Growth distribution histogram
+const grBuckets = { '<0': 11, '0–5': 8, '5–10': 18, '10–15': 22, '15–20': 18, '20–30': 14, '>30': 12 };
+new Chart(document.getElementById('growthDist'), {
+  type: 'bar',
+  data: {
+    labels: Object.keys(grBuckets),
+    datasets: [{ label: 'Companies', data: Object.values(grBuckets), backgroundColor: [red,'rgba(155,35,53,0.4)',lightBlue,'rgba(74,144,217,0.5)',blue,lightAmber,amber], borderWidth: 1 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } }, title: { display: true, text: 'YoY Growth Rate (%)', font: { size: 11 }, color: '#999' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 } }, title: { display: true, text: '# Companies', font: { size: 11 }, color: '#999' } }
+    }
+  }
+});
+
+// 6. Product bar chart
+new Chart(document.getElementById('prodBarChart'), {
+  type: 'bar',
+  data: {
+    labels: prodNames,
+    datasets: [{
+      label: 'MAT Sales (Rs. Bn)',
+      data: prodSales,
+      backgroundColor: prodGr26.map(g => g >= 15 ? amber : g >= 5 ? 'rgba(200,146,58,0.5)' : g >= 0 ? 'rgba(200,146,58,0.25)' : 'rgba(155,35,53,0.4)'),
+      borderColor: prodGr26.map(g => g >= 0 ? amber : red),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { afterLabel: ctx => `YoY: ${prodGr26[ctx.dataIndex]}%` } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 35 } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => 'Rs.'+v } }
+    }
+  }
+});
+
+// 7. Product compare chart
+new Chart(document.getElementById('prodCompareChart'), {
+  type: 'bar',
+  data: {
+    labels: prodNames,
+    datasets: [
+      { label: 'Apr-25 YoY GR%', data: prodGr25, backgroundColor: lightGreen, borderColor: green, borderWidth: 1.5 },
+      { label: 'Apr-26 YoY GR%', data: prodGr26, backgroundColor: lightAmber, borderColor: amber, borderWidth: 1.5 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 12 }, boxWidth: 12 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 35 } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => v+'%' } }
+    }
+  }
+});
+
+// 8. Growth decomp by company (stacked bar)
+// Clamp values to sane range for display
+function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, v)); }
+const pClamp = pricePct.map(v => clamp(v, 0, 150));
+const vClamp = volPct.map(v => clamp(v, 0, 100));
+const nClamp = newProdPct.map(v => clamp(v, 0, 50));
+const lClamp = lineExtPct.map(v => clamp(v, 0, 20));
+
+new Chart(document.getElementById('growthDecompChart'), {
+  type: 'bar',
+  data: {
+    labels: top10Names,
+    datasets: [
+      { label: 'Price Change%', data: pClamp, backgroundColor: amber },
+      { label: 'Volume Change%', data: vClamp, backgroundColor: green },
+      { label: 'New Products%', data: nClamp, backgroundColor: blue },
+      { label: 'Line Extensions%', data: lClamp, backgroundColor: purple }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 12 }, boxWidth: 12 } }, tooltip: {
+      callbacks: {
+        afterBody: (items) => {
+          const i = items[0].dataIndex;
+          return [`Raw: Price=${pricePct[i]}%, Vol=${volPct[i]}%, NewProd=${newProdPct[i]}%`];
+        }
+      }
+    }},
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 20 } },
+      y: { stacked: true, grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => v+'%' } }
+    }
+  }
+});
+
+// 9. Price vs Volume shift
+new Chart(document.getElementById('pvShiftChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Apr-25', 'Apr-26'],
+    datasets: [
+      { label: 'Price Change%', data: [71.1, 63.6], backgroundColor: amber },
+      { label: 'Volume Change%', data: [15.4, 20.1], backgroundColor: green },
+      { label: 'New Products%', data: [5.0, 10.5], backgroundColor: blue },
+      { label: 'Line Extensions%', data: [8.5, 5.8], backgroundColor: purple }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 12 }, boxWidth: 12 } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 } } },
+      y: { stacked: true, grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => v+'%' } }
+    }
+  }
+});
+
+// 10. Growth histogram (more detail)
+new Chart(document.getElementById('growthHistChart'), {
+  type: 'bar',
+  data: {
+    labels: ['<−20%','−20 to −10%','−10 to 0%','0–5%','5–10%','10–15%','15–20%','20–30%','>30%'],
+    datasets: [{ label: 'Companies', data: [3, 3, 5, 8, 18, 22, 18, 14, 12], backgroundColor: [red,red,'rgba(155,35,53,0.5)','rgba(155,35,53,0.2)',lightBlue,'rgba(74,144,217,0.5)',blue,lightAmber,amber], borderWidth: 0.5 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 30 } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// 11. Concentration chart
+new Chart(document.getElementById('concentrationChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Top 5', 'Top 10', 'Top 20', 'Rest'],
+    datasets: [
+      { label: 'Apr-25', data: [28.9, 47.4, 70.1, 29.9], backgroundColor: lightGreen, borderColor: green, borderWidth: 1.5 },
+      { label: 'Apr-26', data: [27.4, 44.3, 66.8, 33.2], backgroundColor: lightAmber, borderColor: amber, borderWidth: 1.5 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 12 }, boxWidth: 12 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => v+'%' }, max: 80 }
+    }
+  }
+});
+
+// 12. Bubble chart (share vs growth)
+const bubbleData = top20Share26.map((share, i) => ({ x: share, y: top20Gr[i], r: Math.max(4, share * 2.5), name: top20Names[i] }));
+new Chart(document.getElementById('bubbleChart'), {
+  type: 'bubble',
+  data: {
+    datasets: [{
+      label: 'Companies',
+      data: bubbleData,
+      backgroundColor: bubbleData.map(d => d.y >= 20 ? 'rgba(200,146,58,0.6)' : d.y >= 10 ? 'rgba(82,183,136,0.5)' : d.y >= 0 ? 'rgba(74,144,217,0.4)' : 'rgba(155,35,53,0.4)'),
+      borderColor: bubbleData.map(d => d.y >= 20 ? amber : d.y >= 10 ? green : d.y >= 0 ? blue : red),
+      borderWidth: 1.5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${bubbleData[ctx.dataIndex].name}: ${ctx.raw.x}% share, ${ctx.raw.y}% growth` } }
+    },
+    scales: {
+      x: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => v+'%' }, title: { display: true, text: 'Market Share %', font: { size: 11 }, color: '#999' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => v+'%' }, title: { display: true, text: 'YoY Growth %', font: { size: 11 }, color: '#999' } }
+    }
+  }
+});
+
+// 13. Scenario chart
+new Chart(document.getElementById('scenarioChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Conservative', 'Central', 'Optimistic'],
+    datasets: [
+      { label: 'Tier 2 Revenue (Rs. Bn)', data: [60, 67.5, 75], backgroundColor: 'rgba(74,144,217,0.6)', borderColor: blue, borderWidth: 1 },
+      { label: 'Tier 3 Revenue (Rs. Bn)', data: [36, 48, 60], backgroundColor: amber, borderColor: amber, borderWidth: 1 },
+      { label: 'Counterfeit Reduction', data: [10, 15, 20], backgroundColor: green, borderColor: green, borderWidth: 1 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 12 }, boxWidth: 12 } } },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font: { size: 12 } } },
+      y: { stacked: true, grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, callback: v => 'Rs.'+v+'Bn' }, title: { display: true, text: 'Annual Recovery (Rs. Bn)', font: { size: 11 }, color: '#999' } }
+    }
+  }
+});
+
+// 14. Radar chart for quality
+new Chart(document.getElementById('qualityRadar'), {
+  type: 'radar',
+  data: {
+    labels: ['Price %', 'Volume %', 'New Product %', 'Line Extension %', 'CAGR Score'],
+    datasets: [
+      { label: 'Apr-25', data: [71, 15, 5, 8.5, 18.5], backgroundColor: 'rgba(82,183,136,0.15)', borderColor: green, borderWidth: 2, pointBackgroundColor: green },
+      { label: 'Apr-26', data: [63.6, 20.1, 10.5, 5.8, 17.4], backgroundColor: 'rgba(200,146,58,0.15)', borderColor: amber, borderWidth: 2, pointBackgroundColor: amber }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 12 }, boxWidth: 12 } } },
+    scales: { r: { grid: { color: '#E5E5E5' }, ticks: { font: { size: 10 }, display: false }, pointLabels: { font: { size: 11 }, color: '#666' } } }
+  }
+});
+
+// ===== INDIA vs PAKISTAN PRICE DATA =====
+const FX = 2.93; // 1 INR = 2.93 PKR (June 2026)
+
+// [Pakistan Brand, India Equivalent, Molecule+Strength, Pak_PKR, India_NPPA_INR, India_Branded_INR, NPPA_note, Branded_note]
+const priceData = [
+  ["PANADOL 500mg",     "Crocin/Calpol 500mg",       "Paracetamol 500mg",              3.0,   0.93,  1.50,  "DPCO 2026 ceiling",   "GSK Calpol branded MRP"],
+  ["AUGMENTIN 625mg",   "Augmentin 625mg Duo",        "Amoxicillin+Clav 625mg",         115,   16.00, 50.00, "DPCO 2026 co-amoxiclav", "GSK Augmentin branded MRP"],
+  ["RISEK 20mg",        "Omee/Omez 20mg",             "Omeprazole 20mg",                20,    2.80,  8.00,  "DPCO 2026 ceiling",   "Cipla Omez branded MRP"],
+  ["BRUFEN 400mg",      "Brufen/Ibugesic 400mg",      "Ibuprofen 400mg",                25,    0.71,  3.50,  "DPCO 2026 ceiling",   "Abbott Brufen branded"],
+  ["METHYCOBAL 500mcg", "Methylcobal/Nurokind 500mcg","Mecobalamin 500mcg",             28,    7.10,  15.00, "DPCO 2026 ceiling",   "Elan Nurokind branded"],
+  ["FLAGYL 400mg",      "Flagyl/Metrogyl 400mg",      "Metronidazole 400mg",            12,    1.10,  3.50,  "DPCO 2026 ceiling",   "Abbott Flagyl branded"],
+  ["CALAMOX 625mg",     "Mox-Clav 625mg (generic)",   "Amoxicillin+Clav 625mg",         100,   16.00, 45.00, "DPCO 2026 ceiling",   "Generic branded"],
+  ["NOVIDAT 500mg",     "Ciplox/Ciprobid 500mg",      "Ciprofloxacin 500mg",            35,    6.80,  14.00, "DPCO 2026 ceiling",   "Cipla Ciplox branded"],
+  ["GABICA 300mg",      "Gabapin/Gabator 300mg",      "Gabapentin 300mg",               40,    5.50,  12.00, "DPCO 2026 ceiling",   "Sun Gabapin branded"],
+  ["VELOSEF 500mg",     "Velosef/Cephradine 500mg",   "Cephradine 500mg",               70,    14.00, 22.00, "DPCO 2026 ceiling",   "Pfizer Velosef branded"],
+  ["DUPHASTON 10mg",    "Duphaston 10mg",             "Dydrogesterone 10mg",            60,    null,  38.00, "Not under DPCO",      "Abbott Duphaston branded"],
+  ["AZOMAX 500mg",      "Azithral/Zithrocin 500mg",   "Azithromycin 500mg",             55,    11.67, 25.00, "DPCO 2026 ceiling",   "Cipla Azithral branded"],
+  ["CEFSPAN 200mg",     "Taxim-O/Stafexim 200mg",     "Cefixime 200mg",                 52,    20.00, 28.00, "DPCO 2026 ceiling",   "Alkem Taxim-O branded"],
+  ["SITAMET",           "Istavel M/Janumet 50+500mg", "Sitagliptin+Metformin 50+500mg", 65,    13.68, 22.00, "DPCO 2026 ceiling",   "MSD Janumet branded"],
+  ["SURBEX Z",          "Becosules Z/Zincovit",       "Zinc+B-Complex multi",           22,    8.00,  15.00, "DPCO 2026 (partial)", "Pfizer Becosules branded"],
+  ["CLOBEVATE 30g",     "Tenovate/Clobeta 30g cream", "Clobetasol 0.05% cream 30g",    200,   30.00, 65.00, "DPCO 2026 ceiling",   "GSK Tenovate branded"],
+  ["AMOXIL 500mg",      "Mox/Amoxil 500mg",           "Amoxicillin 500mg",              35,    3.40,  10.00, "DPCO 2026 ceiling",   "GSK Amoxil branded"],
+  ["BETNOVATE-N 20g",   "Betnovate-N/Betnobact 20g",  "Betamethasone+Neomycin cream",  180,   25.00, 55.00, "DPCO 2026 ceiling",   "GSK Betnovate branded"],
+  ["INS MIXTARD 30",    "Insugen 30/70 (3ml pen)",    "Premix Insulin 30:70 (3ml)",    950,   90.00, 185.00,"NPPA insulin ceiling","Biocon/Novo branded"],
+  ["SINEMET 25/100mg",  "Syndopa/Polopa 25/100mg",    "Carbidopa+Levodopa 25+100mg",   120,   8.20,  18.00, "DPCO 2026 ceiling",   "Sun Syndopa branded"],
+];
+
+// Populate price table
+const ptb = document.getElementById('priceTableBody');
+priceData.forEach((d, i) => {
+  const [pakBrand, indBrand, mol, pakPKR, nppaMRP, brandedINR, nppaNote, brandNote] = d;
+  const nppaInPKR = nppaMRP ? (nppaMRP * FX).toFixed(1) : '—';
+  const brandedInPKR = (brandedINR * FX).toFixed(1);
+  const vsNPPA = nppaMRP ? (((pakPKR - nppaMRP*FX)/(nppaMRP*FX))*100).toFixed(0) : null;
+  const vsBranded = (((pakPKR - brandedINR*FX)/(brandedINR*FX))*100).toFixed(0);
+  const nppaBadge = vsNPPA !== null ? `<span class="badge ${parseFloat(vsNPPA)>0?'badge-red':'badge-green'}">${parseFloat(vsNPPA)>0?'+':''}${vsNPPA}%</span>` : '<span class="badge badge-blue">N/A</span>';
+  const brandBadge = `<span class="badge ${parseFloat(vsBranded)>0?'badge-amber':'badge-green'}">${parseFloat(vsBranded)>0?'+':''}${vsBranded}%</span>`;
+  ptb.innerHTML += `
+    <tr>
+      <td>${i+1}</td>
+      <td><strong>${pakBrand}</strong></td>
+      <td style="color:#999;font-size:12px">${indBrand}</td>
+      <td style="font-size:12px;color:#666">${mol}</td>
+      <td class="right"><strong>Rs. ${pakPKR}</strong></td>
+      <td class="right" style="color:#666">₹${nppaMRP !== null ? nppaMRP : '—'}</td>
+      <td class="right">${nppaInPKR !== '—' ? 'Rs. '+nppaInPKR : '—'}</td>
+      <td class="right" style="color:#666">₹${brandedINR}</td>
+      <td class="right">Rs. ${brandedInPKR}</td>
+      <td class="right">${nppaBadge}</td>
+      <td class="right">${brandBadge}</td>
+    </tr>`;
+});
+
+// Chart A: Side-by-side Pak vs NPPA in PKR (top 12 with NPPA data)
+const nppaComps = priceData.filter(d => d[4] !== null).slice(0,12);
+const pcLabels = nppaComps.map(d => d[0].replace(' 500mg','').replace(' 400mg','').replace(' 20mg','').replace(' 625mg',''));
+const pcPak = nppaComps.map(d => d[3]);
+const pcNPPA = nppaComps.map(d => +(d[4]*FX).toFixed(1));
+const pcBranded = nppaComps.map(d => +(d[5]*FX).toFixed(1));
+
+new Chart(document.getElementById('priceCompBar'), {
+  type: 'bar',
+  data: {
+    labels: pcLabels,
+    datasets: [
+      { label: 'Pakistan MRP (PKR)', data: pcPak, backgroundColor: amber, borderColor: amber, borderWidth: 1 },
+      { label: 'India NPPA Ceiling → PKR', data: pcNPPA, backgroundColor: 'rgba(82,183,136,0.5)', borderColor: green, borderWidth: 1 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 35 } },
+      y: { type: 'logarithmic', grid: { color: '#F0F0F0' }, ticks: { font: { size: 10 }, callback: v => 'Rs.'+v }, title: { display: true, text: 'Log Scale (PKR/unit)', font: { size: 10 }, color: '#999' } }
+    }
+  }
+});
+
+// Chart B: Premium % over NPPA
+const premLabels = nppaComps.map(d => d[0].split(' ')[0]);
+const premPct = nppaComps.map(d => Math.round(((d[3] - d[4]*FX)/(d[4]*FX))*100));
+
+new Chart(document.getElementById('premiumBar'), {
+  type: 'bar',
+  data: {
+    labels: premLabels,
+    datasets: [{
+      label: 'Pakistan Premium over India NPPA (%)',
+      data: premPct,
+      backgroundColor: premPct.map(v => v > 200 ? red : v > 100 ? amber : v > 0 ? 'rgba(200,146,58,0.4)' : green),
+      borderColor: premPct.map(v => v > 0 ? amber : green),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 9 }, callback: v => v+'%' } },
+      y: { grid: { display: false }, ticks: { font: { size: 9 } } }
+    }
+  }
+});
+
+// Chart C: Branded comparison
+new Chart(document.getElementById('brandedCompBar'), {
+  type: 'bar',
+  data: {
+    labels: pcLabels,
+    datasets: [
+      { label: 'Pakistan MRP (PKR)', data: pcPak, backgroundColor: amber, borderColor: amber, borderWidth: 1 },
+      { label: 'India Branded MRP → PKR', data: pcBranded, backgroundColor: 'rgba(74,144,217,0.4)', borderColor: blue, borderWidth: 1 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 35 } },
+      y: { type: 'logarithmic', grid: { color: '#F0F0F0' }, ticks: { font: { size: 10 }, callback: v => 'Rs.'+v } }
+    }
+  }
+});
+
+// Chart D: Premium distribution donut
+const vsNppaPcts = priceData.filter(d=>d[4]!==null).map(d => ((d[3]-d[4]*FX)/(d[4]*FX))*100);
+const below0 = vsNppaPcts.filter(v=>v<0).length;
+const between0_50 = vsNppaPcts.filter(v=>v>=0&&v<50).length;
+const between50_150 = vsNppaPcts.filter(v=>v>=50&&v<150).length;
+const above150 = vsNppaPcts.filter(v=>v>=150).length;
+
+new Chart(document.getElementById('premiumDist'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Cheaper than India NPPA', '0–50% premium', '50–150% premium', '>150% premium'],
+    datasets: [{
+      data: [below0, between0_50, between50_150, above150],
+      backgroundColor: [green, 'rgba(200,146,58,0.3)', amber, red],
+      borderColor: [green, amber, amber, red],
+      borderWidth: 1.5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 12 } } }
+  }
+});
+
+// Chart E: Ratio chart
+const ratioData = priceData.filter(d=>d[4]!==null).map(d => ({ label: d[0].split(' ')[0], ratio: +(d[3]/(d[4]*FX)).toFixed(2) }));
+ratioData.sort((a,b)=>b.ratio-a.ratio);
+
+new Chart(document.getElementById('ratioChart'), {
+  type: 'bar',
+  data: {
+    labels: ratioData.map(d=>d.label),
+    datasets: [{
+      label: 'Pakistan MRP / India NPPA (PKR ratio)',
+      data: ratioData.map(d=>d.ratio),
+      backgroundColor: ratioData.map(d => d.ratio > 5 ? red : d.ratio > 2 ? amber : d.ratio > 1 ? 'rgba(200,146,58,0.35)' : green),
+      borderColor: ratioData.map(d => d.ratio > 2 ? amber : green),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      annotation: { annotations: { line1: { type: 'line', yMin: 1, yMax: 1, borderColor: green, borderWidth: 2, borderDash: [4,4], label: { display: true, content: '1.0x = India NPPA parity', position: 'start', font: { size: 10 } } } } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 35 } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 10 }, callback: v => v+'x' }, title: { display: true, text: 'Ratio (Pak÷India NPPA in PKR)', font: { size: 10 }, color: '#999' } }
+    }
+  }
+});
+
+</script>
+</body>
+</html>
