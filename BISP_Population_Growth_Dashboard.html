@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BISP Disbursements &amp; Population Growth — District Analysis</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --primary:#FFFFFF; --secondary:#FAFAFA; --border:#E5E5E5;
+  --accent:#C8923A; --text-primary:#1A1A1A; --text-secondary:#666666;
+  --text-tertiary:#999999; --success:#52B788; --warning:#9B2335;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--primary);color:#2D2D2D;line-height:1.6;}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem;}
+a{color:var(--accent);}
+
+/* top bar */
+.topbar{border-bottom:1px solid var(--border);background:#FFFFFF;position:sticky;top:0;z-index:50;}
+.topbar-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px;}
+.brand{font-family:Georgia,serif;font-size:16px;color:var(--text-primary);}
+.brand span{color:var(--accent);}
+.navlinks{display:flex;gap:1.75rem;}
+.navlinks a{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;}
+.navlinks a:hover{color:var(--text-primary);}
+
+/* header */
+.header-section{padding:3rem 0 2rem;border-bottom:1px solid var(--border);}
+.section-label{font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:.5rem;}
+.section-title{font-family:Georgia,serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:1rem;line-height:1.2;}
+h1.section-title{font-size:36px;}
+.lede{font-size:16px;color:var(--text-secondary);max-width:760px;line-height:1.7;}
+.meta-row{display:flex;gap:1.5rem;margin-top:1.25rem;font-size:12px;color:var(--text-tertiary);}
+.meta-row b{color:var(--text-secondary);font-weight:600;}
+
+section{padding:2.75rem 0;border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+
+/* grids */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;}
+.four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+@media (max-width:768px){.two-col,.three-col,.four-col{grid-template-columns:1fr;}}
+
+/* panel */
+.panel{background:var(--secondary);border:1px solid var(--border);border-radius:8px;padding:1.5rem;}
+.panel-title{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--text-primary);margin-bottom:1rem;}
+.panel-sub{font-size:12px;color:var(--text-tertiary);margin-top:-0.5rem;margin-bottom:1rem;}
+
+/* kpi */
+.kpi-card{background:#FFFFFF;border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.25rem;text-align:left;transition:all .2s ease;}
+.kpi-card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.kpi-num{font-family:Georgia,serif;font-size:28px;font-weight:400;color:var(--text-primary);}
+.kpi-label{font-size:11px;color:var(--text-tertiary);margin-top:.4rem;letter-spacing:.06em;text-transform:uppercase;}
+.kpi-delta{font-size:12px;margin-top:.5rem;font-weight:600;}
+.kpi-delta.neg{color:var(--warning);}
+.kpi-delta.pos{color:var(--success);}
+
+/* insight boxes */
+.insight-box{background:var(--secondary);border:1px solid var(--border);border-top:3px solid var(--success);padding:1.5rem;border-radius:4px;}
+.insight-box.amber{border-top-color:var(--accent);}
+.insight-box.red{border-top-color:var(--warning);}
+.insight-num{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--text-primary);}
+.insight-text{font-size:13px;color:var(--text-secondary);margin-top:.6rem;line-height:1.5;}
+
+/* tables */
+table.est-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.est-table th{font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--text-primary);text-align:left;padding:.65rem .6rem;border-bottom:1px solid var(--border);background:#FFFFFF;text-transform:uppercase;}
+.est-table td{padding:.6rem;border-bottom:1px solid var(--border);color:#2D2D2D;}
+.est-table tr:hover td{background:var(--secondary);}
+.est-table td.num,.est-table th.num{text-align:right;font-variant-numeric:tabular-nums;}
+.tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.04em;padding:.15rem .5rem;border-radius:20px;text-transform:uppercase;}
+.tag.sindh{background:#FDF0E3;color:#9C5B14;}
+.tag.punjab{background:#E9F4EC;color:#2A6B45;}
+.tag.kp{background:#EFEAFB;color:#5B3FA0;}
+.tag.balochistan{background:#FCE9EB;color:#9B2335;}
+.tag.ict{background:#EAEAEA;color:#444;}
+
+/* sig badges */
+.sig{font-weight:600;}
+.sig.yes{color:var(--success);}
+.sig.no{color:var(--text-tertiary);}
+
+/* narrative */
+.narrative{padding:1rem 0;font-size:14px;color:#3D3D3D;line-height:1.75;}
+.narrative.caution{background:var(--secondary);border-left:4px solid var(--accent);padding:1.25rem 1.5rem;border-radius:4px;}
+.narrative p + p{margin-top:.85rem;}
+
+.verdict{background:var(--secondary);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.75rem;margin:1rem 0;border-radius:4px;}
+.verdict-label{font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:.6rem;}
+.verdict-text{font-size:15px;color:#1A1A1A;line-height:1.75;}
+.verdict-text b{font-weight:600;}
+
+/* tabs */
+.tabs{display:flex;gap:2rem;border-bottom:1px solid var(--border);margin:0 0 1.5rem;}
+.tab-btn{background:none;border:none;padding:.8rem 0;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.tab-btn:hover{color:var(--text-primary);}
+.tab-btn.active{color:var(--text-primary);border-bottom-color:var(--accent);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+.steps{counter-reset:step;}
+.step{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{font-family:Georgia,serif;font-size:20px;color:var(--accent);min-width:28px;}
+.step-body b{display:block;font-size:13.5px;color:var(--text-primary);margin-bottom:.25rem;}
+.step-body span{font-size:13px;color:var(--text-secondary);line-height:1.6;}
+
+.chart-wrap{position:relative;width:100%;height:340px;}
+.chart-wrap.short{height:260px;}
+
+.legend-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:10px;font-size:12px;color:var(--text-secondary);}
+.legend-row span.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
+
+.footer{padding:2.5rem 0 3rem;}
+.footer p{font-size:12px;color:var(--text-tertiary);line-height:1.7;}
+
+.pillrow{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem;}
+.pill{font-size:11px;background:#FFFFFF;border:1px solid var(--border);padding:.3rem .7rem;border-radius:20px;color:var(--text-secondary);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">BISP <span>×</span> Population Growth</div>
+    <div class="navlinks">
+      <a href="#methodology">Methodology</a>
+      <a href="#cohort">Top-30 cohort</a>
+      <a href="#growth">Growth comparison</a>
+      <a href="#tests">Statistical tests</a>
+      <a href="#percapita">Per-capita check</a>
+      <a href="#children">Birth-rate proxy</a>
+      <a href="#truegrowth">True 2017-23 growth</a>
+      <a href="#conclusion">Conclusion</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="header-section">
+    <div class="section-label">District-level analysis · Pakistan</div>
+    <h1 class="section-title">Does BISP disbursement intensity relate to population growth?</h1>
+    <p class="lede">A statistical comparison of the 30 Pakistani districts with the highest share of BISP beneficiaries against the remaining 99 districts, testing whether disbursement intensity correlates with the 2017–2023 census population growth rate.</p>
+    <div class="meta-row">
+      <div><b>Districts analyzed</b> &nbsp;129</div>
+      <div><b>Disbursement window</b> &nbsp;Jan–Mar 2023 (BISP MPI report)</div>
+      <div><b>Growth window</b> &nbsp;2017–2023 census</div>
+      <div><b>Sources</b> &nbsp;BISP MPI district disbursements · Census-2023 district tables</div>
+    </div>
+  </div>
+
+  <section id="overview">
+    <div class="section-label">Headline numbers</div>
+    <div class="four-col">
+      <div class="kpi-card">
+        <div class="kpi-num">38.0%</div>
+        <div class="kpi-label">Of disbursement → Top-30 districts</div>
+        <div class="kpi-delta neg">on 19.8% of population</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">2.19%</div>
+        <div class="kpi-label">Avg. growth, Top-30 cohort</div>
+        <div class="kpi-delta neg">vs 2.96% for rest</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">r = −0.27</div>
+        <div class="kpi-label">Pearson correlation (n=129)</div>
+        <div class="kpi-delta neg">p = 0.0018</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">p = 0.0006</div>
+        <div class="kpi-label">Welch t-test, Top-30 vs rest</div>
+        <div class="kpi-delta pos">statistically significant</div>
+      </div>
+    </div>
+    <div class="narrative caution" style="margin-top:1.5rem;">
+      <p><b>One-line summary:</b> districts with the highest share of BISP beneficiaries grew <i>total</i> population <b>more slowly</b> (≈2.2%/yr vs ≈3.0%/yr) and have a <b>larger 2023 share of young children</b> (34.0% vs 30.9% under age 10) — suggestive of domestic out-migration rather than lower fertility. But the best available <i>true</i> 2017–2023 child-growth measure (division-level) doesn't robustly confirm this once poverty is controlled for, so treat the migration explanation as plausible, not proven. See <a href="#children">Birth-rate proxy</a>, <a href="#truegrowth">True 2017-23 growth</a> and <a href="#conclusion">Conclusion</a>.</p>
+    </div>
+  </section>
+
+  <section id="methodology">
+    <div class="section-label">01 · Data &amp; methodology</div>
+    <h2 class="section-title">How the dataset was built</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><b>Beneficiaries &amp; population</b><span>Pulled district-level BISP beneficiary counts from the workbook's Summary sheet. The workbook's own population figures were unreliable for ~1-in-6 matched districts (partial tehsil-level joins), so population was replaced with the census-sourced figure below for every district, for one consistent denominator.</span></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><b>Disbursement</b><span>Aggregated tehsil-level "Amount Deposited" figures (Jan–Mar 2023 quarter, Sheet1) up to the district level — 582 tehsil rows rolled into 131 district totals.</span></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><b>Population growth</b><span>Extracted the official 2017 and 2023 populations and the published "2017–2023 average annual growth rate" from the Census-2023 district tables (Punjab, Sindh, KP, Balochistan, Islamabad PDFs).</span></div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><b>Name matching</b><span>Reconciled post-2017 district splits and naming variants: Chitral → Upper/Lower Chitral (aggregated), Kohistan → Kolai Palas / Lower / Upper Kohistan (aggregated), Kambar Shahdadkot, Tando Allahyar, Malakand Protected Area. Where districts were split, a population-weighted compound annual growth rate was recomputed from summed 2017/2023 populations.</span></div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body"><b>Exclusions</b><span>AJK and Gilgit-Baltistan districts excluded (no census growth-rate tables available in source files). Ghanche and Lehri excluded (no matching census district). Final sample: <b>129 districts</b> across Punjab, Sindh, KP, Balochistan and Islamabad.</span></div>
+      </div>
+    </div>
+    <div class="pillrow">
+      <span class="pill">BISP_MPI_District_Disbursements.xlsx — Summary, Sheet1</span>
+      <span class="pill">Census-2023 district PDFs ×5 provinces</span>
+      <span class="pill">n = 129 districts</span>
+      <span class="pill">Disbursement: PKR 72.18bn (Q1 2023, sample total)</span>
+    </div>
+  </section>
+
+  <section id="cohort">
+    <div class="section-label">02 · Cohort construction</div>
+    <h2 class="section-title">Top-30 districts by BISP beneficiary share</h2>
+    <p class="narrative">The Top-30 cohort holds districts where 6.4%–10.9% of the population are BISP beneficiaries, led by Sindh (Khairpur, Sujawal, Tharparkar) and South Punjab (Rajanpur, Muzaffargarh). It concentrates beneficiaries and disbursement well above its population weight:</p>
+
+    <div class="three-col" style="margin:1.25rem 0 1.75rem;">
+      <div class="insight-box">
+        <div class="insight-num">19.8%</div>
+        <div class="insight-text">Share of national population (of the 129-district sample)</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">38.5%</div>
+        <div class="insight-text">Share of BISP beneficiaries</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">38.0%</div>
+        <div class="insight-text">Share of total disbursement (PKR 27.45bn of 72.18bn)</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Population vs. beneficiary vs. disbursement share</div>
+        <div class="panel-sub">Top-30 districts hold roughly double their population share of both beneficiaries and rupees</div>
+        <div class="chart-wrap short"><canvas id="shareChart" role="img" aria-label="Bar chart comparing Top-30 districts' share of population, beneficiaries and disbursement against the remaining 99 districts"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Top-30 cohort by province</div>
+        <div class="panel-sub">Sindh and KP dominate the highest-penetration districts</div>
+        <div class="chart-wrap short"><canvas id="provChart" role="img" aria-label="Bar chart of how many Top-30 districts come from each province"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1.5rem;">
+      <div class="panel-title">Top-30 districts — full list</div>
+      <div class="panel-sub">Sorted by % of district population on BISP · disbursement in PKR millions, Q1 2023</div>
+      <div style="overflow-x:auto;">
+      <table class="est-table" id="top30Table">
+        <thead><tr>
+          <th>#</th><th>District</th><th>Province</th>
+          <th class="num">Population (2017)</th><th class="num">Beneficiaries</th>
+          <th class="num">% of pop.</th><th class="num">Disbursement (PKR mn)</th>
+          <th class="num">Pop. growth 2017–23</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="growth">
+    <div class="section-label">03 · Population growth comparison</div>
+    <h2 class="section-title">Top-30 vs. the remaining 99 districts</h2>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Average annual growth rate, 2017–2023</div>
+        <div class="panel-sub">Top-30 grew at roughly three-quarters the pace of the rest</div>
+        <div class="chart-wrap short"><canvas id="growthBarChart" role="img" aria-label="Bar chart: Top-30 districts averaged 2.19 percent annual population growth versus 2.96 percent for the remaining 99 districts"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Growth rate by beneficiary-share quintile</div>
+        <div class="panel-sub">A fairly monotonic gradient — not just a Top-30 artifact</div>
+        <div class="chart-wrap short"><canvas id="decileChart" role="img" aria-label="Bar chart showing average population growth rate declining steadily from 3.37 percent in the lowest beneficiary-share quintile to 2.15 percent in the highest quintile"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1.5rem;">
+      <div class="panel-title">% beneficiaries vs. population growth — all 129 districts</div>
+      <div class="panel-sub">OLS fit line shown; each point is one district</div>
+      <div class="legend-row">
+        <span><span class="dot" style="background:#C8923A"></span>Top-30 cohort</span>
+        <span><span class="dot" style="background:#999999"></span>Remaining 99 districts</span>
+        <span><span class="dot" style="background:#1A1A1A"></span>OLS fit</span>
+      </div>
+      <div class="chart-wrap"><canvas id="scatterChart" role="img" aria-label="Scatter plot of percent of district population receiving BISP benefits against 2017 to 2023 population growth rate for 129 districts, showing a negative trend"></canvas></div>
+    </div>
+  </section>
+
+  <section id="tests">
+    <div class="section-label">04 · Statistical tests</div>
+    <h2 class="section-title">Is the relationship statistically robust?</h2>
+    <p class="narrative">Five independent tests were run on the full 129-district sample. All point the same direction.</p>
+
+    <div style="overflow-x:auto;">
+    <table class="est-table">
+      <thead><tr>
+        <th>Test</th><th>What it checks</th><th class="num">Statistic</th><th class="num">p-value</th><th>Result</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Welch's t-test</td><td>Difference in mean growth, Top-30 vs. rest</td><td class="num">t = −3.57</td><td class="num">0.0006</td><td><span class="sig yes">Significant</span></td></tr>
+        <tr><td>Mann-Whitney U</td><td>Rank-based difference (robust to outliers)</td><td class="num">U = 990</td><td class="num">0.0058</td><td><span class="sig yes">Significant</span></td></tr>
+        <tr><td>Levene's test</td><td>Equality of variance between cohorts</td><td class="num">0.91</td><td class="num">0.343</td><td><span class="sig no">Not significant</span></td></tr>
+        <tr><td>Pearson r</td><td>Linear correlation, % beneficiaries vs. growth</td><td class="num">r = −0.273</td><td class="num">0.0018</td><td><span class="sig yes">Significant</span></td></tr>
+        <tr><td>Spearman ρ</td><td>Monotonic correlation (rank-based)</td><td class="num">ρ = −0.299</td><td class="num">0.0006</td><td><span class="sig yes">Significant</span></td></tr>
+        <tr><td>Pearson r (per-capita PKR)</td><td>Linear correlation, disbursement/capita vs. growth</td><td class="num">r = −0.262</td><td class="num">0.0027</td><td><span class="sig yes">Significant</span></td></tr>
+        <tr><td>OLS, controlled</td><td>% beneficiaries effect, controlling for poverty score, log(population), province FE</td><td class="num">β = −0.157</td><td class="num">0.013</td><td><span class="sig yes">Significant</span></td></tr>
+        <tr><td>Trimmed t-test (5–95pctile)</td><td>Robustness check excluding extreme-growth outlier districts</td><td class="num">t = −1.85</td><td class="num">0.072</td><td><span class="sig no">Borderline</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="two-col" style="margin-top:1.5rem;">
+      <div class="panel">
+        <div class="panel-title">Effect size</div>
+        <table class="est-table">
+          <tr><td>Cohen's d</td><td class="num">−0.55</td></tr>
+          <tr><td>Interpretation</td><td class="num">Medium effect</td></tr>
+          <tr><td>Top-30 mean growth</td><td class="num">2.19% (median 2.11%)</td></tr>
+          <tr><td>Rest mean growth</td><td class="num">2.96% (median 2.55%)</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Multiple regression (n=118)</div>
+        <table class="est-table">
+          <tr><td>% Beneficiaries</td><td class="num">−0.157 (p=0.013)</td></tr>
+          <tr><td>Poverty score</td><td class="num">+0.407 (p=0.697)</td></tr>
+          <tr><td>log(Population)</td><td class="num">−0.376 (p=0.067)</td></tr>
+          <tr><td>Province fixed effects</td><td class="num">included, n.s. individually</td></tr>
+          <tr><td>Model R²</td><td class="num">0.251</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="narrative caution" style="margin-top:1.5rem;">
+      <p><b>Robustness caveat:</b> when the most extreme 5% of growth-rate observations are trimmed (small, high-volatility Balochistan districts like Washuk, Panjgur and Kharan), the gap narrows to p≈0.07. The core result holds but a handful of outlier districts in the "rest" group are doing some of the work.</p>
+    </div>
+  </section>
+
+  <section id="percapita">
+    <div class="section-label">05 · Robustness check</div>
+    <h2 class="section-title">Same analysis, disbursement-per-capita basis</h2>
+    <p class="narrative">Rebuilding the Top-30 cohort using PKR disbursed per person (instead of % of population on BISP) returns <b>29 of the same 30 districts</b> (only Rahim Yar Khan swaps for Lasbela) — because the two measures are correlated at <b>r = 0.999</b> across this sample (the per-beneficiary transfer rate is nearly flat nationwide).</p>
+
+    <div class="four-col" style="margin:1.25rem 0;">
+      <div class="kpi-card"><div class="kpi-num">34.8%</div><div class="kpi-label">Disbursement share, per-capita Top-30</div></div>
+      <div class="kpi-card"><div class="kpi-num">17.8%</div><div class="kpi-label">Population share</div></div>
+      <div class="kpi-card"><div class="kpi-num">2.20%</div><div class="kpi-label">Avg. growth, Top-30</div></div>
+      <div class="kpi-card"><div class="kpi-num">2.96%</div><div class="kpi-label">Avg. growth, rest</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Avg. growth — per-capita cohort</div>
+        <div class="chart-wrap short"><canvas id="growthBarChartPC" role="img" aria-label="Bar chart comparing average population growth between the top 30 districts by disbursement per capita and the remaining 99 districts"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Growth by disbursement-per-capita quintile</div>
+        <div class="chart-wrap short"><canvas id="decileChartPC" role="img" aria-label="Bar chart showing average population growth declining from 3.35 percent in the lowest per-capita disbursement quintile to 2.12 percent in the highest"></canvas></div>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;margin-top:1.5rem;">
+    <table class="est-table">
+      <thead><tr><th>Test</th><th class="num">% Beneficiaries basis</th><th class="num">PKR/capita basis</th></tr></thead>
+      <tbody>
+        <tr><td>Welch t-test (Top-30 vs. rest)</td><td class="num">t=−3.57, p=0.0006</td><td class="num">t=−3.48, p=0.0008</td></tr>
+        <tr><td>Mann-Whitney U</td><td class="num">p=0.0058</td><td class="num">p=0.0093</td></tr>
+        <tr><td>Pearson r vs. growth</td><td class="num">−0.273, p=0.0018</td><td class="num">−0.262, p=0.0027</td></tr>
+        <tr><td>Spearman ρ vs. growth</td><td class="num">−0.299, p=0.0006</td><td class="num">−0.293, p=0.0008</td></tr>
+        <tr><td>Cohen's d</td><td class="num">−0.55</td><td class="num">−0.54</td></tr>
+        <tr><td>OLS w/ controls, p-value</td><td class="num">0.013</td><td class="num">0.013</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section id="children">
+    <div class="section-label">06 · Birth-rate proxy (cross-sectional)</div>
+    <h2 class="section-title">Does child population tell a different story than total growth?</h2>
+    <p class="narrative">When this section was first built, only Census-2023 Table 5 (population by age band) was available, with no matching 2017 breakdown — so this started as a cross-sectional fertility proxy: the <b>2023 share of population aged under 10</b> (and under 5 / under 15), rather than a literal growth rate. Young children rarely migrate independently, so this share is driven mostly by recent births rather than adult labour migration — a cleaner read on birth rates than total population growth, which bundles fertility, mortality <i>and</i> migration together. <b>2017 census age-band data has since been located and is analysed in <a href="#truegrowth">Section 07</a></b> — read both sections together, since the true longitudinal measure tells a more cautious story than this cross-sectional one.</p>
+
+    <div class="three-col" style="margin:1.25rem 0 1.75rem;">
+      <div class="insight-box">
+        <div class="insight-num">34.0%</div>
+        <div class="insight-text">Avg. under-10 share, Top-30 BISP districts (vs. 30.9% for the rest)</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">r = +0.43</div>
+        <div class="insight-text">Pearson correlation, %BISP beneficiaries vs. under-10 share (p&lt;0.0001) — opposite sign to the growth-rate result</div>
+      </div>
+      <div class="insight-box red">
+        <div class="insight-num">r = +0.20</div>
+        <div class="insight-text">Correlation between total growth and under-10 share — the two outcomes are only weakly related, confirming they capture different things</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Under-10 population share: Top-30 vs. rest</div>
+        <div class="panel-sub">Higher BISP intensity → larger share of young children, the reverse direction of the growth-rate result</div>
+        <div class="chart-wrap short"><canvas id="childBarChart" role="img" aria-label="Bar chart comparing average under-10 population share between Top-30 BISP districts and remaining districts, showing Top-30 districts have a higher share of young children"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Under-10 share vs. growth, by beneficiary-share quintile</div>
+        <div class="panel-sub">As BISP intensity rises, child share rises while total growth falls</div>
+        <div class="chart-wrap short"><canvas id="childDecileChart" role="img" aria-label="Combo chart showing under-10 population share rising and total population growth rate falling across beneficiary-share quintiles"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1.5rem;">
+      <div class="panel-title">% beneficiaries vs. under-10 population share — 128 districts</div>
+      <div class="panel-sub">Positive trend — the opposite direction from the total-growth scatter above</div>
+      <div class="legend-row">
+        <span><span class="dot" style="background:#C8923A"></span>Top-30 cohort</span>
+        <span><span class="dot" style="background:#999999"></span>Remaining 98 districts</span>
+      </div>
+      <div class="chart-wrap"><canvas id="childScatterChart" role="img" aria-label="Scatter plot of percent of district population receiving BISP benefits against under-10 population share for 128 districts, showing a positive trend"></canvas></div>
+    </div>
+
+    <div style="overflow-x:auto;margin-top:1.5rem;">
+    <table class="est-table">
+      <thead><tr>
+        <th>Outcome variable</th><th class="num">Welch t-test</th><th class="num">Mann-Whitney</th>
+        <th class="num">Pearson r vs. %BISP</th><th class="num">Spearman ρ</th><th class="num">Cohen's d</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Under-10 share</td><td class="num">t=3.51, p=0.0007</td><td class="num">p=0.0027</td><td class="num">+0.428, p&lt;0.0001</td><td class="num">+0.459, p&lt;0.0001</td><td class="num">+0.58</td></tr>
+        <tr><td>Under-5 share</td><td class="num">t=2.36, p=0.021</td><td class="num">p=0.013</td><td class="num">+0.339, p=0.0001</td><td class="num">+0.399, p&lt;0.0001</td><td class="num">+0.40</td></tr>
+        <tr><td>Under-15 share</td><td class="num">t=3.30, p=0.0015</td><td class="num">p=0.0039</td><td class="num">+0.409, p&lt;0.0001</td><td class="num">+0.442, p&lt;0.0001</td><td class="num">+0.54</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="two-col" style="margin-top:1.5rem;">
+      <div class="panel">
+        <div class="panel-title">Controlled regression — Under-10 share (n=117)</div>
+        <table class="est-table">
+          <tr><td>% Beneficiaries</td><td class="num">+0.381 (p=0.007)</td></tr>
+          <tr><td>Poverty score</td><td class="num">+17.10 (p&lt;0.0001)</td></tr>
+          <tr><td>log(Population)</td><td class="num">+0.308 (p=0.499)</td></tr>
+          <tr><td>Province fixed effects</td><td class="num">included, all significant</td></tr>
+          <tr><td>Model R²</td><td class="num">0.80</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Controlled regression — Under-5 share (n=117)</div>
+        <table class="est-table">
+          <tr><td>% Beneficiaries</td><td class="num">+0.121 (p=0.215)</td></tr>
+          <tr><td>Poverty score</td><td class="num">+9.96 (p&lt;0.0001)</td></tr>
+          <tr><td>log(Population)</td><td class="num">+0.238 (p=0.455)</td></tr>
+          <tr><td>Province fixed effects</td><td class="num">included, all significant</td></tr>
+          <tr><td>Model R²</td><td class="num">0.70</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="narrative caution" style="margin-top:1.5rem;">
+      <p><b>Reading the regression split:</b> for under-10 and under-15 shares, the %Beneficiaries effect survives controlling for poverty score — there's a residual BISP-associated signal beyond what poverty alone explains. For under-5 share (the narrowest, most recent window), the effect is fully absorbed by poverty score — once you know how poor a district is, BISP intensity adds nothing further to predicting very recent births. Poverty score is the dominant predictor throughout (R²=0.70–0.80, far higher than the growth-rate model's R²=0.25), which is expected since BISP eligibility itself is poverty-scored.</p>
+    </div>
+  </section>
+
+  <section id="truegrowth">
+    <div class="section-label">07 · True 2017&ndash;2023 child growth (division-level)</div>
+    <h2 class="section-title">A genuine before/after comparison — at coarser geography</h2>
+    <p class="narrative">Census-<b>2017</b> age-band tables (Table 5) have since been located for all five regions. They give a real 2017 Under-10 population to compare against 2023 — but only at <b>division level</b> (Punjab's 9 divisions, Sindh's 6, KP's 7, Balochistan's 6), not district level, and KP's 2017 file <b>excludes the seven districts that were still FATA agencies in 2017</b> (Bajaur, Mohmand, Khyber, Kurram, Orakzai, North &amp; South Waziristan — merged into KP only in 2018). The division&rarr;district mapping was verified against the 2017 provincial population totals before use. Each district inherits its division's 2017&ndash;2023 Under-10 compound annual growth rate; 121 of 128 districts retain a value.</p>
+
+    <div class="three-col" style="margin:1.25rem 0 1.75rem;">
+      <div class="insight-box red">
+        <div class="insight-num">2.42% vs 2.77%</div>
+        <div class="insight-text">Avg. true Under-10 CAGR, Top-30 BISP districts vs. rest — same direction as total population growth, not opposite</div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-num">r = &minus;0.23</div>
+        <div class="insight-text">Pearson correlation, %BISP beneficiaries vs. true Under-10 growth (p=0.012) &mdash; weak, and the <b>opposite sign</b> from the cross-sectional share result in Section 06</div>
+      </div>
+      <div class="insight-box red">
+        <div class="insight-num">p = 0.64</div>
+        <div class="insight-text">%Beneficiaries effect once poverty score is controlled for &mdash; the relationship is not robust</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">True Under-10 growth: Top-30 vs. rest (n=121)</div>
+        <div class="panel-sub">Welch t-test p=0.074, Mann-Whitney p=0.168 &mdash; neither reaches significance</div>
+        <div class="chart-wrap short"><canvas id="trueGrowthBarChart" role="img" aria-label="Bar chart comparing true 2017 to 2023 under-10 population growth rate between Top-30 BISP districts and remaining districts, showing only a small difference"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">True Under-10 growth by beneficiary-share quintile</div>
+        <div class="panel-sub">A shallow downward gradient, much flatter than the cross-sectional share pattern</div>
+        <div class="chart-wrap short"><canvas id="trueGrowthDecileChart" role="img" aria-label="Bar chart showing true under-10 population growth declining only slightly from the lowest to highest beneficiary-share quintile"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1.5rem;">
+      <div class="panel-title">% beneficiaries vs. true Under-10 growth — 121 districts</div>
+      <div class="panel-sub">Points cluster by division (28 divisions, so many districts share a value) &mdash; visibly noisier and flatter than the cross-sectional scatter in Section 06</div>
+      <div class="legend-row">
+        <span><span class="dot" style="background:#C8923A"></span>Top-30 cohort</span>
+        <span><span class="dot" style="background:#999999"></span>Remaining 91 districts</span>
+      </div>
+      <div class="chart-wrap"><canvas id="trueGrowthScatterChart" role="img" aria-label="Scatter plot of percent of district population receiving BISP benefits against true 2017 to 2023 under-10 population growth rate for 121 districts, showing a weak negative and noisy relationship"></canvas></div>
+    </div>
+
+    <div class="panel" style="margin-top:1.5rem;">
+      <div class="panel-title">Division-level Under-10 growth, 2017&ndash;2023 (all 28 divisions, sorted)</div>
+      <div class="panel-sub">Karachi and Kalat grew fastest; Peshawar and Quetta grew slowest</div>
+      <div style="overflow-x:auto;">
+      <table class="est-table" id="divTable">
+        <thead><tr><th>Division</th><th class="num">Under-10 CAGR 2017&ndash;23</th><th class="num">Total pop. CAGR 2017&ndash;23</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="narrative caution" style="margin-top:1.5rem;">
+      <p><b>Why this tempers the Section 06 finding:</b> the cross-sectional under-10 <i>share</i> (district-level, n=128, r=+0.43) and the true under-10 <i>growth rate</i> (division-level, n=121, r=&minus;0.23) disagree on direction. A district's child share is a stock measure shaped by decades of fertility history — high-poverty districts simply have young population pyramids, BISP-targeted or not. The growth rate is a flow measure over just six years, computed at much coarser geography, and not robust to controlling for poverty. The honest read: <b>the district-level cross-sectional pattern is real and worth noting, but it should not be read as strong evidence about how BISP districts' birth rates are currently trending</b> &mdash; the best available longitudinal evidence is weak, noisy, and not poverty-independent.</p>
+    </div>
+  </section>
+
+  <section id="conclusion">
+    <div class="section-label">08 · Conclusion</div>
+    <h2 class="section-title">What this does — and doesn't — show</h2>
+
+    <div class="verdict">
+      <div class="verdict-label">Finding</div>
+      <div class="verdict-text">Three outcome variables, three different pictures — and the honest synthesis is more cautious than any single one. <b>Total population growth</b> is negatively correlated with BISP intensity (r ≈ −0.27, p &lt; 0.01): high-BISP districts grew ~2.2%/yr vs. ~3.0%/yr for the rest. The <b>2023 cross-sectional under-10 child share</b> — a fine-grained, district-level fertility proxy — is positively correlated (r ≈ +0.43, p &lt; 0.0001): high-BISP districts have 34.0% of their population under 10 vs. 30.9% for the rest. But the <b>true 2017–2023 under-10 growth rate</b> — a genuine before/after comparison, though only available at coarser division level — comes back negative and weak (r ≈ −0.23, p = 0.01) and <b>loses significance entirely once poverty score is controlled for</b> (p = 0.64). The domestic-migration hypothesis remains plausible and is not contradicted by the data, but the strongest, most defensible piece of evidence (the true growth rate) does not robustly support it either way once granularity and poverty are accounted for.</div>
+    </div>
+
+    <div class="narrative">
+      <p><b>Why none of this is a causal BISP effect:</b> BISP targeting is itself based on a Multidimensional Poverty Index score — it deliberately concentrates in poor, rural districts. Those same districts (concentrated in interior Sindh, South Punjab and Balochistan in this sample) plausibly differ in baseline fertility, migration patterns, urbanization and female labour-force participation for reasons unrelated to BISP, none of which are in this dataset. The regression controls (poverty score, population size, province) show poverty score doing most of the explanatory work in every model — for the cross-sectional child share (R²=0.70–0.80, BISP intensity adds a smaller but still-significant residual effect) and especially for the true growth rate (R²=0.37, BISP intensity's effect disappears once poverty is in the model).</p>
+      <p><b>Data-quality caveats:</b> disbursement reflects a single quarter (Jan–Mar 2023) while total-growth and division-growth figures reflect six-year census averages (2017–2023) — different reference periods. Table 5's own district totals differ from Table 1's by up to ~12% for two districts (Quetta, Kohistan), handled by using each table's internal denominator throughout. The true 2017–2023 growth rate is only available at <b>division level</b> (28 divisions covering 121 of 128 districts) — the seven districts that were still FATA agencies in 2017 (Bajaur, Mohmand, Khyber, Kurram, Orakzai, North &amp; South Waziristan) have no 2017 comparison point and are excluded from that specific metric, though they retain the cross-sectional 2023 share. A handful of small, high-volatility Balochistan districts pull on the "rest" group's total-growth average and weaken significance under trimming (p≈0.07). AJK and Gilgit-Baltistan are excluded entirely for lack of matching census data; Islamabad is excluded from both child-population metrics (no Table 5 file available for it in either year).</p>
+    </div>
+
+    <div class="narrative caution">
+      <p><b>Recommended next step:</b> the migration hypothesis is testable directly if district-level net migration, commuting, or remittance data becomes available — that would separate "fewer people staying" from "fewer people being born" far more confidently than these proxies can. A genuinely district-level 2017 age-band table, if one exists, would also let the true growth-rate analysis run at the same resolution as the cross-sectional one rather than being diluted to 28 divisions. Failing either, urbanization rate and female literacy remain the most useful additional controls.</p>
+    </div>
+  </section>
+
+  <div class="footer">
+    <p>Sources: BISP MPI District Disbursements workbook (Jan–Mar 2023 quarter); Pakistan Bureau of Statistics, Census-2023 district population tables (Punjab, Sindh, Khyber Pakhtunkhwa, Balochistan, Islamabad). n = 129 districts after name-matching and exclusion of AJK/Gilgit-Baltistan and 2 unmatched districts (Ghanche, Lehri). All statistical tests computed in Python (scipy, statsmodels). Dashboard generated for internal analytical review — not for publication without further confounder controls.</p>
+  </div>
+
+</div>
+
+<script id="dashboard-data" type="application/json">{"scatter_top30": [{"Pct_Beneficiaries": 10.914, "GrowthRate_pct": 1.29, "District": "KHAIRPUR"}, {"Pct_Beneficiaries": 9.58, "GrowthRate_pct": 1.25, "District": "SUJAWAL"}, {"Pct_Beneficiaries": 9.487, "GrowthRate_pct": 2.99, "District": "RAJANPUR"}, {"Pct_Beneficiaries": 9.173, "GrowthRate_pct": 1.3, "District": "UMER KOT"}, {"Pct_Beneficiaries": 9.073, "GrowthRate_pct": 1.29, "District": "THARPARKAR"}, {"Pct_Beneficiaries": 8.554, "GrowthRate_pct": 2.71, "District": "SHANGLA"}, {"Pct_Beneficiaries": 8.454, "GrowthRate_pct": 2.49, "District": "MUZAFFARGARH"}, {"Pct_Beneficiaries": 8.223, "GrowthRate_pct": 1.27, "District": "BADIN"}, {"Pct_Beneficiaries": 7.778, "GrowthRate_pct": 2.81, "District": "BAJAUR"}, {"Pct_Beneficiaries": 8.028, "GrowthRate_pct": 1.22, "District": "GHOTKI"}, {"Pct_Beneficiaries": 7.89, "GrowthRate_pct": 2.46, "District": "KARAK"}, {"Pct_Beneficiaries": 7.807, "GrowthRate_pct": 2.42, "District": "LAKKI MARWAT"}, {"Pct_Beneficiaries": 7.542, "GrowthRate_pct": 2.92, "District": "BHAKKAR"}, {"Pct_Beneficiaries": 7.644, "GrowthRate_pct": 1.65, "District": "THATTA"}, {"Pct_Beneficiaries": 7.36, "GrowthRate_pct": 1.83, "District": "LORALAI"}, {"Pct_Beneficiaries": 7.456, "GrowthRate_pct": 1.18, "District": "TANDO MUHAMMAD KHAN"}, {"Pct_Beneficiaries": 7.093, "GrowthRate_pct": 1.63, "District": "TANK"}, {"Pct_Beneficiaries": 7.232, "GrowthRate_pct": 2.09, "District": "KASHMORE"}, {"Pct_Beneficiaries": 7.042, "GrowthRate_pct": 1.3, "District": "DERA ISMAIL KHAN"}, {"Pct_Beneficiaries": 6.963, "GrowthRate_pct": 1.94, "District": "BANNU"}, {"Pct_Beneficiaries": 6.998, "GrowthRate_pct": 2.01, "District": "SANGHAR"}, {"Pct_Beneficiaries": 6.829, "GrowthRate_pct": 1.87, "District": "JHANG"}, {"Pct_Beneficiaries": 6.563, "GrowthRate_pct": 4.93, "District": "KALAT"}, {"Pct_Beneficiaries": 6.64, "GrowthRate_pct": 2.46, "District": "JAFFARABAD"}, {"Pct_Beneficiaries": 6.673, "GrowthRate_pct": 3.06, "District": "SOHBATPUR"}, {"Pct_Beneficiaries": 6.475, "GrowthRate_pct": 2.66, "District": "TORGHAR"}, {"Pct_Beneficiaries": 6.48, "GrowthRate_pct": 2.13, "District": "LODHRAN"}, {"Pct_Beneficiaries": 6.54, "GrowthRate_pct": 3.51, "District": "BARKHAN"}, {"Pct_Beneficiaries": 6.509, "GrowthRate_pct": 2.58, "District": "KHYBER"}, {"Pct_Beneficiaries": 6.438, "GrowthRate_pct": 2.47, "District": "RAHIM YAR KHAN"}], "scatter_rest": [{"Pct_Beneficiaries": 6.387, "GrowthRate_pct": 2.83, "District": "LASBELA"}, {"Pct_Beneficiaries": 6.344, "GrowthRate_pct": 1.594, "District": "TANDO ALLAH YAR"}, {"Pct_Beneficiaries": 6.315, "GrowthRate_pct": 2.83, "District": "DERA GHAZI KHAN"}, {"Pct_Beneficiaries": 6.139, "GrowthRate_pct": 6.64, "District": "AWARAN"}, {"Pct_Beneficiaries": 6.197, "GrowthRate_pct": 2.55, "District": "BATAGRAM"}, {"Pct_Beneficiaries": 6.214, "GrowthRate_pct": 2.24, "District": "CHINIOT"}, {"Pct_Beneficiaries": 6.188, "GrowthRate_pct": 1.97, "District": "SHIKARPUR"}, {"Pct_Beneficiaries": 6.139, "GrowthRate_pct": 2.09, "District": "KAMBAR SHAHDADKOT"}, {"Pct_Beneficiaries": 6.031, "GrowthRate_pct": 2.27, "District": "SHAHEED BENAZIRABAD"}, {"Pct_Beneficiaries": 5.971, "GrowthRate_pct": 1.97, "District": "DADU"}, {"Pct_Beneficiaries": 5.812, "GrowthRate_pct": 2.6, "District": "JACOBABAD"}, {"Pct_Beneficiaries": 5.632, "GrowthRate_pct": 2.15, "District": "BUNER"}, {"Pct_Beneficiaries": 5.647, "GrowthRate_pct": 1.65, "District": "MATIARI"}, {"Pct_Beneficiaries": 5.378, "GrowthRate_pct": 2.27, "District": "UPPER DIR"}, {"Pct_Beneficiaries": 5.353, "GrowthRate_pct": 5.35, "District": "JHAL MAGSI"}, {"Pct_Beneficiaries": 5.368, "GrowthRate_pct": 1.98, "District": "JAMSHORO"}, {"Pct_Beneficiaries": 5.381, "GrowthRate_pct": 1.88, "District": "MIRPUR KHAS"}, {"Pct_Beneficiaries": 5.395, "GrowthRate_pct": 1.64, "District": "NAUSHAHRO FEROZE"}, {"Pct_Beneficiaries": 5.263, "GrowthRate_pct": 2.63, "District": "BAHAWALPUR"}, {"Pct_Beneficiaries": 5.136, "GrowthRate_pct": 4.16, "District": "KURRAM"}, {"Pct_Beneficiaries": 4.991, "GrowthRate_pct": 2.13, "District": "DERA BUGTI"}, {"Pct_Beneficiaries": 5.07, "GrowthRate_pct": 2.06, "District": "MULTAN"}, {"Pct_Beneficiaries": 5.153, "GrowthRate_pct": 2.39, "District": "KHANEWAL"}, {"Pct_Beneficiaries": 5.189, "GrowthRate_pct": 4.25, "District": "NORTH WAZIRISTAN"}, {"Pct_Beneficiaries": 5.139, "GrowthRate_pct": 2.4, "District": "LAYYAH"}, {"Pct_Beneficiaries": 5.12, "GrowthRate_pct": 1.63, "District": "SUKKUR"}, {"Pct_Beneficiaries": 4.671, "GrowthRate_pct": 2.93, "District": "CHAGAI"}, {"Pct_Beneficiaries": 4.968, "GrowthRate_pct": 2.7, "District": "LARKANA"}, {"Pct_Beneficiaries": 4.691, "GrowthRate_pct": 2.395, "District": "CHITRAL"}, {"Pct_Beneficiaries": 4.519, "GrowthRate_pct": 2.86, "District": "ZIARAT"}, {"Pct_Beneficiaries": 4.447, "GrowthRate_pct": 8.17, "District": "KHARAN"}, {"Pct_Beneficiaries": 4.412, "GrowthRate_pct": 2.37, "District": "NASIRABAD"}, {"Pct_Beneficiaries": 4.329, "GrowthRate_pct": 2.53, "District": "NUSHKI"}, {"Pct_Beneficiaries": 4.483, "GrowthRate_pct": 2.45, "District": "OKARA"}, {"Pct_Beneficiaries": 4.311, "GrowthRate_pct": 2.63, "District": "MOHMAND"}, {"Pct_Beneficiaries": 4.379, "GrowthRate_pct": 2.84, "District": "KASUR"}, {"Pct_Beneficiaries": 4.297, "GrowthRate_pct": 2.83, "District": "VEHARI"}, {"Pct_Beneficiaries": 4.126, "GrowthRate_pct": 1.74, "District": "KILLA SAIFULLAH"}, {"Pct_Beneficiaries": 4.267, "GrowthRate_pct": 3.78, "District": "KHUZDAR"}, {"Pct_Beneficiaries": 3.865, "GrowthRate_pct": 4.68, "District": "HARNAI"}, {"Pct_Beneficiaries": 3.909, "GrowthRate_pct": 2.56, "District": "GWADAR"}, {"Pct_Beneficiaries": 4.201, "GrowthRate_pct": 2.373, "District": "MALAKAND PROTECTED AREA"}, {"Pct_Beneficiaries": 4.134, "GrowthRate_pct": 1.78, "District": "KOHAT"}, {"Pct_Beneficiaries": 4.106, "GrowthRate_pct": 2.57, "District": "SWAT"}, {"Pct_Beneficiaries": 4.16, "GrowthRate_pct": 2.28, "District": "NOWSHERA"}, {"Pct_Beneficiaries": 4.015, "GrowthRate_pct": 7.3, "District": "ORAKZAI"}, {"Pct_Beneficiaries": 4.018, "GrowthRate_pct": 3.0, "District": "BAHAWALNAGAR"}, {"Pct_Beneficiaries": 4.033, "GrowthRate_pct": 2.7, "District": "SARGODHA"}, {"Pct_Beneficiaries": 3.811, "GrowthRate_pct": 0.32, "District": "HANGU"}, {"Pct_Beneficiaries": 3.98, "GrowthRate_pct": 2.67, "District": "PAKPATTAN"}, {"Pct_Beneficiaries": 3.675, "GrowthRate_pct": 2.3, "District": "ZHOB"}, {"Pct_Beneficiaries": 3.904, "GrowthRate_pct": 3.19, "District": "NANKANA SAHIB"}, {"Pct_Beneficiaries": 3.606, "GrowthRate_pct": 1.88, "District": "KILLA ABDULLAH"}, {"Pct_Beneficiaries": 3.742, "GrowthRate_pct": 2.6, "District": "MIANWALI"}, {"Pct_Beneficiaries": 3.739, "GrowthRate_pct": 2.79, "District": "MASTUNG"}, {"Pct_Beneficiaries": 3.594, "GrowthRate_pct": 2.69, "District": "KHUSHAB"}, {"Pct_Beneficiaries": 3.573, "GrowthRate_pct": 2.46, "District": "MARDAN"}, {"Pct_Beneficiaries": 3.43, "GrowthRate_pct": 2.59, "District": "SWABI"}, {"Pct_Beneficiaries": 3.333, "GrowthRate_pct": 2.44, "District": "MANSEHRA"}, {"Pct_Beneficiaries": 3.003, "GrowthRate_pct": 1.45, "District": "MUSAKHEL"}, {"Pct_Beneficiaries": 3.316, "GrowthRate_pct": 2.31, "District": "SAHIWAL"}, {"Pct_Beneficiaries": 3.13, "GrowthRate_pct": 2.35, "District": "LOWER DIR"}, {"Pct_Beneficiaries": 3.159, "GrowthRate_pct": 2.4, "District": "TOBA TEK SINGH"}, {"Pct_Beneficiaries": 3.062, "GrowthRate_pct": 2.23, "District": "HAFIZABAD"}, {"Pct_Beneficiaries": 2.908, "GrowthRate_pct": 3.76, "District": "SIBI"}, {"Pct_Beneficiaries": 2.895, "GrowthRate_pct": 4.859, "District": "KOHISTAN"}, {"Pct_Beneficiaries": 2.966, "GrowthRate_pct": 2.2, "District": "CHARSADDA"}, {"Pct_Beneficiaries": 2.751, "GrowthRate_pct": 4.7, "District": "SOUTH WAZIRISTAN"}, {"Pct_Beneficiaries": 2.715, "GrowthRate_pct": 4.35, "District": "KARACHI WEST"}, {"Pct_Beneficiaries": 2.813, "GrowthRate_pct": 2.66, "District": "SHEIKHUPURA"}, {"Pct_Beneficiaries": 2.43, "GrowthRate_pct": 3.84, "District": "SHERANI"}, {"Pct_Beneficiaries": 2.597, "GrowthRate_pct": 3.33, "District": "KOHLU"}, {"Pct_Beneficiaries": 2.32, "GrowthRate_pct": 2.12, "District": "PISHIN"}, {"Pct_Beneficiaries": 2.338, "GrowthRate_pct": 9.51, "District": "WASHUK"}, {"Pct_Beneficiaries": 2.585, "GrowthRate_pct": 1.58, "District": "PESHAWAR"}, {"Pct_Beneficiaries": 2.402, "GrowthRate_pct": 2.65, "District": "KECH"}, {"Pct_Beneficiaries": 2.341, "GrowthRate_pct": 6.25, "District": "KACHHI"}, {"Pct_Beneficiaries": 2.155, "GrowthRate_pct": 3.99, "District": "MALIR"}, {"Pct_Beneficiaries": 2.071, "GrowthRate_pct": 2.25, "District": "NAROWAL"}, {"Pct_Beneficiaries": 1.876, "GrowthRate_pct": 8.36, "District": "PANJGUR"}, {"Pct_Beneficiaries": 1.746, "GrowthRate_pct": 2.65, "District": "LAHORE"}, {"Pct_Beneficiaries": 1.822, "GrowthRate_pct": 2.33, "District": "MANDI BAHAUDDIN"}, {"Pct_Beneficiaries": 1.778, "GrowthRate_pct": 2.38, "District": "FAISALABAD"}, {"Pct_Beneficiaries": 1.714, "GrowthRate_pct": 1.69, "District": "HYDERABAD"}, {"Pct_Beneficiaries": 1.22, "GrowthRate_pct": 1.05, "District": "ABBOTTABAD"}, {"Pct_Beneficiaries": 1.149, "GrowthRate_pct": 2.94, "District": "GUJRANWALA"}, {"Pct_Beneficiaries": 1.151, "GrowthRate_pct": 2.08, "District": "JHELUM"}, {"Pct_Beneficiaries": 1.145, "GrowthRate_pct": 2.37, "District": "ATTOCK"}, {"Pct_Beneficiaries": 1.051, "GrowthRate_pct": 2.27, "District": "QUETTA"}, {"Pct_Beneficiaries": 0.996, "GrowthRate_pct": 2.44, "District": "SIALKOT"}, {"Pct_Beneficiaries": 0.896, "GrowthRate_pct": 2.51, "District": "CHAKWAL"}, {"Pct_Beneficiaries": 0.814, "GrowthRate_pct": 4.71, "District": "KARACHI SOUTH"}, {"Pct_Beneficiaries": 0.714, "GrowthRate_pct": 5.32, "District": "KARACHI EAST"}, {"Pct_Beneficiaries": 0.65, "GrowthRate_pct": 4.3, "District": "KARACHI CENTRAL"}, {"Pct_Beneficiaries": 0.519, "GrowthRate_pct": 3.29, "District": "KORANGI"}, {"Pct_Beneficiaries": 0.471, "GrowthRate_pct": 2.63, "District": "GUJRAT"}, {"Pct_Beneficiaries": 0.431, "GrowthRate_pct": 2.7, "District": "HARIPUR"}, {"Pct_Beneficiaries": 0.398, "GrowthRate_pct": 2.1, "District": "RAWALPINDI"}, {"Pct_Beneficiaries": 0.329, "GrowthRate_pct": 2.8, "District": "ISLAMABAD"}], "scatter_top30_pc": [{"Disb_per_capita": 931.76, "GrowthRate_pct": 1.29, "District": "KHAIRPUR"}, {"Disb_per_capita": 822.37, "GrowthRate_pct": 1.25, "District": "SUJAWAL"}, {"Disb_per_capita": 812.48, "GrowthRate_pct": 2.99, "District": "RAJANPUR"}, {"Disb_per_capita": 786.05, "GrowthRate_pct": 1.3, "District": "UMER KOT"}, {"Disb_per_capita": 782.32, "GrowthRate_pct": 1.29, "District": "THARPARKAR"}, {"Disb_per_capita": 753.04, "GrowthRate_pct": 2.71, "District": "SHANGLA"}, {"Disb_per_capita": 732.24, "GrowthRate_pct": 2.49, "District": "MUZAFFARGARH"}, {"Disb_per_capita": 701.62, "GrowthRate_pct": 1.27, "District": "BADIN"}, {"Disb_per_capita": 689.0, "GrowthRate_pct": 2.81, "District": "BAJAUR"}, {"Disb_per_capita": 688.68, "GrowthRate_pct": 1.22, "District": "GHOTKI"}, {"Disb_per_capita": 688.33, "GrowthRate_pct": 2.46, "District": "KARAK"}, {"Disb_per_capita": 677.32, "GrowthRate_pct": 2.42, "District": "LAKKI MARWAT"}, {"Disb_per_capita": 659.96, "GrowthRate_pct": 2.92, "District": "BHAKKAR"}, {"Disb_per_capita": 656.98, "GrowthRate_pct": 1.65, "District": "THATTA"}, {"Disb_per_capita": 652.85, "GrowthRate_pct": 1.83, "District": "LORALAI"}, {"Disb_per_capita": 637.21, "GrowthRate_pct": 1.18, "District": "TANDO MUHAMMAD KHAN"}, {"Disb_per_capita": 617.47, "GrowthRate_pct": 1.63, "District": "TANK"}, {"Disb_per_capita": 617.26, "GrowthRate_pct": 2.09, "District": "KASHMORE"}, {"Disb_per_capita": 611.97, "GrowthRate_pct": 1.3, "District": "DERA ISMAIL KHAN"}, {"Disb_per_capita": 600.22, "GrowthRate_pct": 1.94, "District": "BANNU"}, {"Disb_per_capita": 596.19, "GrowthRate_pct": 2.01, "District": "SANGHAR"}, {"Disb_per_capita": 590.6, "GrowthRate_pct": 1.87, "District": "JHANG"}, {"Disb_per_capita": 589.3, "GrowthRate_pct": 4.93, "District": "KALAT"}, {"Disb_per_capita": 587.62, "GrowthRate_pct": 2.46, "District": "JAFFARABAD"}, {"Disb_per_capita": 585.97, "GrowthRate_pct": 3.06, "District": "SOHBATPUR"}, {"Disb_per_capita": 582.45, "GrowthRate_pct": 2.66, "District": "TORGHAR"}, {"Disb_per_capita": 572.53, "GrowthRate_pct": 2.83, "District": "LASBELA"}, {"Disb_per_capita": 571.15, "GrowthRate_pct": 2.13, "District": "LODHRAN"}, {"Disb_per_capita": 566.24, "GrowthRate_pct": 3.51, "District": "BARKHAN"}, {"Disb_per_capita": 564.13, "GrowthRate_pct": 2.58, "District": "KHYBER"}], "scatter_rest_pc": [{"Disb_per_capita": 561.03, "GrowthRate_pct": 2.47, "District": "RAHIM YAR KHAN"}, {"Disb_per_capita": 548.66, "GrowthRate_pct": 1.59, "District": "TANDO ALLAH YAR"}, {"Disb_per_capita": 544.04, "GrowthRate_pct": 2.83, "District": "DERA GHAZI KHAN"}, {"Disb_per_capita": 541.27, "GrowthRate_pct": 6.64, "District": "AWARAN"}, {"Disb_per_capita": 540.1, "GrowthRate_pct": 2.55, "District": "BATAGRAM"}, {"Disb_per_capita": 537.9, "GrowthRate_pct": 2.24, "District": "CHINIOT"}, {"Disb_per_capita": 528.36, "GrowthRate_pct": 1.97, "District": "SHIKARPUR"}, {"Disb_per_capita": 521.74, "GrowthRate_pct": 2.09, "District": "KAMBAR SHAHDADKOT"}, {"Disb_per_capita": 516.4, "GrowthRate_pct": 2.27, "District": "SHAHEED BENAZIRABAD"}, {"Disb_per_capita": 509.61, "GrowthRate_pct": 1.97, "District": "DADU"}, {"Disb_per_capita": 503.56, "GrowthRate_pct": 2.6, "District": "JACOBABAD"}, {"Disb_per_capita": 495.68, "GrowthRate_pct": 2.15, "District": "BUNER"}, {"Disb_per_capita": 483.97, "GrowthRate_pct": 1.65, "District": "MATIARI"}, {"Disb_per_capita": 476.44, "GrowthRate_pct": 2.27, "District": "UPPER DIR"}, {"Disb_per_capita": 471.15, "GrowthRate_pct": 5.35, "District": "JHAL MAGSI"}, {"Disb_per_capita": 464.7, "GrowthRate_pct": 1.98, "District": "JAMSHORO"}, {"Disb_per_capita": 463.91, "GrowthRate_pct": 1.88, "District": "MIRPUR KHAS"}, {"Disb_per_capita": 459.53, "GrowthRate_pct": 1.64, "District": "NAUSHAHRO FEROZE"}, {"Disb_per_capita": 459.29, "GrowthRate_pct": 2.63, "District": "BAHAWALPUR"}, {"Disb_per_capita": 453.78, "GrowthRate_pct": 4.16, "District": "KURRAM"}, {"Disb_per_capita": 449.77, "GrowthRate_pct": 2.13, "District": "DERA BUGTI"}, {"Disb_per_capita": 449.66, "GrowthRate_pct": 2.06, "District": "MULTAN"}, {"Disb_per_capita": 449.3, "GrowthRate_pct": 2.39, "District": "KHANEWAL"}, {"Disb_per_capita": 448.58, "GrowthRate_pct": 4.25, "District": "NORTH WAZIRISTAN"}, {"Disb_per_capita": 447.07, "GrowthRate_pct": 2.4, "District": "LAYYAH"}, {"Disb_per_capita": 438.7, "GrowthRate_pct": 1.63, "District": "SUKKUR"}, {"Disb_per_capita": 430.41, "GrowthRate_pct": 2.93, "District": "CHAGAI"}, {"Disb_per_capita": 422.65, "GrowthRate_pct": 2.7, "District": "LARKANA"}, {"Disb_per_capita": 422.06, "GrowthRate_pct": 2.4, "District": "CHITRAL"}, {"Disb_per_capita": 410.85, "GrowthRate_pct": 2.86, "District": "ZIARAT"}, {"Disb_per_capita": 400.02, "GrowthRate_pct": 8.17, "District": "KHARAN"}, {"Disb_per_capita": 392.66, "GrowthRate_pct": 2.37, "District": "NASIRABAD"}, {"Disb_per_capita": 389.69, "GrowthRate_pct": 2.53, "District": "NUSHKI"}, {"Disb_per_capita": 388.79, "GrowthRate_pct": 2.45, "District": "OKARA"}, {"Disb_per_capita": 382.91, "GrowthRate_pct": 2.63, "District": "MOHMAND"}, {"Disb_per_capita": 382.08, "GrowthRate_pct": 2.84, "District": "KASUR"}, {"Disb_per_capita": 376.75, "GrowthRate_pct": 2.83, "District": "VEHARI"}, {"Disb_per_capita": 372.96, "GrowthRate_pct": 1.74, "District": "KILLA SAIFULLAH"}, {"Disb_per_capita": 372.18, "GrowthRate_pct": 3.78, "District": "KHUZDAR"}, {"Disb_per_capita": 366.22, "GrowthRate_pct": 4.68, "District": "HARNAI"}, {"Disb_per_capita": 364.14, "GrowthRate_pct": 2.56, "District": "GWADAR"}, {"Disb_per_capita": 362.41, "GrowthRate_pct": 2.37, "District": "MALAKAND PROTECTED AREA"}, {"Disb_per_capita": 361.66, "GrowthRate_pct": 1.78, "District": "KOHAT"}, {"Disb_per_capita": 358.31, "GrowthRate_pct": 2.57, "District": "SWAT"}, {"Disb_per_capita": 357.4, "GrowthRate_pct": 2.28, "District": "NOWSHERA"}, {"Disb_per_capita": 357.17, "GrowthRate_pct": 7.3, "District": "ORAKZAI"}, {"Disb_per_capita": 357.05, "GrowthRate_pct": 3.0, "District": "BAHAWALNAGAR"}, {"Disb_per_capita": 355.68, "GrowthRate_pct": 2.7, "District": "SARGODHA"}, {"Disb_per_capita": 345.29, "GrowthRate_pct": 0.32, "District": "HANGU"}, {"Disb_per_capita": 345.25, "GrowthRate_pct": 2.67, "District": "PAKPATTAN"}, {"Disb_per_capita": 341.57, "GrowthRate_pct": 2.3, "District": "ZHOB"}, {"Disb_per_capita": 341.51, "GrowthRate_pct": 3.19, "District": "NANKANA SAHIB"}, {"Disb_per_capita": 338.0, "GrowthRate_pct": 1.88, "District": "KILLA ABDULLAH"}, {"Disb_per_capita": 332.63, "GrowthRate_pct": 2.6, "District": "MIANWALI"}, {"Disb_per_capita": 327.68, "GrowthRate_pct": 2.79, "District": "MASTUNG"}, {"Disb_per_capita": 318.01, "GrowthRate_pct": 2.69, "District": "KHUSHAB"}, {"Disb_per_capita": 310.43, "GrowthRate_pct": 2.46, "District": "MARDAN"}, {"Disb_per_capita": 301.6, "GrowthRate_pct": 2.59, "District": "SWABI"}, {"Disb_per_capita": 296.96, "GrowthRate_pct": 2.44, "District": "MANSEHRA"}, {"Disb_per_capita": 294.33, "GrowthRate_pct": 1.45, "District": "MUSAKHEL"}, {"Disb_per_capita": 289.75, "GrowthRate_pct": 2.31, "District": "SAHIWAL"}, {"Disb_per_capita": 280.24, "GrowthRate_pct": 2.35, "District": "LOWER DIR"}, {"Disb_per_capita": 273.15, "GrowthRate_pct": 2.4, "District": "TOBA TEK SINGH"}, {"Disb_per_capita": 269.33, "GrowthRate_pct": 2.23, "District": "HAFIZABAD"}, {"Disb_per_capita": 262.01, "GrowthRate_pct": 3.76, "District": "SIBI"}, {"Disb_per_capita": 260.61, "GrowthRate_pct": 4.86, "District": "KOHISTAN"}, {"Disb_per_capita": 259.47, "GrowthRate_pct": 2.2, "District": "CHARSADDA"}, {"Disb_per_capita": 248.65, "GrowthRate_pct": 4.7, "District": "SOUTH WAZIRISTAN"}, {"Disb_per_capita": 247.35, "GrowthRate_pct": 4.35, "District": "KARACHI WEST"}, {"Disb_per_capita": 242.6, "GrowthRate_pct": 2.66, "District": "SHEIKHUPURA"}, {"Disb_per_capita": 236.22, "GrowthRate_pct": 3.84, "District": "SHERANI"}, {"Disb_per_capita": 232.86, "GrowthRate_pct": 3.33, "District": "KOHLU"}, {"Disb_per_capita": 223.73, "GrowthRate_pct": 2.12, "District": "PISHIN"}, {"Disb_per_capita": 223.52, "GrowthRate_pct": 9.51, "District": "WASHUK"}, {"Disb_per_capita": 222.15, "GrowthRate_pct": 1.58, "District": "PESHAWAR"}, {"Disb_per_capita": 215.12, "GrowthRate_pct": 2.65, "District": "KECH"}, {"Disb_per_capita": 213.9, "GrowthRate_pct": 6.25, "District": "KACHHI"}, {"Disb_per_capita": 193.0, "GrowthRate_pct": 3.99, "District": "MALIR"}, {"Disb_per_capita": 186.43, "GrowthRate_pct": 2.25, "District": "NAROWAL"}, {"Disb_per_capita": 169.89, "GrowthRate_pct": 8.36, "District": "PANJGUR"}, {"Disb_per_capita": 166.9, "GrowthRate_pct": 2.65, "District": "LAHORE"}, {"Disb_per_capita": 166.36, "GrowthRate_pct": 2.33, "District": "MANDI BAHAUDDIN"}, {"Disb_per_capita": 156.3, "GrowthRate_pct": 2.38, "District": "FAISALABAD"}, {"Disb_per_capita": 152.4, "GrowthRate_pct": 1.69, "District": "HYDERABAD"}, {"Disb_per_capita": 111.55, "GrowthRate_pct": 1.05, "District": "ABBOTTABAD"}, {"Disb_per_capita": 105.03, "GrowthRate_pct": 2.94, "District": "GUJRANWALA"}, {"Disb_per_capita": 104.55, "GrowthRate_pct": 2.08, "District": "JHELUM"}, {"Disb_per_capita": 103.98, "GrowthRate_pct": 2.37, "District": "ATTOCK"}, {"Disb_per_capita": 94.31, "GrowthRate_pct": 2.27, "District": "QUETTA"}, {"Disb_per_capita": 93.03, "GrowthRate_pct": 2.44, "District": "SIALKOT"}, {"Disb_per_capita": 82.97, "GrowthRate_pct": 2.51, "District": "CHAKWAL"}, {"Disb_per_capita": 78.87, "GrowthRate_pct": 4.71, "District": "KARACHI SOUTH"}, {"Disb_per_capita": 67.5, "GrowthRate_pct": 5.32, "District": "KARACHI EAST"}, {"Disb_per_capita": 59.7, "GrowthRate_pct": 4.3, "District": "KARACHI CENTRAL"}, {"Disb_per_capita": 48.11, "GrowthRate_pct": 3.29, "District": "KORANGI"}, {"Disb_per_capita": 44.71, "GrowthRate_pct": 2.63, "District": "GUJRAT"}, {"Disb_per_capita": 39.75, "GrowthRate_pct": 2.7, "District": "HARIPUR"}, {"Disb_per_capita": 37.73, "GrowthRate_pct": 2.1, "District": "RAWALPINDI"}, {"Disb_per_capita": 31.05, "GrowthRate_pct": 2.8, "District": "ISLAMABAD"}], "decile": {"labels": ["Q1", "Q2", "Q3", "Q4", "Q5"], "avg_pct": [1.327, 3.25, 4.435, 5.867, 7.828], "avg_growth": [3.373, 2.789, 2.995, 2.616, 2.149]}, "decile_pc": {"labels": ["Q1", "Q2", "Q3", "Q4", "Q5"], "avg_pc": [121.877, 291.343, 392.481, 509.792, 678.895], "avg_growth": [3.352, 2.738, 3.098, 2.622, 2.117]}, "top30_table": [{"District": "KHAIRPUR", "Province": "SINDH", "Population_2017": 2405190, "Beneficiaries": 262498, "Pct_Beneficiaries": 10.91, "Amount_Deposited": 2241.1, "GrowthRate_pct": 1.29}, {"District": "SUJAWAL", "Province": "SINDH", "Population_2017": 779062, "Beneficiaries": 74632, "Pct_Beneficiaries": 9.58, "Amount_Deposited": 640.7, "GrowthRate_pct": 1.25}, {"District": "RAJANPUR", "Province": "PUNJAB", "Population_2017": 1996039, "Beneficiaries": 189369, "Pct_Beneficiaries": 9.49, "Amount_Deposited": 1621.7, "GrowthRate_pct": 2.99}, {"District": "UMER KOT", "Province": "SINDH", "Population_2017": 1073469, "Beneficiaries": 98473, "Pct_Beneficiaries": 9.17, "Amount_Deposited": 843.8, "GrowthRate_pct": 1.3}, {"District": "THARPARKAR", "Province": "SINDH", "Population_2017": 1647036, "Beneficiaries": 149440, "Pct_Beneficiaries": 9.07, "Amount_Deposited": 1288.5, "GrowthRate_pct": 1.29}, {"District": "SHANGLA", "Province": "KP", "Population_2017": 759609, "Beneficiaries": 64979, "Pct_Beneficiaries": 8.55, "Amount_Deposited": 572.0, "GrowthRate_pct": 2.71}, {"District": "MUZAFFARGARH", "Province": "PUNJAB", "Population_2017": 4328549, "Beneficiaries": 365923, "Pct_Beneficiaries": 8.45, "Amount_Deposited": 3169.5, "GrowthRate_pct": 2.49}, {"District": "BADIN", "Province": "SINDH", "Population_2017": 1804958, "Beneficiaries": 148417, "Pct_Beneficiaries": 8.22, "Amount_Deposited": 1266.4, "GrowthRate_pct": 1.27}, {"District": "GHOTKI", "Province": "SINDH", "Population_2017": 1648708, "Beneficiaries": 132362, "Pct_Beneficiaries": 8.03, "Amount_Deposited": 1135.4, "GrowthRate_pct": 1.22}, {"District": "KARAK", "Province": "KP", "Population_2017": 705362, "Beneficiaries": 55653, "Pct_Beneficiaries": 7.89, "Amount_Deposited": 485.5, "GrowthRate_pct": 2.46}, {"District": "LAKKI MARWAT", "Province": "KP", "Population_2017": 902138, "Beneficiaries": 70430, "Pct_Beneficiaries": 7.81, "Amount_Deposited": 611.0, "GrowthRate_pct": 2.42}, {"District": "BAJAUR", "Province": "KP", "Population_2017": 1090987, "Beneficiaries": 84857, "Pct_Beneficiaries": 7.78, "Amount_Deposited": 751.7, "GrowthRate_pct": 2.81}, {"District": "THATTA", "Province": "SINDH", "Population_2017": 982138, "Beneficiaries": 75072, "Pct_Beneficiaries": 7.64, "Amount_Deposited": 645.2, "GrowthRate_pct": 1.65}, {"District": "BHAKKAR", "Province": "PUNJAB", "Population_2017": 1647852, "Beneficiaries": 124288, "Pct_Beneficiaries": 7.54, "Amount_Deposited": 1087.5, "GrowthRate_pct": 2.92}, {"District": "TANDO MUHAMMAD KHAN", "Province": "SINDH", "Population_2017": 677098, "Beneficiaries": 50484, "Pct_Beneficiaries": 7.46, "Amount_Deposited": 431.5, "GrowthRate_pct": 1.18}, {"District": "LORALAI", "Province": "BALOCHISTAN", "Population_2017": 244446, "Beneficiaries": 17992, "Pct_Beneficiaries": 7.36, "Amount_Deposited": 159.6, "GrowthRate_pct": 1.83}, {"District": "KASHMORE", "Province": "SINDH", "Population_2017": 1090336, "Beneficiaries": 78850, "Pct_Beneficiaries": 7.23, "Amount_Deposited": 673.0, "GrowthRate_pct": 2.09}, {"District": "TANK", "Province": "KP", "Population_2017": 427044, "Beneficiaries": 30291, "Pct_Beneficiaries": 7.09, "Amount_Deposited": 263.7, "GrowthRate_pct": 1.63}, {"District": "DERA ISMAIL KHAN", "Province": "KP", "Population_2017": 1693594, "Beneficiaries": 119266, "Pct_Beneficiaries": 7.04, "Amount_Deposited": 1036.4, "GrowthRate_pct": 1.3}, {"District": "SANGHAR", "Province": "SINDH", "Population_2017": 2049873, "Beneficiaries": 143445, "Pct_Beneficiaries": 7.0, "Amount_Deposited": 1222.1, "GrowthRate_pct": 2.01}, {"District": "BANNU", "Province": "KP", "Population_2017": 1210183, "Beneficiaries": 84264, "Pct_Beneficiaries": 6.96, "Amount_Deposited": 726.4, "GrowthRate_pct": 1.94}, {"District": "JHANG", "Province": "PUNJAB", "Population_2017": 2743526, "Beneficiaries": 187356, "Pct_Beneficiaries": 6.83, "Amount_Deposited": 1620.3, "GrowthRate_pct": 1.87}, {"District": "SOHBATPUR", "Province": "BALOCHISTAN", "Population_2017": 200426, "Beneficiaries": 13374, "Pct_Beneficiaries": 6.67, "Amount_Deposited": 117.4, "GrowthRate_pct": 3.06}, {"District": "JAFFARABAD", "Province": "BALOCHISTAN", "Population_2017": 513972, "Beneficiaries": 34129, "Pct_Beneficiaries": 6.64, "Amount_Deposited": 302.0, "GrowthRate_pct": 2.46}, {"District": "KALAT", "Province": "BALOCHISTAN", "Population_2017": 203565, "Beneficiaries": 13359, "Pct_Beneficiaries": 6.56, "Amount_Deposited": 120.0, "GrowthRate_pct": 4.93}, {"District": "BARKHAN", "Province": "BALOCHISTAN", "Population_2017": 171025, "Beneficiaries": 11185, "Pct_Beneficiaries": 6.54, "Amount_Deposited": 96.8, "GrowthRate_pct": 3.51}, {"District": "KHYBER", "Province": "KP", "Population_2017": 984246, "Beneficiaries": 64065, "Pct_Beneficiaries": 6.51, "Amount_Deposited": 555.2, "GrowthRate_pct": 2.58}, {"District": "LODHRAN", "Province": "PUNJAB", "Population_2017": 1699693, "Beneficiaries": 110136, "Pct_Beneficiaries": 6.48, "Amount_Deposited": 970.8, "GrowthRate_pct": 2.13}, {"District": "TORGHAR", "Province": "KP", "Population_2017": 171349, "Beneficiaries": 11095, "Pct_Beneficiaries": 6.48, "Amount_Deposited": 99.8, "GrowthRate_pct": 2.66}, {"District": "RAHIM YAR KHAN", "Province": "PUNJAB", "Population_2017": 4807762, "Beneficiaries": 309542, "Pct_Beneficiaries": 6.44, "Amount_Deposited": 2697.3, "GrowthRate_pct": 2.47}], "prov_counts": {"SINDH": 10, "KP": 9, "PUNJAB": 6, "BALOCHISTAN": 5}}</script>
+<script id="child-dashboard-data" type="application/json">{"scatter_top30": [{"Pct_Beneficiaries": 10.914, "Under10_Share": 34.313, "District": "KHAIRPUR"}, {"Pct_Beneficiaries": 9.58, "Under10_Share": 34.258, "District": "SUJAWAL"}, {"Pct_Beneficiaries": 9.487, "Under10_Share": 35.151, "District": "RAJANPUR"}, {"Pct_Beneficiaries": 9.173, "Under10_Share": 35.102, "District": "UMER KOT"}, {"Pct_Beneficiaries": 9.073, "Under10_Share": 38.757, "District": "THARPARKAR"}, {"Pct_Beneficiaries": 8.554, "Under10_Share": 34.511, "District": "SHANGLA"}, {"Pct_Beneficiaries": 8.454, "Under10_Share": 32.275, "District": "MUZAFFARGARH"}, {"Pct_Beneficiaries": 8.223, "Under10_Share": 32.155, "District": "BADIN"}, {"Pct_Beneficiaries": 8.028, "Under10_Share": 32.046, "District": "GHOTKI"}, {"Pct_Beneficiaries": 7.89, "Under10_Share": 29.678, "District": "KARAK"}, {"Pct_Beneficiaries": 7.807, "Under10_Share": 33.224, "District": "LAKKI MARWAT"}, {"Pct_Beneficiaries": 7.778, "Under10_Share": 36.322, "District": "BAJAUR"}, {"Pct_Beneficiaries": 7.644, "Under10_Share": 32.009, "District": "THATTA"}, {"Pct_Beneficiaries": 7.542, "Under10_Share": 30.349, "District": "BHAKKAR"}, {"Pct_Beneficiaries": 7.456, "Under10_Share": 30.762, "District": "TANDO MUHAMMAD KHAN"}, {"Pct_Beneficiaries": 7.36, "Under10_Share": 37.647, "District": "LORALAI"}, {"Pct_Beneficiaries": 7.232, "Under10_Share": 39.379, "District": "KASHMORE"}, {"Pct_Beneficiaries": 7.093, "Under10_Share": 34.608, "District": "TANK"}, {"Pct_Beneficiaries": 7.042, "Under10_Share": 30.687, "District": "DERA ISMAIL KHAN"}, {"Pct_Beneficiaries": 6.998, "Under10_Share": 31.81, "District": "SANGHAR"}, {"Pct_Beneficiaries": 6.963, "Under10_Share": 32.872, "District": "BANNU"}, {"Pct_Beneficiaries": 6.829, "Under10_Share": 27.308, "District": "JHANG"}, {"Pct_Beneficiaries": 6.673, "Under10_Share": 42.991, "District": "SOHBATPUR"}, {"Pct_Beneficiaries": 6.64, "Under10_Share": 37.828, "District": "JAFFARABAD"}, {"Pct_Beneficiaries": 6.563, "Under10_Share": 37.061, "District": "KALAT"}, {"Pct_Beneficiaries": 6.54, "Under10_Share": 40.328, "District": "BARKHAN"}, {"Pct_Beneficiaries": 6.509, "Under10_Share": 34.495, "District": "KHYBER"}, {"Pct_Beneficiaries": 6.48, "Under10_Share": 28.067, "District": "LODHRAN"}, {"Pct_Beneficiaries": 6.475, "Under10_Share": 33.662, "District": "TORGHAR"}, {"Pct_Beneficiaries": 6.438, "Under10_Share": 30.283, "District": "RAHIM YAR KHAN"}], "scatter_rest": [{"Pct_Beneficiaries": 6.387, "Under10_Share": 30.704, "District": "LASBELA"}, {"Pct_Beneficiaries": 6.344, "Under10_Share": 32.561, "District": "TANDO ALLAH YAR"}, {"Pct_Beneficiaries": 6.315, "Under10_Share": 33.991, "District": "DERA GHAZI KHAN"}, {"Pct_Beneficiaries": 6.214, "Under10_Share": 26.684, "District": "CHINIOT"}, {"Pct_Beneficiaries": 6.197, "Under10_Share": 31.939, "District": "BATAGRAM"}, {"Pct_Beneficiaries": 6.188, "Under10_Share": 37.09, "District": "SHIKARPUR"}, {"Pct_Beneficiaries": 6.139, "Under10_Share": 34.832, "District": "KAMBAR SHAHDADKOT"}, {"Pct_Beneficiaries": 6.139, "Under10_Share": 34.952, "District": "AWARAN"}, {"Pct_Beneficiaries": 6.031, "Under10_Share": 32.869, "District": "SHAHEED BENAZIRABAD"}, {"Pct_Beneficiaries": 5.971, "Under10_Share": 31.18, "District": "DADU"}, {"Pct_Beneficiaries": 5.812, "Under10_Share": 38.058, "District": "JACOBABAD"}, {"Pct_Beneficiaries": 5.647, "Under10_Share": 31.405, "District": "MATIARI"}, {"Pct_Beneficiaries": 5.632, "Under10_Share": 30.539, "District": "BUNER"}, {"Pct_Beneficiaries": 5.395, "Under10_Share": 32.649, "District": "NAUSHAHRO FEROZE"}, {"Pct_Beneficiaries": 5.381, "Under10_Share": 31.979, "District": "MIRPUR KHAS"}, {"Pct_Beneficiaries": 5.378, "Under10_Share": 36.235, "District": "UPPER DIR"}, {"Pct_Beneficiaries": 5.368, "Under10_Share": 29.677, "District": "JAMSHORO"}, {"Pct_Beneficiaries": 5.353, "Under10_Share": 36.228, "District": "JHAL MAGSI"}, {"Pct_Beneficiaries": 5.263, "Under10_Share": 28.876, "District": "BAHAWALPUR"}, {"Pct_Beneficiaries": 5.189, "Under10_Share": 36.682, "District": "NORTH WAZIRISTAN"}, {"Pct_Beneficiaries": 5.153, "Under10_Share": 26.978, "District": "KHANEWAL"}, {"Pct_Beneficiaries": 5.139, "Under10_Share": 28.764, "District": "LAYYAH"}, {"Pct_Beneficiaries": 5.136, "Under10_Share": 35.071, "District": "KURRAM"}, {"Pct_Beneficiaries": 5.12, "Under10_Share": 33.181, "District": "SUKKUR"}, {"Pct_Beneficiaries": 5.07, "Under10_Share": 26.179, "District": "MULTAN"}, {"Pct_Beneficiaries": 4.991, "Under10_Share": 42.913, "District": "DERA BUGTI"}, {"Pct_Beneficiaries": 4.968, "Under10_Share": 31.912, "District": "LARKANA"}, {"Pct_Beneficiaries": 4.691, "Under10_Share": 25.658, "District": "CHITRAL"}, {"Pct_Beneficiaries": 4.671, "Under10_Share": 37.758, "District": "CHAGAI"}, {"Pct_Beneficiaries": 4.519, "Under10_Share": 41.631, "District": "ZIARAT"}, {"Pct_Beneficiaries": 4.483, "Under10_Share": 27.36, "District": "OKARA"}, {"Pct_Beneficiaries": 4.447, "Under10_Share": 41.435, "District": "KHARAN"}, {"Pct_Beneficiaries": 4.412, "Under10_Share": 38.495, "District": "NASIRABAD"}, {"Pct_Beneficiaries": 4.379, "Under10_Share": 28.102, "District": "KASUR"}, {"Pct_Beneficiaries": 4.329, "Under10_Share": 35.353, "District": "NUSHKI"}, {"Pct_Beneficiaries": 4.311, "Under10_Share": 34.617, "District": "MOHMAND"}, {"Pct_Beneficiaries": 4.297, "Under10_Share": 27.442, "District": "VEHARI"}, {"Pct_Beneficiaries": 4.267, "Under10_Share": 37.666, "District": "KHUZDAR"}, {"Pct_Beneficiaries": 4.201, "Under10_Share": 29.638, "District": "MALAKAND PROTECTED AREA"}, {"Pct_Beneficiaries": 4.16, "Under10_Share": 27.596, "District": "NOWSHERA"}, {"Pct_Beneficiaries": 4.134, "Under10_Share": 27.068, "District": "KOHAT"}, {"Pct_Beneficiaries": 4.126, "Under10_Share": 40.405, "District": "KILLA SAIFULLAH"}, {"Pct_Beneficiaries": 4.106, "Under10_Share": 30.114, "District": "SWAT"}, {"Pct_Beneficiaries": 4.033, "Under10_Share": 25.181, "District": "SARGODHA"}, {"Pct_Beneficiaries": 4.018, "Under10_Share": 27.417, "District": "BAHAWALNAGAR"}, {"Pct_Beneficiaries": 4.015, "Under10_Share": 35.676, "District": "ORAKZAI"}, {"Pct_Beneficiaries": 3.98, "Under10_Share": 28.731, "District": "PAKPATTAN"}, {"Pct_Beneficiaries": 3.909, "Under10_Share": 29.322, "District": "GWADAR"}, {"Pct_Beneficiaries": 3.904, "Under10_Share": 26.216, "District": "NANKANA SAHIB"}, {"Pct_Beneficiaries": 3.865, "Under10_Share": 43.112, "District": "HARNAI"}, {"Pct_Beneficiaries": 3.811, "Under10_Share": 29.014, "District": "HANGU"}, {"Pct_Beneficiaries": 3.742, "Under10_Share": 25.309, "District": "MIANWALI"}, {"Pct_Beneficiaries": 3.739, "Under10_Share": 35.066, "District": "MASTUNG"}, {"Pct_Beneficiaries": 3.675, "Under10_Share": 44.747, "District": "ZHOB"}, {"Pct_Beneficiaries": 3.606, "Under10_Share": 36.921, "District": "KILLA ABDULLAH"}, {"Pct_Beneficiaries": 3.594, "Under10_Share": 24.755, "District": "KHUSHAB"}, {"Pct_Beneficiaries": 3.573, "Under10_Share": 28.692, "District": "MARDAN"}, {"Pct_Beneficiaries": 3.43, "Under10_Share": 27.503, "District": "SWABI"}, {"Pct_Beneficiaries": 3.333, "Under10_Share": 26.765, "District": "MANSEHRA"}, {"Pct_Beneficiaries": 3.316, "Under10_Share": 26.829, "District": "SAHIWAL"}, {"Pct_Beneficiaries": 3.159, "Under10_Share": 24.623, "District": "TOBA TEK SINGH"}, {"Pct_Beneficiaries": 3.13, "Under10_Share": 32.88, "District": "LOWER DIR"}, {"Pct_Beneficiaries": 3.062, "Under10_Share": 25.083, "District": "HAFIZABAD"}, {"Pct_Beneficiaries": 3.003, "Under10_Share": 40.966, "District": "MUSAKHEL"}, {"Pct_Beneficiaries": 2.966, "Under10_Share": 29.582, "District": "CHARSADDA"}, {"Pct_Beneficiaries": 2.908, "Under10_Share": 35.518, "District": "SIBI"}, {"Pct_Beneficiaries": 2.895, "Under10_Share": 43.504, "District": "KOHISTAN"}, {"Pct_Beneficiaries": 2.813, "Under10_Share": 26.848, "District": "SHEIKHUPURA"}, {"Pct_Beneficiaries": 2.751, "Under10_Share": 33.264, "District": "SOUTH WAZIRISTAN"}, {"Pct_Beneficiaries": 2.715, "Under10_Share": 25.139, "District": "KARACHI WEST"}, {"Pct_Beneficiaries": 2.597, "Under10_Share": 37.152, "District": "KOHLU"}, {"Pct_Beneficiaries": 2.585, "Under10_Share": 28.537, "District": "PESHAWAR"}, {"Pct_Beneficiaries": 2.43, "Under10_Share": 39.338, "District": "SHERANI"}, {"Pct_Beneficiaries": 2.402, "Under10_Share": 30.974, "District": "KECH"}, {"Pct_Beneficiaries": 2.341, "Under10_Share": 37.367, "District": "KACHHI"}, {"Pct_Beneficiaries": 2.338, "Under10_Share": 40.602, "District": "WASHUK"}, {"Pct_Beneficiaries": 2.32, "Under10_Share": 38.066, "District": "PISHIN"}, {"Pct_Beneficiaries": 2.155, "Under10_Share": 25.795, "District": "MALIR"}, {"Pct_Beneficiaries": 2.071, "Under10_Share": 25.364, "District": "NAROWAL"}, {"Pct_Beneficiaries": 1.876, "Under10_Share": 30.513, "District": "PANJGUR"}, {"Pct_Beneficiaries": 1.822, "Under10_Share": 25.014, "District": "MANDI BAHAUDDIN"}, {"Pct_Beneficiaries": 1.778, "Under10_Share": 24.27, "District": "FAISALABAD"}, {"Pct_Beneficiaries": 1.746, "Under10_Share": 24.902, "District": "LAHORE"}, {"Pct_Beneficiaries": 1.714, "Under10_Share": 27.083, "District": "HYDERABAD"}, {"Pct_Beneficiaries": 1.22, "Under10_Share": 23.918, "District": "ABBOTTABAD"}, {"Pct_Beneficiaries": 1.151, "Under10_Share": 20.854, "District": "JHELUM"}, {"Pct_Beneficiaries": 1.149, "Under10_Share": 26.839, "District": "GUJRANWALA"}, {"Pct_Beneficiaries": 1.145, "Under10_Share": 22.197, "District": "ATTOCK"}, {"Pct_Beneficiaries": 1.051, "Under10_Share": 31.741, "District": "QUETTA"}, {"Pct_Beneficiaries": 0.996, "Under10_Share": 24.958, "District": "SIALKOT"}, {"Pct_Beneficiaries": 0.896, "Under10_Share": 23.006, "District": "CHAKWAL"}, {"Pct_Beneficiaries": 0.814, "Under10_Share": 20.905, "District": "KARACHI SOUTH"}, {"Pct_Beneficiaries": 0.714, "Under10_Share": 23.853, "District": "KARACHI EAST"}, {"Pct_Beneficiaries": 0.65, "Under10_Share": 23.515, "District": "KARACHI CENTRAL"}, {"Pct_Beneficiaries": 0.519, "Under10_Share": 26.08, "District": "KORANGI"}, {"Pct_Beneficiaries": 0.471, "Under10_Share": 22.32, "District": "GUJRAT"}, {"Pct_Beneficiaries": 0.431, "Under10_Share": 24.059, "District": "HARIPUR"}, {"Pct_Beneficiaries": 0.398, "Under10_Share": 22.474, "District": "RAWALPINDI"}], "decile": {"labels": ["Q1", "Q2", "Q3", "Q4", "Q5"], "avg_pct": [1.408, 3.283, 4.462, 5.896, 7.828], "avg_under10": [27.154, 31.494, 32.514, 32.505, 34.363], "avg_growth": [3.413, 2.747, 2.972, 2.625, 2.149]}, "top30_table": [{"District": "KHAIRPUR", "Province": "SINDH", "Pct_Beneficiaries": 10.91, "Under5_Share": 18.22, "Under10_Share": 34.31, "Under15_Share": 45.88, "GrowthRate_pct": 1.29}, {"District": "SUJAWAL", "Province": "SINDH", "Pct_Beneficiaries": 9.58, "Under5_Share": 17.33, "Under10_Share": 34.26, "Under15_Share": 46.35, "GrowthRate_pct": 1.25}, {"District": "RAJANPUR", "Province": "PUNJAB", "Pct_Beneficiaries": 9.49, "Under5_Share": 18.6, "Under10_Share": 35.15, "Under15_Share": 48.2, "GrowthRate_pct": 2.99}, {"District": "UMER KOT", "Province": "SINDH", "Pct_Beneficiaries": 9.17, "Under5_Share": 18.33, "Under10_Share": 35.1, "Under15_Share": 47.81, "GrowthRate_pct": 1.3}, {"District": "THARPARKAR", "Province": "SINDH", "Pct_Beneficiaries": 9.07, "Under5_Share": 21.47, "Under10_Share": 38.76, "Under15_Share": 51.88, "GrowthRate_pct": 1.29}, {"District": "SHANGLA", "Province": "KP", "Pct_Beneficiaries": 8.55, "Under5_Share": 17.19, "Under10_Share": 34.51, "Under15_Share": 48.02, "GrowthRate_pct": 2.71}, {"District": "MUZAFFARGARH", "Province": "PUNJAB", "Pct_Beneficiaries": 8.45, "Under5_Share": 17.43, "Under10_Share": 32.27, "Under15_Share": 45.24, "GrowthRate_pct": 2.49}, {"District": "BADIN", "Province": "SINDH", "Pct_Beneficiaries": 8.22, "Under5_Share": 15.98, "Under10_Share": 32.16, "Under15_Share": 43.99, "GrowthRate_pct": 1.27}, {"District": "GHOTKI", "Province": "SINDH", "Pct_Beneficiaries": 8.03, "Under5_Share": 15.88, "Under10_Share": 32.05, "Under15_Share": 44.23, "GrowthRate_pct": 1.22}, {"District": "KARAK", "Province": "KP", "Pct_Beneficiaries": 7.89, "Under5_Share": 15.53, "Under10_Share": 29.68, "Under15_Share": 41.76, "GrowthRate_pct": 2.46}, {"District": "LAKKI MARWAT", "Province": "KP", "Pct_Beneficiaries": 7.81, "Under5_Share": 17.78, "Under10_Share": 33.22, "Under15_Share": 45.47, "GrowthRate_pct": 2.42}, {"District": "BAJAUR", "Province": "KP", "Pct_Beneficiaries": 7.78, "Under5_Share": 18.53, "Under10_Share": 36.32, "Under15_Share": 50.15, "GrowthRate_pct": 2.81}, {"District": "THATTA", "Province": "SINDH", "Pct_Beneficiaries": 7.64, "Under5_Share": 15.85, "Under10_Share": 32.01, "Under15_Share": 44.23, "GrowthRate_pct": 1.65}, {"District": "BHAKKAR", "Province": "PUNJAB", "Pct_Beneficiaries": 7.54, "Under5_Share": 17.89, "Under10_Share": 30.35, "Under15_Share": 41.43, "GrowthRate_pct": 2.92}, {"District": "TANDO MUHAMMAD KHAN", "Province": "SINDH", "Pct_Beneficiaries": 7.46, "Under5_Share": 14.89, "Under10_Share": 30.76, "Under15_Share": 42.19, "GrowthRate_pct": 1.18}, {"District": "LORALAI", "Province": "BALOCHISTAN", "Pct_Beneficiaries": 7.36, "Under5_Share": 20.27, "Under10_Share": 37.65, "Under15_Share": 51.33, "GrowthRate_pct": 1.83}, {"District": "KASHMORE", "Province": "SINDH", "Pct_Beneficiaries": 7.23, "Under5_Share": 21.01, "Under10_Share": 39.38, "Under15_Share": 52.25, "GrowthRate_pct": 2.09}, {"District": "TANK", "Province": "KP", "Pct_Beneficiaries": 7.09, "Under5_Share": 17.36, "Under10_Share": 34.61, "Under15_Share": 48.21, "GrowthRate_pct": 1.63}, {"District": "DERA ISMAIL KHAN", "Province": "KP", "Pct_Beneficiaries": 7.04, "Under5_Share": 15.21, "Under10_Share": 30.69, "Under15_Share": 43.31, "GrowthRate_pct": 1.3}, {"District": "SANGHAR", "Province": "SINDH", "Pct_Beneficiaries": 7.0, "Under5_Share": 16.39, "Under10_Share": 31.81, "Under15_Share": 44.15, "GrowthRate_pct": 2.01}, {"District": "BANNU", "Province": "KP", "Pct_Beneficiaries": 6.96, "Under5_Share": 16.79, "Under10_Share": 32.87, "Under15_Share": 45.51, "GrowthRate_pct": 1.94}, {"District": "JHANG", "Province": "PUNJAB", "Pct_Beneficiaries": 6.83, "Under5_Share": 14.09, "Under10_Share": 27.31, "Under15_Share": 39.32, "GrowthRate_pct": 1.87}, {"District": "SOHBATPUR", "Province": "BALOCHISTAN", "Pct_Beneficiaries": 6.67, "Under5_Share": 24.04, "Under10_Share": 42.99, "Under15_Share": 56.55, "GrowthRate_pct": 3.06}, {"District": "JAFFARABAD", "Province": "BALOCHISTAN", "Pct_Beneficiaries": 6.64, "Under5_Share": 19.95, "Under10_Share": 37.83, "Under15_Share": 51.46, "GrowthRate_pct": 2.46}, {"District": "KALAT", "Province": "BALOCHISTAN", "Pct_Beneficiaries": 6.56, "Under5_Share": 19.27, "Under10_Share": 37.06, "Under15_Share": 52.08, "GrowthRate_pct": 4.93}, {"District": "BARKHAN", "Province": "BALOCHISTAN", "Pct_Beneficiaries": 6.54, "Under5_Share": 20.8, "Under10_Share": 40.33, "Under15_Share": 54.65, "GrowthRate_pct": 3.51}, {"District": "KHYBER", "Province": "KP", "Pct_Beneficiaries": 6.51, "Under5_Share": 17.13, "Under10_Share": 34.5, "Under15_Share": 48.91, "GrowthRate_pct": 2.58}, {"District": "LODHRAN", "Province": "PUNJAB", "Pct_Beneficiaries": 6.48, "Under5_Share": 14.48, "Under10_Share": 28.07, "Under15_Share": 40.3, "GrowthRate_pct": 2.13}, {"District": "TORGHAR", "Province": "KP", "Pct_Beneficiaries": 6.48, "Under5_Share": 16.66, "Under10_Share": 33.66, "Under15_Share": 46.9, "GrowthRate_pct": 2.66}, {"District": "RAHIM YAR KHAN", "Province": "PUNJAB", "Pct_Beneficiaries": 6.44, "Under5_Share": 15.9, "Under10_Share": 30.28, "Under15_Share": 42.43, "GrowthRate_pct": 2.47}], "bar_under10": {"top30": 34.0, "rest": 30.87}, "bar_under5": {"top30": 17.68, "rest": 16.41}}</script>
+<script id="division-dashboard-data" type="application/json">{"scatter_top30": [{"Pct_Beneficiaries": 10.914, "Under10_CAGR_division": 1.54, "District": "KHAIRPUR"}, {"Pct_Beneficiaries": 9.58, "Under10_CAGR_division": 1.978, "District": "SUJAWAL"}, {"Pct_Beneficiaries": 9.487, "Under10_CAGR_division": 2.504, "District": "RAJANPUR"}, {"Pct_Beneficiaries": 9.173, "Under10_CAGR_division": 1.93, "District": "UMER KOT"}, {"Pct_Beneficiaries": 9.073, "Under10_CAGR_division": 1.93, "District": "THARPARKAR"}, {"Pct_Beneficiaries": 8.554, "Under10_CAGR_division": 1.817, "District": "SHANGLA"}, {"Pct_Beneficiaries": 8.454, "Under10_CAGR_division": 2.504, "District": "MUZAFFARGARH"}, {"Pct_Beneficiaries": 8.223, "Under10_CAGR_division": 1.978, "District": "BADIN"}, {"Pct_Beneficiaries": 8.028, "Under10_CAGR_division": 1.54, "District": "GHOTKI"}, {"Pct_Beneficiaries": 7.89, "Under10_CAGR_division": 1.465, "District": "KARAK"}, {"Pct_Beneficiaries": 7.807, "Under10_CAGR_division": 2.3, "District": "LAKKI MARWAT"}, {"Pct_Beneficiaries": 7.644, "Under10_CAGR_division": 1.978, "District": "THATTA"}, {"Pct_Beneficiaries": 7.542, "Under10_CAGR_division": 3.106, "District": "BHAKKAR"}, {"Pct_Beneficiaries": 7.456, "Under10_CAGR_division": 1.978, "District": "TANDO MUHAMMAD KHAN"}, {"Pct_Beneficiaries": 7.36, "Under10_CAGR_division": 2.947, "District": "LORALAI"}, {"Pct_Beneficiaries": 7.232, "Under10_CAGR_division": 2.999, "District": "KASHMORE"}, {"Pct_Beneficiaries": 7.093, "Under10_CAGR_division": 1.559, "District": "TANK"}, {"Pct_Beneficiaries": 7.042, "Under10_CAGR_division": 1.559, "District": "DERA ISMAIL KHAN"}, {"Pct_Beneficiaries": 6.998, "Under10_CAGR_division": 2.605, "District": "SANGHAR"}, {"Pct_Beneficiaries": 6.963, "Under10_CAGR_division": 2.3, "District": "BANNU"}, {"Pct_Beneficiaries": 6.829, "Under10_CAGR_division": 1.726, "District": "JHANG"}, {"Pct_Beneficiaries": 6.673, "Under10_CAGR_division": 3.722, "District": "SOHBATPUR"}, {"Pct_Beneficiaries": 6.64, "Under10_CAGR_division": 3.722, "District": "JAFFARABAD"}, {"Pct_Beneficiaries": 6.563, "Under10_CAGR_division": 4.656, "District": "KALAT"}, {"Pct_Beneficiaries": 6.54, "Under10_CAGR_division": 2.947, "District": "BARKHAN"}, {"Pct_Beneficiaries": 6.48, "Under10_CAGR_division": 1.808, "District": "LODHRAN"}, {"Pct_Beneficiaries": 6.475, "Under10_CAGR_division": 2.331, "District": "TORGHAR"}, {"Pct_Beneficiaries": 6.438, "Under10_CAGR_division": 2.539, "District": "RAHIM YAR KHAN"}, {"Pct_Beneficiaries": 6.387, "Under10_CAGR_division": 4.656, "District": "LASBELA"}, {"Pct_Beneficiaries": 6.344, "Under10_CAGR_division": 1.978, "District": "TANDO ALLAH YAR"}], "scatter_rest": [{"Pct_Beneficiaries": 6.315, "Under10_CAGR_division": 2.504, "District": "DERA GHAZI KHAN"}, {"Pct_Beneficiaries": 6.214, "Under10_CAGR_division": 1.726, "District": "CHINIOT"}, {"Pct_Beneficiaries": 6.197, "Under10_CAGR_division": 2.331, "District": "BATAGRAM"}, {"Pct_Beneficiaries": 6.188, "Under10_CAGR_division": 2.999, "District": "SHIKARPUR"}, {"Pct_Beneficiaries": 6.139, "Under10_CAGR_division": 2.999, "District": "KAMBAR SHAHDADKOT"}, {"Pct_Beneficiaries": 6.139, "Under10_CAGR_division": 4.656, "District": "AWARAN"}, {"Pct_Beneficiaries": 6.031, "Under10_CAGR_division": 2.605, "District": "SHAHEED BENAZIRABAD"}, {"Pct_Beneficiaries": 5.971, "Under10_CAGR_division": 1.978, "District": "DADU"}, {"Pct_Beneficiaries": 5.812, "Under10_CAGR_division": 2.999, "District": "JACOBABAD"}, {"Pct_Beneficiaries": 5.647, "Under10_CAGR_division": 1.978, "District": "MATIARI"}, {"Pct_Beneficiaries": 5.632, "Under10_CAGR_division": 1.817, "District": "BUNER"}, {"Pct_Beneficiaries": 5.395, "Under10_CAGR_division": 2.605, "District": "NAUSHAHRO FEROZE"}, {"Pct_Beneficiaries": 5.381, "Under10_CAGR_division": 1.93, "District": "MIRPUR KHAS"}, {"Pct_Beneficiaries": 5.378, "Under10_CAGR_division": 1.817, "District": "UPPER DIR"}, {"Pct_Beneficiaries": 5.368, "Under10_CAGR_division": 1.978, "District": "JAMSHORO"}, {"Pct_Beneficiaries": 5.353, "Under10_CAGR_division": 3.722, "District": "JHAL MAGSI"}, {"Pct_Beneficiaries": 5.263, "Under10_CAGR_division": 2.539, "District": "BAHAWALPUR"}, {"Pct_Beneficiaries": 5.153, "Under10_CAGR_division": 1.808, "District": "KHANEWAL"}, {"Pct_Beneficiaries": 5.139, "Under10_CAGR_division": 2.504, "District": "LAYYAH"}, {"Pct_Beneficiaries": 5.12, "Under10_CAGR_division": 1.54, "District": "SUKKUR"}, {"Pct_Beneficiaries": 5.07, "Under10_CAGR_division": 1.808, "District": "MULTAN"}, {"Pct_Beneficiaries": 4.991, "Under10_CAGR_division": 4.244, "District": "DERA BUGTI"}, {"Pct_Beneficiaries": 4.968, "Under10_CAGR_division": 2.999, "District": "LARKANA"}, {"Pct_Beneficiaries": 4.691, "Under10_CAGR_division": 1.817, "District": "CHITRAL"}, {"Pct_Beneficiaries": 4.671, "Under10_CAGR_division": 1.448, "District": "CHAGAI"}, {"Pct_Beneficiaries": 4.519, "Under10_CAGR_division": 4.244, "District": "ZIARAT"}, {"Pct_Beneficiaries": 4.483, "Under10_CAGR_division": 2.771, "District": "OKARA"}, {"Pct_Beneficiaries": 4.447, "Under10_CAGR_division": 4.656, "District": "KHARAN"}, {"Pct_Beneficiaries": 4.412, "Under10_CAGR_division": 3.722, "District": "NASIRABAD"}, {"Pct_Beneficiaries": 4.379, "Under10_CAGR_division": 3.518, "District": "KASUR"}, {"Pct_Beneficiaries": 4.329, "Under10_CAGR_division": 1.448, "District": "NUSHKI"}, {"Pct_Beneficiaries": 4.297, "Under10_CAGR_division": 1.808, "District": "VEHARI"}, {"Pct_Beneficiaries": 4.267, "Under10_CAGR_division": 4.656, "District": "KHUZDAR"}, {"Pct_Beneficiaries": 4.201, "Under10_CAGR_division": 1.817, "District": "MALAKAND PROTECTED AREA"}, {"Pct_Beneficiaries": 4.16, "Under10_CAGR_division": 1.267, "District": "NOWSHERA"}, {"Pct_Beneficiaries": 4.134, "Under10_CAGR_division": 1.465, "District": "KOHAT"}, {"Pct_Beneficiaries": 4.126, "Under10_CAGR_division": 2.947, "District": "KILLA SAIFULLAH"}, {"Pct_Beneficiaries": 4.106, "Under10_CAGR_division": 1.817, "District": "SWAT"}, {"Pct_Beneficiaries": 4.033, "Under10_CAGR_division": 3.106, "District": "SARGODHA"}, {"Pct_Beneficiaries": 4.018, "Under10_CAGR_division": 2.539, "District": "BAHAWALNAGAR"}, {"Pct_Beneficiaries": 3.98, "Under10_CAGR_division": 2.771, "District": "PAKPATTAN"}, {"Pct_Beneficiaries": 3.909, "Under10_CAGR_division": 3.936, "District": "GWADAR"}, {"Pct_Beneficiaries": 3.904, "Under10_CAGR_division": 3.518, "District": "NANKANA SAHIB"}, {"Pct_Beneficiaries": 3.865, "Under10_CAGR_division": 4.244, "District": "HARNAI"}, {"Pct_Beneficiaries": 3.811, "Under10_CAGR_division": 1.465, "District": "HANGU"}, {"Pct_Beneficiaries": 3.742, "Under10_CAGR_division": 3.106, "District": "MIANWALI"}, {"Pct_Beneficiaries": 3.739, "Under10_CAGR_division": 4.656, "District": "MASTUNG"}, {"Pct_Beneficiaries": 3.675, "Under10_CAGR_division": 2.947, "District": "ZHOB"}, {"Pct_Beneficiaries": 3.606, "Under10_CAGR_division": 1.448, "District": "KILLA ABDULLAH"}, {"Pct_Beneficiaries": 3.594, "Under10_CAGR_division": 3.106, "District": "KHUSHAB"}, {"Pct_Beneficiaries": 3.573, "Under10_CAGR_division": 2.084, "District": "MARDAN"}, {"Pct_Beneficiaries": 3.43, "Under10_CAGR_division": 2.084, "District": "SWABI"}, {"Pct_Beneficiaries": 3.333, "Under10_CAGR_division": 2.331, "District": "MANSEHRA"}, {"Pct_Beneficiaries": 3.316, "Under10_CAGR_division": 2.771, "District": "SAHIWAL"}, {"Pct_Beneficiaries": 3.159, "Under10_CAGR_division": 1.726, "District": "TOBA TEK SINGH"}, {"Pct_Beneficiaries": 3.13, "Under10_CAGR_division": 1.817, "District": "LOWER DIR"}, {"Pct_Beneficiaries": 3.062, "Under10_CAGR_division": 2.593, "District": "HAFIZABAD"}, {"Pct_Beneficiaries": 3.003, "Under10_CAGR_division": 2.947, "District": "MUSAKHEL"}, {"Pct_Beneficiaries": 2.966, "Under10_CAGR_division": 1.267, "District": "CHARSADDA"}, {"Pct_Beneficiaries": 2.908, "Under10_CAGR_division": 4.244, "District": "SIBI"}, {"Pct_Beneficiaries": 2.895, "Under10_CAGR_division": 2.331, "District": "KOHISTAN"}, {"Pct_Beneficiaries": 2.813, "Under10_CAGR_division": 3.518, "District": "SHEIKHUPURA"}, {"Pct_Beneficiaries": 2.715, "Under10_CAGR_division": 4.892, "District": "KARACHI WEST"}, {"Pct_Beneficiaries": 2.597, "Under10_CAGR_division": 4.244, "District": "KOHLU"}, {"Pct_Beneficiaries": 2.585, "Under10_CAGR_division": 1.267, "District": "PESHAWAR"}, {"Pct_Beneficiaries": 2.43, "Under10_CAGR_division": 2.947, "District": "SHERANI"}, {"Pct_Beneficiaries": 2.402, "Under10_CAGR_division": 3.936, "District": "KECH"}, {"Pct_Beneficiaries": 2.341, "Under10_CAGR_division": 3.722, "District": "KACHHI"}, {"Pct_Beneficiaries": 2.338, "Under10_CAGR_division": 4.656, "District": "WASHUK"}, {"Pct_Beneficiaries": 2.32, "Under10_CAGR_division": 1.448, "District": "PISHIN"}, {"Pct_Beneficiaries": 2.155, "Under10_CAGR_division": 4.892, "District": "MALIR"}, {"Pct_Beneficiaries": 2.071, "Under10_CAGR_division": 2.593, "District": "NAROWAL"}, {"Pct_Beneficiaries": 1.876, "Under10_CAGR_division": 3.936, "District": "PANJGUR"}, {"Pct_Beneficiaries": 1.822, "Under10_CAGR_division": 2.593, "District": "MANDI BAHAUDDIN"}, {"Pct_Beneficiaries": 1.778, "Under10_CAGR_division": 1.726, "District": "FAISALABAD"}, {"Pct_Beneficiaries": 1.746, "Under10_CAGR_division": 3.518, "District": "LAHORE"}, {"Pct_Beneficiaries": 1.714, "Under10_CAGR_division": 1.978, "District": "HYDERABAD"}, {"Pct_Beneficiaries": 1.22, "Under10_CAGR_division": 2.331, "District": "ABBOTTABAD"}, {"Pct_Beneficiaries": 1.151, "Under10_CAGR_division": 1.643, "District": "JHELUM"}, {"Pct_Beneficiaries": 1.149, "Under10_CAGR_division": 2.593, "District": "GUJRANWALA"}, {"Pct_Beneficiaries": 1.145, "Under10_CAGR_division": 1.643, "District": "ATTOCK"}, {"Pct_Beneficiaries": 1.051, "Under10_CAGR_division": 1.448, "District": "QUETTA"}, {"Pct_Beneficiaries": 0.996, "Under10_CAGR_division": 2.593, "District": "SIALKOT"}, {"Pct_Beneficiaries": 0.896, "Under10_CAGR_division": 1.643, "District": "CHAKWAL"}, {"Pct_Beneficiaries": 0.814, "Under10_CAGR_division": 4.892, "District": "KARACHI SOUTH"}, {"Pct_Beneficiaries": 0.714, "Under10_CAGR_division": 4.892, "District": "KARACHI EAST"}, {"Pct_Beneficiaries": 0.65, "Under10_CAGR_division": 4.892, "District": "KARACHI CENTRAL"}, {"Pct_Beneficiaries": 0.519, "Under10_CAGR_division": 4.892, "District": "KORANGI"}, {"Pct_Beneficiaries": 0.471, "Under10_CAGR_division": 2.593, "District": "GUJRAT"}, {"Pct_Beneficiaries": 0.431, "Under10_CAGR_division": 2.331, "District": "HARIPUR"}, {"Pct_Beneficiaries": 0.398, "Under10_CAGR_division": 1.643, "District": "RAWALPINDI"}], "decile": {"labels": ["Q1", "Q2", "Q3", "Q4", "Q5"], "avg_pct": [1.367, 3.244, 4.435, 5.927, 7.884], "avg_under10_growth": [3.001, 2.815, 2.702, 2.552, 2.348], "avg_under10_share": [26.667, 31.838, 32.055, 32.574, 34.033]}, "div_table": [{"division": "PESHAWAR", "under10_cagr": 1.27, "totalpop_cagr": 1.98}, {"division": "QUETTA", "under10_cagr": 1.45, "totalpop_cagr": 0.94}, {"division": "KOHAT", "under10_cagr": 1.47, "totalpop_cagr": 2.53}, {"division": "SUKKUR", "under10_cagr": 1.54, "totalpop_cagr": 1.29}, {"division": "DERA ISMAIL KHAN", "under10_cagr": 1.56, "totalpop_cagr": 2.17}, {"division": "RAWALPINDI", "under10_cagr": 1.64, "totalpop_cagr": 2.03}, {"division": "FAISALABAD", "under10_cagr": 1.73, "totalpop_cagr": 2.26}, {"division": "MULTAN", "under10_cagr": 1.81, "totalpop_cagr": 2.3}, {"division": "MALAKAND", "under10_cagr": 1.82, "totalpop_cagr": 2.4}, {"division": "MIRPUR KHAS", "under10_cagr": 1.93, "totalpop_cagr": 1.49}, {"division": "HYDERABAD", "under10_cagr": 1.98, "totalpop_cagr": 1.6}, {"division": "MARDAN", "under10_cagr": 2.08, "totalpop_cagr": 2.48}, {"division": "BANNU", "under10_cagr": 2.3, "totalpop_cagr": 2.66}, {"division": "HAZARA", "under10_cagr": 2.33, "totalpop_cagr": 2.09}, {"division": "D.G.KHAN", "under10_cagr": 2.5, "totalpop_cagr": 2.56}, {"division": "BAHAWALPUR", "under10_cagr": 2.54, "totalpop_cagr": 2.61}, {"division": "GUJRANWALA", "under10_cagr": 2.59, "totalpop_cagr": 2.53}, {"division": "SHAHEED BENAZIRABAD", "under10_cagr": 2.61, "totalpop_cagr": 1.97}, {"division": "SAHIWAL", "under10_cagr": 2.77, "totalpop_cagr": 2.42}, {"division": "ZHOB", "under10_cagr": 2.95, "totalpop_cagr": 2.56}, {"division": "LARKANA", "under10_cagr": 3.0, "totalpop_cagr": 2.29}, {"division": "SARGODHA", "under10_cagr": 3.11, "totalpop_cagr": 2.7}, {"division": "LAHORE", "under10_cagr": 3.52, "totalpop_cagr": 2.7}, {"division": "NASIRABAD", "under10_cagr": 3.72, "totalpop_cagr": 3.52}, {"division": "MEKRAN", "under10_cagr": 3.94, "totalpop_cagr": 3.95}, {"division": "SIBI", "under10_cagr": 4.24, "totalpop_cagr": 3.09}, {"division": "KALAT", "under10_cagr": 4.66, "totalpop_cagr": 4.55}, {"division": "KARACHI", "under10_cagr": 4.89, "totalpop_cagr": 4.07}], "bar_growth": {"top30": 2.42, "rest": 2.77}, "n_total": 121, "n_excluded": 7}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('dashboard-data').textContent);
+const ink = '#1A1A1A', amber='#C8923A', gray='#999999', green='#52B788', red='#9B2335', lightgray='#CFCFCF';
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#666666';
+
+new Chart(document.getElementById('shareChart'), {
+  type:'bar',
+  data:{ labels:['% of population','% of beneficiaries','% of disbursement'],
+    datasets:[
+      {label:'Top-30 districts', data:[19.8,38.5,38.0], backgroundColor:amber},
+      {label:'Remaining 99 districts', data:[80.2,61.5,62.0], backgroundColor:lightgray}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ y:{ ticks:{callback:v=>v+'%'}, grid:{color:'#EFEFEF'} }, x:{grid:{display:false}} }
+  }
+});
+
+const provLabels = Object.keys(DATA.prov_counts);
+const provValues = Object.values(DATA.prov_counts);
+new Chart(document.getElementById('provChart'), {
+  type:'bar',
+  data:{ labels:provLabels, datasets:[{label:'Districts in Top-30', data:provValues, backgroundColor:[amber,'#8E7CC3',green,red,gray]}] },
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{ x:{ ticks:{stepSize:1}, grid:{color:'#EFEFEF'} }, y:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('growthBarChart'), {
+  type:'bar',
+  data:{ labels:['Top-30 districts (n=30)','Remaining districts (n=99)'],
+    datasets:[{label:'Avg. annual growth %', data:[2.19,2.96], backgroundColor:[amber,gray]}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ y:{ title:{display:true,text:'Avg. annual growth rate (%)'}, grid:{color:'#EFEFEF'} }, x:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('decileChart'), {
+  type:'bar',
+  data:{ labels:DATA.decile.labels.map((l,i)=>l+' ('+DATA.decile.avg_pct[i].toFixed(1)+'%)'),
+    datasets:[{label:'Avg. growth %', data:DATA.decile.avg_growth, backgroundColor:amber}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ y:{ title:{display:true,text:'Avg. annual growth rate (%)'}, grid:{color:'#EFEFEF'} }, x:{grid:{display:false}, title:{display:true,text:'% beneficiaries quintile (avg. % shown)'}} }
+  }
+});
+
+new Chart(document.getElementById('scatterChart'), {
+  type:'scatter',
+  data:{ datasets:[
+    { label:'Top-30 cohort', data: DATA.scatter_top30.map(d=>({x:d.Pct_Beneficiaries,y:d.GrowthRate_pct})), backgroundColor:amber, pointRadius:4 },
+    { label:'Remaining 99', data: DATA.scatter_rest.map(d=>({x:d.Pct_Beneficiaries,y:d.GrowthRate_pct})), backgroundColor:gray, pointRadius:4 },
+    { label:'OLS fit', data:[{x:0,y:3.539},{x:11,y:1.71}], type:'line', borderColor:ink, borderWidth:2, pointRadius:0, fill:false }
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ x:{ title:{display:true,text:'BISP beneficiaries (% of district population)'}, grid:{color:'#EFEFEF'} },
+             y:{ title:{display:true,text:'2017-2023 avg. annual population growth (%)'}, grid:{color:'#EFEFEF'} } }
+  }
+});
+
+new Chart(document.getElementById('growthBarChartPC'), {
+  type:'bar',
+  data:{ labels:['Top-30 by PKR/capita (n=30)','Remaining districts (n=99)'],
+    datasets:[{label:'Avg. growth %', data:[2.20,2.96], backgroundColor:[amber,gray]}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ y:{ title:{display:true,text:'Avg. annual growth rate (%)'}, grid:{color:'#EFEFEF'} }, x:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('decileChartPC'), {
+  type:'bar',
+  data:{ labels:DATA.decile_pc.labels.map((l,i)=>l+' (PKR '+Math.round(DATA.decile_pc.avg_pc[i])+')'),
+    datasets:[{label:'Avg. growth %', data:DATA.decile_pc.avg_growth, backgroundColor:amber}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ y:{ title:{display:true,text:'Avg. annual growth rate (%)'}, grid:{color:'#EFEFEF'} }, x:{grid:{display:false}, title:{display:true,text:'PKR/capita quintile (avg. shown)'}} }
+  }
+});
+
+// Top-30 table
+const tbody = document.querySelector('#top30Table tbody');
+const provTag = { SINDH:'sindh', PUNJAB:'punjab', KP:'kp', BALOCHISTAN:'balochistan', ICT:'ict' };
+DATA.top30_table.forEach((d,i)=>{
+  const tr = document.createElement('tr');
+  const provClass = provTag[d.Province] || 'ict';
+  tr.innerHTML = `<td>${i+1}</td><td>${d.District}</td><td><span class="tag ${provClass}">${d.Province}</span></td>
+    <td class="num">${d.Population_2017.toLocaleString()}</td>
+    <td class="num">${d.Beneficiaries.toLocaleString()}</td>
+    <td class="num">${d.Pct_Beneficiaries.toFixed(2)}%</td>
+    <td class="num">${d.Amount_Deposited.toLocaleString()}</td>
+    <td class="num">${d.GrowthRate_pct.toFixed(2)}%</td>`;
+  tbody.appendChild(tr);
+});
+
+const CHILD_DATA = JSON.parse(document.getElementById('child-dashboard-data').textContent);
+
+new Chart(document.getElementById('childBarChart'), {
+  type:'bar',
+  data:{ labels:['Top-30 BISP districts (n=30)','Remaining districts (n=98)'],
+    datasets:[{label:'Avg. under-10 share %', data:[CHILD_DATA.bar_under10.top30, CHILD_DATA.bar_under10.rest], backgroundColor:['#185FA5',gray]}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ y:{ title:{display:true,text:'% of population under age 10'}, grid:{color:'#EFEFEF'} }, x:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('childDecileChart'), {
+  data:{ labels:CHILD_DATA.decile.labels.map((l,i)=>l+' ('+CHILD_DATA.decile.avg_pct[i].toFixed(1)+'%)'),
+    datasets:[
+      {type:'bar', label:'Avg. under-10 share %', data:CHILD_DATA.decile.avg_under10, backgroundColor:'#185FA5', yAxisID:'y'},
+      {type:'line', label:'Avg. total growth %', data:CHILD_DATA.decile.avg_growth, borderColor:amber, backgroundColor:amber, yAxisID:'y1', tension:0.3, pointRadius:4}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true, position:'top', labels:{boxWidth:10,font:{size:11}}}},
+    scales:{
+      y:{ position:'left', title:{display:true,text:'Under-10 share (%)'}, grid:{color:'#EFEFEF'} },
+      y1:{ position:'right', title:{display:true,text:'Total growth (%)'}, grid:{display:false} },
+      x:{grid:{display:false}, title:{display:true,text:'% beneficiaries quintile (avg. shown)'}}
+    }
+  }
+});
+
+new Chart(document.getElementById('childScatterChart'), {
+  type:'scatter',
+  data:{ datasets:[
+    { label:'Top-30 cohort', data: CHILD_DATA.scatter_top30.map(d=>({x:d.Pct_Beneficiaries,y:d.Under10_Share})), backgroundColor:amber, pointRadius:4 },
+    { label:'Remaining 98', data: CHILD_DATA.scatter_rest.map(d=>({x:d.Pct_Beneficiaries,y:d.Under10_Share})), backgroundColor:gray, pointRadius:4 }
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ x:{ title:{display:true,text:'BISP beneficiaries (% of district population)'}, grid:{color:'#EFEFEF'} },
+             y:{ title:{display:true,text:'Under-10 population share, 2023 (%)'}, grid:{color:'#EFEFEF'} } }
+  }
+});
+
+const DIV_DATA = JSON.parse(document.getElementById('division-dashboard-data').textContent);
+
+new Chart(document.getElementById('trueGrowthBarChart'), {
+  type:'bar',
+  data:{ labels:['Top-30 BISP districts (n=30)','Remaining districts (n=91)'],
+    datasets:[{label:'Avg. true Under-10 CAGR %', data:[DIV_DATA.bar_growth.top30, DIV_DATA.bar_growth.rest], backgroundColor:[red,gray]}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ y:{ title:{display:true,text:'True 2017-2023 Under-10 CAGR (%)'}, grid:{color:'#EFEFEF'} }, x:{grid:{display:false}} }
+  }
+});
+
+new Chart(document.getElementById('trueGrowthDecileChart'), {
+  data:{ labels:DIV_DATA.decile.labels.map((l,i)=>l+' ('+DIV_DATA.decile.avg_pct[i].toFixed(1)+'%)'),
+    datasets:[
+      {type:'bar', label:'True Under-10 CAGR %', data:DIV_DATA.decile.avg_under10_growth, backgroundColor:red, yAxisID:'y'},
+      {type:'line', label:'2023 Under-10 share %', data:DIV_DATA.decile.avg_under10_share, borderColor:'#185FA5', backgroundColor:'#185FA5', yAxisID:'y1', tension:0.3, pointRadius:4}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true, position:'top', labels:{boxWidth:10,font:{size:11}}}},
+    scales:{
+      y:{ position:'left', title:{display:true,text:'True Under-10 CAGR (%)'}, grid:{color:'#EFEFEF'} },
+      y1:{ position:'right', title:{display:true,text:'2023 Under-10 share (%)'}, grid:{display:false} },
+      x:{grid:{display:false}, title:{display:true,text:'% beneficiaries quintile (avg. shown)'}}
+    }
+  }
+});
+
+new Chart(document.getElementById('trueGrowthScatterChart'), {
+  type:'scatter',
+  data:{ datasets:[
+    { label:'Top-30 cohort', data: DIV_DATA.scatter_top30.map(d=>({x:d.Pct_Beneficiaries,y:d.Under10_CAGR_division})), backgroundColor:amber, pointRadius:4 },
+    { label:'Remaining 91', data: DIV_DATA.scatter_rest.map(d=>({x:d.Pct_Beneficiaries,y:d.Under10_CAGR_division})), backgroundColor:gray, pointRadius:4 }
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ x:{ title:{display:true,text:'BISP beneficiaries (% of district population)'}, grid:{color:'#EFEFEF'} },
+             y:{ title:{display:true,text:'True 2017-2023 Under-10 CAGR (%, division-level)'}, grid:{color:'#EFEFEF'} } }
+  }
+});
+
+// Division table
+const divTbody = document.querySelector('#divTable tbody');
+DIV_DATA.div_table.forEach(d=>{
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${d.division}</td><td class="num">${d.under10_cagr.toFixed(2)}%</td><td class="num">${d.totalpop_cagr.toFixed(2)}%</td>`;
+  divTbody.appendChild(tr);
+});
+</script>
+</body>
+</html>
