@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCGCL Monthly Board Update — May 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  /* ============ NCGCL Design System tokens ============ */
+  --ncgcl-blue:  #0C688D;
+  --ncgcl-green: #39A935;
+
+  --petrol-900: #042B3B;
+  --petrol-800: #004C66;
+  --petrol-700: #035076;
+  --petrol-600: #0C688D;
+  --petrol-500: #12678A;
+  --petrol-400: #007AA0;
+  --petrol-300: #4FA0BC;
+  --petrol-200: #A7C7D6;
+  --petrol-100: #E3EEF3;
+
+  --green-800: #1F6A1D;
+  --green-700: #2B8129;
+  --green-600: #39A935;
+  --green-500: #4EA72E;
+  --green-400: #5AB060;
+  --green-300: #8CD872;
+  --green-100: #E6F4E2;
+
+  --ink-900: #061626;
+  --ink-800: #0E2841;
+  --ink-700: #1E293B;
+  --ink-600: #33424F;
+  --slate-500: #5B6B7A;
+  --slate-400: #7F7F7F;
+  --slate-300: #AEAEAE;
+  --slate-200: #C8D6E0;
+  --slate-150: #E2E8F0;
+  --slate-100: #EEF1F4;
+  --slate-50:  #F6F8FA;
+  --paper:     #FFFFFF;
+
+  --risk-high: #C00000;
+  --risk-med:  #BF9000;
+  --risk-low:  #2B8129;
+
+  --color-primary: var(--ncgcl-blue);
+  --color-primary-hover: #0A5876;
+  --color-primary-press: #084A63;
+  --color-accent: var(--ncgcl-green);
+  --color-accent-hover: #2F9A2B;
+  --color-accent-press: #287F25;
+
+  --text-strong: var(--ink-800);
+  --text-body: #1F2E3A;
+  --text-muted: var(--slate-400);
+  --text-faint: var(--slate-300);
+  --text-on-dark: #FFFFFF;
+  --text-on-dark-muted: #B9CFDA;
+  --text-link: var(--petrol-400);
+
+  --surface-page: #FFFFFF;
+  --surface-canvas: var(--slate-50);
+  --surface-card: #FFFFFF;
+  --surface-muted: var(--slate-100);
+  --surface-dark: var(--petrol-800);
+  --surface-darker: var(--petrol-900);
+  --surface-accent-soft: var(--green-100);
+  --surface-primary-soft: var(--petrol-100);
+
+  --border-subtle: var(--slate-200);
+  --border-strong: #9FB5C4;
+  --border-on-dark: rgba(255,255,255,0.16);
+
+  /* Type */
+  --font-sans: 'Figtree','Google Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono: 'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+
+  --text-display: 3.815rem;
+  --text-h1: 3.052rem;
+  --text-h2: 2.441rem;
+  --text-h3: 1.953rem;
+  --text-h4: 1.563rem;
+  --text-h5: 1.25rem;
+  --text-lg: 1.125rem;
+  --text-base: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
+  --text-2xs: 0.6875rem;
+
+  --tracking-tighter: -0.03em;
+  --tracking-tight: -0.015em;
+  --tracking-wide: 0.04em;
+  --tracking-eyebrow: 0.14em;
+
+  /* Spacing / radii */
+  --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.5rem;
+  --space-6: 2rem; --space-7: 2.5rem; --space-8: 3rem; --space-9: 4rem;
+  --radius-xs: 3px; --radius-sm: 5px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px; --radius-pill: 999px;
+  --border-accent: 3px;
+
+  --shadow-xs: 0 1px 2px rgba(6,22,38,0.06);
+  --shadow-sm: 0 1px 3px rgba(6,22,38,0.08), 0 1px 2px rgba(6,22,38,0.04);
+  --shadow-md: 0 4px 12px rgba(6,22,38,0.08), 0 2px 4px rgba(6,22,38,0.05);
+  --shadow-lg: 0 12px 28px rgba(6,22,38,0.12), 0 4px 8px rgba(6,22,38,0.06);
+
+  --ease-standard: cubic-bezier(0.2,0,0.2,1);
+  --duration-base: 200ms;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--surface-page);color:var(--text-body)}
+body{font-family:var(--font-sans);line-height:1.6;font-size:14px;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+.container{max-width:1180px;margin:0 auto;padding:0 1.5rem 4rem}
+
+/* ============ Top brand bar ============ */
+.topbar{border-bottom:1px solid var(--border-subtle);background:var(--paper)}
+.topbar-inner{max-width:1180px;margin:0 auto;padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+.brand-mark{width:34px;height:34px;flex:none}
+.brand-mark img{width:100%;height:100%;object-fit:contain}
+.brand-text{display:flex;flex-direction:column;line-height:1.1}
+.brand-text .n{font-family:var(--font-sans);font-weight:800;font-size:16px;color:var(--text-strong);letter-spacing:-0.01em}
+.brand-text small{font-family:var(--font-sans);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
+.rating-chips{display:flex;gap:.5rem;flex-wrap:wrap}
+.rchip{font-family:var(--font-sans);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);color:var(--text-body);white-space:nowrap}
+.rchip.rating{background:var(--petrol-900);color:#fff;border-color:var(--petrol-900)}
+
+/* ============ Header ============ */
+.hdr{background:var(--petrol-900);border-bottom:1px solid var(--border-subtle);padding:2.75rem 0 2.25rem;margin-bottom:0;position:relative;overflow:hidden}
+.hdr::after{content:'';position:absolute;right:-140px;top:-140px;width:460px;height:460px;border:1px solid rgba(255,255,255,0.07);border-radius:50%}
+.hdr-inner{position:relative;z-index:1}
+.hdr-eyebrow{font-size:11px;font-weight:700;letter-spacing:var(--tracking-eyebrow);color:var(--green-300);text-transform:uppercase;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.hdr-eyebrow svg{width:13px;height:13px;stroke-width:2.5}
+.hdr-title{font-family:var(--font-sans);font-size:32px;font-weight:800;color:#fff;line-height:1.15;letter-spacing:var(--tracking-tight);margin-bottom:.6rem;max-width:20ch}
+.hdr-sub{font-size:14.5px;color:var(--text-on-dark-muted);margin-bottom:1.5rem;max-width:60ch}
+.hdr-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border-on-dark)}
+.hdr-meta > div{min-width:0}
+.hdr-meta .k{display:block;font-family:var(--font-mono);font-size:16px;font-weight:600;color:#fff;letter-spacing:-0.01em;margin-bottom:.2rem}
+.hdr-meta .l{font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-on-dark-muted)}
+
+/* ============ Jump nav (sticky tab bar) ============ */
+.jump-nav{display:flex;gap:2px;flex-wrap:wrap;border-bottom:3px solid var(--color-accent);background:var(--paper);position:sticky;top:0;z-index:30;overflow-x:auto}
+.jump-nav-inner{max-width:1180px;margin:0 auto;padding:0 1.5rem;display:flex;gap:.25rem;flex-wrap:wrap}
+.jump-nav a{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:.04em;color:var(--text-muted);text-decoration:none;padding:.85rem .25rem;border-bottom:3px solid transparent;margin-bottom:-3px;white-space:nowrap;transition:color .15s,border-color .15s}
+.jump-nav a + a{margin-left:1.5rem}
+.jump-nav a svg{width:13px;height:13px;stroke-width:2.25}
+.jump-nav a:hover,.jump-nav a.active{color:var(--color-primary);border-bottom-color:var(--color-primary)}
+
+/* ============ Sections ============ */
+.sec{margin:3rem 0 2.5rem}
+.sec-eyebrow{font-size:11px;font-weight:700;letter-spacing:var(--tracking-eyebrow);color:var(--color-primary);text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.45rem}
+.sec-eyebrow svg{width:14px;height:14px;stroke-width:2.25}
+.sec-title{font-family:var(--font-sans);font-size:23px;font-weight:800;color:var(--text-strong);margin-bottom:.4rem;letter-spacing:var(--tracking-tight)}
+.sec-sub{font-size:13px;color:var(--text-muted);margin-bottom:1.5rem}
+.ex-tag{font-size:10px;font-weight:700;letter-spacing:var(--tracking-eyebrow);color:var(--color-primary);text-transform:uppercase;margin-bottom:.5rem}
+hr.div{border:none;border-top:1px solid var(--border-subtle);margin:0}
+
+/* ============ Grids ============ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+
+/* ============ KPI boxes (signature stat block) ============ */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.kbox{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;border-top:var(--border-accent) solid var(--border-subtle);box-shadow:var(--shadow-sm)}
+.kbox.am{border-top-color:var(--color-primary)}
+.kbox.gn{border-top-color:var(--color-accent)}
+.kbox.rd{border-top-color:var(--risk-high)}
+.kbox.sl{border-top-color:var(--slate-400)}
+.kbox.bl{border-top-color:var(--petrol-300)}
+.knum{font-family:var(--font-mono);font-size:24px;font-weight:600;color:var(--text-strong);line-height:1;letter-spacing:-0.01em}
+.klbl{font-size:11px;color:var(--text-body);text-transform:uppercase;letter-spacing:.06em;margin-top:.55rem;font-weight:600}
+.knote{font-size:11px;color:var(--color-primary);margin-top:.4rem;font-weight:500}
+.knote.gn{color:var(--green-700)}
+
+/* ============ Panels ============ */
+.panel{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm)}
+.ptitle{font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--text-strong);margin-bottom:.2rem}
+.psub{font-size:12px;color:var(--text-muted);margin-bottom:1rem}
+
+/* ============ Chart heights ============ */
+.ch{position:relative;width:100%}
+.h260{height:260px}.h230{height:230px}.h300{height:300px}.h200{height:200px}.h180{height:180px}
+
+/* ============ Tables ============ */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);padding:.65rem .8rem;border-bottom:2px solid var(--border-subtle);background:var(--surface-muted);text-align:left;white-space:nowrap}
+.tbl td{padding:.65rem .8rem;border-bottom:1px solid var(--border-subtle);color:var(--text-body);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--surface-muted)}
+.tbl .mono{font-family:var(--font-mono);font-size:10px;color:var(--text-muted)}
+.tbl .val{font-family:var(--font-mono);font-size:12.5px;text-align:right;white-space:nowrap;color:var(--text-body)}
+.tbl .na{color:var(--text-faint);font-style:italic;text-align:right}
+.tbl .strong{font-weight:700;color:var(--text-strong)}
+
+/* ============ Badges ============ */
+.b{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:var(--radius-sm);font-size:10px;font-weight:700;letter-spacing:.02em;white-space:nowrap;font-family:var(--font-sans)}
+.b-live{background:var(--green-100);color:var(--green-800)}
+.b-magfa{background:var(--surface-primary-soft);color:var(--petrol-700)}
+.b-ic{background:#E3F3EE;color:#1a5c47}
+.b-ts{background:#FBF1DA;color:#8A6800}
+.b-dd{background:var(--surface-muted);color:var(--ink-700);border:1px solid var(--border-subtle)}
+.b-init{background:var(--slate-50);color:var(--text-muted);border:1px solid var(--border-subtle)}
+.b-pipe{background:#F3EEF8;color:#5a3a8c}
+.b-new{background:#FBE8E8;color:var(--risk-high)}
+.b-up{background:var(--surface-primary-soft);color:var(--petrol-700)}
+.b-review{background:#FBF1DA;color:#8A6800}
+
+/* ============ Product cards ============ */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.pc{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1.25rem;border-left:var(--border-accent) solid var(--border-subtle);box-shadow:var(--shadow-sm)}
+.pc.live{border-left-color:var(--color-accent)}
+.pc.str{border-left-color:var(--color-primary)}
+.pc.rev{border-left-color:var(--slate-400)}
+.pc.con{border-left-color:var(--border-subtle)}
+.pc.new{border-left-color:var(--risk-high)}
+.pname{font-family:var(--font-sans);font-size:14px;font-weight:700;color:var(--text-strong);margin-bottom:.2rem}
+.pmeta{font-size:11px;color:var(--text-muted);margin-bottom:.65rem}
+.pnote{font-size:11.5px;color:var(--text-body);background:var(--surface-muted);padding:.5rem .7rem;border-radius:var(--radius-sm);line-height:1.55}
+.pfi{font-size:10.5px;color:var(--color-primary);margin-top:.5rem;font-weight:600}
+
+/* Stage progress bars */
+.sb-row{display:flex;gap:3px;margin:.5rem 0;align-items:center}
+.sb{height:5px;flex:1;border-radius:var(--radius-pill);background:var(--slate-150)}
+.sb.on{background:var(--color-accent)}.sb.am{background:var(--color-primary)}.sb.gy{background:var(--slate-300)}
+.sl{font-size:10px;font-weight:700;margin-left:7px;font-family:var(--font-mono)}
+
+/* ============ Project cards ============ */
+.proj-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.pjc{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow-sm)}
+.pjn{font-family:var(--font-sans);font-size:14px;font-weight:700;color:var(--text-strong);margin-bottom:.2rem}
+.pja{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.65rem;font-weight:600}
+.pjd{font-size:11.5px;color:var(--text-body);line-height:1.55;margin-bottom:.65rem}
+
+/* ============ Fin / investment panels ============ */
+.fin-highlight{background:var(--surface-muted);border:1px solid var(--border-subtle);border-left:var(--border-accent) solid var(--color-primary);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:1rem 1.25rem;font-size:13px;color:var(--text-body);margin:1rem 0;line-height:1.6}
+.fin-highlight strong{color:var(--text-strong);font-weight:700}
+.milestone{background:var(--green-100);border:1px solid var(--green-300);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1rem}
+.milestone-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:var(--tracking-eyebrow);color:var(--green-800);margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
+.milestone-head svg{width:14px;height:14px;stroke-width:2.5}
+.milestone-text{font-size:13px;color:#1a3d26;line-height:1.6}
+.milestone-text strong{font-weight:700}
+
+/* ============ Ratio table ============ */
+.ratio-card{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm)}
+.ratio-title{font-family:var(--font-sans);font-size:14.5px;font-weight:700;color:var(--text-strong);margin-bottom:1rem;border-bottom:1px solid var(--border-subtle);padding-bottom:.6rem}
+
+/* ============ Stat strip ============ */
+.stat-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;padding:1.5rem;background:var(--surface-muted);border:1px solid var(--border-subtle);border-radius:var(--radius-lg)}
+.si .sv{font-family:var(--font-mono);font-size:19px;font-weight:600;color:var(--text-strong)}
+.si .sl2{font-size:9.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.3rem;font-weight:600}
+
+/* ============ Portfolio perf boxes ============ */
+.perf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.perfbox{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:1.25rem;text-align:center;box-shadow:var(--shadow-sm)}
+.perf-lbl{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.6rem}
+.perf-ret{font-family:var(--font-mono);font-size:26px;font-weight:600;color:var(--text-strong);line-height:1}
+.perf-bm{font-size:11.5px;color:var(--text-muted);margin-top:.4rem}
+.perf-alpha{font-size:13px;font-weight:700;margin-top:.4rem}
+.alpha-pos{color:var(--green-700)}.alpha-neg{color:var(--risk-high)}.alpha-note{font-size:10px;color:var(--text-muted);margin-top:.25rem;line-height:1.4}
+
+/* ============ Footer ============ */
+footer{background:var(--petrol-900);color:var(--text-on-dark-muted);padding:2.25rem 0 1.75rem;margin-top:1rem}
+.footer-inner{max-width:1180px;margin:0 auto;padding:0 1.5rem}
+.footer-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border-on-dark);margin-bottom:1.1rem}
+.footer-brand{display:flex;align-items:center;gap:.65rem}
+.footer-brand img{width:28px;height:28px;object-fit:contain}
+.footer-brand .n{font-family:var(--font-sans);font-size:16px;font-weight:800;color:#fff}
+.footer-brand small{display:block;font-family:var(--font-sans);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green-300);margin-top:.2rem}
+.footer-fine{font-size:11px;color:#7C93A1;line-height:1.7}
+.footer-fine strong{color:var(--text-on-dark-muted)}
+
+@media(max-width:900px){
+  .g2,.g3,.g4,.kpi-grid,.prod-grid,.proj-grid,.stat-strip,.perf-grid{grid-template-columns:1fr}
+  .hdr-meta{grid-template-columns:1fr 1fr}
+  .rating-chips{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BRAND BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADGCAYAAABo1b0lAABNG0lEQVR42u19eZxdRbX12lV1zh07E4QZEWcSQKGTzoC8JoKiou85cC9BREUgE6BCgiioN9fPAcjAIFPigIJA6CvPp/IUFYX2QeYQBNIKCBKmAIFMfcdzqmp/f5zbTSeEkKnnWv8Efn27+/Q5dVatvWvtvSk1Zd5RUPJHYL6/FLdX4KqZFUyZ4mHhwhAODg4OvYBMS0aOyoziPOXthMLYE4USX7dV+wClp83/K8WTk2A02OglZGtntd90yePI5QTaRhMKWeNun4ODQ0+h+b5m1TqpVQPAhMLYq0jSBUIKycaC0lPn/Zw8/0wOq4b8hMfGbCDYfPsNF15bpzrpSMvBwaHbkYPAbDAIPK6l8YPKV98mQR8xVQO2bIhICiL+FVsjQEJxULVgOwJ+/JqG86/57/S0K45HIWuQaZFgJndHHRwcuisERB62cWGjmnDXmFlSyLuFJz6iy1rDgoUnJIOfEMaaF2GMBYhAJGANc6WsIbxPQ8T+mp4277MoZA2IGJkW6W6tg4PD3lRVmZaMLGQLZszPxhzqjxAPqIQ3B4yh4ZbQEJFisBUegUCPCyvleia0gwgAM4gIBMW1sgFbCeX9qmHG1YtSZ39/fxSyBrmcAuDUloODw15RVYVswYy/c8ylseFytVCiKdwcGjbMJKhDIBEswMR/pREXXDMkCPRjUOpQ6DAirE4wg4kpnhSsw6fYhrNLN878ZfTbMhKFgsttOTg47Bq4LngI3Hhr44GxpLiBhPgUW4YNrSEiudWnAQKDrdUfkJXl99T8MR8ZQ178KFhtAIjXP0sEAkEHGkLuK4T8jDf2ZBW+fdwKFG6oIdMi0VZg9wQcHBx2VlW1HdlmAYhx5435pOeJu2RCjddlY2EBIhLb0hspIli8aGLiShHREj0MKSMu2x6IFHRoWQcslP+t9L7DV6dnzP0gClkDZkIm43JbDg4OO1RVzblmVcgWzAd++oGR448Y+0s/5f0GRIdFuSoI0BtTTQyAFIGBV1Z8ZsVrAgC0pPu4VtYgvDnxEARAxNWygRTvAtT9qWlX/QzZrEChYNCcU+6pODg4bE9VgcCt+VY9ftGYk5JDvcdkXJyu27Vlw7ZLrmo7RMdMggDiVwBAAUAyGT5e3SI2kfT2hdHb5LHeoLYkwtCCIEQseVZ6/+MPEVPHf2vLgpnLo1iTASIXJjo4OKD5vmZVmFTQ77/5/cNSDbFvsOWLSQhhqmbbXNWbCSUmAYDpFQAQyOXEa8lyiYgeJanq+fi3/CECAHG1rEnID1sp7ktNm/c1ZHKesz84ODggF+XCWye16qY7mo5PpWN/Uml1CRhkA8s7RVb1UJINGKB7I8Jat04in7cMehxCArwL6oiguFYxsJwU8dRV6X2G/n7IhfNGdOa2cjnhnpyDw+BTVchHwmdiy9iLvDj9jRSNDTYFus4bO22LIpBgw8SWHo5CwgMP5OgLKO7W1RFJwDJXi5aUf6IN8Uhq+vwrSkQ/AsCutMfBYRCpqtngVmrV424/5mjpez8WHjWZqmVmZiLa1Ty3Fb4Qtmb+VdHBU5HCur+uvEisBBig3SnBIQJIchhYWHuw8GLXpmZcfdeQKVe+s7O0x5lNHRwGrqrKbaWqLhO+d6+IiSZdMQYAbceusBPRIFvhEwCsfuQLj5QyLRkpsN9oBgBl+EkOawag3Q/jiASMsRxUjPBinzHSW5qaNv9DdYXlclsODgMNDMq0ZGRrvlVP/MkxB00ojFmkhnjfI+aRuqTNTueqdkwsjwDAKyNfIVEnE9q84MLVMPoR8nwCsPshXGR/kFwtGQL2Fcr7S3raVdfu//k5qddLe1whtYNDf0eHXaGQLZjjCmOzGO6tkgmVDTeHIRvwHpMVg5gBMB4GANzf4WrPZERkRaDHI4G1F1wJRBLWMIeBJT92QXGov6Jh2tz/RD6vAWKXkHdw6N+qqpAtmObbGvedWBhbgCfuBHCALmoDwNuVxPqbUwgRGwYUKgCw3+j9OCKNUaPqP5z+ARK7dlL4Fr8RBMG1siESR7CQv0mff/U3cMY1Q5DP23ohtYODQ39BDqJDVU24Y+wnwri8XybVqaZqLIdbFSzvKSkyCRKmatp9xhoAKGQKdluVs26vqKvtqa0wsDDWkpf8YXoI/yU5fW4j8nmNTEY6teXg0PfRkVhvurVpyMS7mq6WKfk7IowO20NNRGJvqKrXOQNMikCE57Em+Srqh3YRUbRFiXcwNkVO9W7IMUW1QoLLWzRJMUYItSw9/arLUCiYSG3d59SWg0MfRKYlI3O5nGjNt+qmRU3vV0msFr74qqkaYwJrd8Ou8NYCi9kKXwCg/2nNt+rmXLMEgaNfNGoNR3yFfyKo1QDhA8zoDisCkeIwsCCS5MW+l55xzXEUhF9rz096AsgJ8Gx2pT0ODn2HrArZqI3UxJamr5Oii0HYV5e0JiK1oyq+PQwJiRlg4HEAwAkA8h0KK5+3AKi0cOajgH0CyiMwuo80Ik8Gc1DT5Mc+Zj3xx9T0+V8F8taV9jg49AHUS2sK2YIZd3vjuAl3jf2rSIgr2PK+pma6RVVtRRGCpClrZqFXA8AJ97fa10NCAGhpERGxieUkJYCdqCnc0yCRoLhSNETi7SKeujo9dd7vOzubZlqksz84OPQ8uphAaULLuMkyLh+USkzSJW1YM++OCXTX9RWYgVB6eBWRuMLWhLUmCguJaB4HNQ0R9Uzu9rtDJGGM5XJRk+9/jOINq9PT52Uif5hTWw4OPamqOkygTbc2HTKhZexfhY87WLPQlXp3Ber+ihVm1iqlCIz/Xrx69UsdrZQjlbN1wCpRyJrUlLkLRcPQc7m0OQSo53q4Mxt4voTRmkncDRtOLd108StRO+YWC7jcloNDd6Brrmr8nWOnSY/yJGg/U7XcGQ/1BAVY1iqtlK2aJ1nUPrjkM4+sr/9+BrBNw762FiAHsT/H/1wp144UseQoGE1g3nGPrL2ntgSMYYCFiCWPgDYfjY09+fngF1f9E8hHfeTb2hxpOTjsxeArM7o+tea2Me84/POHfkPGxQ9Zc8oE1ux1u8KOlZVRSakAWhdWzaxlpz28IjO6s6Uy8CbKqTMUTE+/6psQ4v/BGglrDYh6Ljxj1lCeIuXBBrWf+KY2a+PCb2xGc06hNW96JFx1cBgkqmpCS9MpIF6okuqgsBhq4p4J/+qwTMwqpqQ15u+iHdkHvrjiia7XtyPCAsCETEGgkDWpafM/RFL8jqRKcq2q0c2nA9uwvwUxkxeXbM2zIghO3fLji1dE8XZO1E83HRwcdlFVNS5sVKumrgobFzQmYyPEjcIXX7BhfWqN6DlhwpaN8ISUcQFT1NcuvmvlRSjAIAfRkbfaCcLqpGCJQtYkps8ZK8n7AcXiJ3G5ZAGmHgkRX/+zDClfsjVbwPhBUYmr8aOv1lyvLQeHXUQXIhi/aMxJwhPfknHZHLaHhtBz4V89BNQqpZStmZdheNbi01b+cttr3DXC6kJamJJLpuWwKyHEeWALGNPDISIsBAmKp8C18p8tm2+Wb5y1qrOsx6ktB4cdovm+ZtU6qVU3LmgcGt9HzrDg/yd9KXU5MoH24LvMAFgmpLDGPoQyn7348yseroeAFjtI9+wcm3ZRMumpV/4XZOznJOUwDno4RAQzGIb8mGJtrAWfVb7xwlvqIaKKOkE4ODhsq6oyozNUyBbM+JbGo0jIBV5aTQg3hcxgSz0oPJjZCElSxCVs1dy8uGXFuSjAdJDpW33/rsg/QqZFoJA1DV++4r0c866nRPpELrcbMIueDhEBEqR8gjG/AfMl7Tdd+DgyLRKj1rBTWw4OdVWVa1at+YgIJtw59gryaAYJSpuK0SSoR+t32bJRSSlNaNvBdPaSzPICGITZoDcLAfeEsNBVyRw4JZdsl8MuJCG+xwBgQgP0YIgIBpgsxRLCmmAjjJldumnmtdsqQgeHQYku4+DH3j52tBenuUKJj9qahTXW9oBbfdsQECqtSFfNEhuGZy87ffU/6rkqxi6c+O+eKupyQpeaPvc0QepaSLUfBxUDEj3rTGc2EFKSHwPC4ApdrV1b+dklL0aklXFmU4dBh047AIMm3NX0eWKeK5Nyv7Bda0KP2hXqIaCQJImttretX7fxnH999V+1rspvV0Bv+fUoDLTI5SQA+3q4xYQpCxUWTg2HTLnynVZ5vyQvPp5rZQMG1WcX9thdAZGhWFJxWHuOoc8q3TDrL05tOQw2VZUpZEQhWzCNLY1DfUs3qwbv06Zietyu0BECyriUDC4itOcszq68EwDlcqB8lxCwOdesWme3mlydj/I7mI2660y7LQF0niJO8RrUqPOh1Hw2BtBhz54idqgt6cm6wix466vnbix8Y7NLyDsMeHSxAhxXGPtFeOL7AA42VdPjdgVwVLysGpQwRb0Yxn5h8emrnsq0QBYysB1lNh1jwTr/fw8UFgHA0Ok3DDNc+TYD40h5i20Y/rK8YObf30BcXUPEKfM+D0/mhPTexbVKD58i1tUWiCmREgjDB62tzC7d+PV7wUyYPZtcQt5hoIaAjbc2Hugn5HcImEaCYAJjqMdFAyyJKJ1vNV+1GaVvtGXbAjBE51T5bRLtEwtjz2VGVvq0RQfmiqXZVct3zTjaYRidMv+TqmHIb1ErASoODsqbmfiy0mObF6A1r7c5lSPkchL5vI5PufxtSsYKFEs0caWkAZY9e4oIgFmTH1dsQgPmS4s3XjQHbrCrwwAjqlGZUZynvJ14+9gxiKFFxtXhul13qJYebT3Olo3whSRBoanxBUsnL1+wFTkxqPn+ZtlhX5jYMvYDEJgnYvJDMAwRlwg3Bf8uBcFRj5z5SLnOUFuprx2qH8GcQlDVrLVF2C4g5FCh/OvSR+4zDe+b953iguyvOwkuIi6NXE5V8994Fp+f86E0Vb9HscTXOKwBtoeNpkSKg6qBEIK82BXpGVedSiY4o31B9klnf3AYKLkqABjf0nQxeciDkaj3V++5Div1EJDBxhvqKV3Uj8LYzNLJKx/PtGRkAQWLPDjTkpEFKphWtOqmu5oOURZXQOIzQoq4LmkDgCmwBND+sXisAYRS50nnziqs1PR5k0h6f0UYWhBEFG7Bkh+TrEMGyXsINt9+w4XLunyfRS7XGXqlps2ZDOFdK5Q/kmvlng8Ro9tpyY9LZvOiNeaq8o0Xzd1uPs7BoR/lqibcPuYYiomrSdJ/cMg9b1eIMjCWJAmVVDCBuUaEwfcfyD68Psc5kae8zTFERxK96damITLBlxDRucITI03VgC0bIpLMsDIuhKmah8PN3LRqyiq9vdzW9smj3uMdbNfDaHSe+EVhneSgZkFE5KmPsdEnNZx/7Vzoyi/ab8pG/ZfbRguACc2zZemmixclp8193GpcI+LJ47la6elaRAKR5KBqIL2DpPLnpGdc1RgyX1a7Mft01NWUImJzcOjD6HCDN7eMSmsvfZrVfJ3wRFyXtSGQ6AWyMjImJRu7RZfCi5dkVy6sSwSRn50HGJQn2Oabm+NBuvJpEC5TSTXalAx0WRsiEq/n2NgKTwhTtfeumroybH5Ps2rFG20PO/wDhaQA1uo3vNDRjSGuVQyM9iDVN1n4D6Wmz/8qOic8zybs18bI5VT5plmrS+sfnMRB7XryYwJSEph7VtkQSZiQOahZUv5kT8iHUzOuOr3u03KdTR36dgjYkpGtk1r1+JbxB4eU+o2Mq5/AIl5/8WVPnwJGvauUZG3/aUI9fkl25UIwRI5zovn+5kgFEvi4u5rGB+nKEhkXtwtBo8MtoWbDHVOh6Y3xHr+wY/WxQ0rPqdR7G54k33s7Qm3fxFvFYLYQQpLywWzWkg1nt98w6+cAgJYWiTVrCPnZBiBOT5v3WRLienix/blWDgHyen4B1M2myoPV4a9Kr9ovoDCzgkyLREvGuqk9Dn1GVXUtrSk0fZkEzyEpRpioZXHP2hXqqoqIpGpQMCUzr7bBfGfV1FXl5vuaFQB0JNTH3Tbu3dK3V5IUnwLQcWJJOxBJDEGamJsWZ1c83BFS7jxhMROIODVl7hIRi4/nsPoWpTdRfgvSkwQCmH9tTXBtacHF93fmi0atIeTzOjVtzpGkYnPJi53MlfbIuN/zp4iR/SEWF2zMCsvhd8o3zLwnyhO4XlsOvQ5qzjXL1nyrbvxF49viaZmHpC+xZljd87mqDrJSCSltaKsw+Mri01b8GAAaFzR6q6auCgFgwi0T9qOkvZit/aJKyJG6ZKIIZkdGcgaTIrKa10PI9y3NLt1QN5+/QTjsKAxSaG21sTEnH0yePwn6TRVWZ8wFkIC1FtYyxWKjYO2ZXtMpMt74kXXBLeesR2urxQXXxMIbLloXjHhXwU8nh0LIMRBS1Dua9txDICIQCCY0pNQhxPi8N+bkuHfsyW3h/Evb0ZxTWNvqlJZDjyPTAtlWgF3butaOu2PMZ7yYWKjS3sm6qDWi7HHPklUkKaxKKGk1L2fmzy3JrvxN833NqumUJrr3i/fqUdeNSr/ny4efydL81GvwPskBp0xtJ1UggYUSBMsvD2vYcPW/bttgkN/+99AO7ppEIWvS0+dlyIu3cFDZteJmZgMiSbEkOAyqbMzcEv/zu1i4MEQupzB6NCObNelp8z4LoW4mKRs4rPZWiGhBIIqniWuV54lwanTySUDuO05tOfScqrov8imNyo3yh45OXyMTYhqHFqZme7y7Ql1VWSKCTElhKvonh/Dh0wrZgvno798Vu+fj/6oBwMRC0/FM+LFKyPfamoEJ7C7VLDKzlXEpTNWsXDp55Vh0adO+Ld6cqesnhdbiCQ5rISAEduUkLUqqMVfLGmziwve+lZLveyQ1/arTkM9rZLMGF1wTK9408y4KSmNY6z9SosEDs63bJ3pwmZAAiLhS1BB0CJNsTU+b9y2gTla5XM/6WhwGH3IQyIFaJ7XqcbeP+c9hRzeslnExzZSNtQHbXiIrLeNSkCS2Zf1fSzIrz+342j0f/1dtwl1jjpz4q6Y/gHC/kPTesD3UNuRoyOqu5daYBAGEzfV7QW8uxnbwMwDiERdcM6QWhP8mqUbA6N2cnlPPbylfRgcBfC9rfUNxwcxfd37kwnmJdCAuBkQezIDRPV+LGMnfqLOpFwPrcCnp4KL2hV9f4nJbDt2FjsR6piUjn6e1PwLx2dKTvq70cCfQLiEgg603xJO6YlaaQF+0/PSH/q/jy423Ne7r+/I7RDhTxMQwUzLMANNuNjxgZqNSSuqSvnDp5JVX76iTw1sS1v4z56SKJfEMCbnv7hNWFzIAg2IJwToEga+0tfL80k8ve7njI6kpcy8iz5tNQjRwUOsd0uowm8YSksPaFih5drEW/w0WTg3rU3tcIbXD3lFVdRPomFvHvNeL0bVeWn0kbNfM3CMTlrcbngkphPAJNrR32I3y/KXnLt0AAM03N8eDocFJsPpalVCHm7KB1XveBaKDsGzRnrz49OV/2t60nJ0grPrXczlKvdTwoPBj4zkMDHacqN+V/JYgP05W69dg9Q9jnvrxhh99dQsAJKfPbRTkLSCpGjmsWTCjR9vVbHWdQlI8Aa5Vf082+Fr7gktcaY/DHqPjpWzONavq6PK5StEckiJVV1WyN1IQzKylLxWDS1bjq0uzy3/akTqaWGg6iZnzMi7H29DChnbv9NZicP3NDgzo2OXZ5W27P4SiribSU+feQfHkZK5VNN6i/nCXCUEqCSEBa55jo+eVFsy6BgDw0Qti6cPfcQlJlWe2vdOupiOcZTB5McFGFxkmV7px1vz6qnOlPQ67rqoAIA877o5xR0iPW0jSkawZ1tie767wegho/GG+CrcEq2yoT192xsNPAsC4O8YdITy7QChxPBiwVRtV+O0l/1dklVDSVPWyJaetHP9mdoYO7Fi1nBD9Ywl/r/9hexdEEkYzwpoFcKiIp65On3/tbampcz+Me35UK9544XeNrp0N0LMUS0gweiEUIwKRYF0zANLCS8xLn3/ddbGzf/CuyNHvEvIOO6+qkIdFHnZ8S9MXpGcfII+ONDVju7i/ezwEJEmkUkqFJX27DGsfXnbGw0823dJ0+MRfNX1XKPug9OXxtmqtqRmLyKSwd9e7AJgRjaSfveOfvWPC6hgLr+U9HNQYBLnXaYsiQoDRzNWyJiE/R0r9qWHG1T9OTZl3VPmmWT+TutTMOlhNsZgCw0a5sB4nLgk2zLWqJs87T8WSf07OmPfRzsaAHePGHBzeqGCoOdesCtmCmXj7MQcd96umX3pJ8QswRpiKsb3hWH89BBQCxBWu2QuWfHb5GZWiXzvuf5q+IJNYJpPy2wQarsvagNBdtYpMRGDmpQDQfEKz2H3CGjWKAcC3eiOsDbvVjR4ZOVW9PpGhvHPIV6tS0+d9f/MB1WeLN1x4rA1rN1IiKSCl6PFaxE61BcXldk1EbxfC/0N6+lXXoTknI/vDfU5tObxRVRG4Nd+qJ9wx9kT43t/JF2eEJa3ZoFcS63UjaOgP8xUzng5qfOSDpy6/rmlR46TYvnKJ8OQviDFym7q/bnytAJLyuZ0UYztAPm8Bpk3thz3PhKWkPADdrG6IJED1wmrjCRW7NLV++GPJ6fNnlW6cOcPWKh8G+EVKpGU07gu9wVsKWlvoGpPyz0sfte/S5LSrPob8JA2AndpyiAqWIaNZgONHTCiM/Qn59HsQ9tUlbQi77FXaW6rKkEekGpRna/Z7tVfNsUrysAl3Nf2vFOKPQoqjw/ZOouqJayS2DLI2AADcvyeEBQCZgkAha8B4AtFAHO4hUpBgZg6qloQ4QvqJOenzrr1XsE2GpnocdPBr8hMS1EuChhCZTYOqJiEaBeyv0zOunocZuTTyeeu6PzhVVcjCTLyj6b+EsEtUQp3Nmn0OmXt6GEQXErVegyfB/EKwJTw13FD5aXxf+R1SYpmKyY+D4emqtj1EVB2BlTQVY4WkRwGgFa12zwhr1JqO+WYvg6inu0ZF+a0wtFwtGRLiRCQafuOTdymX2qfaoLIAUhYB6j17AUFFZUuIUSx5UcoOuXfIjHlRQh5MTm0NPrIqZAvm6FuOTk1sGXuZTIv/IUHvCYthpL6p11IGljwiUzV/oQAnC09URYP/iEyqi2CgwvbQ1PNJPbleI0sDo0Ice2XPQ8Kt/ly82jEQsVfUDJHksGq4UjTw4ucikV5LwAvQ5hFSnuidRHznBUZlSOV2TcobZyEfTU+fdwlA3KW0x2GgqyoGFbIFM65lXGM6EV8p4vJ7umKMCYzt8bbF23vXLWBDs9oq/oVKyLuJqSHYHGhEpTE97v1iZitjEkxY/EDmgVd35L/aZcJi4k1gpsgB36vEIDmsGrBNkJ/4Logmsg56x1j6BjUIBR0YMMchvctTM67+25ApV74zOkl0amuAovMEEASecOfY2VLwg6TofbqsLRiyVxLr23uHDZNKerOELxvDLaHtzFP1HpEySQKYHwGB3+qEcGcJy0bajf5sw0oZQsp6bWBvrhEJtsxBxYBtH2sBE9kfoEMjlHe8Vd7i9PT5U4D6iDGX2xo4iCyU3Jpv1R9sObbxuP8eV1ANKseGY6ZmbF8hqi5bKnRZG1uzvWal2PaKItLEEwCw3/r93vJdfusbms9bICcqC2a+AOb7SSnu1ZzRVre/d0oYduLS6r3vKwaM/SieWpCePvTWoefMORyFrIlIi539oR+j+b5mBYqmwUwsjD3XCvU34dGp4ZZQg3vJrrBTK5MkgD5xbQQSrJlgsXrn49qdejrR54j5ZghFPd7+pf9GCxLWMFeKmpT3OeN7j6Wnzj81SsgTI5NxaqsfqqrGBY1e66RW/cHbjhr+glj7R5lUC9lwMixq05MnbP36NjIbERNkQvsUxf1/gkGFTOEthdDOEVZr3oCZmPA3G5SfgecrMLvC353c0gAoDmsG4CSULKRmzL9+ny9f0YBCwbgQsR8hBwECr5q6Kpy4aOw5NpG4V8TEiWF7XVX1ll2hfzPXhYs/tbg9U8iInRlZv7PSkJEtiNJNF79CwJfAqEEIdkprF9WWMQytrfBTM2qJ2J+TU3/4/no9okvG93F01AE2XdM0ZEJh7BWUED8mQcdqp6p2R6WG/hBPmpq+c+nklb/bUTuZN4aRu/bUorbJ0+bOp3j6Qq6WQjBkHzih62+7iiY/plibEth+rHjTRf/n+mz1bbIqZAum8dbGA/2EvMtLqwnBpsBE+pnc2t81sgpUg/JNRS/XSfrwYcXlpUImGgm2M9++axK2rQBMmeIFC374B+/9k+IimW6G0QS2ph76uF1m58JEAasNCDHy/M97H/hQKfzvyx7ElAUeVt3tQu0+SFbjbxn/Li9J/ytjolG365CIFBG59b7TezRbANYb6nmmbBaH7fj0iuyK19pGgTBp5/2dux5zr1rFAChc9ad7/WM/tAbM/0Hx1BCYkMCwThrvNGtFZle2kjz/I/6xJ9pgwVfuQ6ZFoq3gQu0+RFbjfnHMETIl7hWeeLcua03UC4NS+q+iYma2MiGl9KSwZXN9sVL74uovrd6Yy0G05nfN8L275EJRF1Di+JSr36YkzwHRZ0gIxTowQFRn557WTj1QCyEoqgENv1S+6eJbXWPAPoC663rMHWMO9TzxoPDoUFMxvdNjvf+qKiOEkCIhwKF9zGo7f0l25c1d7++u/kyx268ZESPTIqsLv/Zs8cYLT7NsP8WMp8iLS5Cg3mn/0h+FFgSsAdiQjKVvSZ4z9+QujQEdemcTodzsHJpbmtOeohbpC0dWuwbLzEbFpYTkiqmaOUaLpiXZlTd3lDDtDlnticLqshPlBNpGEwpZgym5ZFoO+RJIXkmen+Jq2dR7SLnE5E5sRxDSQKkSVWsfb//xrMVOafXOFpJpyYhCtmDGLxrzO6/B+0TYHjqy2tnwD2yEJ5RKSoTtYYv15CXLPr3sma4h9p7t73st4M9IFKKLSU6f20ikLhXK/wyMBptg14awDl7SMhRLSBtUl1FNfbJYPHADWjIWRC6n1UPoeKkm3DH22zIlv6srWhMcWe3EfmtJCKFSEqZinrAW31+aXX4rEFUDFLIFi73Q62XvkUjUTpmQaZHhL859IVxxT4t/zIkvMPhdwo/vD6NNVIPojoHffPsgAR1qkUi/jbn6jvCWc+9E22iXhO8p5CDazm+zEwoTjiHJi6yxhuxemAwzCFSVSkgJwmYOeIFl8YWl2WVL67WWou38tr128t09D6LDCJnPW3z5ioZ0zLuWvNiXYC0ixzcE3JHwjqBJecoYfXL5xov+5ELDHnnxKFOAeDreGPMq4hHpiXeYwLDzWe1QVRkhScqkgqmaf8Dw2YuzK5YArw+H3et7erf+RV3MkKlp8z9EhG+TnziBw1rvTXbuHy+PhVICRj8Xaxg6+rXkcyXMns0uNOyJUHDMV9UQdXW4RRtXavOmsGCQSksyFbMFgmZj4+afLD7n8fbm+5pV6wmtZmeNoL0XEm4Pa1tt1AcKIpx36dNBavxt3nCVJCHeQV58CLS2AMOprTdsIwRrLMWSw3SpvRjMv+xvLjTs5lDwvDYeP7qxiZT4uQ3ZI+4T7Vf6pqrypSQC2cD+3iA8bWlm1e+e++1rAXIQa89aa5Dvvt/fA3K33nUz0yLROtuUbrrwYqntBOjw1/A8AakIzK4k5Q23jQQHVU2xxPdTM+ae+HpbGoe9rq5GZ6LhnYbmqLhqYM3syGoborJsALCMS8nML7I1mSXZFacszz7c1nxfs9oTq0LfCQnfIkxsmHbVx5joJxSLH8TVEoPZujBxq2ViSMUEh8HDxQO2NAEA8rOj1jQOey8UzBTs+Dsbz5Rx9VNTM3CngluHf8xsVVIptgxTtXNF0fvu4nMWt3edYt1zwUdP/I66K/51Cf56Uj5xzuWHSD82C6DzyPMVV8s2CopcmNhJWn5Ccq18dXHBxRe6BPxeXpu5SBmMXzT2GRkTh9matc43+LqqEr6QMi5hauZ3bPiaJZkVfwGAHEPkqQtRMTqG1XD3PrDuJ0Tu/O9Mi0Ah+7ofo8vLl54x5z8A7+sQ4hSwBbRLyndkDSAkA1QxYTip8uOLVyCXE1EnWIc9VlfZghm/qOnrMk5XmGofbGvcW6oKDC/lCVPT/7aaf7L0tJU/6KpIO4kpB5GbDXSSVxRMc3cSSnevCpk+dOPw4vypr24VFp4Ai3zegpmQrc8+BJCaOv+rkOLbQnn7cFC1dXU2uBcRw0J5AlY/L306avOLi9tRaLEuNNwbZNV4nIypB2xobV0l0CBeZ8zMVsSEJCJYyz9HSV6y5AtLXkEOIjM6Q3WnelQNsKbAHeFgY0vjUFERasUXV7y2jVDZq+gmIoj6lafP+v7I9D7PruJq9R+p6fOXJKdf9QUAhNa87kzEz55NKGQtMhmJTIssLbjoGi4FR3IYXAepBHkxAYbu/cEXvRq4COhAUyx5SFgLp0WdSgtOCewV/UrfIklgyzyYyYqZDQTIG+pJ1vwPq81xSz67/KwlX1jySvN9zQp52MKaAmdaMhIAF7IFgzzsBwvjjp5QaFrkk2jzh4l/jL9zzKUAkOmm9t/dZRxVyOd1eurcuZQaOpPLWwDPBxGBtV4N5r9SaBa2/2TWE12VWERcLZ1qKz1t/vEQYjbF4h/iShmAHcwlPgwiC+mVRK160pYfX7zC5bN2D833NavWSa16/KIxX1MpdZUuDmrPlQUDMimFDW0RzJcnrb3u3uyqzZ1JdQBdw75MS0Y+h7XThcSpNuAJXlr6umIhEwK6rJ9cetrK93RXaNjNpyH8NMLAAmwQBJKJGco/hqQ6xqI2JT1t3gIW9PPSDRet2erFqx/fF2/K/h++mDslzUO/CymnkfAbOKwxGDwIE6MEa0G+GmIkfRPAZ+pTubtNfg9U2m+d3WrHt4xPCDJfZsM8WHUVMxvpS8lgcGBX2Jo5f+kZq5Z3kBIAdBQr5/PAcS2Nb2NPjX3BPHOp8uWxAMDGICxpAwaDhQIjSv3M7p51Sd32ckV3BKnp89vI89+HoGZB9aZ1USJZkueDgxqzEMuIzfwEbfnD+hvyxU6V1gaBQj4AgIapV7ybhX81hPh4NGAt0PWkPA2yVVY/NazMLi6cle9Qs46JdjF3dceY21VanT4Y1RUzGyIimZTCVs0zDPr6kszyAgA0Lmj0AGDV1FVhx+cn3DXmSLJ0mWV8QvkizQBM1RgAoOidBgRYSKppYz6yLLvqAbRAIgvTXwirs3tDeur846DUX2BDBe7qrGcGYAGS5MWiITxav0SCbtGkrqlcf8GLHUkGzC54yGcDAEhOu+pkIfAjiiXfzZUi6t6twaS2OOqNSCQC++4tP535L3dquLNkBVnIwoy7vXGcl1RLdc1YGlzF+JaZWSWVZMuwIX/f5+Llrdm2YvN9zar4RJE6iKo516yCI0pnQtIUImoUMeHZqoU11kauo9cjHLas/aGeqm0Of7Hs9JVf6gi5+08O6/VclkA+b1NT5/1OxJOf4Gpp+1YFZgsQIKUgLwaull9hIX4iGX/bctOFf3x9xeV8FPJB4pzLD1F+4jK2+svkx30OKoOryymzJeWTtWaxb2qnbNz4jmKfaEPDoObZzVs931a02p40Fu7o2jKFjHi8+ng8Gfd/q3w5SUc2Bjk4lgwb4QkpPAGr7b3Q9keLsyt/26GqOoiqqaXpcE/Rfxptz1BxORbMMFUbqTJsp1yJwVCwJKmCkI9fnFnx99zsHOW7aQPtfsICkFo/9AiweIDAQ8D2zY+Oua66pJLkxwCjwTr8oyVxrWwvL2u/9dLXun48NWXuiaS8KyBFI3QIWDt4vFvMmlJDlS1t/l5pwaxv91poWD/uHpUZxXl6k0XacSTe5Ri8p9HRPWDC7WO+7A33fhpsHhxN+erDH6ASUljGs1yzNyw5bcWVALgrUR23qGm8EfbjJMU0LylHmqqFqRlbD/ve9J1ly0alldQlfenSySt/uDea9PUeYUU6XKKQNampc84X8fSPuFo0ICHf6i4DZACW5Mcj2aDD55noipJO/AwLp5a7rESVHDXkiwJ0HXnxOAflzlBzwIeGQlhYrnhWjN544MbnAaBHQkMGNd/fLPdbvx93XZzH39V4oDb0aTC9mwjEwHNG0p3LP7v8+a45pFdGvkKt9/eg8qqrq3XJdUN0ubZaKDqUQwYwoA9umJmNjEklPIIum99DqrOWfHbJK10/dFzLuA9aab8piD4uPAFTs7Da6rqB9q3ujyWPhA14fTmoHf7pMx+p5CPraD82jjITZs+mIVuGDLMVWgMp94fWu3DKV+8NL5Qk5YHD4N/MvJoU5hevu+jBjk+lp191BBNdJIQ4ByTAQU2DWA7sMLGegA8qvy/eNOuUrl1fu+OlzwHUVug0DwIAJvxqwmGw+ssgTABjjErK4R1Li8HQJVMSRH9n4geJ+aeLsysf7xReHCnwPPLdusgzmYwsFApmwqIxLTKtMvXhp3IAM5UhIukN8xBuDlcJIfMPnrr0btRP7cbcMeZQX4kZlvk/BDBRxCVM2TCD7XbDvjddErBCEXHA/7nk9BV35zgn3lRl9xvC2lplZYUXu5N1aLCrrW2YGQQL6UmSHljXAIhFDP2gIP+O9usveA0AktPnnyKFuATKP56DKsAD3rtlIJWA1lOLC2b+eK+T1tYOZwDAxNsnHgRfnwHgWGb+hIzLNBiwgYXV1tS5CgBISCGFL0CSoIthhZRYBMKjpkp3Lztj2ZNdlVd3hIwdL9G4QuMJUsp72LCChcBAPF2O7D4sk1LosqmRwBXkeXMXf2pxOwBMLDR9BIRT2NrTVNrbnwMLU7OdBLerpKhSSuqi/tvS01c2d3co2LOEBSbkZhPa2ig1Ytwa8mPv7bQ57PpDsSBmgCT5CYAArlWeAeMHxoR/qPzkG89Himv+VSCaTtKLcVgduKQVDa8ACFbo8L1bFn79qT09NcxxTrQV2rYiqcbbGvf1G/zDhdanW0ufVwk5EpZhqgbWRCr4zZKyDLYAmAQplYxEry6bzST5N0LKhcEW++jyM5dv6UpeozIF3qq4drf3yox8euPTwh9Ka0RCvttUBma9IDMboepJ9cA8iBBfW/y5FSuPvuXoVHpY7GgOMVMI8VnhC5iKgdVW19NTcreokcAkqQzLkxY/tuIhzAZAA6m9TPQScWL6nDGSvFaw9cG8hzsdGzAxlFIkFTgM2hm8iKSdX7xu1j9jU3/4dk/Ef0J+/EQOKgO3uoehKRZTNqj9prT/sacC92OXE/A5iOYTmsW23SLH3THuCCns+UzIkKCRMi5gqvb1Bb8LIQQYzMQGDAgplIgLcGhhNb8A4NewvGDJ5JWPvb5kIO4/oVnsbr4rwxlZoIKZcPuY82SDum4ge65kUoJD3mIZU5d8dtkiAJjQMnYmEc4jSYeTEh1hnyHsWZ96Ztb+UF/VNtXyy05fNbs7bQy9R1jRClTI53Vq6pWXi+TQS7jcrrE3Tmo6VBfVzahhNQTE3yHo8mK48Q/pxMgxCMK7AU5Hmz3RgCStZFrZ0ubzSwu/fv1OnRq+yendxMLYMZb5swTxSTC/R6WUZ6oGrLkjfNjzbpx15UUgQR6RjAmERW2EJ56E5T8aNrcuyz60quuenilsXXD7VsqqkC2Y4xY1jWef7mVr49AYeF1EGUw+WWb+fvCqvSI+QhzOQnwFxB8VUryNDcMGNrrXeydvZ8kjsOG1kmPjHljzQHRy30MHKD1NWAIARrww4qDAM0tA8iBYDey105quZlQfEBJcq/4dzNeD+P9BqP1hNA/IXltRH3gG+PlQ8Qm1a762FrnZtJ3QkDItGbFtyDWhMOYYkjSOA/40KfER4QuwZdjAgi3rPd2Vd4q8iKTwBYQi6LIBiO+RMflbrvDiBycv//vrISvEtsn/N5BVRGw8/s4xd3sp7+NhezhwHe0Ew9ZeKki8D4LOknEBE1jY0Jq6JWGvhcBs2XhDPBm2688vnbzitu4aNtE3CAvo7Dg6ZOrcMzie+iXXyhp7v6YxqjcEA15MkPLAtfLAb/jAbCielLZSfrC0cNYHu+aycpwT999/v+gq3cfcNuYdfky+D2zPZeATKqkU6ygvxcymbsDpyZYrHEUczEQkZUKCFEGXdJVAfxZSLgxr5ceWnf73ZzrDWDRHL+MJAO6P/m2d1Kqbc80qOLJ8lYzJ83Vp4JffqLQCGNAl3Vl6g71v27DCF8IE5okYpRpb17SWMbt7bQy9T1gAIZcjtEGlRzSshBc7CmHQfV0eGRaABWGQtL1lQyomEVQ/UVx48f++85qPxv71lXuCrotqwq/G/gcZTAfhv0RMJkCAqRhw1Fuf+siRP9dNj0yClIzL6By9ZssA/0YIe/0Dp656cHvfOLFl7Acg6Cbhi3GmaszWJWEDda/i12v7uue9ZhAsKTIc2A8umbxyxRu6jg5Qwnq9znDa/OMh5X3QhkDs+jvtJdFOUhJb+1Lxz598H/71ni1RXqrpeEg+jTU+IDxxHCmKSMrWSaH7FvreJC8SgoRISNiaBVv+E8BPAfSsZTAxDydB74LFyTIp07o8sP1WPbuq2HhDPRluDn+/9PSVp/SUjaFvEFZX0po6p4Xi6cyb1hk67NyDJI4iXhYwWlmZkGLkQasXHfCulSut8U+SHj4qExI2tLBVu8smwT6Uq+vMd8mEBAl6wwdMJSrSde2O914oSIoA5rUG4uRljy57Kgcg3wtlVr0XJo0axWAmmnblZRxUPwYhk2A7qLs+7g5JRfKDoEMfQlpIVcPQA58R+x3axql9i5PJS0zmMMpLhe1hZ8hH/dWXRqCOa9dlbbBtzyUCiEk6stqr6sp6SU+Fm8Kbl52+7Mnm+5pVflKr7p3H35vo7Ew6bx4l0xftNZvDgGapKMfJLGC0BzBBxaoYsu+L2OfgJxFPbYSfKIGZYLTseKGpj4d8Dn1YXQlPkNX2CRlWJxzoPbqlkIHtyUR73yGsugN+yPNDhpkYPUCk3gsdwo1Z2n4sBBCsUbBWQvk1DN//OTTs8xzi6U1IDnkNzAS2AtbKertHtoiMZ5Egg5tm7LDLDGFJEGmtJy6f/NDSnqgX7MOEhc46w/SUuZ+iRPLXXCsP5r7tO5DlAkRAYsirSA59Bfse8hQSDRvqtCRhjIoeZkdLLAaLmCDhiXrYyLBVC2vZEtyG4LBTe6SVCSF0xa4+VLx97Kg1Bc73sI2h7xFWB2mNGknpdav+SH7sQxzWLFwOojMEtEYhntqEw45cgsSQ9RDSgE1EUp0PcevefSx8QbqKR4n5DgizgUFjpRSnk0TSBm4Uu8NbkhVDwkJQRRqMeyCz/B8ACNS7zRj7BimMWsPIT9LGM2eyCcuRwGI3WKEeNQtpcNiRi5Eevg5sPOggBmsUiDhKvHchKwYseYJMVZ2z7PSl71/6ueU/XDp51YJlk1eeI8gexZpXiISgjsZuDg5vwlfGS3mSA777gezytkwhI3qbrPoOYeXzFpmMrFx/yYtszR8onqgPq3BgJkipEUuWoMNYlHTfhqRe/ywblRDCVHH30tMf/GkuR9R8X7NqzjWrxgWN3gOnrnzawp7NBiWSVOc3B4c3kJUVvhC6op+2Pl2c45wYtWZUn1grfSdXlMkQTjiB5EZ/qSD7nxBy+IAtVN6ViJAAqxUSDRuRGrYe1nhv2rqdBJhIISj709e9f+2zOKFZtE5q1Wtb19p1d6+zzfc1qwc/seSlQz514BiVVKNM4LxKDttlLKuSSuqS+cry01Y8sN/o/cQN59/QJwRE31msUc2bqP7s4rWszdUUSwgAbnxVnZye/+cYVIvDIGQIZtrutiikkGGJ17/678NXIw/bekLrG5zImZaMZEF/qlcIOoXl8Aaykr4UYVE/RkrdlWmBLGQKfSba6Vu7az5vkGmRPvQtXC0tIy/mdbZIHrQLiEDSwGofjy/9BMqbRkL5NbDd5tERYDWzjGHYsINfOhg5iEwh84bnW8gWDBjvc2+mw/Y3SESdGAlnLs0urRTQtza2vhYOMEat4Y0Lv7EZQXAWG1MCSRr0CXgmkLCw2sO/H2lGceNIKL+6rdIitmxVgmKx1JavIg+7Bmtkx7jxxgWNXuukVt14a+OBJHGGqVomdvYRhy7LjNmoaLjqLYuzKx7OtGS6ZRjqnqDvLdjWVkamRQa/nPqKf+yJR5OfOAo6dDYHEIQwCGspVNr3xdB9XoL0AoBFpzmFQMTGggS/98BT3v7bv5/x0EtojXbHdXevs41Tpnj+EesvVXH5YVMxloTLXzl0SSkoAav5VaXsqc+2rCu1jWpDx/rpSwKw76FjnuHG4SMR2seIxAhY0xcVYc8/MGIYo+D5Ad47/nfwEu0wYQxEtnPhQYAYVGUT+4HeMvQX3vBX11fLyRPiidK3pI+Jtmb2WqF5pPKofhDgUmL9lq8sa3+Er2obwznLJq/4ek+2Pe7/hBWRVr2d8rzvikT621wp6sHT0+qtScsaBT+5BYe//z4kh2yADuNbkRZJkEwohEVTJNhNpNQhwmOYit0rplHmiKSkCkFkYYwHa2SvD5922C1xZaUnwAZPSGE+9H+PrHoZvexo7z8hYdfQMJcTwyq15WEoPgnPOwDGOod2Z3hoEVRTKG44GOkRr8CPF6MawrrggQWbwFghEReeGMKhYavBtKd1mnVFpVQAQGLTy+/AhnWHw4tVEEsUd2i7cOijsLDRyC4zdfHkVSuaT2iWayettX1z5fdl1OsMkzPmfVSq+B+4VnG5rK4PT1joIIZEejPe3fR7SC94o8rhzp1yj4mKAUilATBKm/fBuicbseXVQ2CtRLJhAw47qhXp4a/A6Fi9VtsRV59XV8xGxqU0FfNA7IDUpPo0b9tX4/u+r1Y68lkvN/xNePHjBvSMwd0ODyW8eAXvHvsH+IkiTOiDhN1LCzpaIlKFIGFR2rhfRFQb9gdYQqogqnfUCiBg/7evwQHvWgWCiAqyyRUs9OloUIDBCA3oiOXZ5f9GDgL5vltl0j/USj5vBeTZbMIQcDaHbQlFSIOgksSTKz+CanEolF/Zvrl0l4mKIFUI5dXQ/uqheGrVh/HEio9i86sHQQgLqYLOljYkDYgs1j11NJ5Y/nFUS0Ph+eXOn+PQB9eOZauSSljLNy/PLv93piUj+zJZAegHzflbWxmZjAxumb/eP/ak91A88X6Y0AIuNOwqlIU0CKtplDePRHr4eqhYBbBy17mik6gCgIDy5n2w7qkP4IUnxkZOe2EhpcEbh+nUlZjUqBWHYctrB8NPFDmR3hQVLbIY5EVWfQ5WeEJwYF8IE3zauvesq7at73s2hv5HWADQtgbIQaSD9L06CE4l6Y+AdQn4bUlLyhBBpQEbXno7ho58Fn6sCmvVziXBmcAQ9VM/RmnLPnjh8bF44fFxKG8ZCSnDNyGq7VyH0jA6hg0vvJtq5TSn93mJlBfs/LU49EAsyMZLKamrZv6Kz676Q/MJzXJtfm2fryrpJ7mgPHDCCbJy5TcqsWM/oimR+gTCwLjOpNtXWlZ72LjuHRi6/1rEkiVYvYOTOyZwl9CvuHE/PNf2Qbz45LGoFkdAqBBS7AxRbX0dRJESK20eSRvXvRPxRAmpES/Dai/6OW6r6U2ystKXZKpmRfhOPmvdgeuwNr+2XyQb+0/yusMBz5vW+BSOI89/J6yxcGbSN5KWsLDGx5ZXD0UivQXJoa/CaD/6at330JmjkiGkClHccAheeeYoPP/4GFTaR0CqEELYzhBxd64j+vmR2tq8/lBmo5Ae8RIJaZza6l3GsiqhpK3aLy4/eeW/MudBtBXgCGuvY3RGYNGUmj/uI0+T9L8ME7LLZb05aYW1BLa8ejD8eBnJIa9BSl0nLYb0IsNnecv+eOWZI/H8P8ehuOGAeo5K7wFRbUdtiahN0Ob1h1KlOIKTDRsRS7RT1ITQPa0e5Spmq5JKmrL5nf+P5JVrT1iLtvP7T++5/rdcMhmJUaM49VLDb0UsfgrXqm6e4Zs9XGJYK8BWYfgB/8aQ/Z5BcsimOlENxZb1h2HjS++ENZE9gciCu3GeLZGF0TEIGeLQI5Zjn0P/CaO9er96p7Z6AJYUgY19RSJ+9APZB9YjygT3m5vf/wgrlxPI523ivB8dJKx+lIiGwWqC26t3SFw69DtHghFZhLVkJLFVUB/CSj10LbY+1YeQGv4S3jb6QcRSW6CDhPNsdb+60v4wXwWbapcsnbzqyr5aLziwCAvodMCnps77rognvh1NjRZOZb0FaUWLVgCMTmNpTxHVtkkUEGCCGOLpTTjkfSt46H5ryeiIVJ1DvlvIyqi4EiYwK8j3Tjo4OLhcyBRsf2vi2D9f8rYWIAcxrDJkeRBWsqT8fZzNYWf2JuqyTfWmofN1U2oYJLBx3TvIGsnpES8TSQPuqIl02KucJRNS2BpfuOTUpatHzhgp1x6+tt9J2n6asCYGINbfcH4RjGvJ8wlwQyv6364vIKSGkBrrnvoAPbH84wjKaZYqrH/AsdZeU1cJKcJ2/ZtDxGH/nWnJyP4WCvZvhQUAra0WmRYZvuP55f4m8T7yY0fDaOOKo/uj8ouKqoNqEq+98F4CCwzZ9zmAqHOArMPu8xUpAmsOQfLkP2X/tLltVBv1dUf7AFNYdYxaw8jnrRR0KetQg4SA6yLXT1UAdTrpX3zyGDy1+iSElSRLrwbnMt0jdWVVTAo2fMvS7NIX+kO94Ftvb/0ZnQn4OTcIPzHddXMYAJqLGDqMwYuV+dBRS2nYfs/CdhRZu4T8zpMV2ApPwIb8stLV0Q888ejmvtqYb3AoLABoyVgA5A8b8k0bBu0gRWDXzaG/qy3l1WC1R08/dCKe/+cYFmQgle5Wn9gAZCyrEkoQY94DZzy6sRnNor+Pduv/T5+IkcvRxiumbiY2cykW7xMjtR32nLRADOlX8cra0fTk8lO4vHkEPL9c/4ALE98iFDQqIVWwObjfrySvz7RkZGu+td+PzBsY21U+z8hkZHHDYd/nWukP5MUEAOOW7UB48wjKC1DcNJKeXPExvPBEIzMLFtKprR3v40TMsBbim61ntVY7NZcjrD4ifl8ZRShkDQNzQILgku8DSm11WB1efKKJnnpoEsIgDqVqrkHgm6grGZdkqvrnyycvX5ppychCtjAgNvCBk5xeW7c5vP35Z7xNdLiIxY+BNtq1oBkwmiFasCpArTyMNr70To4ltiA59DUCCzC7iT31rZtJEjhkQKj/fL7wfHt/tjEMVIUVoW5zUFLmWWtAkHRKa6Cph6jJoK7F6OmHT6S1jzaz1ZKVV+2lMqM+x1dGJZUA8zVLM0tf7O82hoGrsIDO0WC1uZdu8I89kaH8E2DZwPXMGnBqi8hCSIv2DQdQcfN+iCfbEUttIWbaahr2oCIry0allLIV8xi1+2c+99vnwrbz2hj5gfM3Djy/UmsrkMupYN5l9/nHnDSaEqmjEAaBa0EzEEPEqPd8WGmgV59/LwHMDSNeJiHsoGsQyBy1jiGidqqZMxZ/afm/MudlRNuRbQPqxHxgvsSt9zNyUInysD9ZXfkQJdNvQ1gL6mU7Lm4YYMQlhIWQBltePZRKG/fj9PCXEUsVabC0Y2bLhiRJr0EJs8WevviMlX9qzjWr35//+wF3Uj5AQyViAHbzjTM2htqcxmHtbkqkfUS9gZ1Ha8CpC6qbTato33AQPbHiY/TKM6MsSQ2SZuDaHxgMIFQNSpKg12qbws8uOWP5/9Q9V3pAvtkDeiXXm/0BOZGeOnQeBM0gz/e5VtEgUu5VH4ALmhhsBXQYwz6HPIGD37OS/WSRdBAfUA0CmdkIIaRMStiaWWJD+9Ulk1euAGNAG6cHdl6nnoRH62wOVk28xxtz8mIQRpMfPwRGW4DdfMOBuAfXe9aXNu6P9g0HIJ7ezIn0JmIrwUz9vfuDZWYrE1KCUTIhf8N/dPn0By548fnm+5rV2sPXmgH+dAcJcjmFfF4jk/Mb9h3xFRY8h4QEBzVdT8i73NaAU1sW1nhgJox82xo+6D2rIKQlo/1+qbbYshG+kDImoMvmLgR65pLPr15bDw8HRUna4HpJ650dACAxbd54KdW3yY9/nCtFgGGdyXQgrnAGGDA6htTQl/ng96xCw8jnSQfJ+iliPzhJZDCD4TUo0lX7LLH9+uJTV94JAPW+7AaDxG84uI762woMgJDLKT3v0meDUeP+25OeICEaSUofxujOwX0OA2hPjuYv1spDadP6w8jza5wa9goxqM875JlZC09IEIgN/ohK+Nklkx96EDkInABae9ZaM9ie5uBEF7WVnDrv/UKqX5IfO5JrZcBaNzpsQIaI0XQgo32MOPBJPnT0MlJeFTrsewl5jk6z2RviSVMxr8LY8xdnI1U1kGoDncLaDbUVzrt0nX/k8b+CEBsAjKdYIg4TmvroMKe2Btj+LGWI0qb9acurB7NUIdIjXiZrvPrEnj5BVkbGpRRKCLb4fli1X102eeXfMi0Z2TaqjdrOb7OD+wkOdnTaH4DktLnHkPS+JYT8DOsAYOs6mA5ItWVhtA+Qxf6H/ZMPeGc9IW+8XlNbzLBEECqpoGtmJVv+wdLsil8PdlXlFNa2aG1lgAk5qHDeZS+GK+5p8Y/50DBI2UjSUzBaIypgcwQ/gPZqIQ1IAFvWH0TlTSM5Pfxl+IkSsVHoUYc8g5nZipiQQpKxGvM32+IZq7N/X+NUlVNYb6222toIhYJJnTfvKFhxg4glPuhyWwNdbcUgvSr2P/wRPuAdj5K1CtZ0f0KeLRuhIgOoLus2hPz5JZ9budqpKkdYu4aOpPwF18TSFl8ktt+DHx/JlVLU/cGprQFGWgxrJdhIDBn5rD3kiGWIp7cIHcS6h7Qiq4L10p7UVbOewJfXXrM/XTV11eYc50Se8v3Ec+EIq2+prXpuKzX9yqNJxK+AEB+F0YDVLrc14MAgAnQQQyxR5ENHL+EhI58ha2KEeo/5vaWqpC8kBIFBf9Bhddby7MNt0ZqDGEj9qxxh9cY9yuUk8nkNAOnp86cQie9Dqn0jlzxLuFGfA1Zt7ff2x+yB735ICGGxxwn5SFUZL62UqdmXrTGXLc2u+mln+Jcp2P4+1cYRVl9SWwCQz9vU2d/fn2LJ+RRLfo6rJcCyBsEVUw+oNyM6hzHGQzy5mQ87+m/cMOJlEdYSEafsmtpiZjZCCaVSEqZibgtL+MbyM5c/n2nJyMKaAjtV5Qire9CcU2jtUFvzZgB0OfmJBq6VGcxwua2BprYi+4PyAj7w3Q/xvm9rI1hJxuxcg0BmtiRIeGmFsKjXEfCdxdkVPwE6y2q0u8s7D5eD2VWsbbVRB4j7EaycuMI/9sO/BngkQEdCKoI1pt4o0GGA7OlCGrCVtOnlw1AtDudEwyb48RJFXU13wFWWrYxLyZarHNqFpL0zF09e1jpYy2qcwupDais1bd7nINU1Qsp9OagaMJErph5oaouhQx9Shfz2o/4Pww54hoxRYCu2UlvMbEiQVAkJUzP/Zs2nLZm8coVTVY6weh+5nEDbaEIha5JfvPIAkVQ/JD/+JdYBoLXzbQ1A0mIbjRUbfsDTfMioJSy9UJjQA4G5PrVGWcMBLF8pqpX5D5zx6Mbm+5pV6wmtxiXVHWH1DXQppk5NnZOFkD8QscQ7uVpyamtAgmHCGFJDN/DBRyzh9IgXmG1cyqSCqZrfGaPzy7IPrQKAHEPkySXVHWH1uTXMhGxBoJA18elzD1WkrichP8lsUS+mdmprgKktoyWDwW97/2ox/MAnNsHyzUuyyy6K9jBnVXCE1T/CRNXh20pNvfrDkLhWKO99HFR1vTOkU1sDQWIxDCmhmBRsgF+lR7xwySuXX/40cjmRmw3kKe9UlSOsfqS2Zs8m5PN2+JTLh4Yi9i2KxWdFua3Q5bb698M1AElKpGCr5adI4qzidRf9X6eqcvV/jrD6LVpaJLIdua25p0Oq2cLz38O1ivNt9cNdCIAlPyE5DGpMuNkWS9+r3PKtF7oai919coTV3xc6IReprREX5IYEeth1IHEGwAJGu5Fj/SMA1BBCkVRg5sWszWWlBRfej0hWdR64ODjCGjjomtuaPv8kEuI2UrH9uFbm+sgxFyb2PaKyADPFk5LDoAwTXlFccPF3AUQ+vPtnmz7dFN4RlsMe3/NMRqBQMPHpcw+V8M4mst8h6REHVae2+hJVMVvyfAmpYHVwo6jUrmn/2SWPu/DPEdbgQyYjUYiSs6kpc08UnjcbXuyDXC0ymNidJPayqiIIiifBtdoyhr6qdOOsO1345whrsIeIAjhBID9JjzgjNyQYMvwagL9AUgrWgfNt9ThRMYNgSfmSLVeY7a3xWjDrtZ9d0u5UlSMsh0619fqunZ4y5z8gvRvI90dzreJyWz2nqjSkUKRi4LD2KDN9rnTT1x6rbyyduUeH3oULO/oCIrIiZFpkceHFf5PljR+EDmeSUExeTILZ1I/UHboj/AMbiicVgdZbHVyQoE0TSzd97bG6qiJHVk5hOeyE2kpNnfthkipPypvAYQBYY13rmr3KVgYqJuv/eZuk8Nubr7v4353hugv/HGE57NSLRMhENYlonOKlmo74Ngn6CpEcymFN113y7tntCVGBBHkxYqMfZWt+ULpp5qIuG4aFGwDhCMthV9VWRqJQsAB4yIx577IQLeTHj+FqGWB2FojdC/8s+XHFzIAJ5xSX//MyrFoYItMiMWoNO1XlCMthT59RpiVSWzOuS6dtMBOCLiMv7nGtZKJialfe89ZkxQbKk+TFwLXKX2D0d4sLL/7btmG4gyMsh72BLjmVhulzToFKnMlsT4M1gDXOArEjVUXMFEtJ1sEjbO0vSm2brkVrXrvwzxGWQ3c/r+ac7GjLnJw+d5YgOZukl4pc8nAjx7ZWVRrKU0QEtmYRUeX89usvfQ0MQrauWh0cYTl0MzItkZoqZE3DOT94D3uJGyiePDEaOWZd65qOpHoiRVyrPMaWv1q66aK/1pWq81Q5wnLopTAxevkuuCbWYOwZlnGl8GP7cK08OHNbHLUhJj8m2GgNkrNR3rKwePNl66PwL2P32vhmB0dYDrtFWp25reS0uccIqa4koU5iowGrB1Fuiw2kJ0ECbE2r0ME32xd+fUmnInXhnyMshz70HHM52RHqNEyfd5aFmCuUGsFhbYCrrXr458eJdfgcGzurtOCilk6iaslY1/5l4MC5pgdKMJTPa+RyAszUfuPMm8H6CKuDuymekpCKohd7gP3NDE1eXEJ5xGFwvb9545GlBRe1gJmQy0VJdUdWTmE59HF0CYEaps87i0nkSfmHcq1iAVC/V1vMFkSC4ilwWPurtWZ++caL/teFfwMfzrszENFW4KgtM0Qw99LVqdEf/pUWPIaU/3YQqH6S2P/UdeSpslFBuK3BhtcW12z6YvirSx9HpkWirQVoO9I51Z3Ccui36HKMn54+fwqEvIKkGsa1qq2vgP5AXAxmC6kkeT5sECwh8NnFGy/8h1NVjrAcBhqYqSOXkzjn8kNkLH4xCfUVNjoa8EpC9uFr7wz/bKX0tPC889tffu3/UMgXnVPdEZbDQEbX1jVT5p5HvncpSe8grpajF75v5bbqPdVjko0OABQ4oJmln37t5bpydO1fHGE5DIIQUeB+CLTmdXz63EMVeXMg6DQYA1irQegDHSDYgIQk5cMa808YO32bkVpOVTnCchhUaM6pzprEGVd/XBBuJ+UP5WrZAtQ7ua2OQmU/IVmHIdjkiv9+Zj7u+VHNOdUdAHdKOHixttWCmQCIcO43n/CPOel/CDZBfqyRhKB6B4geJC02UL4kPy6s0b8SOji3uGDWIvxruUEuJ3DD+RbIu+fmFJbDoEfX3NaM+VlBajaEOIKDWvefJHaM1PLjYKMfI2vntN944S1dVKBx4Z+DIyyHrdF1jNUXc/F0YsgvyItl2RpA6+7IbTGYDTxfwbIFm0XFV/kcFGZWEJUakUuqOzjCcthptZWYMv+TUtJ88uPvinJbe0ltcT2pHk+Ca5W/G7bTKjfNXFonTtf+xcERlsOurgsGQDzk7NwI6w//Bil1MVsLmKAjt7XrayfqqU4UTxLXqkVW4psx2njLhh/lt3TtX+9uv4MjLIc9UlvpqfPOhlSXkJTvZh0Alu0uqS1mC88XMAYgutfq2iXlhZc81BmOuvDPwRGWw14I3wjZ+sixzLxEeh/xXUh5AcAx6HAnRo51jNTyyRrzNBtzQXnBzN93IUSnqhwcYTl0n9pKnTfvKFjRIuKp93G1CLA1YCIQCAB1dP4EAPLjgtmCdXBl6fktedydL2+V4HdwcITl0G3rpT5yLDnjygME/EsBfImkamC2gDEAW0AqkBAAM5j5L2yCH5Ruuviv2xKfg4MjLIfuR9e2zOfNP1YYfJ2IDrbMo4gwApYfgRSvgPmu4o0X3dTle9iFfw57gv8P3CsHZQb8clYAAAAASUVORK5CYII=" alt="NCGCL"></span>
+      <span class="brand-text"><span class="n">NCGCL</span><small>National Credit Guarantee Company</small></span>
+    </a>
+    <div class="rating-chips">
+      <span class="rchip rating">AAA / A1+ &middot; PACRA</span>
+      <span class="rchip">Shariah Compliant</span>
+      <span class="rchip">SBP Enlisted</span>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="container hdr-inner">
+    <div class="hdr-eyebrow"><i data-lucide="building-2"></i>National Credit Guarantee Company Limited &middot; Monthly Board Update</div>
+    <h1 class="hdr-title">Pipeline, Product &amp; Financial Performance</h1>
+    <p class="hdr-sub">Comprehensive monthly update for Board Members and Key Stakeholders &middot; May 2026</p>
+    <div class="hdr-meta">
+      <div><span class="k">PKR 16.4Bn</span><span class="l">Pipeline Value (Quantified)</span></div>
+      <div><span class="k">31</span><span class="l">Active Deals</span></div>
+      <div><span class="k">PKR 9.58Bn</span><span class="l">Investment Portfolio</span></div>
+      <div><span class="k">+43 bps</span><span class="l">YTD Alpha vs Peer Universe</span></div>
+      <div><span class="k">AAA</span><span class="l">Board Confidential</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- JUMP NAV -->
+<div class="jump-nav">
+  <div class="jump-nav-inner">
+    <a href="#snapshot" class="active"><i data-lucide="layout-grid"></i>A &middot; Snapshot</a>
+    <a href="#pipeline"><i data-lucide="git-branch"></i>B &middot; Deal Pipeline</a>
+    <a href="#products"><i data-lucide="package"></i>C &middot; Products</a>
+    <a href="#projects"><i data-lucide="handshake"></i>D &middot; Projects</a>
+    <a href="#financials"><i data-lucide="landmark"></i>E &middot; Financials</a>
+    <a href="#investment"><i data-lucide="trending-up"></i>F &middot; Investment Portfolio</a>
+    <a href="#analytics"><i data-lucide="bar-chart-3"></i>G &middot; Analytics</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════ A · EXECUTIVE SNAPSHOT ═══════════════════ -->
+<div id="snapshot" class="sec">
+  <div class="sec-eyebrow"><i data-lucide="layout-grid"></i>Section A</div>
+  <h2 class="sec-title">Executive Snapshot</h2>
+  <p class="sec-sub">Portfolio-level metrics as at May 2026 &middot; Financial data YTD April 2026</p>
+
+  <div class="ex-tag">Exhibit A-1 &middot; Headline Portfolio Metrics</div>
+  <div class="kpi-grid">
+    <div class="kbox am"><div class="knum">PKR 16.4Bn</div><div class="klbl">Quantified Deal Pipeline</div><div class="knote">31 active &middot; 17 additional TBD</div></div>
+    <div class="kbox gn"><div class="knum">PKR 9.58Bn</div><div class="klbl">Total Asset Base</div><div class="knote gn">PKR 9.29Bn deployed in investments</div></div>
+    <div class="kbox sl"><div class="knum">9.74%</div><div class="klbl">YTD Investment Return</div><div class="knote">+43 bps alpha vs peer universe</div></div>
+    <div class="kbox rd"><div class="knum">PKR 293Mn</div><div class="klbl">YTD Investment Income</div><div class="knote">First guarantee revenue recognised</div></div>
+  </div>
+
+  <div class="milestone">
+    <div class="milestone-head"><i data-lucide="award"></i>Corporate Milestone &mdash; First-Ever Guarantee Revenue Recognised</div>
+    <div class="milestone-text">YTD April 2026 marks a historic milestone for NCGCL: the Company recognised its first-ever core operating revenue of <strong>PKR 125,000</strong> in Guarantee Revenue, out of the PKR 2.5 million upfront fee received from PMIC. This reflects the activation of the Company's primary business mandate and marks the beginning of a sustainable guarantee fee income stream.</div>
+  </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="ex-tag">Exhibit A-2</div>
+      <div class="ptitle">Deal Pipeline by Product Category</div>
+      <div class="psub">Quantified PKR pipeline &middot; 18 confirmed deals</div>
+      <div class="ch h260"><canvas id="cA2"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ex-tag">Exhibit A-3</div>
+      <div class="ptitle">Deal Stage Distribution</div>
+      <div class="psub">28 active In Progress engagements by origination stage</div>
+      <div class="ch h260"><canvas id="cA3"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════ B · GUARANTEE DEAL PIPELINE ════════════════ -->
+<div id="pipeline" class="sec">
+  <div class="sec-eyebrow"><i data-lucide="git-branch"></i>Section B</div>
+  <h2 class="sec-title">Guarantee Deal Pipeline</h2>
+  <p class="sec-sub">Institution-level tracking across the 21-stage NCGCL origination framework &middot; MAGFA as master guarantee agreement</p>
+
+  <div class="panel" style="margin-bottom:1.5rem">
+    <div class="ex-tag">Exhibit B-1</div>
+    <div class="ptitle">Top Deals by Guarantee Value</div>
+    <div class="psub">PKR Mn &middot; 12 largest quantified deals &middot; Colour by origination stage</div>
+    <div class="ch h300"><canvas id="cB1"></canvas></div>
+  </div>
+
+  <div class="panel" style="margin-bottom:1.5rem">
+    <div class="ex-tag">Exhibit B-2</div>
+    <div class="ptitle">Active Deal Tracker &mdash; All Engagements</div>
+    <div class="psub">Status reflects latest update as of first week May 2026 &middot; <span class="b b-up">Updated</span> indicates change from prior period</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr><th>Deal ID</th><th>Institution</th><th>Product Type</th><th>Amount</th><th>Stage</th><th>Latest Status</th></tr></thead>
+      <tbody>
+
+        <tr><td class="mono">GUA-2025-001</td><td class="strong">PMIC</td><td>Credit Guarantee – FI</td><td class="val">PKR 1,000 Mn</td><td><span class="b b-live">First Issuance Ready</span></td><td style="font-size:11px">Fee received. System demo to be arranged at PMIC offices with NCGCL team member present to guide. <span class="b b-up">Updated</span></td></tr>
+        <tr><td class="mono">GUA-2025-005</td><td class="strong">HBL FI</td><td>Credit Guarantee – FI</td><td class="val">PKR 1,000 Mn</td><td><span class="b b-magfa">MAGFA Finalised</span></td><td style="font-size:11px">Agreement finalised; HBL confirming system access. Demo to follow.</td></tr>
+        <tr><td class="mono">GUA-2025-003</td><td class="strong">BIPL</td><td>Credit Guarantee – FI</td><td class="val">PKR 200 Mn</td><td><span class="b b-magfa">MAGFA — Business Confirmed</span></td><td style="font-size:11px">Business team confirmed MAGFA. Shariah and Legal team's response still awaited. <span class="b b-up">Updated</span></td></tr>
+        <tr><td class="mono">GUA-2025-010</td><td class="strong">NRSP</td><td>Credit Guarantee – Corp</td><td class="val">PKR 70 Mn</td><td><span class="b b-magfa">MAGFA Stage</span></td><td style="font-size:11px">HBL–NRSP arrangement for NOC release finalised; NCGCL guarantee to replace cash margin.</td></tr>
+        <tr><td class="mono">GUA-2025-006</td><td class="strong">JS Bank (JSBL)</td><td>Credit Guarantee – FI</td><td class="val">PKR 2,000 Mn</td><td><span class="b b-ic">IC Approval</span></td><td style="font-size:11px">Approval under process at JSBL. Satisfactory CCO &amp; Treasurer meeting held; process expediting.</td></tr>
+        <tr><td class="mono">GUA-2025-004</td><td class="strong">Bank Alfalah (BAFL)</td><td>Credit Guarantee – FI</td><td class="val">PKR 2,000 Mn</td><td><span class="b b-ts">Term Sheet</span></td><td style="font-size:11px">Revised term sheet shared. Corporate Farming &amp; Supply Chain financing also deliberated.</td></tr>
+        <tr><td class="mono">GUA-2026-031</td><td class="strong">Bank of Punjab</td><td>Credit Guarantee – FI</td><td class="val">PKR 2,000 Mn</td><td><span class="b b-ts">Term Sheet</span></td><td style="font-size:11px">Satisfactory meeting with Head of FIs for on-lending to MFIs. Draft term sheet shared.</td></tr>
+        <tr><td class="mono">GUA-2025-002</td><td class="strong">HBL MFB</td><td>Credit Guarantee – FI</td><td class="val">PKR 1,500 Mn</td><td><span class="b b-ts">Term Sheet</span></td><td style="font-size:11px">Meeting set for Thursday, 07-May-26. <span class="b b-up">Updated</span></td></tr>
+        <tr><td class="mono">GUA-2025-008</td><td class="strong">UBL</td><td>Credit Guarantee – FI</td><td class="val">PKR 1,500 Mn</td><td><span class="b b-dd">Due Diligence</span></td><td style="font-size:11px">Meeting to be arranged with Chief Product Officer and Head Digital Lending. <span class="b b-up">Updated</span></td></tr>
+        <tr><td class="mono">GUA-2025-011</td><td class="strong">Haball</td><td>Credit Guarantee – Tech</td><td class="val">PKR 500 Mn</td><td><span class="b b-dd">Due Diligence</span></td><td style="font-size:11px">System demo by Haball to NCGCL team to be scheduled. Al Baraka to be introduced post demo.</td></tr>
+        <tr><td class="mono">GUA-2025-015</td><td class="strong">Daewoo</td><td>Credit Guarantee – STFF</td><td class="val">PKR 500 Mn</td><td><span class="b b-dd">Due Diligence</span></td><td style="font-size:11px">Financial model and waste management business data still awaited.</td></tr>
+        <tr><td class="mono">GUA-2025-000</td><td class="strong">UNIDO</td><td>Consortium Guarantee</td><td class="val">PKR 80 Mn</td><td><span class="b b-dd">Consortium DD</span></td><td style="font-size:11px">Phase 1 findings shared. Multi-stakeholder meeting with PFIs, PAIDAR, UNIDO to be arranged at SAFCO HO.</td></tr>
+        <tr><td class="mono">GUA-2026-026</td><td class="strong">Askari Bank</td><td>Guarantee &amp; IB Advisory</td><td class="val">PKR 1,000 Mn</td><td><span class="b b-init">Initial Engagement</span></td><td style="font-size:11px">Portfolio &amp; Sukuk guarantees + Treasury credit line discussed. NDA signed.</td></tr>
+        <tr><td class="mono">GUA-2026-030</td><td class="strong">Bank of Khyber</td><td>Credit Guarantee – Portfolio</td><td class="val">PKR 1,000 Mn</td><td><span class="b b-init">MoU Stage</span></td><td style="font-size:11px">MoU draft under review at BOK; signing ceremony targeted 2nd week May in Peshawar. <span class="b b-up">Updated</span></td></tr>
+        <tr><td class="mono">GUA-2025-007</td><td class="strong">Meezan Bank (MEBL)</td><td>Credit Guarantee – FI</td><td class="val">PKR 1,000 Mn</td><td><span class="b b-init">Initial Engagement</span></td><td style="font-size:11px">CEO-level discussion with Faisal to be initiated.</td></tr>
+        <tr><td class="mono">GUA-2025-020</td><td class="strong">Halan Microfinance</td><td>Microfinance Guarantee</td><td class="val">PKR 500 Mn</td><td><span class="b b-init">Initial Engagement</span></td><td style="font-size:11px">Meeting to be arranged by CEO.</td></tr>
+        <tr><td class="mono">SUK-2026-021</td><td class="strong">Haball – Sukuk</td><td>Sukuk</td><td class="val">PKR 500 Mn</td><td><span class="b b-init">NDA Signed</span></td><td style="font-size:11px">NDA signed. 2nd meeting in the next week.</td></tr>
+        <tr><td class="mono">GUA-2025-010b</td><td class="strong">HBL Zarai</td><td>Credit Guarantee – Corp</td><td class="val">PKR 37.5 Mn</td><td><span class="b b-init">Concept Stage</span></td><td style="font-size:11px">Concept paper under internal review per Research Head &amp; CEO discussion.</td></tr>
+        <tr><td class="mono">GUA-2025-013</td><td class="strong">Pak China</td><td>Credit Guarantee – Portfolio</td><td class="na">TBD</td><td><span class="b b-init">MoU Signed</span></td><td style="font-size:11px">MoU signed. Meeting in Islamabad planned for 07-May-26. <span class="b b-up">Updated</span></td></tr>
+        <tr><td class="mono">GUA-2025-012b</td><td class="strong">Pak Oman</td><td>Credit Guarantee – Portfolio</td><td class="na">TBD</td><td><span class="b b-init">MoU Imminent</span></td><td style="font-size:11px">MoU signing this week 06-May-26; meeting with Corporate &amp; SME Team to follow. <span class="b b-up">Updated</span></td></tr>
+        <tr><td class="mono">GUA-2025-021</td><td class="strong">Pak Kuwait</td><td>Credit Guarantee – Portfolio</td><td class="na">TBD</td><td><span class="b b-init">Initial Engagement</span></td><td style="font-size:11px">2nd meeting pending; supply chain with Haball under consideration.</td></tr>
+        <tr><td class="mono">GUA-2025-012</td><td class="strong">Allied Bank (ABL)</td><td>Credit Guarantee – Portfolio</td><td class="na">TBD</td><td><span class="b b-init">Meeting Set</span></td><td style="font-size:11px">Meeting with RCH set for Wednesday, 06-May-26. <span class="b b-up">Updated</span></td></tr>
+        <tr><td class="mono">GUA-2026-029</td><td class="strong">Climate Core Asia</td><td>Equity Guarantee</td><td class="na">TBD</td><td><span class="b b-init">LOI Received</span></td><td style="font-size:11px">LOIs from Pak Libya (PKR 300 Mn) &amp; Saudi Pak (PKR 1 Bn). Licensing in 2–3 weeks.</td></tr>
+        <tr><td class="mono">GUA-2026-028</td><td class="strong">WASL Mobility Modaraba</td><td>2-3 Wheeler Pilot</td><td class="na">TBD</td><td><span class="b b-init">Preliminary DD</span></td><td style="font-size:11px">Portfolio &amp; Sukuk discussed with CFO. Documentation and risk framework requested.</td></tr>
+        <tr><td class="mono">GUA-2025-014</td><td class="strong">Pak Brunei</td><td>Credit Guarantee – Portfolio</td><td class="na">TBD</td><td><span class="b b-init">Initial Engagement</span></td><td style="font-size:11px">No satisfactory updates; credit line for Thardeep unlikely per verbal confirmation.</td></tr>
+        <tr><td class="mono">GUA-2026-027</td><td class="strong">Pak Libya</td><td>Guarantee &amp; IB Advisory</td><td class="na">TBD</td><td><span class="b b-pipe">Pending</span></td><td style="font-size:11px">Meeting to be arranged post CEO availability.</td></tr>
+            </tbody>
+    </table>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:.85rem">Additionally tracked: Al Habib, HMB, Al Baraka, Faysal (engagement pending, N/A status) &middot; Pantera declined</p>
+  </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="ex-tag">Exhibit B-3</div>
+      <div class="ptitle">Pipeline by Origination Team</div>
+      <div class="psub">PKR Mn &middot; Quantified deals by originating function</div>
+      <div class="ch h230"><canvas id="cB3"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ex-tag">Exhibit B-4</div>
+      <div class="ptitle">Deal Status Distribution</div>
+      <div class="psub">Deal count by stage &middot; 28 active engagements</div>
+      <div class="ch h230"><canvas id="cB4"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════ C · PRODUCT PIPELINE ═══════════════════════ -->
+<div id="products" class="sec">
+  <div class="sec-eyebrow"><i data-lucide="package"></i>Section C</div>
+  <h2 class="sec-title">Product Pipeline Status</h2>
+  <p class="sec-sub">12 core products + 4 strategic collaborations &middot; FI partners and Q3/Q4 2026 timelines now confirmed</p>
+
+  <div class="ex-tag" style="margin-bottom:.85rem">Exhibit C-1 &middot; Product Development Stage Tracker &mdash; Updated May 2026</div>
+  <div style="display:flex;gap:1.25rem;flex-wrap:wrap;font-size:11px;color:var(--text-muted);margin-bottom:1.25rem;font-weight:600">
+    <span style="color:var(--green-700)">&#9679; Live</span><span style="color:var(--color-primary)">&#9679; Structuring</span><span style="color:var(--slate-500)">&#9679; Board Review</span><span style="color:var(--slate-300)">&#9679; Concept</span><span style="color:var(--risk-high)">&#9679; New This Period</span>
+  </div>
+
+  <div class="prod-grid">
+
+
+    <div class="pc live">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">M&amp;SME Guarantee Programme</div><span class="b b-live">Live · 3Q26</span>
+      </div>
+      <div class="pmeta">SME · Account &amp; FL/SL · POC: Majid</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><span class="sl" style="color:#1a6b3c">Stage 4</span></div>
+      <div class="pnote">In-placed · Active FI onboarding in progress</div>
+      <div class="pfi">FI Partners: HBL MFB · Meezan · HBL · BOP · BOK · JS Bank · ASA</div>
+    </div>
+
+    <div class="pc live">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">Agriculture Guarantee Structure</div><span class="b b-live">Live · 3Q26</span>
+      </div>
+      <div class="pmeta">Agriculture · Joint FL &amp; SL · POC: Majid</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><span class="sl" style="color:#1a6b3c">Stage 4</span></div>
+      <div class="pnote">In-placed · FI onboarding active · SWAT region visit planned</div>
+      <div class="pfi">FI Partners: UBL · BOP · BIPL · BOK</div>
+    </div>
+
+    <div class="pc live">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">Microfinance On-Lending Guarantee</div><span class="b b-live">Live · 3Q26</span>
+      </div>
+      <div class="pmeta">Microenterprises · Joint FL &amp; SL · POC: Majid</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><span class="sl" style="color:#1a6b3c">Stage 4</span></div>
+      <div class="pnote">In-placed · On-lending MFI arrangements in active development</div>
+      <div class="pfi">FI Partners: PMIC · Pak Brunei · JS Bank · BOP · HBL FI · Askari FI</div>
+    </div>
+
+    <div class="pc str">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">Digital Lending Guarantee</div><span class="b b-ts">Structuring · 3Q26</span>
+      </div>
+      <div class="pmeta">MSME &amp; Agri · Pari Passu · POC: Majid</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb am"></div><span class="sl" style="color:var(--acc)">Stage 3</span></div>
+      <div class="pnote">Term sheet at closure with Bank Alfalah. Covers Embedded, COD, POS, Merchant financing</div>
+      <div class="pfi">FI Partners: Bank Alfalah · UBL</div>
+    </div>
+
+    <div class="pc str">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">FinTech / Start-up Financing</div><span class="b b-ts">Pilot Active · 4Q26</span>
+      </div>
+      <div class="pmeta">FinTech · Account Level · POC: Majid</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb am"></div><span class="sl" style="color:var(--acc)">Stage 3</span></div>
+      <div class="pnote">Smart Finance pilot confirmed: 30% coverage on PKR 50 Mn. ALIF discussions underway for structure. <span class="b b-up">Updated</span></div>
+      <div class="pfi">FI Partners: ALIF · Smart Finance · CashNow</div>
+    </div>
+
+    <div class="pc str">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">HBL Zarai Collaboration</div><span class="b b-ts">Board Agenda · 3Q26</span>
+      </div>
+      <div class="pmeta">Agriculture Value Chain · Portfolio Level · POC: Adil</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb on"></div><div class="sb am"></div><span class="sl" style="color:var(--acc)">Stage 3</span></div>
+      <div class="pnote">Concept paper ready. Expected on agenda at upcoming Board Guarantee Meeting</div>
+      <div class="pfi">FI Partners: HBL Zarai</div>
+    </div>
+
+    <div class="pc rev">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">Corporate Guarantees</div><span class="b b-dd">CEO Review · 4Q26</span>
+      </div>
+      <div class="pmeta">Corporate Entities · Account Level · POC: Adil</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb gy"></div><div class="sb"></div><span class="sl">Stage 2</span></div>
+      <div class="pnote">CEO paper under review. Intermark meeting held. PARCO meeting to be arranged by Business. <span class="b b-up">Updated</span></div>
+      <div class="pfi">Entities: TPL · Intermark · PARCO</div>
+    </div>
+
+    <div class="pc rev">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">Horticulture &amp; Agri Value Chain</div><span class="b b-dd">Research · 4Q26</span>
+      </div>
+      <div class="pmeta">Agriculture · TBD · POC: Adil</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb gy"></div><div class="sb"></div><span class="sl">Stage 2</span></div>
+      <div class="pnote">SWAT region visit scoped and finalised. BOK team already aligned for field engagement</div>
+      <div class="pfi">FI Partners: BOK · BOP · HBL</div>
+    </div>
+
+    <div class="pc rev">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">SECP Invoice Discounting Framework</div><span class="b b-dd">Regulatory</span>
+      </div>
+      <div class="pmeta">SME · Anchor Risk – Pari Passu · POC: Majid</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb on"></div><div class="sb gy"></div><div class="sb"></div><span class="sl">Stage 2</span></div>
+      <div class="pnote">NCGCL facilitating SECP framework. SECP soliciting NBFI &amp; FI feedback. Timeline: SECP-dependent</div>
+      <div class="pfi">FI Partners: Meezan · CashNow · Smart Finance</div>
+    </div>
+
+    <div class="pc rev">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">EXIM Bank Collaboration</div><span class="b b-init">Concept</span>
+      </div>
+      <div class="pmeta">Trade Finance · TBD · POC: Falak</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb"></div><div class="sb"></div><div class="sb"></div><span class="sl">Stage 1</span></div>
+      <div class="pnote">Draft concept paper prepared; to be shared with relevant EXIM Bank body</div>
+      <div class="pfi">FI Partners: HBL · JS Bank</div>
+    </div>
+
+    <div class="pc new">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">TPL &amp; OEM Buy Now Pay Later Guarantee</div><span class="b b-new">New · 3Q26</span>
+      </div>
+      <div class="pmeta">Consumer Finance · Joint FL (TPL) &amp; SL (NCGCL) · POC: Majid</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb am"></div><div class="sb"></div><div class="sb"></div><span class="sl" style="color:var(--acc)">Stage 2</span></div>
+      <div class="pnote">Joint guarantee structure with TPL Finance for OEM Buy Now Pay Later scheme on selected variants. Concept paper drafted; queries raised with TPL Finance team. <span class="b b-new">New Product</span></div>
+      <div class="pfi">Partners: TPL Finance · OEM Partners (TBD)</div>
+    </div>
+
+    <div class="pc new">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div class="pname">Electricity Product — Power Distribution</div><span class="b b-new">New · Concept</span>
+      </div>
+      <div class="pmeta">Energy / Infrastructure · TBD · POC: Majid</div>
+      <div class="sb-row"><div class="sb on"></div><div class="sb am"></div><div class="sb"></div><div class="sb"></div><span class="sl" style="color:var(--acc)">Stage 2</span></div>
+      <div class="pnote">Discussing possible structure with "Independent System Company" to bring efficiency in power distribution. Concept paper drafted. <span class="b b-new">New Product</span></div>
+      <div class="pfi">Partners: Independent System Company (TBD)</div>
+    </div>
+
+    </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="ex-tag">Exhibit C-2</div>
+      <div class="ptitle">Products by Business Segment</div>
+      <div class="psub">14 products across 9 segments including 2 new additions</div>
+      <div class="ch h230"><canvas id="cC2"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ex-tag">Exhibit C-3</div>
+      <div class="ptitle">Products by Development Stage</div>
+      <div class="psub">Stage 1 = Concept &middot; Stage 2 = Review &middot; Stage 3 = Active &middot; Stage 4 = Live</div>
+      <div class="ch h230"><canvas id="cC3"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════ D · STRATEGIC PROJECTS ═════════════════════ -->
+<div id="projects" class="sec">
+  <div class="sec-eyebrow"><i data-lucide="handshake"></i>Section D</div>
+  <h2 class="sec-title">Strategic Projects &amp; Collaborations</h2>
+  <p class="sec-sub">Climate finance, capital markets, multilateral partnerships &middot; 4 active international collaborations + 7 thematic initiatives</p>
+
+  <div class="ex-tag" style="margin-bottom:.85rem">Exhibit D-1 &middot; Active International Collaborations</div>
+  <div class="g2" style="margin-bottom:1.5rem">
+<div class="pjc" style="border-top:3px solid var(--grn)">
+      <div class="pjn">GIZ Project – BG&amp;BE Pakistan</div>
+      <div class="pja">Climate Finance · SME · POC: Shajeea</div>
+      <div class="pjd">NCGCL participating in international collaboration to support SME carbon efficiency and upscaling. Technical assistance also to be provided to relatively new SMEs. Joint FL &amp; SL arrangement.</div>
+      <span class="b b-live">Concept Submitted — Apr 17, 2026</span>
+    </div>
+    <div class="pjc" style="border-top:3px solid var(--grn)">
+      <div class="pjn">IFC Partnership</div>
+      <div class="pja">Multi-Sector · POC: Saher</div>
+      <div class="pjd">Concept paper submitted with IFC team covering possible collaboration areas. NCGCL provided list of sectors and products where co-investment and risk-sharing can be ventured.</div>
+      <span class="b b-live">Paper Shared — Apr 20, 2026</span>
+    </div>
+    <div class="pjc" style="border-top:3px solid var(--acc)">
+      <div class="pjn">Equity Fund Guarantee Paper</div>
+      <div class="pja">Climate Finance · Portfolio Level · POC: Shajeea</div>
+      <div class="pjd">Paper prepared to support investor capital by absorbing a portion of risk to enable commercially relevant capital formation. Linked to Climate Core Asia LOIs from Pak Libya (PKR 300 Mn) and Saudi Pak (PKR 1 Bn).</div>
+      <span class="b b-review">Board Review Pending</span>
+    </div>
+    <div class="pjc" style="border-top:3px solid var(--acc)">
+      <div class="pjn">Credit Enhancer – Capital Markets (PSX)</div>
+      <div class="pja">Bond Market · Account Level · POC: Saira</div>
+      <div class="pjd">Deck prepared underlining NCGCL's role as credit enhancer and risk absorber for the PSX green and corporate bond market. Under internal review before PSX submission.</div>
+      <span class="b b-review">Internal Review → PSX Submission</span>
+    </div>
+    </div>
+
+  <div class="ex-tag" style="margin-bottom:.85rem">Exhibit D-2 &middot; Thematic Strategic Initiatives</div>
+  <div class="proj-grid">
+
+    <div class="pjc"><div class="pjn">GCF Proposal – PCFGF</div><div class="pja">Climate Finance · Multilateral</div><div class="pjd">Pakistan Climate Finance Guarantee Facility targeting Green Climate Fund to mobilise blended finance for climate adaptation and mitigation priorities.</div><span class="b b-ts">In Structuring</span></div>
+    <div class="pjc"><div class="pjn">Green Sukuk – Capital Markets</div><div class="pja">Bond Market · Sukuk</div><div class="pjd">NCGCL as credit enhancer for PSX green bond and Sukuk market. Linked to Haball Sukuk deal and broader PSX credit enhancer positioning.</div><span class="b b-dd">In Review</span></div>
+    <div class="pjc"><div class="pjn">Electrification Product Suite</div><div class="pja">Energy Finance · EV &amp; Appliances</div><div class="pjd">Multi-product suite covering EVs, 2-3 wheelers (WASL Mobility), TPL OEM BNPL, and energy-efficient appliances. Research and product design phase.</div><span class="b b-ts">Product Design</span></div>
+    <div class="pjc"><div class="pjn">Hyfin – Solar Securitisation</div><div class="pja">Climate Finance · Solar</div><div class="pjd">Guarantee product enabling risk transfer from solar ESCO portfolios to capital markets, linked to NCGCL's PSX credit enhancement positioning.</div><span class="b b-pipe">Development</span></div>
+    <div class="pjc"><div class="pjn">OPM – Mitigation Action Facility</div><div class="pja">Climate · Multilateral</div><div class="pjd">GCF-linked mitigation facility supporting Pakistan's nationally determined contributions in collaboration with OPM and multilateral partners.</div><span class="b b-dd">In Progress</span></div>
+    <div class="pjc"><div class="pjn">Impact Assessment Framework</div><div class="pja">Analytics · Portfolio</div><div class="pjd">Portfolio-wide impact measurement covering credit additionality, employment, women's income, and emissions. Required for IFC, GCF and multilateral reporting.</div><span class="b b-dd">Development</span></div>
+    </div>
+</div>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════ E · FINANCIAL OVERVIEW ═════════════════════ -->
+<div id="financials" class="sec">
+  <div class="sec-eyebrow"><i data-lucide="landmark"></i>Section E</div>
+  <h2 class="sec-title">Financial Overview</h2>
+  <p class="sec-sub">Management Accounts &middot; YTD April 2026 &middot; PKR in Millions</p>
+
+  <div class="milestone" style="margin-bottom:1.5rem">
+    <div class="milestone-head"><i data-lucide="award"></i>Corporate Milestone &mdash; First Operating Revenue Recognised</div>
+    <div class="milestone-text">YTD April 2026 represents a landmark period: NCGCL recognised its <strong>first-ever Guarantee Revenue of PKR 0.125 Mn</strong> (out of PKR 2.5 Mn upfront fee from PMIC), marking the Company's transition from a pre-revenue to a revenue-generating guarantee institution. This is the foundational step toward building a sustainable fee income stream.</div>
+  </div>
+
+  <!-- Key Financial KPIs -->
+  <div class="ex-tag">Exhibit E-1 &middot; Key Financial Metrics &mdash; YTD April 2026</div>
+  <div class="kpi-grid">
+    <div class="kbox gn"><div class="knum">PKR 293Mn</div><div class="klbl">YTD Investment Income</div><div class="knote gn">Core revenue driver</div></div>
+    <div class="kbox am"><div class="knum">42.87%</div><div class="klbl">Net Profit Margin</div><div class="knote">23% C/I ratio ex-finance cost</div></div>
+    <div class="kbox sl"><div class="knum">7.09x</div><div class="klbl">Current Ratio</div><div class="knote">PKR 9.29Bn in investments</div></div>
+    <div class="kbox bl"><div class="knum">13.05%</div><div class="klbl">Gearing Ratio</div><div class="knote">Conservative leverage profile</div></div>
+  </div>
+
+  <!-- Ratio Analysis -->
+  <div class="ex-tag">Exhibit E-2 &middot; Financial Ratio Analysis &mdash; 2026 vs 2025</div>
+  <div class="g2" style="margin-bottom:1.5rem">
+    <div>
+      <div class="ratio-card" style="margin-bottom:1rem">
+        <div class="ratio-title">Profitability</div>
+        <table class="tbl">
+          <thead><tr><th>Ratio</th><th style="text-align:right">YTD Apr 2026</th><th style="text-align:right">2025</th><th style="text-align:right">Change</th></tr></thead>
+          <tbody>
+            <tr><td>Net Profit Margin</td><td class="val">42.87%</td><td class="val" style="color:var(--text-muted)">50.07%</td><td class="val" style="color:var(--risk-high)">&#9660; 7.2pp</td></tr>
+            <tr><td>Return on Equity</td><td class="val">1.55%</td><td class="val" style="color:var(--text-muted)">5.42%</td><td class="val" style="color:var(--risk-high)">&#9660; 3.87pp</td></tr>
+            <tr><td>Return on Assets</td><td class="val">1.31%</td><td class="val" style="color:var(--text-muted)">4.56%</td><td class="val" style="color:var(--risk-high)">&#9660; 3.25pp</td></tr>
+          </tbody>
+        </table>
+        <div class="fin-highlight" style="margin-top:.85rem">The decline in profitability ratios is primarily attributable to <strong>PKR 46.98 Mn in finance costs</strong> on the short-term running finance facility &mdash; a new cost element introduced in 2026. On a like-for-like basis (excluding finance costs), the <strong>C/I ratio of 23.11%</strong> reflects highly efficient operations.</div>
+      </div>
+      <div class="ratio-card">
+        <div class="ratio-title">Efficiency</div>
+        <table class="tbl">
+          <thead><tr><th>Ratio</th><th style="text-align:right">YTD Apr 2026</th><th style="text-align:right">2025</th></tr></thead>
+          <tbody>
+            <tr><td>C/I (incl. Finance Costs)</td><td class="val">39.13%</td><td class="val" style="color:var(--text-muted)">20.99%</td></tr>
+            <tr><td>C/I (excl. Finance Costs)</td><td class="val" style="color:var(--green-700)">23.11%</td><td class="val" style="color:var(--text-muted)">20.33%</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:.6rem">23 paisas in admin overhead per rupee of income (excluding finance costs) reflects disciplined cost management.</p>
+      </div>
+    </div>
+    <div>
+      <div class="ratio-card" style="margin-bottom:1rem">
+        <div class="ratio-title">Liquidity</div>
+        <table class="tbl">
+          <thead><tr><th>Ratio</th><th style="text-align:right">YTD Apr 2026</th><th style="text-align:right">2025</th><th style="text-align:right">Change</th></tr></thead>
+          <tbody>
+            <tr><td>Current Ratio</td><td class="val" style="color:var(--green-700)">7.09x</td><td class="val" style="color:var(--text-muted)">6.75x</td><td class="val" style="color:var(--green-700)">&#9650; 0.34x</td></tr>
+            <tr><td>Cash Ratio</td><td class="val" style="color:var(--green-700)">7.07x</td><td class="val" style="color:var(--text-muted)">6.73x</td><td class="val" style="color:var(--green-700)">&#9650; 0.34x</td></tr>
+          </tbody>
+        </table>
+        <div class="fin-highlight" style="margin-top:.85rem">Immediate liquidity risk is effectively non-existent. Pure cash stands at <strong>PKR 136.8 Mn</strong> while short-term investments of <strong>PKR 9.29 Bn</strong> provide massive coverage against total current liabilities of <strong>PKR 1.33 Bn</strong>.</div>
+      </div>
+      <div class="ratio-card">
+        <div class="ratio-title">Solvency &amp; Balance Sheet</div>
+        <table class="tbl">
+          <thead><tr><th>Ratio</th><th style="text-align:right">YTD Apr 2026</th><th style="text-align:right">2025</th><th style="text-align:right">Change</th></tr></thead>
+          <tbody>
+            <tr><td>Gearing Ratio</td><td class="val">13.05%</td><td class="val" style="color:var(--text-muted)">13.06%</td><td class="val" style="color:var(--green-700)">Stable</td></tr>
+            <tr><td>Debt-to-Equity Ratio</td><td class="val">18.29%</td><td class="val" style="color:var(--text-muted)">18.91%</td><td class="val" style="color:var(--green-700)">&#9660; Improved</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px;color:var(--text-muted);margin-top:.6rem">Running finance facility: PKR 1.238 Bn &middot; Accrued interest: PKR 12.01 Mn &middot; Leverage remains within secure thresholds.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Balance Sheet Snapshot -->
+  <div class="ex-tag">Exhibit E-3 &middot; Balance Sheet Snapshot &mdash; YTD April 2026</div>
+  <div class="panel" style="margin-bottom:1.5rem">
+    <div class="ptitle">Key Balance Sheet Figures &mdash; PKR Mn</div>
+    <div class="psub">As at April 30, 2026 &middot; Total asset base flat MoM (+0%) due to markup payment on short-term facility</div>
+    <div class="g2" style="gap:2rem">
+      <div>
+        <table class="tbl">
+          <thead><tr><th>Asset Component</th><th style="text-align:right">PKR Mn</th><th style="text-align:right">% of Total</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Short-term Investments</td><td class="val" style="color:var(--green-700)">9,290</td><td class="val">96.9%</td></tr>
+            <tr><td>Cash &amp; Equivalents</td><td class="val">136.8</td><td class="val">1.4%</td></tr>
+            <tr><td>Other Assets</td><td class="val">155.2</td><td class="val">1.6%</td></tr>
+            <tr style="background:var(--surface-muted)"><td class="strong">Total Asset Base</td><td class="val strong">9,582</td><td class="val strong">100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <table class="tbl">
+          <thead><tr><th>Income Component</th><th style="text-align:right">April 2026</th><th style="text-align:right">YTD 2026</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Investment Income (Mark-up)</td><td class="val" style="color:var(--green-700)">69</td><td class="val" style="color:var(--green-700)">293</td></tr>
+            <tr><td>Guarantee Revenue (First Ever)</td><td class="val">&mdash;</td><td class="val" style="color:var(--color-primary)">0.125</td></tr>
+            <tr><td>Finance Costs (Running Finance)</td><td class="val" style="color:var(--risk-high)">(est. 12)</td><td class="val" style="color:var(--risk-high)">(46.98)</td></tr>
+            <tr style="background:var(--surface-muted)"><td class="strong">Net Profit Margin</td><td class="val strong">&mdash;</td><td class="val strong">42.87%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ratio chart -->
+  <div class="g2">
+    <div class="panel">
+      <div class="ex-tag">Exhibit E-4</div>
+      <div class="ptitle">Key Ratios &mdash; 2026 vs 2025</div>
+      <div class="psub">YTD comparative &middot; Profitability and efficiency metrics</div>
+      <div class="ch h230"><canvas id="cE4"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ex-tag">Exhibit E-5</div>
+      <div class="ptitle">Balance Sheet Composition</div>
+      <div class="psub">Asset allocation by component &middot; April 2026</div>
+      <div class="ch h230"><canvas id="cE5"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════ F · INVESTMENT PORTFOLIO ═══════════════════ -->
+<div id="investment" class="sec">
+  <div class="sec-eyebrow"><i data-lucide="trending-up"></i>Section F</div>
+  <h2 class="sec-title">Investment Portfolio Performance</h2>
+  <p class="sec-sub">April 2026 Investment Review &middot; Total portfolio PKR 9.58 Bn &middot; Policy rate 11.50% effective April 27</p>
+
+  <div class="fin-highlight" style="border-left-color:var(--color-accent);margin-bottom:1.5rem">
+    <strong>Portfolio outperformance sustained despite interest rate volatility.</strong> Notwithstanding the 100 bps policy rate hike to 11.50% on April 27 and heightened market pressure across the yield curve, NCGCL's investment portfolio delivered a positive MTD alpha of <strong>+23 bps</strong> against the peer fund universe average of 8.87%, and a YTD alpha of <strong>+43 bps</strong> against the peer benchmark of 9.31%. This places NCGCL among a select minority of institutions: <strong>37 out of 44 high-rated fixed income and money market funds</strong> underperformed their benchmark during April. NCGCL did not.
+  </div>
+
+  <!-- Performance KPI boxes -->
+  <div class="ex-tag">Exhibit F-1 &middot; Investment Return Summary</div>
+  <div class="perf-grid" style="margin-bottom:1.5rem">
+    <div class="perfbox">
+      <div class="perf-lbl">April 2026 Return</div>
+      <div class="perf-ret">9.10%</div>
+      <div class="perf-bm">Benchmark (3M KIBOR &minus;100bps): 10.46%</div>
+      <div class="perf-alpha alpha-neg">Alpha: &minus;136 bps</div>
+      <div class="alpha-note">Variance driven by strategic sovereign allocation and capital gains timing; consistent with mandate</div>
+    </div>
+    <div class="perfbox" style="border-top:3px solid var(--color-accent)">
+      <div class="perf-lbl">MTD vs Peer Universe</div>
+      <div class="perf-ret" style="color:var(--green-700)">9.10%</div>
+      <div class="perf-bm">Peer Fund Universe Avg: 8.87%</div>
+      <div class="perf-alpha alpha-pos">Alpha: +23 bps &#8593;</div>
+      <div class="alpha-note">Outperformed 37 of 44 high-rated FI/MM funds</div>
+    </div>
+    <div class="perfbox" style="border-top:3px solid var(--color-accent)">
+      <div class="perf-lbl">YTD 2026 Return</div>
+      <div class="perf-ret" style="color:var(--green-700)">9.74%</div>
+      <div class="perf-bm">Peer Fund Universe Avg YTD: 9.31%</div>
+      <div class="perf-alpha alpha-pos">Alpha: +43 bps &#8593;</div>
+      <div class="alpha-note">YTD income: PKR 293 Mn &middot; Consistent alpha generation</div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:1.5rem">
+    <!-- Allocation donut -->
+    <div class="panel">
+      <div class="ex-tag">Exhibit F-2</div>
+      <div class="ptitle">Portfolio Asset Allocation</div>
+      <div class="psub">As at April 30, 2026 &middot; Emphasis on sovereign and high-quality instruments</div>
+      <div class="ch h260"><canvas id="cF2"></canvas></div>
+    </div>
+    <!-- Performance chart -->
+    <div class="panel">
+      <div class="ex-tag">Exhibit F-3</div>
+      <div class="ptitle">Return vs Benchmark &mdash; Period Comparison</div>
+      <div class="psub">NCGCL portfolio return vs absolute benchmark and peer fund universe avg (%)</div>
+      <div class="ch h260"><canvas id="cF3"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Peer comparison chart + holdings -->
+  <div class="g2" style="margin-bottom:1.5rem">
+    <div class="panel">
+      <div class="ex-tag">Exhibit F-4</div>
+      <div class="ptitle">Peer Universe Performance &mdash; April 2026</div>
+      <div class="psub">37 of 44 high-rated FI/MM funds underperformed benchmark &middot; NCGCL above peer average</div>
+      <div class="ch h230"><canvas id="cF4"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ex-tag">Exhibit F-5 &middot; Notable Holdings</div>
+      <div class="ptitle">Selected Portfolio Positions</div>
+      <div class="psub">High-yield Sukuk positions delivering spread over sovereign</div>
+      <table class="tbl" style="margin-top:.6rem">
+        <thead><tr><th>Instrument</th><th>Type</th><th style="text-align:right">Amount</th><th style="text-align:right">Rate</th><th>Maturity</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">MTBs (12-Month)</td><td>Gov. Security</td><td class="val">62.47% of AUM</td><td class="val" style="color:var(--green-700)">12.10%</td><td>6&ndash;12 months</td></tr>
+          <tr><td class="strong">Daewoo Express Sukuk</td><td>ST Corporate Sukuk</td><td class="val">PKR 275 Mn</td><td class="val" style="color:var(--green-700)">13.09%</td><td>August 2026</td></tr>
+          <tr><td class="strong">AT-Tahur (PREMA) Sukuk</td><td>Float-rate Sukuk</td><td class="val">PKR 104 Mn</td><td class="val" style="color:var(--green-700)">KIBOR +130bps</td><td>~11.5 months</td></tr>
+          <tr><td>Mutual Funds</td><td>FI/MM Funds</td><td class="val">18.13% of AUM</td><td class="val">Variable</td><td>Liquid</td></tr>
+          <tr><td>Certificates of Investment</td><td>COIs</td><td class="val">13.89% of AUM</td><td class="val">Fixed</td><td>Short-term</td></tr>
+          <tr><td>Bank Placements</td><td>TDRs</td><td class="val">1.44% of AUM</td><td class="val">Fixed</td><td>Short-term</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Market context + strategy -->
+  <div class="ex-tag">Exhibit F-6 &middot; Market Context &amp; Forward Strategy</div>
+  <div class="g2">
+    <div class="panel">
+      <div class="ptitle">April 2026 Market Context</div>
+      <div class="psub">Key macro and market developments informing portfolio positioning</div>
+      <table class="tbl" style="margin-top:.6rem">
+        <thead><tr><th>Market Event</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td>Policy rate hike: +100bps to 11.50% (Apr 27)</td><td style="font-size:11px">Validated prevailing market expectations; anchored short-term rates at elevated levels</td></tr>
+          <tr><td>3M&ndash;1Y yields repriced +21&ndash;83 bps</td><td style="font-size:11px">Primary auction confirmed yield elevation across belly of curve</td></tr>
+          <tr><td>PIB 2Y&ndash;3Y increased +12&ndash;25 bps</td><td style="font-size:11px">Gradual reassessment of inflation and fiscal risk in longer tenors</td></tr>
+          <tr><td>KIBOR trended upward throughout April</td><td style="font-size:11px">Reinforced tightening liquidity environment across money markets</td></tr>
+          <tr><td>PIB auction bids continued to be rejected</td><td style="font-size:11px">Government preference for short-duration borrowing confirmed; reinforces MTB overweight</td></tr>
+          <tr><td>37/44 high-rated funds underperformed</td><td style="font-size:11px">Hostile environment for peer managers; NCGCL maintained positive peer alpha</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="ptitle">Forward Investment Strategy</div>
+      <div class="psub">Key strategic priorities for the coming quarter</div>
+      <table class="tbl" style="margin-top:.6rem">
+        <thead><tr><th>Strategic Priority</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td>Dominant allocation to sovereign MTBs (6&ndash;12M)</td><td style="font-size:11px">Capital preservation, liquidity, and elevated sovereign yields; auction bids at 12.00&ndash;12.10%</td></tr>
+          <tr><td>Selective short-term corporate Sukuk</td><td style="font-size:11px">Incremental spread over sovereigns while preserving controlled duration and liquidity</td></tr>
+          <tr><td>Opportunistic COI placements</td><td style="font-size:11px">Fixed-rate yield lock-in at attractive tenor; complements MTB liquidity profile</td></tr>
+          <tr><td>Disciplined primary market participation</td><td style="font-size:11px">Defined bid ranges; competitive yield levels aligned with return thresholds</td></tr>
+          <tr><td>Lock in rates ahead of potential easing</td><td style="font-size:11px">Prioritise short-to-medium tenors to capture elevated rates before policy reversal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<hr class="div">
+
+<!-- ═══════════════════════════════ G · PIPELINE ANALYTICS ═════════════════════ -->
+<div id="analytics" class="sec">
+  <div class="sec-eyebrow"><i data-lucide="bar-chart-3"></i>Section G</div>
+  <h2 class="sec-title">Pipeline Analytics</h2>
+  <p class="sec-sub">Stage concentration, institutional type breakdown and origination velocity</p>
+
+  <div class="g2" style="margin-bottom:1.5rem">
+    <div class="panel">
+      <div class="ex-tag">Exhibit G-1</div>
+      <div class="ptitle">Origination Funnel &mdash; PKR Value by Stage</div>
+      <div class="psub">Quantified deals only &middot; Capital concentration at each stage</div>
+      <div class="ch h260"><canvas id="cG1"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ex-tag">Exhibit G-2</div>
+      <div class="ptitle">Pipeline Institutions by Type</div>
+      <div class="psub">28+ unique institutions by category</div>
+      <div class="ch h260"><canvas id="cG2"></canvas></div>
+    </div>
+  </div>
+
+  <div class="ex-tag">Exhibit G-3 &middot; Origination Statistics at a Glance</div>
+  <div class="stat-strip">
+    <div class="si"><div class="sv" style="color:var(--green-800)">1</div><div class="sl2">First Issuance Ready</div></div>
+    <div class="si"><div class="sv" style="color:var(--petrol-700)">3</div><div class="sl2">MAGFA / Legal Stage</div></div>
+    <div class="si"><div class="sv" style="color:#1a5c47">1</div><div class="sl2">IC / Approval</div></div>
+    <div class="si"><div class="sv" style="color:#8A6800">3</div><div class="sl2">Term Sheet Stage</div></div>
+    <div class="si"><div class="sv" style="color:var(--ink-700)">4</div><div class="sl2">Due Diligence</div></div>
+    <div class="si"><div class="sv" style="color:var(--text-muted)">16</div><div class="sl2">Initial Engagement</div></div>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-row">
+      <div class="footer-brand">
+        <img src="data:image/png;base64,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" alt="NCGCL">
+        <div><span class="n">NCGCL</span><small>Monthly Board Update &middot; May 2026</small></div>
+      </div>
+      <div class="footer-fine" style="text-align:right">
+        <strong>Financial Data:</strong> YTD April 2026<br>
+        Prepared for Board Members and Key Stakeholders
+      </div>
+    </div>
+    <p class="footer-fine"><strong>Board Confidential</strong> &middot; AAA Rated (PACRA) &middot; SBP Recognised. This document contains forward-looking statements and management estimates subject to change. &copy; National Credit Guarantee Company Limited.</p>
+  </div>
+</footer>
+
+<script>
+// Initialize Lucide icons
+if (window.lucide) { lucide.createIcons(); }
+
+const petrol='#0C688D',petrolDk='#004C66',petrolLt='#A7C7D6',petrolMid='#4FA0BC';
+const green='#39A935',greenDk='#1F6A1D',greenLt='#8CD872';
+const slate='#5B6B7A',slateLt='#AEAEAE',red='#C00000',amber='#BF9000',teal='#11688A',gold='#C4A882';
+const ink='#0E2841',body='#1F2E3A',muted='#7F7F7F';
+
+const pal=[green,petrol,slate,petrolMid,red,teal,gold,slateLt];
+Chart.defaults.font.family = "'Figtree', system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = body;
+Chart.defaults.borderColor = '#C8D6E0';
+
+const tt={backgroundColor:'rgba(14,40,65,0.95)',titleColor:'#fff',bodyColor:'#E3EEF3',titleFont:{size:11,weight:'600'},bodyFont:{size:11,family:"'IBM Plex Mono', monospace"},padding:10,borderColor:petrol,borderWidth:1,cornerRadius:6};
+const noLeg={legend:{display:false}};
+const leg=(p='right')=>({legend:{position:p,labels:{font:{size:10},boxWidth:10,padding:8,color:body}}});
+
+// A-2 Pipeline donut
+new Chart(document.getElementById('cA2'),{type:'doughnut',data:{labels:['Credit Guarantee – FI','Credit Guarantee – Portfolio','Guarantee & Advisory','Tech / Sukuk / Innovation','STFF / Specialised','Corp / Consortium','Microfinance'],datasets:[{data:[13200,1000,1000,1000,500,187.5,500],backgroundColor:pal,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{...leg('right'),tooltip:{...tt,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}}}});
+
+// A-3 Stage bar
+new Chart(document.getElementById('cA3'),{type:'bar',data:{labels:['Initial','Due Diligence','Term Sheet','IC Approval','Legal / MAGFA','First Issuance'],datasets:[{label:'Deals',data:[16,4,3,1,3,1],backgroundColor:[slateLt,'#94A3AD',amber,teal,petrol,green],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tt,callbacks:{label:c=>` ${c.raw} deals`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#E2E8F0'},ticks:{font:{size:10},stepSize:2}}}}});
+
+// B-1 Top deals
+new Chart(document.getElementById('cB1'),{type:'bar',data:{labels:['Bank Alfalah','JS Bank','Bank of Punjab','HBL MFB','UBL','PMIC','HBL FI','Meezan Bank','Askari Bank','Bank of Khyber','Haball','Daewoo'],datasets:[{label:'PKR Mn',data:[2000,2000,2000,1500,1500,1000,1000,1000,1000,1000,500,500],backgroundColor:[amber,amber,amber,petrolMid,petrolMid,green,green,'#94A3AD',slate,slate,teal,teal],borderRadius:3,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tt,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}},scales:{x:{grid:{color:'#E2E8F0'},ticks:{font:{size:10},callback:v=>'PKR '+(v/1000).toFixed(0)+'Bn'}},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+
+// B-3 Team
+new Chart(document.getElementById('cB3'),{type:'bar',data:{labels:['Guarantee Origination (CGO)','Senior Mgmt / CEO-Led','ALM / Structured Products','Consortium / Multilateral','Research'],datasets:[{label:'PKR Mn',data:[9270,4000,1500,580,37.5],backgroundColor:[green,amber,petrolMid,teal,muted],borderRadius:3,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tt,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}},scales:{x:{grid:{color:'#E2E8F0'},ticks:{font:{size:10},callback:v=>v>=1000?(v/1000).toFixed(1)+'Bn':v}},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+
+// B-4 Status pie
+new Chart(document.getElementById('cB4'),{type:'pie',data:{labels:['Initial Engagement','Due Diligence','Term Sheet','Legal / MAGFA','IC Approval','First Issuance Ready'],datasets:[{data:[16,4,3,3,1,1],backgroundColor:[slateLt,'#94A3AD',amber,petrolMid,teal,green],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{...leg('right'),tooltip:{...tt,callbacks:{label:c=>` ${c.raw} deals`}}}}});
+
+// C-2 Products by segment
+new Chart(document.getElementById('cC2'),{type:'doughnut',data:{labels:['SME','Agriculture','Climate Finance','MSME & Agri','FinTech','Trade Finance','Energy / Power','Consumer Finance','Bond Market'],datasets:[{data:[2,3,2,1,1,1,1,1,1],backgroundColor:pal,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{...leg('right'),tooltip:{...tt,callbacks:{label:c=>` ${c.raw} products`}}}}});
+
+// C-3 Products by stage
+new Chart(document.getElementById('cC3'),{type:'bar',data:{labels:['Stage 1\nConcept','Stage 2\nReview / New','Stage 3\nStructuring','Stage 4\nLive'],datasets:[{label:'Products',data:[1,5,3,3],backgroundColor:[slateLt,'#94A3AD',petrol,green],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tt,callbacks:{label:c=>` ${c.raw} products`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#E2E8F0'},ticks:{font:{size:10},stepSize:1}}}}});
+
+// E-4 Ratio comparison
+new Chart(document.getElementById('cE4'),{type:'bar',data:{labels:['Net Profit\nMargin','Return on\nEquity','Return on\nAssets','C/I (ex\nFin Cost)'],datasets:[{label:'2026',data:[42.87,1.55,1.31,23.11],backgroundColor:petrol,borderRadius:3},{label:'2025',data:[50.07,5.42,4.56,20.33],backgroundColor:slateLt,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10,color:body}},tooltip:{...tt,callbacks:{label:c=>` ${c.raw}%`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#E2E8F0'},ticks:{font:{size:10},callback:v=>v+'%'}}}}});
+
+// E-5 Balance sheet donut
+new Chart(document.getElementById('cE5'),{type:'doughnut',data:{labels:['Short-term Investments','Cash & Equivalents','Other Assets'],datasets:[{data:[9290,136.8,155.2],backgroundColor:[green,petrol,muted],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{...leg('right'),tooltip:{...tt,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}}}});
+
+// F-2 Asset allocation donut
+new Chart(document.getElementById('cF2'),{type:'doughnut',data:{labels:['Market Treasury Bills (MTBs)','Mutual Funds','Certificates of Investment','Sukuk','Bank Placements'],datasets:[{data:[62.47,18.13,13.89,4.05,1.44],backgroundColor:[green,petrol,petrolMid,teal,muted],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{...leg('right'),tooltip:{...tt,callbacks:{label:c=>` ${c.raw}%`}}}}});
+
+// F-3 Performance comparison
+new Chart(document.getElementById('cF3'),{type:'bar',data:{labels:['April 2026\n(MTD)', 'April 2026\n(vs Abs Benchmark)','YTD 2026\n(vs Peer Avg)'],datasets:[{label:'NCGCL Portfolio',data:[9.10,9.10,9.74],backgroundColor:green,borderRadius:4},{label:'Benchmark / Peer Avg',data:[8.87,10.46,9.31],backgroundColor:slateLt,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10,color:body}},tooltip:{...tt,callbacks:{label:c=>` ${c.raw}%`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:false,min:8,grid:{color:'#E2E8F0'},ticks:{font:{size:10},callback:v=>v.toFixed(1)+'%'}}}}});
+
+// F-4 Peer comparison
+new Chart(document.getElementById('cF4'),{type:'bar',data:{labels:['Fund Avg (8.87%)','NCGCL (9.10%)'],datasets:[{label:'April 2026 Return (%)',data:[8.87,9.10],backgroundColor:[muted,green],borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tt,callbacks:{label:c=>` ${c.raw}%`}}},scales:{x:{grid:{display:false},ticks:{font:{size:11,weight:'600'}}},y:{beginAtZero:false,min:8.5,max:9.5,grid:{color:'#E2E8F0'},ticks:{font:{size:10},callback:v=>v.toFixed(2)+'%'}}}}});
+
+// G-1 Funnel
+new Chart(document.getElementById('cG1'),{type:'bar',data:{labels:['Initial','Due Diligence','Term Sheet','IC / Approval','MAGFA / Legal','First Issuance'],datasets:[{label:'PKR Mn',data:[3537,2580,5500,2000,1270,1000],backgroundColor:[slateLt,'#94A3AD',amber,teal,petrolMid,green],borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tt,callbacks:{label:c=>` PKR ${c.raw.toLocaleString()} Mn`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#E2E8F0'},ticks:{font:{size:10},callback:v=>'PKR '+(v/1000).toFixed(0)+'Bn'}}}}});
+
+// G-2 Institution type
+new Chart(document.getElementById('cG2'),{type:'bar',data:{labels:['Commercial\nBanks','DFIs /\nModarabas','MFBs / MFIs','Tech /\nFinTech','Others','Multilateral'],datasets:[{label:'Institutions',data:[12,6,4,3,3,2],backgroundColor:[green,amber,petrolMid,'#94A3AD',slateLt,muted],borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{...noLeg,tooltip:{...tt,callbacks:{label:c=>` ${c.raw} institutions`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{beginAtZero:true,grid:{color:'#E2E8F0'},ticks:{font:{size:10},stepSize:2}}}}});
+
+// Sticky nav active-state on scroll
+const navLinks = document.querySelectorAll('.jump-nav a');
+const sections = Array.from(navLinks).map(a => document.querySelector(a.getAttribute('href')));
+window.addEventListener('scroll', () => {
+  let idx = 0;
+  const y = window.scrollY + 100;
+  sections.forEach((s, i) => { if (s && s.offsetTop <= y) idx = i; });
+  navLinks.forEach((a, i) => a.classList.toggle('active', i === idx));
+}, { passive: true });
+</script>
+</body>
+</html>
