@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Economy IRL — Show Concept</title>
+<style>
+:root {
+  --white: #FFFFFF;
+  --off: #FAFAFA;
+  --border: #E5E5E5;
+  --amber: #C8923A;
+  --text: #1A1A1A;
+  --mid: #666666;
+  --light: #999999;
+  --green: #52B788;
+  --red: #9B2335;
+  --navy: #0F2340;
+  --show-orange: #D94F0A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: var(--white);
+  color: #2D2D2D;
+  line-height: 1.6;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+/* HERO */
+.hero {
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--border);
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--light);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.show-title {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  line-height: 0.9;
+  margin-bottom: 0;
+}
+.show-title .economy {
+  display: block;
+  font-size: 52px;
+  color: var(--text);
+  font-style: italic;
+}
+.show-title .irl {
+  display: block;
+  font-size: 96px;
+  color: var(--amber);
+  letter-spacing: -0.02em;
+}
+.show-tagline {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  color: var(--mid);
+  font-style: italic;
+  margin: 2rem 0 0.75rem;
+}
+.show-sub {
+  font-size: 14px;
+  color: var(--mid);
+  max-width: 560px;
+  line-height: 1.65;
+}
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.hero-stat {
+  padding-right: 2.5rem;
+  border-right: 1px solid var(--border);
+  margin-right: 2.5rem;
+}
+.hero-stat:last-child { border-right: none; margin-right: 0; }
+.hero-stat-num {
+  font-family: Georgia, serif;
+  font-size: 30px;
+  color: var(--text);
+  line-height: 1.1;
+}
+.hero-stat-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--light);
+  margin-top: 3px;
+}
+
+/* STICKY NAV */
+.nav-wrap {
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+}
+.nav-tabs { display: flex; overflow-x: auto; }
+.nav-tab {
+  background: none;
+  border: none;
+  padding: 1rem 1.5rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--light);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--text); border-bottom-color: var(--amber); }
+
+/* TAB PANELS */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* SECTION */
+.section {
+  padding: 3rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.section:last-child { border-bottom: none; padding-bottom: 4rem; }
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--light);
+  margin-bottom: 0.4rem;
+}
+.heading {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+.intro-text {
+  font-size: 14px;
+  color: var(--mid);
+  line-height: 1.75;
+  max-width: 680px;
+  margin-bottom: 2rem;
+}
+
+/* OVERVIEW GRID */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 4rem;
+}
+.body-text p {
+  font-size: 14px;
+  color: #3D3D3D;
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+}
+.body-text p:last-child { margin-bottom: 0; }
+
+.callout {
+  background: var(--off);
+  border-left: 3px solid var(--amber);
+  padding: 1.25rem 1.5rem;
+  margin: 1.75rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.callout p {
+  font-size: 13px;
+  color: #2D2D2D;
+  line-height: 1.65;
+}
+.promise {
+  background: var(--navy);
+  padding: 1.75rem 2rem;
+  margin: 1.75rem 0;
+}
+.promise-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 0.75rem;
+}
+.promise-text {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  color: #FFFFFF;
+  line-height: 1.55;
+  font-style: italic;
+}
+
+/* HOST CARDS */
+.host-card {
+  background: var(--off);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+.host-name {
+  font-family: Georgia, serif;
+  font-size: 17px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.host-role {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.6rem;
+}
+.host-desc {
+  font-size: 12px;
+  color: var(--mid);
+  line-height: 1.55;
+  margin-bottom: 0.75rem;
+}
+.trait-list { list-style: none; }
+.trait-list li {
+  font-size: 12px;
+  color: var(--mid);
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 0.6rem;
+}
+.trait-list li:last-child { border-bottom: none; }
+.trait-arrow { color: var(--amber); flex-shrink: 0; }
+
+.why-box {
+  background: var(--off);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1rem;
+}
+.why-box p {
+  font-size: 12px;
+  color: var(--mid);
+  line-height: 1.6;
+}
+
+/* JARGON SCORE BAR */
+.score-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding: 0.875rem 1.25rem;
+  background: var(--off);
+  border: 1px solid var(--border);
+}
+.score-label { font-size: 11px; color: var(--light); text-transform: uppercase; letter-spacing: 0.08em; flex: 1; }
+.score-val { font-family: Georgia, serif; font-size: 22px; color: var(--amber); }
+.score-desc { font-size: 11px; color: var(--mid); }
+
+/* FORMAT / SEGMENT FLOW */
+.segment-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.segment-row:last-child { border-bottom: none; }
+.seg-num-block { text-align: center; padding-top: 0.25rem; }
+.seg-num {
+  font-family: Georgia, serif;
+  font-size: 48px;
+  color: var(--border);
+  line-height: 1;
+  display: block;
+}
+.seg-time {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--light);
+  text-transform: uppercase;
+  display: block;
+  margin-top: 4px;
+}
+.seg-chapter {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.3rem;
+}
+.seg-name {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+}
+.seg-desc {
+  font-size: 14px;
+  color: var(--mid);
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+.seg-examples {
+  background: var(--off);
+  border-left: 2px solid var(--border);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+.seg-examples p {
+  font-size: 12px;
+  color: var(--mid);
+  line-height: 1.5;
+  font-style: italic;
+}
+.seg-examples p + p { margin-top: 0.3rem; }
+.seg-device {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+/* EPISODE ARC */
+.ep-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.ep-card {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--amber);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+.ep-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+.ep-card[data-ep="1"] { border-top-color: var(--show-orange); }
+.ep-card[data-ep="2"] { border-top-color: var(--green); }
+.ep-card[data-ep="3"] { border-top-color: #4A7FB5; }
+.ep-card[data-ep="4"] { border-top-color: #8B5CF6; }
+.ep-card[data-ep="5"] { border-top-color: var(--red); }
+.ep-card[data-ep="6"] { border-top-color: var(--navy); }
+.ep-num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--light);
+  margin-bottom: 0.4rem;
+}
+.ep-title {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 0.4rem;
+}
+.ep-q {
+  font-size: 12px;
+  color: var(--mid);
+  font-style: italic;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.ep-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.ep-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  background: var(--off);
+  border: 1px solid var(--border);
+  color: var(--light);
+}
+.ep-detail {
+  display: none;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.ep-detail.open { display: block; }
+.ep-row { margin-bottom: 0.85rem; }
+.ep-dlabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--light);
+  margin-bottom: 0.2rem;
+}
+.ep-dtext {
+  font-size: 12px;
+  color: var(--mid);
+  line-height: 1.55;
+}
+.ep-expand {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-top: 0.75rem;
+  display: inline-block;
+}
+
+/* SANA TRACKER */
+.sana-track {
+  background: var(--off);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+.sana-track-title {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+.sana-track-sub { font-size: 12px; color: var(--mid); margin-bottom: 1.25rem; }
+.sana-steps {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+.sana-step {
+  padding: 0.75rem 0.5rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.sana-step-ep { font-size: 10px; color: var(--light); text-transform: uppercase; letter-spacing: 0.06em; }
+.sana-step-q { font-size: 11px; color: var(--mid); line-height: 1.4; margin-top: 4px; font-style: italic; }
+
+/* SEGMENTS */
+.new-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--amber);
+  color: #fff;
+  padding: 1px 5px;
+  margin-left: 6px;
+  vertical-align: 2px;
+}
+.additions-bar {
+  background: var(--navy);
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+}
+.additions-bar h3 {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 0.35rem;
+}
+.additions-bar p { font-size: 12px; color: rgba(255,255,255,0.55); margin-bottom: 1.25rem; }
+.additions-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+}
+
+.segs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.seg-block {
+  background: var(--off);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+}
+.seg-block-name {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.seg-block-desc { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+/* STRATEGY */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.strategy-card {
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+}
+.strategy-card h3 {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+.strategy-card p {
+  font-size: 13px;
+  color: var(--mid);
+  line-height: 1.65;
+  margin-bottom: 0.75rem;
+}
+.output-list { list-style: none; }
+.output-list li {
+  font-size: 13px;
+  color: var(--mid);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+.output-list li:last-child { border-bottom: none; }
+.output-type {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  background: var(--off);
+  border: 1px solid var(--border);
+  color: var(--light);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.output-type.good { border-color: var(--green); color: var(--green); }
+.output-type.avoid { border-color: var(--red); color: var(--red); }
+
+/* VISUAL LANGUAGE */
+.vis-lang-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.vis-block {
+  border: 1px solid var(--border);
+  padding: 1.25rem;
+}
+.vis-block-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 0.6rem;
+}
+.vis-block-label.avoid { color: var(--red); }
+.vis-block ul { list-style: none; }
+.vis-block ul li { font-size: 13px; color: var(--mid); padding: 0.3rem 0; }
+
+/* FOOTER */
+.footer {
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-l { font-size: 12px; color: var(--light); }
+.footer-l strong { color: var(--text); }
+.footer-r { font-size: 11px; color: var(--light); letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .show-title .economy { font-size: 36px; }
+  .show-title .irl { font-size: 64px; }
+  .hero-stat { padding-right: 1.5rem; margin-right: 1.5rem; }
+  .overview-grid, .ep-grid, .segs-grid, .strategy-grid, .vis-lang-grid { grid-template-columns: 1fr; }
+  .sana-steps { grid-template-columns: repeat(3, 1fr); }
+  .segment-row { grid-template-columns: 70px 1fr; gap: 1rem; }
+  .seg-num { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">DawnNews English &nbsp;·&nbsp; Series Concept &nbsp;·&nbsp; 2025</div>
+    <div class="show-title">
+      <span class="economy">economy</span>
+      <span class="irl">IRL</span>
+    </div>
+    <div class="show-tagline">Big questions. Real choices. No boring answers.</div>
+    <div class="show-sub">A six-episode father-daughter show that teaches Pakistan's youth to think economically — not to memorise economics.</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">24–26</div>
+        <div class="hero-stat-label">Minutes per episode</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">6</div>
+        <div class="hero-stat-label">Episode arc</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">2</div>
+        <div class="hero-stat-label">Hosts</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">4</div>
+        <div class="hero-stat-label">Recurring panellists</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">8+</div>
+        <div class="hero-stat-label">Digital outputs / episode</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<div class="nav-wrap">
+  <div class="container">
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="overview">Overview</button>
+      <button class="nav-tab" data-tab="format">Episode Format</button>
+      <button class="nav-tab" data-tab="episodes">Six-Episode Arc</button>
+      <button class="nav-tab" data-tab="segments">Recurring Segments</button>
+      <button class="nav-tab" data-tab="strategy">Production Strategy</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="tab-panel active" id="panel-overview">
+  <div class="container">
+    <div class="section">
+      <div class="eyebrow">The Concept</div>
+      <div class="heading">Economics as a decoding tool, not a subject</div>
+      <div class="overview-grid">
+        <div class="body-text">
+          <p>This should not feel like an economics programme made for children. It should feel like a youth show in which economics becomes the tool used to decode real life — pocket money, gaming, careers, AI, influencers, inequality, inflation and Pakistan's future.</p>
+          <p>The strongest format is a father-daughter investigation and challenge show. The daughter represents the intelligent, sceptical viewer who refuses to accept complicated or evasive answers. The father brings the economics, evidence and wider context — but <em>she</em> determines whether the explanation actually makes sense.</p>
+          <p>That relationship is the show's greatest asset. Younger audiences particularly value relatable people, authentic relationships and genuine disagreement over manufactured aspiration. The programme should feel conversational, visual and participatory rather than like a television lecture.</p>
+
+          <div class="callout">
+            <p><strong>The central tension:</strong> Two people who love each other, think differently, and refuse to pretend the other is automatically right. The daughter sometimes proves the economist wrong. That is not a bug — that is the show.</p>
+          </div>
+
+          <p>A recurring <strong>Jargon Alarm</strong> goes off whenever terms like "fiscal deficit," "monetary transmission" or "capital formation" are used without plain explanation. The economist then has 20 seconds to explain using an example from her life. A running score tracks this across all six episodes — by the finale, she has a number.</p>
+
+          <p>Crucially: she sometimes proves him wrong, changes his mind, or makes a better decision than him in the Choice Lab. That outcome should be allowed to stand, uncorrected and unqualified.</p>
+
+          <div class="promise">
+            <div class="promise-eyebrow">The Editorial Promise</div>
+            <div class="promise-text">"You will not leave every episode knowing the correct answer. You will leave knowing how to think about the question."</div>
+          </div>
+
+          <p>The show never begins with "Today we are going to learn about..." It begins with a provocation — "This does not make sense," "I think adults have got this wrong," "Can I actually become rich doing this?" That framing respects young people as thinkers rather than recipients of information.</p>
+        </div>
+
+        <div>
+          <div style="margin-bottom:1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);">
+            <div class="eyebrow">The Hosts</div>
+          </div>
+
+          <div class="host-card">
+            <div class="host-name">Ammar H. Khan</div>
+            <div class="host-role">The Economist · The Father</div>
+            <div class="host-desc">CFA, FRM · CEO, NCGCL · Visiting Professor, IBA Karachi · Columnist, Dawn &amp; The News International · Host, All Things Money on DawnNews English.</div>
+            <ul class="trait-list">
+              <li><span class="trait-arrow">→</span> Brings mechanism, evidence and systemic context</li>
+              <li><span class="trait-arrow">→</span> Sometimes explains things badly — and gets called out</li>
+              <li><span class="trait-arrow">→</span> Must speak human before he can speak economist</li>
+              <li><span class="trait-arrow">→</span> Tracks 20-sec Jargon Alarm clock in real time</li>
+            </ul>
+          </div>
+
+          <div class="host-card">
+            <div class="host-name">The Daughter</div>
+            <div class="host-role">The Co-Host · The Sceptic</div>
+            <div class="host-desc">Not a junior assistant. A genuine co-host with full authority to interrupt, challenge and adjudicate whether any explanation actually made sense.</div>
+            <ul class="trait-list">
+              <li><span class="trait-arrow">→</span> Gives the first answer before hearing the economics</li>
+              <li><span class="trait-arrow">→</span> Represents what young people actually care about</li>
+              <li><span class="trait-arrow">→</span> Issues the Jargon Alarm and holds the verdict</li>
+              <li><span class="trait-arrow">→</span> Sometimes wins the argument — and keeps the point</li>
+            </ul>
+          </div>
+
+          <div class="score-bar">
+            <span class="score-label">Jargon Score (series total)</span>
+            <span class="score-val">Ep 1–6</span>
+            <span class="score-desc">Running across all episodes</span>
+          </div>
+
+          <div class="why-box">
+            <div class="eyebrow" style="margin-bottom:0.5rem;">Why this dynamic works</div>
+            <p>A 13-year-old in Karachi sees someone like them — curious, impatient with jargon, unimpressed by credentials — actually winning arguments against a qualified economist on television. That is both entertaining and quietly transformative.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORMAT -->
+<div class="tab-panel" id="panel-format">
+  <div class="container">
+    <div class="section">
+      <div class="eyebrow">Episode Structure</div>
+      <div class="heading">Six chapters. 24–26 minutes. Every episode.</div>
+      <p class="intro-text">Each episode follows a recognisable structure signposted clearly on screen. Viewers always know where they are in the investigation. The structure can be made familiar enough to become a ritual — and flexible enough to accommodate very different topics.</p>
+
+      <!-- SEGMENT 1 -->
+      <div class="segment-row">
+        <div class="seg-num-block">
+          <span class="seg-num">01</span>
+          <span class="seg-time">60–90 sec</span>
+        </div>
+        <div>
+          <div class="seg-chapter">Cold Open</div>
+          <div class="seg-name">"Would You Do It?"</div>
+          <div class="seg-desc">Begin with a surprising decision, not a definition. Both hosts commit to an answer before the investigation begins — before either knows the economics. This immediately divides the audience into two camps and creates genuine stakes. No textbook framing. No context-setting. A provocation first.</div>
+          <div class="seg-examples">
+            <p>"Would you rather receive PKR 10,000 today or PKR 1,000 every month for a year?"</p>
+            <p>"Would you pay PKR 500,000 for a university degree if AI could do the same job?"</p>
+            <p>"Should the government just print money to pay for hospitals?"</p>
+          </div>
+          <span class="seg-device">Device — Commitment before knowledge. Stakes before explanation.</span>
+        </div>
+      </div>
+
+      <!-- SEGMENT 2 -->
+      <div class="segment-row">
+        <div class="seg-num-block">
+          <span class="seg-num">02</span>
+          <span class="seg-time">4–5 min</span>
+        </div>
+        <div>
+          <div class="seg-chapter">Field Investigation</div>
+          <div class="seg-name">The Real-Life Test</div>
+          <div class="seg-desc">Leave the studio. Test the episode question in a setting young people recognise. Instead of telling viewers that prices have risen, give the daughter the same money and ask her to recreate a basket of goods from three years ago. The gap is visible, physical and impossible to dismiss.</div>
+          <div class="seg-examples">
+            <p>Locations: school canteen · supermarket · gaming café · university campus · shopping mall · public transport stop · small online business · street market · sports ground</p>
+          </div>
+          <span class="seg-device">Device — Experience before explanation. Show the problem before naming it.</span>
+        </div>
+      </div>
+
+      <!-- SEGMENT 3 -->
+      <div class="segment-row">
+        <div class="seg-num-block">
+          <span class="seg-num">03</span>
+          <span class="seg-time">3–4 min</span>
+        </div>
+        <div>
+          <div class="seg-chapter">The Explanation</div>
+          <div class="seg-name">"Dad, Prove It"</div>
+          <div class="seg-desc">The economist now explains what is actually happening, using exactly one strong visual device. Never more than one major chart or idea on screen at a time. The daughter can trigger the Jargon Alarm at any point. If she does, the 20-second clock appears and the explanation restarts from her life.</div>
+          <div class="seg-examples">
+            <p>Devices: physical coins or blocks · animated map · price timeline · game board · scale showing winners and losers · hand-drawn diagram · receipt wall · simple "money moving" sketch</p>
+          </div>
+          <span class="seg-device">Device — One idea. One visual. Fully explained before the next one begins.</span>
+        </div>
+      </div>
+
+      <!-- SEGMENT 4 -->
+      <div class="segment-row">
+        <div class="seg-num-block">
+          <span class="seg-num">04</span>
+          <span class="seg-time">5–6 min</span>
+        </div>
+        <div>
+          <div class="seg-chapter">Youth Decision</div>
+          <div class="seg-name">The Choice Lab</div>
+          <div class="seg-desc">Four recurring youth panellists — approximately 13, 15, 17 and 20 years old — face an actual economic decision under time pressure. They are given a problem to solve, not a microphone for opinions. Every choice has a visible consequence revealed on screen. The age range means different maturity levels appear naturally without anyone being condescended to.</div>
+          <div class="seg-examples">
+            <p>"You have PKR 100 billion. Allocate it between schools, hospitals, roads, climate resilience and lower taxes — and defend every allocation."</p>
+          </div>
+          <span class="seg-device">Device — Stakes, consequences, visible trade-offs. Decision first, analysis after.</span>
+        </div>
+      </div>
+
+      <!-- SEGMENT 5 -->
+      <div class="segment-row">
+        <div class="seg-num-block">
+          <span class="seg-num">05</span>
+          <span class="seg-time">3 min</span>
+        </div>
+        <div>
+          <div class="seg-chapter">Depth Layer</div>
+          <div class="seg-name">Level Up</div>
+          <div class="seg-desc">The story that began with pocket money now escalates to a larger economic framework. The "Level Up" graphic signals that younger viewers can stay with the example while older viewers get the underlying theory. A story about saving pocket money becomes a discussion of compound growth, opportunity cost and risk — without losing either audience.</div>
+          <div class="seg-examples">
+            <p>Concepts: opportunity cost · compound growth · incentives · inequality · public goods · risk · taxation · inflation · human capital · productivity · market failure</p>
+          </div>
+          <span class="seg-device">Device — Layered depth. Single escalation. No viewer left behind.</span>
+        </div>
+      </div>
+
+      <!-- SEGMENT 6 -->
+      <div class="segment-row">
+        <div class="seg-num-block">
+          <span class="seg-num">06</span>
+          <span class="seg-time">2 min</span>
+        </div>
+        <div>
+          <div class="seg-chapter">The Verdict</div>
+          <div class="seg-name">"What Changed My Mind?"</div>
+          <div class="seg-desc">Return to the cold-open question. Each host says what they thought at the beginning and what they think now. It is perfectly acceptable for neither to have changed their minds — the segment demonstrates thoughtful disagreement rather than forcing a tidy resolution. The episode ends with a viewer poll question for the following week. The Before/After poll shift, tracked via WhatsApp and social channels, becomes the show's evidence of its own learning impact.</div>
+          <span class="seg-device">Device — Honest revision. No forced consensus. Disagreement treated as a valid outcome.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EPISODES -->
+<div class="tab-panel" id="panel-episodes">
+  <div class="container">
+    <div class="section">
+      <div class="eyebrow">Six-Episode Arc</div>
+      <div class="heading">From the individual to the country</div>
+      <p class="intro-text">The series moves deliberately from personal economics (how money affects my life today) to future economics (what the economy will look like in 2035) to national economics (how Pakistan works and who gets to shape it). Expand any episode card for the full brief.</p>
+
+      <div class="ep-grid">
+        <!-- EP 1 -->
+        <div class="ep-card" data-ep="1" onclick="toggleEp(this)">
+          <div class="ep-num">Episode 01 &nbsp;·&nbsp; Individual</div>
+          <div class="ep-title">Why Does Everything Cost More?</div>
+          <div class="ep-q">"Why does the same money buy less than it did three years ago?"</div>
+          <div class="ep-tags">
+            <span class="ep-tag">Inflation</span>
+            <span class="ep-tag">Purchasing Power</span>
+            <span class="ep-tag">Exchange Rates</span>
+            <span class="ep-tag">Expectations</span>
+          </div>
+          <div class="ep-detail">
+            <div class="ep-row">
+              <div class="ep-dlabel">Cold Open</div>
+              <div class="ep-dtext">"Would you rather have PKR 10,000 today — or PKR 10,000 that bought what it bought in 2022?"</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Real-Life Test</div>
+              <div class="ep-dtext">The daughter takes a 2022 school canteen receipt and tries to recreate the identical basket at today's prices. The difference is chalked live on the Pakistan Price Index wall — a studio fixture that grows across all six episodes.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Choice Lab</div>
+              <div class="ep-dtext">Youth panel picks one policy: control the exchange rate, subsidise food prices, or raise civil servant salaries. Each choice triggers a visible consequence chain. No correct answer exists.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Level Up</div>
+              <div class="ep-dtext">Why central banks exist. How price expectations can cause inflation before a single rupee is printed. What Pakistan's inflation history reveals about institutional trust.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Villain of the Episode</div>
+              <div class="ep-dtext">Hoarding. How it works, who benefits and why price controls usually make it worse.</div>
+            </div>
+          </div>
+          <span class="ep-expand" data-open="false">+ Full brief</span>
+        </div>
+
+        <!-- EP 2 -->
+        <div class="ep-card" data-ep="2" onclick="toggleEp(this)">
+          <div class="ep-num">Episode 02 &nbsp;·&nbsp; Individual</div>
+          <div class="ep-title">Spend It or Save It?</div>
+          <div class="ep-q">"Is enjoying your money today actually irresponsible?"</div>
+          <div class="ep-tags">
+            <span class="ep-tag">Opportunity Cost</span>
+            <span class="ep-tag">Compound Growth</span>
+            <span class="ep-tag">Debt</span>
+            <span class="ep-tag">Risk</span>
+          </div>
+          <div class="ep-detail">
+            <div class="ep-row">
+              <div class="ep-dlabel">Cold Open</div>
+              <div class="ep-dtext">"You have PKR 10,000. Spend it on an experience, invest it, save it, donate it, or start something. Which one is the adult move?"</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Real-Life Test</div>
+              <div class="ep-dtext">Three 16-year-olds each received PKR 5,000 six months ago. One spent it, one saved it in a bank, one traded it into something. We find out what actually happened — numbers only, no judgment.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Level Up</div>
+              <div class="ep-dtext">Compound interest as the most underrated idea in personal finance. Why Pakistan's inflation rate changes the calculus. The psychology of delayed gratification — and when refusing it is actually the rational choice.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Sana Thread (Ep 2)</div>
+              <div class="ep-dtext">Sana decides to put her PKR 5,000 into a small side hustle rather than save it. We record the decision. The consequence will appear in episode 4.</div>
+            </div>
+          </div>
+          <span class="ep-expand" data-open="false">+ Full brief</span>
+        </div>
+
+        <!-- EP 3 -->
+        <div class="ep-card" data-ep="3" onclick="toggleEp(this)">
+          <div class="ep-num">Episode 03 &nbsp;·&nbsp; Future</div>
+          <div class="ep-title">What Will You Be Worth in 2035?</div>
+          <div class="ep-q">"Which skills will still matter when AI becomes better at most things?"</div>
+          <div class="ep-tags">
+            <span class="ep-tag">AI & Automation</span>
+            <span class="ep-tag">Human Capital</span>
+            <span class="ep-tag">Wages</span>
+            <span class="ep-tag">Education</span>
+          </div>
+          <div class="ep-detail">
+            <div class="ep-row">
+              <div class="ep-dlabel">Cold Open</div>
+              <div class="ep-dtext">"Would you pay PKR 500,000 for a university degree if an AI assistant could do the same job for free?"</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Real-Life Test</div>
+              <div class="ep-dtext">Four tasks — writing, coding, financial analysis, pastoral counselling. The daughter attempts each. Then an AI tool attempts each. The youth panel decides which result they would actually pay for, and why.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Level Up</div>
+              <div class="ep-dtext">Why technology has historically created more jobs than it destroys — and why Pakistan's structural situation may produce a different outcome. What "complementary skills" means in practice versus on paper.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Villain of the Episode</div>
+              <div class="ep-dtext">Credential inflation: the economic mechanism by which more degrees produce lower graduate wages.</div>
+            </div>
+          </div>
+          <span class="ep-expand" data-open="false">+ Full brief</span>
+        </div>
+
+        <!-- EP 4 -->
+        <div class="ep-card" data-ep="4" onclick="toggleEp(this)">
+          <div class="ep-num">Episode 04 &nbsp;·&nbsp; Future</div>
+          <div class="ep-title">Can the Internet Make You Rich?</div>
+          <div class="ep-q">"Are creators, gamers and online sellers running real businesses — or expensive hobbies?"</div>
+          <div class="ep-tags">
+            <span class="ep-tag">Platform Economics</span>
+            <span class="ep-tag">Revenue vs Profit</span>
+            <span class="ep-tag">Entrepreneurship</span>
+            <span class="ep-tag">Algorithms</span>
+          </div>
+          <div class="ep-detail">
+            <div class="ep-row">
+              <div class="ep-dlabel">Cold Open</div>
+              <div class="ep-dtext">"A creator has 200,000 followers and posts every day. Are they building a business — or an expensive hobby?"</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Real-Life Test</div>
+              <div class="ep-dtext">Help an actual young creator or online seller price their first digital product. Walk through revenue, platform fees, taxes and what the profit actually looks like after six months. Sana's side hustle from episode 2 reappears here with real numbers.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Level Up</div>
+              <div class="ep-dtext">Platform dependency risk. How algorithms create winners and quietly disappear them. The difference between income and wealth — and why the creator economy often produces the former without the latter.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Your Rupee, Your Call</div>
+              <div class="ep-dtext">A real online seller with PKR 50,000 to deploy: the youth panel decides between marketing, product development and operations. The outcome is followed up in episode 5.</div>
+            </div>
+          </div>
+          <span class="ep-expand" data-open="false">+ Full brief</span>
+        </div>
+
+        <!-- EP 5 -->
+        <div class="ep-card" data-ep="5" onclick="toggleEp(this)">
+          <div class="ep-num">Episode 05 &nbsp;·&nbsp; National</div>
+          <div class="ep-title">Is the Economy Fair?</div>
+          <div class="ep-q">"Why do equally talented people end up in such different places?"</div>
+          <div class="ep-tags">
+            <span class="ep-tag">Inequality</span>
+            <span class="ep-tag">Social Mobility</span>
+            <span class="ep-tag">Taxation</span>
+            <span class="ep-tag">Privilege</span>
+          </div>
+          <div class="ep-detail">
+            <div class="ep-row">
+              <div class="ep-dlabel">Cold Open</div>
+              <div class="ep-dtext">"Two people have identical talent and identical work ethic. One was born in Clifton. One was born in Lyari. At 30, who earns more — and by how much? Is that difference economics, or injustice, or both?"</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Real-Life Test: The Inequality Game</div>
+              <div class="ep-dtext">Youth panel members start with different tokens: income, education access, connections, health. They make identical decisions. The diverging outcomes are made visible. No one is blamed. The mechanism is shown.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Level Up</div>
+              <div class="ep-dtext">Why inequality slows economic growth — not just hurts individuals. Gini coefficients, intergenerational mobility and the specific things social protection can and cannot fix.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Your Rupee, Your Call (follow-up)</div>
+              <div class="ep-dtext">Results from the episode 4 seller decision revealed. Did the youth panel's allocation work? Real data, not simulation.</div>
+            </div>
+          </div>
+          <span class="ep-expand" data-open="false">+ Full brief</span>
+        </div>
+
+        <!-- EP 6 -->
+        <div class="ep-card" data-ep="6" onclick="toggleEp(this)">
+          <div class="ep-num">Episode 06 &nbsp;·&nbsp; Finale</div>
+          <div class="ep-title">You Run Pakistan</div>
+          <div class="ep-q">"What would young people do differently if they controlled the national budget?"</div>
+          <div class="ep-tags">
+            <span class="ep-tag">Public Spending</span>
+            <span class="ep-tag">Debt</span>
+            <span class="ep-tag">Climate</span>
+            <span class="ep-tag">Trade-offs</span>
+          </div>
+          <div class="ep-detail">
+            <div class="ep-row">
+              <div class="ep-dlabel">Format</div>
+              <div class="ep-dtext">The youth panel receives a simulated national budget. Every decision updates a live national dashboard on screen: more subsidies reduce education funding; lower taxes reduce revenue; climate investment reduces future disaster costs but raises current borrowing; skills investment raises future productivity but shows no immediate impact on the dashboard.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">The Sana Scorecard</div>
+              <div class="ep-dtext">Sana's six decisions across the series are shown together for the first time. Her actual trajectory is compared to the two most common alternative paths. The compounding effect is visible. No moral is stated — the graphic speaks.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">Participants</div>
+              <div class="ep-dtext">All recurring panellists return. Guests from earlier episodes observe and react. Every cold-open question from episodes 1–5 reappears attached to a real budget line number.</div>
+            </div>
+            <div class="ep-row">
+              <div class="ep-dlabel">The Ending</div>
+              <div class="ep-dtext">The series ends on agency rather than pessimism. The economy is not something that merely happens to young people. It is a system they will inherit — and can improve. The final question goes to the audience, not to the hosts.</div>
+            </div>
+          </div>
+          <span class="ep-expand" data-open="false">+ Full brief</span>
+        </div>
+      </div>
+
+      <!-- SANA THREAD -->
+      <div class="sana-track">
+        <div class="sana-track-title">The Sana Thread — Series Continuity Device</div>
+        <div class="sana-track-sub">Sana is a fictional 17-year-old who makes one economic decision per episode. Her six choices compound into a visible outcome by the finale. She provides narrative continuity across what would otherwise be six separate topic episodes.</div>
+        <div class="sana-steps">
+          <div class="sana-step">
+            <div class="sana-step-ep">Ep 1</div>
+            <div class="sana-step-q">Buys textbooks or waits for cheaper reprints?</div>
+          </div>
+          <div class="sana-step">
+            <div class="sana-step-ep">Ep 2</div>
+            <div class="sana-step-q">Puts PKR 5,000 in a side hustle vs. savings</div>
+          </div>
+          <div class="sana-step">
+            <div class="sana-step-ep">Ep 3</div>
+            <div class="sana-step-q">Picks a career path: AI-adjacent or credential-heavy?</div>
+          </div>
+          <div class="sana-step">
+            <div class="sana-step-ep">Ep 4</div>
+            <div class="sana-step-q">Invests hustle earnings in growth or withdraws profit?</div>
+          </div>
+          <div class="sana-step">
+            <div class="sana-step-ep">Ep 5</div>
+            <div class="sana-step-q">Uses her network advantage — or refuses to?</div>
+          </div>
+          <div class="sana-step">
+            <div class="sana-step-ep">Ep 6</div>
+            <div class="sana-step-q">The scorecard. All six decisions shown together.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEGMENTS -->
+<div class="tab-panel" id="panel-segments">
+  <div class="container">
+    <div class="section">
+      <div class="eyebrow">Recurring Segments</div>
+      <div class="heading">Identifiable devices that give the show character</div>
+
+      <div class="additions-bar">
+        <h3>New additions to the original format</h3>
+        <p>Six new recurring devices have been developed beyond the original brief to add continuity, measurability and real-world stakes.</p>
+        <div class="additions-chips">
+          <span class="chip">Pakistan Price Index</span>
+          <span class="chip">Villain of the Episode</span>
+          <span class="chip">The Sana Thread</span>
+          <span class="chip">WhatsApp Before / After</span>
+          <span class="chip">Your Rupee, Your Call</span>
+          <span class="chip">Age Breakdown Cards</span>
+          <span class="chip">Economy IRL Classroom</span>
+        </div>
+      </div>
+
+      <div class="segs-grid">
+        <div class="seg-block">
+          <div class="seg-block-name">🔔 The Jargon Alarm</div>
+          <div class="seg-block-desc">The daughter stops any explanation that sounds like a textbook. A 20-second timer appears. The economist must re-explain using an example from her life. Failures are scored across all six episodes. By the finale she holds a running total — and it appears on screen.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">🧾 Receipts, Please</div>
+          <div class="seg-block-desc">One of you makes a factual claim. The other demands evidence. The number appears on screen with a visible source citation in the corner — Dawn-style credibility applied to every factual statement. No claim floats without a reference. This also models good epistemic practice for young viewers.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">💸 Rich, Broke or Just Bad Economics?</div>
+          <div class="seg-block-desc">Examine a viral claim, business idea or money trend and classify it as a genuinely good idea, bad luck, or structurally wrong. The show's connection to the internet's live conversation. Keeps the content evergreen for digital clips and gives the format a reason to engage with current social media discourse without chasing it.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">📊 The Tier List</div>
+          <div class="seg-block-desc">Rank careers, investments, government policies or spending choices from sensible to disastrous. A directly familiar online format — YouTube reports over a billion views of tier-list content — applied to economics decisions. Inherently social and clippable. Each episode produces at least one tier-list clip built for sharing.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">⏱️ One Minute, No Big Words</div>
+          <div class="seg-block-desc">An expert — entrepreneur, policymaker, creator or banker — has exactly 60 seconds to answer a youth panel question without using professional jargon. If they use a jargon term, the penalty clock continues. Clean, punchy and highly clippable. Senior officials are welcome but must answer the same way as everyone else.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">🛒 Pakistan Price Index <span class="new-badge">New</span></div>
+          <div class="seg-block-desc">A physical wall in the studio tracks a basket of 10 everyday goods — a school meal, a haircut, a 2GB data plan, a litre of petrol, a textbook, a bus ticket, a kilo of atta. Updated at the top of every episode. By the finale it is a physical record of what six episodes of Pakistan's economy looked like in real time. It anchors every inflation discussion to lived experience.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">⚖️ Villain of the Episode <span class="new-badge">New</span></div>
+          <div class="seg-block-desc">One bad economic idea goes on trial each week: hoarding, pyramid schemes, circular debt, price-fixing, informal sector evasion, energy theft. The youth panel acts as jury. Arguments for and against are heard. A verdict is delivered. The economic mechanism of the harm is then explained without lecturing. Combines genuine drama with economic education.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">📱 WhatsApp Before / After <span class="new-badge">New</span></div>
+          <div class="seg-block-desc">One week before the episode, the cold-open question goes out on Dawn's WhatsApp channel and social platforms. Results are revealed at the cold open. After the episode, the same question is sent again. The shift in the audience's answer is displayed — that shift is the measurable learning the show produced. Creates a pre-broadcast audience relationship and gives advertisers a learning metric.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">💰 Your Rupee, Your Call <span class="new-badge">New</span></div>
+          <div class="seg-block-desc">Each episode, one viewer with a real small decision and real stakes receives advice from the youth panel. A street vendor with PKR 30,000 deciding between a new cart and digital payments. A freelancer choosing between two client offers. The outcome is followed up in the next episode. This is not a prize — it is a real consequence, and the follow-up makes that clear.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">🎯 Age Breakdown Cards <span class="new-badge">New</span></div>
+          <div class="seg-block-desc">At the end of every episode, three distinct "what can you do with this now" cards appear — one for ages 12–15, one for 16–18, one for 19–25. No one is talked down to. Each card is at the right level for where that viewer actually is in life. A 13-year-old and a 22-year-old watching the same episode each leave with a different and appropriate action.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">👤 The Sana Thread <span class="new-badge">New</span></div>
+          <div class="seg-block-desc">A fictional 17-year-old named Sana makes one economic decision per episode. A simple graphic tracks her trajectory. By the finale, her six decisions have compounded into a visible outcome, compared to two alternative paths. Creates the narrative continuity a topic-by-topic format otherwise lacks. Keeps recurring viewers invested across all six episodes.</div>
+        </div>
+
+        <div class="seg-block">
+          <div class="seg-block-name">🎓 Economy IRL Classroom <span class="new-badge">New</span></div>
+          <div class="seg-block-desc">Schools register to watch episodes as a class and submit one collective question per episode. One classroom question is selected, addressed on screen and the school is named. Gives teachers a ready-made economics tool. Gives the show a direct link to Pakistan's 53 million school-age population. Creates earned media and institutional partnerships at zero cost.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY -->
+<div class="tab-panel" id="panel-strategy">
+  <div class="container">
+    <div class="section">
+      <div class="eyebrow">Production Strategy</div>
+      <div class="heading">Television first. Digital by design.</div>
+      <p class="intro-text">The programme is produced as television but structured so that every episode simultaneously becomes a content library. The clips do not merely promote the full episode — each one must contain a complete question, reveal or useful idea on its own terms.</p>
+
+      <div class="strategy-grid">
+        <div class="strategy-card">
+          <h3>From every episode</h3>
+          <ul class="output-list">
+            <li><span class="output-type">Broadcast</span> One 24–26-minute episode</li>
+            <li><span class="output-type">YouTube</span> One 6–8-minute central investigation cut</li>
+            <li><span class="output-type">Vertical</span> Four or five 30–90-second clips</li>
+            <li><span class="output-type">Social</span> One WhatsApp / social poll (pre- and post-air)</li>
+            <li><span class="output-type">Clip</span> One Jargon Alarm moment</li>
+            <li><span class="output-type">Clip</span> One Villain of the Episode verdict</li>
+            <li><span class="output-type">Clip</span> One host disagreement (unresolved)</li>
+            <li><span class="output-type">Edu</span> One classroom challenge card</li>
+            <li><span class="output-type">Edu</span> Three Age Breakdown Cards (12–15, 16–18, 19–25)</li>
+          </ul>
+        </div>
+
+        <div class="strategy-card">
+          <h3>Guest philosophy</h3>
+          <p>Avoid conventional television panels. A 13-year-old will lose interest in three adults behind a desk within 90 seconds. Every guest must be brought in because they can <strong>show, build, test or decide something</strong> — not because they hold a title.</p>
+          <ul class="output-list">
+            <li><span class="output-type good">Good</span> A teenage entrepreneur explaining their first loss</li>
+            <li><span class="output-type good">Good</span> A creator showing views-to-income breakdown live</li>
+            <li><span class="output-type good">Good</span> A climate scientist allocating a city budget</li>
+            <li><span class="output-type good">Good</span> A shopkeeper explaining pricing decisions in real time</li>
+            <li><span class="output-type good">Good</span> A university student with PKR 3,000 left this month</li>
+            <li><span class="output-type avoid">Avoid</span> Officials delivering pre-prepared economic philosophy</li>
+            <li><span class="output-type avoid">Avoid</span> Panels with all guests in the same age bracket</li>
+          </ul>
+        </div>
+
+        <div class="strategy-card">
+          <h3>Audience by segment</h3>
+          <ul class="output-list">
+            <li><span class="output-type">Ages 12–15</span> Cold open and Choice Lab most engaging</li>
+            <li><span class="output-type">Ages 16–18</span> Level Up and Sana Thread; planning horizon matches</li>
+            <li><span class="output-type">Ages 19–25</span> Villain of the Episode and national policy debate</li>
+            <li><span class="output-type">Parents</span> Joint-viewing hook: they are watching themselves</li>
+            <li><span class="output-type">Teachers</span> Economy IRL Classroom programme; 53M school-age Pakistanis</li>
+          </ul>
+          <p style="margin-top:1rem;">The WhatsApp Before/After poll creates a measurable before-and-after for every episode — the shift in audience answers is the show's evidence of its own impact.</p>
+        </div>
+
+        <div class="strategy-card">
+          <h3>Visual and editorial language</h3>
+          <div class="vis-lang-grid" style="margin-top:0.5rem;">
+            <div>
+              <div style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color: var(--green); margin-bottom:0.5rem;">Use</div>
+              <ul style="list-style:none;">
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Bold, readable typography</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Mobile-style choice cards</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Countdown clocks</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Animated receipts</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Game-board consequences</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0;">Hand-drawn annotations</li>
+              </ul>
+            </div>
+            <div style="grid-column: span 2;">
+              <div style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color: var(--red); margin-bottom:0.5rem;">Avoid</div>
+              <ul style="list-style:none;">
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Cartoon coins and excessive emojis</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Adults imitating TikTok personalities</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Fake youth slang</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Multiple charts per segment</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0; border-bottom:1px solid var(--border);">Panel shows with no physical activity</li>
+                <li style="font-size:12px; color:var(--mid); padding:0.25rem 0;">Manufactured positivity or forced resolution</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="promise" style="margin-top: 2rem;">
+        <div class="promise-eyebrow">The editorial rule that overrides everything else</div>
+        <div class="promise-text">Never begin with "Today we are going to learn about..." Begin with a problem, a contradiction, a bad decision someone already made, or a question the audience did not know they had. Respect produces engagement. Condescension produces a channel change.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="container">
+  <div class="footer">
+    <div class="footer-l"><strong>Economy IRL</strong> &nbsp;·&nbsp; Show Concept developed by Ammar H. Khan &nbsp;·&nbsp; 2025</div>
+    <div class="footer-r">DawnNews English</div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.nav-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    this.classList.add('active');
+    document.getElementById('panel-' + this.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+function toggleEp(card) {
+  var detail = card.querySelector('.ep-detail');
+  var btn = card.querySelector('.ep-expand');
+  var isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? '+ Full brief' : '− Collapse';
+}
+</script>
+</body>
+</html>
