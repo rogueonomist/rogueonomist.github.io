@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Electric MYT Review — Data Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --primary:#FFFFFF; --secondary:#FAFAFA; --tertiary-bg:#F3F1EC;
+  --border:#E5E1D8; --border-strong:#D8D3C6;
+  --accent:#C8923A; --accent-dark:#A8752A;
+  --navy:#1B3A5C; --navy-light:#2E5580;
+  --text-primary:#1A1A1A; --text-secondary:#5C5850; --text-tertiary:#96907F;
+  --success:#3F7D5C; --success-bg:#EAF3EE;
+  --warning:#9B2335; --warning-bg:#FBEDEE;
+  --amber-bg:#FBF3E4;
+  --mono: 'IBM Plex Mono','SF Mono',Menlo,Consolas,monospace;
+  --serif: Georgia, 'Iowan Old Style', serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --sidebar-w: 264px;
+  --shadow-sm: 0 1px 3px rgba(20,20,15,0.06);
+  --shadow-md: 0 4px 16px rgba(20,20,15,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--sans); background:var(--primary); color:var(--text-primary);
+  line-height:1.6; font-size:15px; -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent); color:#fff;}
+
+/* ---------- Layout shell ---------- */
+.shell{display:flex; min-height:100vh;}
+.sidebar{
+  width:var(--sidebar-w); flex-shrink:0; position:fixed; top:0; left:0; bottom:0;
+  background:#FCFBF8; border-right:1px solid var(--border); overflow-y:auto;
+  padding:1.75rem 1.25rem 3rem; z-index:100;
+}
+.main{margin-left:var(--sidebar-w); flex:1; min-width:0; max-width:calc(100% - var(--sidebar-w));}
+
+.brand{margin-bottom:1.75rem;}
+.brand-mark{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:9px; background:var(--navy); color:#fff;
+  font-family:var(--serif); font-size:17px; margin-bottom:.85rem;
+}
+.brand-title{font-family:var(--serif); font-size:17px; line-height:1.3; color:var(--text-primary);}
+.brand-sub{font-size:11px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.08em; margin-top:.35rem;}
+
+.navgroup{margin-bottom:1.6rem;}
+.navgroup-label{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-tertiary); margin:0 0 .55rem .1rem;}
+.navlink{
+  display:flex; align-items:center; gap:.55rem; padding:.42rem .55rem; border-radius:6px;
+  font-size:13px; color:var(--text-secondary); text-decoration:none; cursor:pointer;
+  border-left:2px solid transparent; transition:background .15s, color .15s;
+}
+.navlink .num{font-family:var(--mono); font-size:10.5px; color:var(--text-tertiary); width:16px; flex-shrink:0;}
+.navlink:hover{background:var(--tertiary-bg); color:var(--text-primary);}
+.navlink.active{background:var(--amber-bg); color:var(--accent-dark); font-weight:600;}
+.navlink.active .num{color:var(--accent-dark);}
+
+.sidebar-foot{margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border);}
+.badge-count{
+  display:inline-flex; align-items:center; gap:.4rem; font-size:11.5px; color:var(--warning);
+  background:var(--warning-bg); border-radius:20px; padding:.3rem .65rem; font-weight:600;
+}
+
+.menu-toggle{display:none;}
+
+/* ---------- Content sections ---------- */
+.container{max-width:1180px; margin:0 auto; padding:0 2.5rem;}
+section.block{padding:3.4rem 0; border-bottom:1px solid var(--border);}
+section.block:last-of-type{border-bottom:none;}
+.eyebrow{font-size:11.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-dark); margin-bottom:.6rem; display:flex; align-items:center; gap:.5rem;}
+.eyebrow::before{content:''; width:18px; height:1px; background:var(--accent);}
+h2.title{font-family:var(--serif); font-weight:400; font-size:30px; color:var(--text-primary); margin-bottom:.75rem; line-height:1.25;}
+h3.subtitle{font-family:var(--serif); font-weight:400; font-size:20px; color:var(--text-primary); margin:2.2rem 0 .85rem;}
+p.lede{font-size:15.5px; color:var(--text-secondary); max-width:820px; margin-bottom:.5rem; line-height:1.7;}
+p.body-text{font-size:14px; color:var(--text-secondary); max-width:820px; line-height:1.75; margin-bottom:.9rem;}
+p.body-text strong{color:var(--text-primary); font-weight:600;}
+a.inline-ref{color:var(--accent-dark); text-decoration:none; border-bottom:1px dotted var(--accent-dark);}
+
+/* ---------- Hero ---------- */
+.hero{padding:3.2rem 0 2.6rem;}
+.hero-top{display:flex; justify-content:space-between; align-items:flex-start; gap:2rem; flex-wrap:wrap;}
+.hero h1{font-family:var(--serif); font-weight:400; font-size:42px; line-height:1.18; max-width:760px; color:var(--text-primary);}
+.hero h1 em{font-style:italic; color:var(--accent-dark);}
+.hero-desc{font-size:15.5px; color:var(--text-secondary); max-width:640px; margin-top:1rem; line-height:1.75;}
+.hero-meta{display:flex; flex-direction:column; gap:.5rem; font-size:12px; color:var(--text-tertiary); text-align:right; white-space:nowrap;}
+.hero-meta .tag{background:var(--tertiary-bg); border:1px solid var(--border); padding:.3rem .7rem; border-radius:20px; font-weight:600; color:var(--text-secondary);}
+
+/* ---------- KPI cards ---------- */
+.kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:2.2rem;}
+.kpi-card{
+  background:var(--primary); border:1px solid var(--border); border-radius:10px; padding:1.3rem 1.35rem;
+  position:relative; overflow:hidden; transition:box-shadow .2s, transform .2s;
+}
+.kpi-card:hover{box-shadow:var(--shadow-md); transform:translateY(-1px);}
+.kpi-card::before{content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--kpi-color, var(--accent));}
+.kpi-num{font-family:var(--serif); font-size:27px; color:var(--text-primary); line-height:1.1;}
+.kpi-delta{font-family:var(--mono); font-size:12px; margin-top:.3rem; font-weight:600;}
+.kpi-delta.down{color:var(--warning);}
+.kpi-delta.up{color:var(--success);}
+.kpi-label{font-size:11.5px; color:var(--text-tertiary); margin-top:.55rem; text-transform:uppercase; letter-spacing:.06em; line-height:1.4;}
+
+/* ---------- Grids & panels ---------- */
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:1.4rem;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:1.1rem;}
+.panel{background:var(--primary); border:1px solid var(--border); border-radius:10px; padding:1.5rem 1.6rem;}
+.panel-secondary{background:var(--secondary);}
+.panel-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:1rem; gap:1rem; flex-wrap:wrap;}
+.panel-title{font-family:var(--serif); font-size:16.5px; color:var(--text-primary);}
+.panel-note{font-size:11.5px; color:var(--text-tertiary);}
+.chart-wrap{position:relative; height:300px;}
+.chart-wrap.tall{height:360px;}
+.chart-wrap.short{height:230px;}
+.source-note{font-size:11px; color:var(--text-tertiary); margin-top:.9rem; line-height:1.6; border-top:1px dashed var(--border); padding-top:.7rem;}
+.source-note b{color:var(--text-secondary);}
+
+/* ---------- Finding / callout boxes ---------- */
+.callout{background:var(--amber-bg); border:1px solid #EAD6AE; border-left:4px solid var(--accent); border-radius:6px; padding:1.15rem 1.3rem; margin:1.3rem 0; font-size:13.5px; color:#5A4322; line-height:1.7;}
+.callout b{color:#40300F;}
+.callout.finding-c{background:#F0EEF8; border-color:#CFC9EA; border-left-color:#6C5CB5; color:#3A3260;}
+.callout.finding-c b{color:#241E42;}
+.callout.critical{background:var(--warning-bg); border-color:#E9BFC5; border-left-color:var(--warning); color:#5C1420;}
+.callout.critical b{color:#3E0D16;}
+
+.pill{display:inline-flex; align-items:center; gap:.3rem; font-size:10.5px; font-weight:700; letter-spacing:.04em; padding:.2rem .55rem; border-radius:20px; text-transform:uppercase;}
+.pill.a{background:#E9EEF3; color:var(--navy);}
+.pill.b{background:#EAF3EE; color:var(--success);}
+.pill.c{background:#F0EEF8; color:#5947A3;}
+
+/* ---------- Tables ---------- */
+.table-scroll{overflow-x:auto; border-radius:8px;}
+table.data-table{width:100%; border-collapse:collapse; font-size:12.8px; min-width:520px;}
+table.data-table th{
+  font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text-secondary);
+  text-align:left; padding:.65rem .8rem; border-bottom:2px solid var(--border-strong); background:var(--secondary);
+  position:sticky; top:0; white-space:nowrap; cursor:default;
+}
+table.data-table th.sortable{cursor:pointer; user-select:none;}
+table.data-table th.sortable:hover{color:var(--accent-dark);}
+table.data-table th .arrow{font-size:9px; margin-left:3px; opacity:.5;}
+table.data-table td{padding:.55rem .8rem; border-bottom:1px solid var(--border); color:var(--text-primary); font-family:var(--mono); font-size:12.3px;}
+table.data-table td.txt{font-family:var(--sans); font-size:12.8px;}
+table.data-table tr:hover td{background:var(--secondary);}
+table.data-table tr.hl td{background:var(--warning-bg);}
+table.data-table tr.hl:hover td{background:#F6DEE1;}
+table.data-table tr.total-row td{font-weight:700; background:var(--tertiary-bg); border-top:2px solid var(--border-strong);}
+.num-cell{text-align:right; font-variant-numeric:tabular-nums;}
+.table-toolbar{display:flex; gap:.7rem; align-items:center; margin-bottom:.9rem; flex-wrap:wrap;}
+.search-input{
+  font-family:var(--sans); font-size:12.8px; padding:.5rem .8rem; border:1px solid var(--border-strong);
+  border-radius:6px; background:#fff; color:var(--text-primary); min-width:220px; outline:none;
+}
+.search-input:focus{border-color:var(--accent);}
+.filter-chip{
+  font-size:11.5px; padding:.35rem .75rem; border-radius:20px; border:1px solid var(--border-strong);
+  background:#fff; color:var(--text-secondary); cursor:pointer; font-weight:600; transition:all .15s;
+}
+.filter-chip.active{background:var(--navy); border-color:var(--navy); color:#fff;}
+.table-caption{font-size:11px; color:var(--text-tertiary); margin-top:.6rem;}
+
+/* ---------- Anomaly register (signature element) ---------- */
+.ledger{border:1px solid var(--border-strong); border-radius:10px; overflow:hidden; background:#fff;}
+.ledger-row{display:grid; grid-template-columns:56px 1fr 100px; border-bottom:1px solid var(--border); transition:background .15s;}
+.ledger-row:last-child{border-bottom:none;}
+.ledger-row:hover{background:var(--secondary);}
+.ledger-num{display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:19px; color:var(--text-tertiary); border-right:1px solid var(--border); background:var(--secondary);}
+.ledger-body{padding:1.05rem 1.3rem;}
+.ledger-top{display:flex; gap:.6rem; align-items:center; margin-bottom:.4rem; flex-wrap:wrap;}
+.ledger-type{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-tertiary);}
+.ledger-finding{font-size:13.6px; color:var(--text-primary); font-weight:600; line-height:1.5; margin-bottom:.3rem;}
+.ledger-impl{font-size:12.6px; color:var(--text-secondary); line-height:1.6;}
+.ledger-impl b{color:var(--text-primary);}
+.ledger-ref{display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11.5px; color:var(--accent-dark); border-left:1px solid var(--border);}
+.severity-dot{width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:5px;}
+.sev-high{background:var(--warning);}
+.sev-med{background:var(--accent);}
+.sev-low{background:var(--text-tertiary);}
+
+/* ---------- Legend / key ---------- */
+.legend-key{display:flex; gap:1.4rem; flex-wrap:wrap; font-size:11.5px; color:var(--text-secondary); margin:.9rem 0 0;}
+.legend-key span{display:inline-flex; align-items:center; gap:.4rem;}
+.legend-key i{width:10px; height:10px; border-radius:3px; display:inline-block;}
+
+/* ---------- Footer ---------- */
+footer{padding:2.6rem 0 4rem; font-size:12px; color:var(--text-tertiary); line-height:1.8;}
+footer .foot-grid{display:grid; grid-template-columns:2fr 1fr; gap:2rem;}
+footer b{color:var(--text-secondary);}
+
+/* ---------- Scrollbar ---------- */
+.sidebar::-webkit-scrollbar{width:6px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border-strong); border-radius:6px;}
+
+/* ---------- Back to top ---------- */
+.top-btn{
+  position:fixed; bottom:1.6rem; right:1.6rem; width:42px; height:42px; border-radius:50%;
+  background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; box-shadow:var(--shadow-md); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s;
+  z-index:200; font-size:16px; border:none;
+}
+.top-btn.show{opacity:1; pointer-events:auto;}
+.top-btn:hover{transform:translateY(-2px);}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1020px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .grid-2{grid-template-columns:1fr;}
+  .grid-3{grid-template-columns:1fr;}
+  footer .foot-grid{grid-template-columns:1fr;}
+}
+@media (max-width:840px){
+  .sidebar{
+    transform:translateX(-100%); transition:transform .25s ease; box-shadow:var(--shadow-md);
+  }
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0; max-width:100%;}
+  .menu-toggle{
+    display:flex; align-items:center; gap:.5rem; position:fixed; top:1rem; left:1rem; z-index:150;
+    background:var(--navy); color:#fff; border:none; border-radius:8px; padding:.55rem .8rem; font-size:12.5px;
+    font-weight:600; cursor:pointer; box-shadow:var(--shadow-md);
+  }
+  .container{padding:0 1.3rem;}
+  .hero h1{font-size:30px;}
+  .hero-top{flex-direction:column;}
+  .hero-meta{text-align:left; flex-direction:row; flex-wrap:wrap;}
+  .ledger-row{grid-template-columns:44px 1fr; }
+  .ledger-ref{display:none;}
+}
+@media print{
+  .sidebar,.menu-toggle,.top-btn{display:none;}
+  .main{margin-left:0;}
+  section.block{break-inside:avoid; padding:1.2rem 0;}
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" id="menuToggle">☰ &nbsp;Contents</button>
+
+<div class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">K</div>
+    <div class="brand-title">K-Electric MYT<br>Review, 2024–2030</div>
+    <div class="brand-sub">Data Dashboard</div>
+  </div>
+
+  <div class="navgroup">
+    <div class="navgroup-label">Overview</div>
+    <a class="navlink" data-target="sec-overview"><span class="num">00</span>Executive Summary</a>
+  </div>
+
+  <div class="navgroup">
+    <div class="navgroup-label">Recovery Performance</div>
+    <a class="navlink" data-target="sec-recovery"><span class="num">01</span>Recovery Ratio Trends</a>
+    <a class="navlink" data-target="sec-benchmark"><span class="num">02</span>Cross-DISCO Benchmarking</a>
+    <a class="navlink" data-target="sec-segments"><span class="num">03</span>Segment History 2019–24</a>
+  </div>
+
+  <div class="navgroup">
+    <div class="navgroup-label">Good / Bad DISCO</div>
+    <a class="navlink" data-target="sec-tieout"><span class="num">04</span>Feeder / IBC Tie-Out</a>
+    <a class="navlink" data-target="sec-ibc"><span class="num">05</span>IBC Theft Concentration</a>
+  </div>
+
+  <div class="navgroup">
+    <div class="navgroup-label">Loss Diagnostics</div>
+    <a class="navlink" data-target="sec-slab"><span class="num">06</span>Slab-Level Waterfall</a>
+    <a class="navlink" data-target="sec-defaults"><span class="num">07</span>Defaults &amp; Write-Offs</a>
+    <a class="navlink" data-target="sec-lossalw"><span class="num">08</span>T&amp;D Loss Allowance</a>
+  </div>
+
+  <div class="navgroup">
+    <div class="navgroup-label">Cost &amp; Impact</div>
+    <a class="navlink" data-target="sec-gencost"><span class="num">09</span>Generation Cost &amp; WC</a>
+    <a class="navlink" data-target="sec-savings"><span class="num">10</span>Financial Impact (TDS)</a>
+  </div>
+
+  <div class="navgroup">
+    <div class="navgroup-label">Negotiation Toolkit</div>
+    <a class="navlink" data-target="sec-anomalies"><span class="num">11</span>Anomaly Register</a>
+    <a class="navlink" data-target="sec-gaps"><span class="num">12</span>Data Gaps &amp; Asks</a>
+  </div>
+
+  <div class="sidebar-foot">
+    <div class="badge-count">● 15 anomalies flagged</div>
+    <div style="margin-top:.9rem; font-size:11px; color:var(--text-tertiary); line-height:1.7;">
+      Companion to the K-Electric MYT Negotiation Memo and Data Annex &amp; Exhibit Book.<br>Prepared 9 July 2026.
+    </div>
+  </div>
+</div>
+
+<div class="main">
+<div class="container">
+
+<section class="hero">
+  <div class="hero-top">
+    <div>
+      <h1>Recovery is falling <em>because of</em> where it's easy to collect, not just where it's hard.</h1>
+      <p class="hero-desc">A full quantitative walkthrough of K-Electric's FY2024–2030 Multi-Year Tariff review petition — rebuilt line-by-line from six source files, cross-checked against itself, and organized around the evidence a negotiator can actually use.</p>
+    </div>
+    <div class="hero-meta">
+      <span class="tag">FY2024 – FY2030 Control Period</span>
+      <span class="tag">6 source files · 17 exhibits · 15 anomalies</span>
+      <span>Companion to the Negotiation Memo &amp; Exhibit Book</span>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--kpi-color:var(--warning)">
+      <div class="kpi-num">82.0%</div>
+      <div class="kpi-delta down">▼ 8.3 pp vs. 2019–22 avg.</div>
+      <div class="kpi-label">Domestic Recovery Rate, 2024</div>
+    </div>
+    <div class="kpi-card" style="--kpi-color:var(--warning)">
+      <div class="kpi-num">78.4%</div>
+      <div class="kpi-delta down">vs. peer DISCOs at 97–112%</div>
+      <div class="kpi-label">Domestic Recovery, Jul–Dec 2024</div>
+    </div>
+    <div class="kpi-card" style="--kpi-color:var(--accent)">
+      <div class="kpi-num">57.4%</div>
+      <div class="kpi-delta" style="color:var(--text-tertiary)">of domestic billing loss</div>
+      <div class="kpi-label">Share From "Good DISCO" Areas</div>
+    </div>
+    <div class="kpi-card" style="--kpi-color:var(--navy)">
+      <div class="kpi-num">PKR 209.8bn</div>
+      <div class="kpi-delta" style="color:var(--text-tertiary)">reconciled, not PKR 176.8bn</div>
+      <div class="kpi-label">Verified Cumulative TDS Savings</div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="sec-overview">
+  <div class="eyebrow">00 · Overview</div>
+  <h2 class="title">Executive Summary</h2>
+  <p class="lede">KE's petition asks NEPRA to lock in a recovery-loss and distribution-loss allowance that blends a shrinking pool of genuinely hard-to-collect areas with a much larger pool of ordinary, collectable, middle-and-upper-slab consumption. Every finding below is sourced and cross-checked — filter by evidence class to see what's documented (A), recomputed (B), or a cross-file finding (C).</p>
+
+  <div class="table-toolbar" style="margin-top:1.6rem;">
+    <button class="filter-chip active" data-filter="all">All findings (13)</button>
+    <button class="filter-chip" data-filter="a">Class A · Documented</button>
+    <button class="filter-chip" data-filter="b">Class B · Recomputed</button>
+    <button class="filter-chip" data-filter="c">Class C · Cross-file</button>
+  </div>
+
+  <div id="execFindings"></div>
+
+  <div class="callout" style="margin-top:1.8rem;">
+    <b>What this means for the negotiating position.</b> None of these findings require disputing K-Electric's right to recover prudent costs. They support a narrower, more defensible ask: tie any recovery-loss or distribution-loss allowance to feeder/IBC-level evidence rather than a company-wide average — because the company-wide average is being pulled down by a well-identified, quantifiable pool of controllable underperformance that sits largely outside the "law and order" justification KE offers for it.
+  </div>
+</section>
+
+<section class="block" id="sec-recovery">
+  <div class="eyebrow">01 · Recovery Performance</div>
+  <h2 class="title">Recovery Ratio Trends</h2>
+  <p class="lede">KE's recovery ratio rose steadily through FY23, then fell sharply — and under KE's own petitioned glide path, it does not recover to its FY22 level until FY29. The decline is concentrated almost entirely in the domestic segment.</p>
+
+  <div class="grid-2" style="margin-top:1.8rem;">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Exhibit 1 — Overall Recovery Ratio, FY17–FY30</div>
+        <div class="panel-note">Actual → KE-petitioned glide path</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartOverallRR"></canvas></div>
+      <div class="source-note"><b>Source:</b> KE MYT review-petition deck, Slide 3 (Class A). FY22 peak 94.9% → FY24 actual 92.8%; petitioned path does not regain FY22 level until FY29.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Exhibit 2 — Domestic Segment Recovery Ratio</div>
+        <div class="panel-note">2019 – 2024</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartDomesticRR"></canvas></div>
+      <div class="source-note"><b>Source:</b> KE MYT review-petition deck, Slide 3 (Class A). 2019–22 average 90.3% → 2023 84.4% → 2024 82.0%, an 8.3 pp fall concentrated in the last two years.</div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="sec-benchmark">
+  <div class="eyebrow">02 · Recovery Performance</div>
+  <h2 class="title">Cross-DISCO Benchmarking</h2>
+  <p class="lede">The domestic recovery decline is specific to K-Electric, not a sector-wide phenomenon. Over 2020–24, the CPPA-basket average improved; K-Electric alone declined — moving from mid-table to last place, and the gap has widened further in the most recent data.</p>
+
+  <div class="grid-2" style="margin-top:1.8rem;">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Exhibit 3 — Domestic Recovery Rate vs. Peer DISCOs</div>
+        <div class="panel-note" id="benchToggleWrap">
+          <button class="filter-chip active" data-bench="2020-21">2020–21</button>
+          <button class="filter-chip" data-bench="2023-24">2023–24</button>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartCrossDisco"></canvas></div>
+      <div class="source-note"><b>Source:</b> KE MYT review-petition deck, Slide 4 (Class A). "Good KE" = KE excluding the six Low-Performing-Area IBCs.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Exhibit 4 — July–December 2024</div>
+        <div class="panel-note">Most recent half-year</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartJulDec"></canvas></div>
+      <div class="source-note"><b>Source:</b> KE MYT review-petition deck, Slide 5 (Class A). Every peer DISCO posted ≥97%, several above 100% (arrears recovery); K-Electric posted 78.41%.</div>
+    </div>
+  </div>
+
+  <h3 class="subtitle">Exhibit 5 — Slab-wise Recovery, July–February FY25</h3>
+  <p class="body-text">The gap holds at every consumption slab, not just in aggregate. K-Electric sits below all four benchmarked peers at every single band, from lifeline through to above-700-unit consumers.</p>
+  <div class="panel">
+    <div class="chart-wrap tall"><canvas id="chartSlabwiseCross"></canvas></div>
+    <div class="source-note"><b>Source:</b> KE MYT review-petition deck, Slide 6 (Class A).</div>
+  </div>
+</section>
+
+<section class="block" id="sec-segments">
+  <div class="eyebrow">03 · Recovery Performance</div>
+  <h2 class="title">Segment-wise Recovery History, 2019–2024</h2>
+  <p class="lede">A six-year, all-category history from the underlying workbook — not shown in the petition deck itself — confirms Domestic is the only major segment in structural decline, even though it consistently represents the largest single share of billed revenue.</p>
+
+  <div class="grid-2" style="margin-top:1.8rem;">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 6 — Recovery Rate by Segment</div></div>
+      <div class="chart-wrap"><canvas id="chartSegmentRR"></canvas></div>
+      <div class="source-note"><b>Source:</b> KElectric_Slab_Data_Electricity_2024_v2.xlsx, "Recovery Ratios" sheet (Class A; rates are Class B recomputations).</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 7 — Billed Revenue Mix by Segment</div></div>
+      <div class="chart-wrap"><canvas id="chartSegmentMix"></canvas></div>
+      <div class="source-note"><b>Source:</b> KElectric_Slab_Data_Electricity_2024_v2.xlsx, "Recovery Ratios" sheet, Segment Weight block (Class A).</div>
+    </div>
+  </div>
+
+  <div class="callout finding-c">
+    <span class="pill c">Class C</span> &nbsp;<b>Finding:</b> The petition deck's cross-DISCO benchmarking is drawn entirely from the domestic segment. The workbook's own six-year, all-segment history wasn't carried into the petition narrative, but it strengthens the underlying point: recovery deterioration is domestic-specific and KE-specific, not a general commercial/industrial collection failure.
+  </div>
+</section>
+
+<section class="block" id="sec-tieout">
+  <div class="eyebrow">04 · Good / Bad DISCO</div>
+  <h2 class="title">Feeder / IBC Tie-Out and Reconciliation</h2>
+  <p class="lede">Two different datasets define "bad" differently — the tie-out memo works from a feeder count (455 High-Loss Feeders), while the petition slides work from six named IBCs (the "Low Performing Areas"). They do not tie out to each other feeder-for-feeder.</p>
+
+  <div class="panel" style="margin-top:1.8rem;">
+    <div class="panel-head"><div class="panel-title">Exhibit 8 — 455 High-Loss Feeders vs. Balance of Network</div><div class="panel-note">Feeder-basis, FY2024</div></div>
+    <div class="chart-wrap"><canvas id="chartFeederTieout"></canvas></div>
+    <div class="source-note"><b>Source:</b> Tie-out memo, Section A1 (Class A).</div>
+  </div>
+
+  <div class="grid-2" style="margin-top:1.4rem;">
+    <div class="panel panel-secondary">
+      <div class="panel-title" style="margin-bottom:.9rem;">Volume &amp; severity gap</div>
+      <table class="data-table">
+        <tr><th>Metric</th><th class="num-cell">455 HLF</th><th class="num-cell">6 LPA IBCs</th></tr>
+        <tr><td class="txt">Sent-out</td><td class="num-cell">4.14 TWh</td><td class="num-cell">2.76 TWh</td></tr>
+        <tr><td class="txt">Distribution loss</td><td class="num-cell">32.8%</td><td class="num-cell">24.6%</td></tr>
+        <tr><td class="txt">Recovery loss</td><td class="num-cell">33.4%</td><td class="num-cell">27.2%</td></tr>
+        <tr><td class="txt">AT&amp;C loss</td><td class="num-cell">≈55%</td><td class="num-cell">≈45%</td></tr>
+        <tr><td class="txt">Avg. tariff</td><td class="num-cell">Rs 59/kWh</td><td class="num-cell">Rs 42/kWh</td></tr>
+      </table>
+      <p class="body-text" style="margin-top:1rem;">≈1.38 TWh of high-loss-feeder energy sits in IBCs <em>outside</em> the six named "Bad DISCO" areas — and the six IBCs are the <em>milder</em> subset of the true high-loss population.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title" style="margin-bottom:.9rem;">Reconstructed feeder economics</div>
+      <div class="chart-wrap short"><canvas id="chartFeederEcon"></canvas></div>
+      <div class="source-note"><b>Source:</b> Reconstructed (Class B), K-Electric MYT Negotiation Memo, Appendix 1.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="pill b">Class B</span> &nbsp;<b>Finding:</b> Bad-DISCO feeders carry <em>more</em> energy per feeder (9.10 GWh) than Good-DISCO feeders (8.27 GWh). These are large, active urban feeders where the revenue chain is broken — not a residual tail of low-value rural connections. That's a solvable operational problem, not an intrinsic characteristic of the load.
+  </div>
+</section>
+
+<section class="block" id="sec-ibc">
+  <div class="eyebrow">05 · Good / Bad DISCO</div>
+  <h2 class="title">IBC-Level Theft &amp; Excess-Loss Concentration</h2>
+  <p class="lede">The Bad-DISCO theft pool (1,047.5 GWh, ≈PKR 62.0 bn) breaks down across all 26 IBCs in KE's network — not just the six officially designated ones. Three IBCs account for 43.9% of the entire pool; but over a third of it sits outside the "law and order" zones KE names.</p>
+
+  <div class="grid-2" style="margin-top:1.8rem;">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 9 — Concentration by IBC (Top 15 of 26)</div></div>
+      <div class="chart-wrap tall"><canvas id="chartTheftPareto"></canvas></div>
+      <div class="source-note"><b>Source:</b> bad_disco_theft_by_ibc.csv (Class A). Cumulative shares are Class B.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 10 — Beyond the Designated 6 IBCs</div></div>
+      <div class="chart-wrap tall"><canvas id="chartTheftDonut"></canvas></div>
+      <div class="source-note"><b>Source:</b> bad_disco_theft_by_ibc.csv, cross-tabulated against the 6 official LPA names (Class B/C).</div>
+    </div>
+  </div>
+
+  <div class="callout finding-c">
+    <span class="pill c">Class C</span> &nbsp;<b>Finding:</b> 34.6% of the theft/excess-loss pool — 362.7 GWh, worth ≈PKR 21.5 bn — sits in 18 IBCs that are nominally "Good DISCO" areas, including Bin Qasim, Malir, North Karachi, North Nazimabad, Nazimabad, and Liaquatabad. This directly corroborates the slab-level finding in Section 06 and undercuts any framing of recovery loss as confined to "law and order" no-go areas.
+  </div>
+
+  <h3 class="subtitle">Full IBC-Level Table</h3>
+  <div class="table-toolbar">
+    <input class="search-input" id="ibcSearch" type="text" placeholder="Search IBC name…">
+    <button class="filter-chip active" data-ibcfilter="all">All 26 IBCs</button>
+    <button class="filter-chip" data-ibcfilter="official">6 designated LPA only</button>
+    <button class="filter-chip" data-ibcfilter="other">18 other IBCs only</button>
+  </div>
+  <div class="table-scroll">
+    <table class="data-table" id="ibcTable">
+      <thead>
+        <tr>
+          <th class="sortable" data-key="ibc">IBC <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="share_pct">Share of Pool <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="gwh">Excess/Theft (GWh) <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="rsmn">Excess/Theft (PKR mn) <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="cum_pct">Cumulative <span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="ibcTableBody"></tbody>
+    </table>
+  </div>
+  <div class="table-caption">Rows shaded red are among the six officially designated "Low Performing Area" IBCs. Click any column header to sort.</div>
+</section>
+
+<section class="block" id="sec-slab">
+  <div class="eyebrow">06 · Loss Diagnostics</div>
+  <h2 class="title">Slab-Level Recovery &amp; Loss Waterfall</h2>
+  <p class="lede">The most granular cut in the evidence base: domestic billing and recovery, by slab, split KE-wide / High-Loss / Low-Loss. This section rebuilds and confirms the petition's two headline claims — the "62%" and "57%" figures — directly from the raw workbook.</p>
+
+  <div class="grid-2" style="margin-top:1.8rem;">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 11 — Domestic Billing-Loss by Slab</div><div class="panel-note">KE-wide, PKR bn, Dec-2024</div></div>
+      <div class="chart-wrap tall"><canvas id="chartSlabWaterfall"></canvas></div>
+      <div class="source-note"><b>Source:</b> Recomputed (Class B) from "Residential Only" sheet. ≈62% of non-ToU domestic losses sit in the 400–700+ slabs.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 12 — Good DISCO vs. Bad DISCO Loss Share</div></div>
+      <div class="chart-wrap tall"><canvas id="chartGdBdShare"></canvas></div>
+      <div class="source-note"><b>Source:</b> Recomputed (Class B) from "Residential Only" sheet, High-Loss/Low-Loss columns.</div>
+    </div>
+  </div>
+
+  <div class="callout critical">
+    <span class="pill b">Class B</span> &nbsp;<b>Why this matters:</b> Both headline percentages in the petition deck (62% and 57%) independently check out against the underlying workbook — a point in KE's favor on data integrity. But the conclusion cuts against KE's broader "law and order" framing: the majority of domestic loss sits in areas KE itself does not classify as high-risk.
+  </div>
+
+  <h3 class="subtitle">Category-Level Recovery Rate — All Consumer Classes, FY24</h3>
+  <p class="body-text">A complementary cut from the KE Recovery Rate workbook: full-year recovery by tariff category in PKR, across all consumer classes — not just domestic slabs.</p>
+  <div class="table-toolbar">
+    <input class="search-input" id="rcSearch" type="text" placeholder="Search category…">
+  </div>
+  <div class="table-scroll">
+    <table class="data-table" id="rcTable">
+      <thead>
+        <tr>
+          <th class="sortable" data-key="label">Category / Slab <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="recovery_rate">Recovery Rate <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="gross_billed_pkrm">Gross Billed (PKR mn) <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="gross_recovered_pkrm">Recovered (PKR mn) <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="not_recovered_pkrm">Not Recovered (PKR mn) <span class="arrow"></span></th>
+          <th class="sortable num-cell" data-key="pct_of_not_recovered">% of Shortfall <span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="rcTableBody"></tbody>
+    </table>
+  </div>
+  <div class="table-caption">Source: KElectric_KE_Recovery_Rate.xlsx (Class A). FY24 full-year basis — a different data cut than the Dec-2024 YTD figures above; see caution box in the Exhibit Book, §6.4.</div>
+</section>
+
+<section class="block" id="sec-defaults">
+  <div class="eyebrow">07 · Loss Diagnostics</div>
+  <h2 class="title">Default Concentration &amp; Write-Off Due Diligence</h2>
+  <p class="lede">Default balances are extremely concentrated among a small consumer subset — and four write-off safeguards were quietly diluted between the original design and the final determination.</p>
+
+  <div class="grid-2" style="margin-top:1.8rem;">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 13 — Default Balance Concentration</div></div>
+      <div class="chart-wrap"><canvas id="chartDefaults"></canvas></div>
+      <div class="source-note"><b>Source:</b> KE MYT review-petition deck, Slide 12 (Class A); ratios are Class B.</div>
+    </div>
+    <div class="panel panel-secondary">
+      <div class="panel-title" style="margin-bottom:1rem;">Key figures</div>
+      <table class="data-table">
+        <tr><td class="txt">Total consumers</td><td class="num-cell">3,780,720</td></tr>
+        <tr><td class="txt">Running defaulters</td><td class="num-cell">591,827 (15.7%)</td></tr>
+        <tr><td class="txt">Running default amount</td><td class="num-cell">PKR 148.9 bn</td></tr>
+        <tr><td class="txt">Defaulters &gt; PKR 100,000</td><td class="num-cell">260,639 (6.9% of all)</td></tr>
+        <tr><td class="txt">Amount from that group</td><td class="num-cell">PKR 139.96 bn (94%)</td></tr>
+        <tr class="total-row"><td class="txt">Avg. balance, that group</td><td class="num-cell">PKR 536,989</td></tr>
+      </table>
+      <div class="callout" style="margin-top:1.2rem;">A tariff mechanism that reimburses shortfall without segmenting by default size risks converting this 6.9% into a permanent, subsidy-funded entitlement.</div>
+    </div>
+  </div>
+
+  <h3 class="subtitle">Write-Off Safeguards: Diluted Between Design and Determination</h3>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead><tr><th style="width:28%">Original Safeguard</th><th style="width:28%">Dilution in Determination</th><th>Implication / Risk</th></tr></thead>
+      <tbody>
+        <tr><td class="txt">≥3 years permanent disconnection + Land Revenue recovery action</td><td class="txt">Ageing test removed; no reference to legal recovery</td><td class="txt">Enables premature write-off; undermines statutory recovery mechanism</td></tr>
+        <tr><td class="txt">Full customer particulars (name, address, CNIC) per write-off</td><td class="txt">No CNIC/address disclosure required</td><td class="txt">Erodes traceability; facilitates double-counting of bad debt</td></tr>
+        <tr><td class="txt">NEPRA to ensure write-off not recognised "in any other way"</td><td class="txt">Safeguard absent</td><td class="txt">Opens door to duplicate tariff claims</td></tr>
+        <tr><td class="txt">Verification by Regulator via documentary evidence</td><td class="txt">Delegated to KE's own auditors</td><td class="txt">Self-assessment risk; weak external oversight</td></tr>
+        <tr><td class="txt">Cap of 1.69% of assessed sales per year</td><td class="txt">No percentage/ceiling reaffirmed</td><td class="txt">Unlimited pass-through potential</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="table-caption">Source: KE MYT review-petition deck, Slide 13 (Class A).</div>
+</section>
+
+<section class="block" id="sec-lossalw">
+  <div class="eyebrow">08 · Loss Diagnostics</div>
+  <h2 class="title">Distribution &amp; Transmission Loss Allowance</h2>
+  <p class="lede">A third-party study (Fichtner-PITCO) puts technical distribution loss at 6.512% — anything above that, by KE's own commissioned study, is controllable. The law &amp; order margin and transmission allowance both appear to carry excess margin relative to KE's own actuals.</p>
+
+  <div class="grid-2" style="margin-top:1.8rem;">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 14 — FY2023-24 Component Bridge</div></div>
+      <div class="chart-wrap"><canvas id="chartLossBridge"></canvas></div>
+      <div class="source-note"><b>Source:</b> Slides 14–18 (Class A) for recommended; approved components Class A/B — see Exhibit Book §8.4.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Exhibit 15 — T&amp;D Loss Glide Path</div></div>
+      <div class="chart-wrap"><canvas id="chartGlidePath"></canvas></div>
+      <div class="source-note"><b>Source:</b> Slide 22 / "Table_2" sheet (Class A). Dotted line: unreconciled alternate trajectory in the underlying workbook — see Anomaly #2.</div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:1.4rem;">
+    <div class="panel panel-secondary">
+      <div class="kpi-num" style="font-size:22px;">0.75% <span style="font-size:13px;color:var(--text-tertiary);font-family:var(--sans)">vs. 1.3% approved</span></div>
+      <div class="kpi-label" style="margin-top:.6rem;">Transmission Loss — KE's Own Posted Actual</div>
+    </div>
+    <div class="panel panel-secondary">
+      <div class="kpi-num" style="font-size:22px;">1.7pp <span style="font-size:13px;color:var(--text-tertiary);font-family:var(--sans)">vs. 3.39% allowed</span></div>
+      <div class="kpi-label" style="margin-top:.6rem;">Law &amp; Order Margin — Actual Differential</div>
+    </div>
+    <div class="panel panel-secondary">
+      <div class="kpi-num" style="font-size:22px;">2.0pp</div>
+      <div class="kpi-label" style="margin-top:.6rem;">KE's Own Estimate of "Bad Connections" (Controllable)</div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="sec-gencost">
+  <div class="eyebrow">09 · Cost &amp; Impact</div>
+  <h2 class="title">Generation Cost &amp; Working Capital Reset</h2>
+  <p class="lede">KE's legacy thermal fleet, proposed for take-or-pay treatment, costs roughly three times what the CPPA grid basket can supply — and four separate working-capital assumptions appear inflated relative to KE's actual borrowing terms.</p>
+
+  <div class="panel" style="margin-top:1.8rem;">
+    <div class="panel-head"><div class="panel-title">Exhibit 16 — Fuel Cost per kWh: KE Plants vs. Grid Basket</div></div>
+    <div class="chart-wrap"><canvas id="chartGenCost"></canvas></div>
+    <div class="source-note"><b>Source:</b> KE MYT review-petition deck, Slide 20 (Class A).</div>
+  </div>
+
+  <h3 class="subtitle">Working Capital &amp; Interest Rate Reset</h3>
+  <div class="grid-2">
+    <div class="callout" style="margin:0;"><b>1) Interest rate levels.</b> Rates exceeded 20% when filed; since rationalized downward — should be actualized.</div>
+    <div class="callout" style="margin:0;"><b>2) Interest rate spread.</b> KE proposes K+0.65%; KE actually borrows at K+0.1% or lower.</div>
+    <div class="callout" style="margin:0;"><b>3) FX hedging cost.</b> Upfront hedge assumed; should pass through as per actual outcomes.</div>
+    <div class="callout" style="margin:0;"><b>4) Working capital duplication.</b> Four business units costed separately despite being one legal entity.</div>
+  </div>
+  <div class="table-caption" style="margin-top:1rem;">Source: KE MYT review-petition deck, Slide 21 (Class A).</div>
+</section>
+
+<section class="block" id="sec-savings">
+  <div class="eyebrow">10 · Cost &amp; Impact</div>
+  <h2 class="title">Financial Impact — Cumulative TDS Savings</h2>
+  <p class="lede">The combined impact of the recommended T&amp;D-loss and recovery-rate adjustments on KE's Total Distribution Sales revenue requirement, year by year across the control period.</p>
+
+  <div class="panel" style="margin-top:1.8rem;">
+    <div class="panel-head"><div class="panel-title">Exhibit 17 — Estimated Annual TDS Savings</div><div class="panel-note">FY2023-24 to FY2029-30</div></div>
+    <div class="chart-wrap tall"><canvas id="chartTdsSavings"></canvas></div>
+    <div class="source-note"><b>Source:</b> Slide 22 (Class A); independently re-summed (Class B) from "Table_2" sheet, which reproduces identical figures.</div>
+  </div>
+
+  <div class="callout critical" style="margin-top:1.6rem;">
+    <span class="pill c">Class C — Anomaly #1</span><br><br>
+    <b>The petition's own headline figure does not reconcile.</b> Slide 22 states both "PKR 176.8 bn cumulative savings" <em>and</em> "~PKR 30 bn per year." Seven years at PKR 30bn is ≈PKR 210bn, not 176.8bn. Independently re-summing the same slide's own year-by-year table — cross-checked against the underlying workbook — gives <b>PKR 209.8 bn</b>, which reconciles with the "~30bn/year" claim but not the "176.8bn" headline. The 176.8bn figure could not be reproduced from any combination of the underlying data and should be treated as unverified until KE clarifies its derivation.
+  </div>
+
+  <p class="body-text" style="margin-top:1rem;">Basis caution: savings are estimated against a PKR 750bn revenue-requirement base. YTD-FY25 revenue is already trending above PKR 950bn — both savings streams (and the cost of failing to secure them) will scale up proportionally on the current base.</p>
+</section>
+
+<section class="block" id="sec-anomalies">
+  <div class="eyebrow">11 · Negotiation Toolkit</div>
+  <h2 class="title">Consolidated Anomaly &amp; Red-Flag Register</h2>
+  <p class="lede">Every anomaly, internal inconsistency, or negotiation-relevant red flag identified across this review, consolidated into one working checklist — the analytical core of this dashboard.</p>
+
+  <div class="table-toolbar" style="margin-top:1.6rem;">
+    <input class="search-input" id="anomalySearch" type="text" placeholder="Search findings…">
+    <button class="filter-chip active" data-sevfilter="all">All (15)</button>
+    <button class="filter-chip" data-sevfilter="high">● High severity</button>
+    <button class="filter-chip" data-sevfilter="med">● Medium</button>
+    <button class="filter-chip" data-sevfilter="low">● Lower</button>
+  </div>
+
+  <div class="ledger" id="anomalyLedger"></div>
+  <div class="legend-key">
+    <span><i style="background:var(--warning)"></i> High — internal inconsistency or governance dilution</span>
+    <span><i style="background:var(--accent)"></i> Medium — overstated margin or mischaracterization risk</span>
+    <span><i style="background:var(--text-tertiary)"></i> Lower — scope/definitional caution</span>
+  </div>
+</section>
+
+<section class="block" id="sec-gaps">
+  <div class="eyebrow">12 · Negotiation Toolkit</div>
+  <h2 class="title">Data Gaps &amp; Further Disclosure Requests</h2>
+  <p class="lede">The evidence base is unusually rich for a DISCO tariff negotiation, but closing these specific gaps would materially strengthen the ability to hold KE to feeder/IBC-level accountability.</p>
+
+  <div class="grid-2" style="margin-top:1.8rem;">
+    <div class="callout" style="margin:0;"><b>Feeder→IBC mapping.</b> No published link between the 455 HLF and the 30 IBCs, preventing an exact tie-out.</div>
+    <div class="callout" style="margin:0;"><b>Reconcile the two "Recommended T&amp;D" trajectories.</b> The workbook and the final deck disagree — confirm the authoritative version in writing.</div>
+    <div class="callout" style="margin:0;"><b>Derivation of PKR 176.8bn.</b> Could not be reproduced from any combination of underlying data reviewed.</div>
+    <div class="callout" style="margin:0;"><b>Feeder-level time series.</b> 36 months of sent-out/billed/collected data at full feeder granularity.</div>
+    <div class="callout" style="margin:0;"><b>Default ageing by IBC.</b> Would show whether large defaulters cluster in already-identified high-loss areas.</div>
+    <div class="callout" style="margin:0;"><b>Explicit tariff/value basis.</b> Files imply different PKR/kWh values (≈Rs 59 vs. ≈Rs 42) for monetized claims.</div>
+    <div class="callout" style="margin:0;"><b>AMI/meter-replacement deployment.</b> To test whether "bad connections" losses are being remediated MYT to MYT.</div>
+    <div class="callout" style="margin:0;"><b>Updated TDS savings on current revenue base.</b> PKR 750bn base vs. YTD-FY25 trending above PKR 950bn.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <b>K-Electric MYT Review, 2024–2030 — Data Dashboard.</b> Companion to the K-Electric MYT Negotiation Memo and the Data Annex &amp; Exhibit Book. Every figure on this dashboard is labelled by evidence class — Class A (documented source data), Class B (reconstructed/recomputed, arithmetic checkable line by line), or Class C (cross-file finding). Prepared for negotiations with K-Electric / Power Division. Not for external distribution.
+    </div>
+    <div>
+      <b>Source files</b><br>
+      KE MYT review-petition deck (22 slides)<br>
+      455 HLF vs. LPA tie-out memo<br>
+      KE Recovery Rate workbook<br>
+      KE Slab Data workbook (9 sheets)<br>
+      IBC/consumer-count dataset<br>
+      Bad-DISCO theft-by-IBC dataset
+    </div>
+  </div>
+</footer>
+
+
+
+</div>
+</div>
+
+<button class="top-btn" id="topBtn">↑</button>
+
+<script>
+/* ============================================================
+   K-Electric MYT Review Dashboard — data & logic
+   ============================================================ */
+
+const KE_DATA = {"recovery_trend":{"years":["FY17","FY18","FY19","FY20","FY21","FY22","FY23","FY24","FY25","FY26","FY27","FY28","FY29","FY30"],"actual_or_petitioned":[88.5,90.6,91.0,92.6,92.1,94.9,96.7,92.8,93.2,93.6,94.1,94.6,95.0,95.5],"type":["actual","actual","actual","actual","actual","actual","actual","petitioned_glide","petitioned_glide","petitioned_glide","petitioned_glide","petitioned_glide","petitioned_glide","petitioned_glide"]},"domestic_recovery_2019_2024":{"years":[2019,2020,2021,2022,2023,2024],"rate_pct":[88.7,92.2,90.0,90.2,84.4,82.0]},"domestic_4yr_avg_2019_2022":90.3,"cross_disco_2020_21":{"disco":["IESCO","GEPCO","FESCO","K-Electric","LESCO","MEPCO","CPPA Average"],"rate_pct":[94.35,93.85,93.51,92.25,92.13,85.84,85.16]},"cross_disco_2023_24":{"disco":["FESCO","MEPCO","IESCO","GEPCO","LESCO","CPPA Average","Good KE (GD)","K-Electric"],"rate_pct":[98.7,96.97,96.92,95.74,93.09,91.64,87.5,81.99]},"cross_disco_jul_dec_2024":{"disco":["LESCO","MEPCO","IESCO","GEPCO","FESCO","CPPA Average","K-Electric"],"rate_pct":[112.0,107.0,101.0,100.0,99.04,97.93,78.41]},"slabwise_cross_disco":{"slabs":["0-50 (Lifeline)","51-100 (Lifeline)","0-100 (Protected)","101-200 (Protected)","0-100","101-200","201-300","301-400","401-500","501-600","601-700","Above 700"],"GEPCO":[123,98,109,99,127,108,95,94,92,95,93,87],"FESCO":[126,96,111,99,135,109,94,93,91,91,90,84],"IESCO":[116,96,109,100,131,109,96,95,92,94,93,86],"MEPCO":[108,97,106,98,122,106,95,94,92,93,92,85],"K-Electric":[70.8,69.9,76.9,80.2,83.5,86.6,83.7,81.8,80.5,79.3,78.2,76.5]},"segment_recovery":{"years":[2019,2020,2021,2022,2023,2024],"categories":["Domestic","Commercial","Industrial","Agricultural","Public","Bulk Supply","General Services"],"Domestic":[88.7,92.2,90.0,90.2,84.4,82.0],"Commercial":[97.6,97.7,97.2,98.1,95.4,95.8],"Industrial":[99.9,90.9,100.5,101.1,99.3,99.8],"Agricultural":[29.5,28.6,22.9,20.3,28.5,24.2],"Public":[9.6,66.4,60.3,188.0,134.6,47.9],"Bulk Supply":[93.8,107.3,106.7,99.3,100.0,97.1],"General Services":[94.8,73.6,92.8,103.2,102.5,89.5],"Total":[92.6,92.1,94.9,96.7,92.8,91.5]},"segment_weight":{"years":[2019,2020,2021,2022,2023,2024],"categories":["Domestic","Commercial","Industrial","Agricultural","Public","Bulk Supply","General Services"],"Domestic":[45.6,42.3,42.3,37.8,40.4,38.1],"Commercial":[19.8,17.3,15.7,16.2,16.5,16.6],"Industrial":[28.5,31.7,34.1,38.4,36.0,37.6],"Agricultural":[0.5,0.4,0.4,0.4,0.2,0.2],"Public":[1.2,1.1,0.8,0.5,0.3,0.4],"Bulk Supply":[4.0,3.7,3.5,3.4,3.4,3.5],"General Services":[0.5,3.6,3.2,3.3,3.2,3.5]},"segment_billed_pkrbn":{"years":[2019,2020,2021,2022,2023,2024],"categories":["Domestic","Commercial","Industrial","Agricultural","Public","Bulk Supply","General Services"],"Domestic":[104293,107747,133515,147442,216981,286751],"Commercial":[45235,43996,49511,63112,88368,124881],"Industrial":[65079,80796,107780,149916,193202,283554],"Agricultural":[1071,975,1361,1387,1145,1590],"Public":[2783,2728,2399,2132,1837,3057],"Bulk Supply":[9077,9534,11051,13332,18268,26657],"General Services":[1098,9109,10255,12910,17353,26688],"Total":[228636,254885,315872,390231,537154,753178]},"tieout_feeder_basis":{"labels":["Overall KE Network","455 High-Loss Feeders","Excluding 455 HLF"],"feeder_count":[2102,455,1647],"sent_out_gwh":[17768,4141,13627],"units_billed_gwh":[15183,2784,12399],"revenue_req_rsmn":[606941,164667,442274],"avg_tariff":[39.97,59.15,35.67],"allowed_dloss_pct":[13.9,32.3,8.3],"allowed_rloss_pct":[6.8,33.1,0.9],"actual_dloss_pct":[16.1,32.8,10.4],"actual_rloss_pct":[8.5,33.4,2.9]},"tieout_ibc_basis":{"labels":["KE-wide","Low Performing Areas (6 IBCs, by diff.)","Excluding LPAs"],"sent_out_kwh":[17753373053,2760865716,14992507337],"units_billed_kwh":[15025108682,2080974306,12944134376],"amount_billed_rs":[692009427237,87426352821,604583074416],"amount_recovered_rs":[637523907733,63645689964,573878217769],"dloss_pct":[15.4,24.6,13.7],"rr_pct":[92.1,72.8,94.9],"atc_pct":[22.0,45.1,18.0]},"gdbd_feeder_econ":{"labels":["Bad DISCO (455 feeders)","Good DISCO (1,647 feeders)"],"feeders":[455,1647],"sent_out_gwh":[4141,13627],"billed_gwh":[2784,12399],"billing_efficiency_pct":[67.23,90.99],"recovery_rate_pct":[66.6,97.1],"atc_loss_pct":[55.22,11.64],"monetized_gwh":[1854,12039],"leakage_gwh":[2287,1588],"gwh_per_feeder":[9.1,8.27]},"theft_summary":{"by_ibc":[{"ibc":"Orangi \u2013 I","share_pct":16.216,"gwh":169.9,"rsmn":10049.2,"cum_pct":16.2},{"ibc":"Lyari \u2013 II","share_pct":15.115,"gwh":158.4,"rsmn":9366.8,"cum_pct":31.3},{"ibc":"Gadap","share_pct":12.613,"gwh":132.1,"rsmn":7816.0,"cum_pct":43.9},{"ibc":"Lyari \u2013 I","share_pct":6.507,"gwh":68.2,"rsmn":4032.1,"cum_pct":50.5},{"ibc":"Surjani","share_pct":6.206,"gwh":65.0,"rsmn":3846.0,"cum_pct":56.7},{"ibc":"Bin Qasim","share_pct":6.206,"gwh":65.0,"rsmn":3846.0,"cum_pct":62.9},{"ibc":"Baldia","share_pct":4.805,"gwh":50.3,"rsmn":2977.5,"cum_pct":67.7},{"ibc":"Malir","share_pct":4.605,"gwh":48.2,"rsmn":2853.5,"cum_pct":72.3},{"ibc":"Landhi","share_pct":3.904,"gwh":40.9,"rsmn":2419.2,"cum_pct":76.2},{"ibc":"North Karachi","share_pct":2.703,"gwh":28.3,"rsmn":1674.9,"cum_pct":78.9},{"ibc":"North Nazimabad","share_pct":2.603,"gwh":27.3,"rsmn":1612.8,"cum_pct":81.5},{"ibc":"New Karachi","share_pct":2.402,"gwh":25.2,"rsmn":1488.8,"cum_pct":83.9},{"ibc":"Uthal","share_pct":2.302,"gwh":24.1,"rsmn":1426.7,"cum_pct":86.2},{"ibc":"Nazimabad","share_pct":2.302,"gwh":24.1,"rsmn":1426.7,"cum_pct":88.5},{"ibc":"Liaquatabad","share_pct":1.702,"gwh":17.8,"rsmn":1054.5,"cum_pct":90.2},{"ibc":"Johar \u2013 I","share_pct":1.401,"gwh":14.7,"rsmn":868.4,"cum_pct":91.6},{"ibc":"Johar \u2013 II","share_pct":1.401,"gwh":14.7,"rsmn":868.4,"cum_pct":93.0},{"ibc":"Bahadurabad","share_pct":1.301,"gwh":13.6,"rsmn":806.4,"cum_pct":94.3},{"ibc":"Shah Faisal","share_pct":1.101,"gwh":11.5,"rsmn":682.4,"cum_pct":95.4},{"ibc":"SITE","share_pct":0.901,"gwh":9.4,"rsmn":558.3,"cum_pct":96.3},{"ibc":"Korangi","share_pct":0.901,"gwh":9.4,"rsmn":558.3,"cum_pct":97.2},{"ibc":"Garden","share_pct":0.801,"gwh":8.4,"rsmn":496.3,"cum_pct":98.0},{"ibc":"Clifton","share_pct":0.801,"gwh":8.4,"rsmn":496.3,"cum_pct":98.8},{"ibc":"Tipu Sultan","share_pct":0.601,"gwh":6.3,"rsmn":372.2,"cum_pct":99.4},{"ibc":"Saddar (City)","share_pct":0.4,"gwh":4.2,"rsmn":248.1,"cum_pct":99.8},{"ibc":"Gulshan","share_pct":0.2,"gwh":2.1,"rsmn":124.1,"cum_pct":100.0}],"official_6_gwh":684.8,"official_6_rsmn":40506.8,"other_ibcs_gwh":362.7,"other_ibcs_rsmn":21463.1,"official_6_share_pct":65.4,"other_ibcs_share_pct":34.6,"total_gwh":1047.5,"total_rsmn":61969.9,"implied_value_pkr_per_kwh":59.16,"n_other_ibcs":19},"ibc_consumers":[{"cluster":"Cluster- 1 (Defence)","ibc":"Clifton","is_total":false,"dom_cons":84325,"dom_units":245501,"comm_cons":16479,"comm_units":155830,"ind_cons":28,"ind_units":10557},{"cluster":"Cluster- 1 (Defence)","ibc":"Defence","is_total":false,"dom_cons":104137,"dom_units":546722,"comm_cons":30319,"comm_units":161492,"ind_cons":47,"ind_units":3912},{"cluster":"Cluster- 1 (Defence)","ibc":"Saddar","is_total":false,"dom_cons":48184,"dom_units":132502,"comm_cons":54288,"comm_units":245407,"ind_cons":566,"ind_units":7170},{"cluster":"Cluster- 1 (Defence)","ibc":"Total","is_total":true,"dom_cons":236646,"dom_units":924725,"comm_cons":101086,"comm_units":562729,"ind_cons":641,"ind_units":21639},{"cluster":"Cluster- 2 (Society)","ibc":"Bahadurrabad","is_total":false,"dom_cons":108005,"dom_units":338457,"comm_cons":27249,"comm_units":127585,"ind_cons":139,"ind_units":8541},{"cluster":"Cluster- 2 (Society)","ibc":"Garden","is_total":false,"dom_cons":83949,"dom_units":226821,"comm_cons":23272,"comm_units":45534,"ind_cons":334,"ind_units":3647},{"cluster":"Cluster- 2 (Society)","ibc":"Tipu Sultan","is_total":false,"dom_cons":106556,"dom_units":334222,"comm_cons":20548,"comm_units":157025,"ind_cons":247,"ind_units":6228},{"cluster":"Cluster- 2 (Society)","ibc":"Total","is_total":true,"dom_cons":298510,"dom_units":899500,"comm_cons":71069,"comm_units":330144,"ind_cons":720,"ind_units":18416},{"cluster":"Cluster- 3 (Johar)","ibc":"Gadap","is_total":false,"dom_cons":97382,"dom_units":162257,"comm_cons":12313,"comm_units":29369,"ind_cons":338,"ind_units":29683},{"cluster":"Cluster- 3 (Johar)","ibc":"Johar - I","is_total":false,"dom_cons":101064,"dom_units":320625,"comm_cons":11537,"comm_units":54261,"ind_cons":10,"ind_units":289},{"cluster":"Cluster- 3 (Johar)","ibc":"Johar - II","is_total":false,"dom_cons":116333,"dom_units":290820,"comm_cons":13005,"comm_units":35993,"ind_cons":33,"ind_units":7553},{"cluster":"Cluster- 3 (Johar)","ibc":"Total","is_total":true,"dom_cons":314779,"dom_units":773702,"comm_cons":36855,"comm_units":119623,"ind_cons":381,"ind_units":37525},{"cluster":"Cluster- 4 (Bin Qasim)","ibc":"Bin Qasim","is_total":false,"dom_cons":116329,"dom_units":178817,"comm_cons":14184,"comm_units":42522,"ind_cons":1549,"ind_units":1193030},{"cluster":"Cluster- 4 (Bin Qasim)","ibc":"Malir","is_total":false,"dom_cons":129465,"dom_units":260060,"comm_cons":13959,"comm_units":30311,"ind_cons":536,"ind_units":14650},{"cluster":"Cluster- 4 (Bin Qasim)","ibc":"Shah Faisal","is_total":false,"dom_cons":115523,"dom_units":281930,"comm_cons":12180,"comm_units":36955,"ind_cons":204,"ind_units":11193},{"cluster":"Cluster- 4 (Bin Qasim)","ibc":"Total","is_total":true,"dom_cons":361317,"dom_units":720807,"comm_cons":40323,"comm_units":109788,"ind_cons":2289,"ind_units":1218873},{"cluster":"Cluster- 5 (Korangi)","ibc":"KIMZ","is_total":false,"dom_cons":77090,"dom_units":144741,"comm_cons":10563,"comm_units":67027,"ind_cons":2438,"ind_units":753606},{"cluster":"Cluster- 5 (Korangi)","ibc":"Korangi","is_total":false,"dom_cons":169117,"dom_units":340644,"comm_cons":15974,"comm_units":31169,"ind_cons":940,"ind_units":44296},{"cluster":"Cluster- 5 (Korangi)","ibc":"Landhi","is_total":false,"dom_cons":112625,"dom_units":218037,"comm_cons":10079,"comm_units":17252,"ind_cons":340,"ind_units":38642},{"cluster":"Cluster- 5 (Korangi)","ibc":"Total","is_total":true,"dom_cons":358832,"dom_units":703422,"comm_cons":36616,"comm_units":115448,"ind_cons":3718,"ind_units":836544},{"cluster":"Cluster- 6 (Orangi)","ibc":"Orangi - I","is_total":false,"dom_cons":119018,"dom_units":247629,"comm_cons":14978,"comm_units":31909,"ind_cons":1313,"ind_units":125174},{"cluster":"Cluster- 6 (Orangi)","ibc":"Orangi - II","is_total":false,"dom_cons":133285,"dom_units":252084,"comm_cons":14158,"comm_units":27298,"ind_cons":1691,"ind_units":21889},{"cluster":"Cluster- 6 (Orangi)","ibc":"SITE","is_total":false,"dom_cons":40345,"dom_units":77641,"comm_cons":12522,"comm_units":47215,"ind_cons":4044,"ind_units":1452465},{"cluster":"Cluster- 6 (Orangi)","ibc":"Total","is_total":true,"dom_cons":292648,"dom_units":577354,"comm_cons":41658,"comm_units":106422,"ind_cons":7048,"ind_units":1599528},{"cluster":"Cluster- 7 (Baldia)","ibc":"Baldia","is_total":false,"dom_cons":153255,"dom_units":283415,"comm_cons":21001,"comm_units":34776,"ind_cons":1433,"ind_units":76487},{"cluster":"Cluster- 7 (Baldia)","ibc":"Layari - I","is_total":false,"dom_cons":73633,"dom_units":143547,"comm_cons":33979,"comm_units":51568,"ind_cons":278,"ind_units":76066},{"cluster":"Cluster- 7 (Baldia)","ibc":"Layari - II","is_total":false,"dom_cons":93029,"dom_units":236980,"comm_cons":16117,"comm_units":21485,"ind_cons":749,"ind_units":9370},{"cluster":"Cluster- 7 (Baldia)","ibc":"Total","is_total":true,"dom_cons":319917,"dom_units":663942,"comm_cons":71097,"comm_units":107829,"ind_cons":2460,"ind_units":161923},{"cluster":"Cluster- 8 (Uthal)","ibc":"Uthal","is_total":false,"dom_cons":41300,"dom_units":52113,"comm_cons":5631,"comm_units":12625,"ind_cons":91,"ind_units":436903},{"cluster":"Cluster- 8 (Uthal)","ibc":"Total","is_total":true,"dom_cons":41300,"dom_units":52113,"comm_cons":5631,"comm_units":12625,"ind_cons":91,"ind_units":436903},{"cluster":"Cluster- 9 (Gulshan)","ibc":"F. B. Area","is_total":false,"dom_cons":113728,"dom_units":329736,"comm_cons":17939,"comm_units":62550,"ind_cons":1160,"ind_units":136993},{"cluster":"Cluster- 9 (Gulshan)","ibc":"Gulshan","is_total":false,"dom_cons":97667,"dom_units":342371,"comm_cons":15812,"comm_units":88614,"ind_cons":34,"ind_units":736},{"cluster":"Cluster- 9 (Gulshan)","ibc":"Liaqatabad","is_total":false,"dom_cons":93059,"dom_units":206608,"comm_cons":15471,"comm_units":25895,"ind_cons":367,"ind_units":4854},{"cluster":"Cluster- 9 (Gulshan)","ibc":"Nazimabad","is_total":false,"dom_cons":89508,"dom_units":237180,"comm_cons":15324,"comm_units":44956,"ind_cons":715,"ind_units":18459},{"cluster":"Cluster- 9 (Gulshan)","ibc":"Total","is_total":true,"dom_cons":393962,"dom_units":1115895,"comm_cons":64546,"comm_units":222015,"ind_cons":2276,"ind_units":161042},{"cluster":"Cluster- 10 (Surjani)","ibc":"New Karachi","is_total":false,"dom_cons":97229,"dom_units":207222,"comm_cons":9423,"comm_units":19499,"ind_cons":216,"ind_units":7941},{"cluster":"Cluster- 10 (Surjani)","ibc":"North Karachi","is_total":false,"dom_cons":85325,"dom_units":207403,"comm_cons":15367,"comm_units":34130,"ind_cons":3356,"ind_units":427384},{"cluster":"Cluster- 10 (Surjani)","ibc":"North Nazimabad","is_total":false,"dom_cons":104045,"dom_units":327277,"comm_cons":17168,"comm_units":67149,"ind_cons":269,"ind_units":10110},{"cluster":"Cluster- 10 (Surjani)","ibc":"Surjani","is_total":false,"dom_cons":96619,"dom_units":171211,"comm_cons":8078,"comm_units":12119,"ind_cons":68,"ind_units":2978},{"cluster":"Cluster- 10 (Surjani)","ibc":"Total","is_total":true,"dom_cons":383218,"dom_units":913113,"comm_cons":50036,"comm_units":132897,"ind_cons":3909,"ind_units":448413},{"cluster":"PSC","ibc":"PSC","is_total":false,"dom_cons":519,"dom_units":21642,"comm_cons":84,"comm_units":1713,"ind_cons":85,"ind_units":409971},{"cluster":"PSC","ibc":"Total","is_total":true,"dom_cons":519,"dom_units":21642,"comm_cons":84,"comm_units":1713,"ind_cons":85,"ind_units":409971}],"slab_summary":{"rows":[{"category":"Lifeline","slab":"1) Upto 50","billed_kewide":1863473349,"recovery_kewide":1319696186,"billed_highloss":651177604,"recovery_highloss":401801709,"billed_lowloss":1212295745,"recovery_lowloss":917894477,"loss_kewide":543777163,"rr_kewide":70.8,"loss_highloss":249375895,"loss_lowloss":294401268},{"category":"Protected","slab":"2) Upto 100","billed_kewide":465001775,"recovery_kewide":308939167,"billed_highloss":197763252,"recovery_highloss":116329443,"billed_lowloss":267238523,"recovery_lowloss":192609724,"loss_kewide":156062608,"rr_kewide":66.4,"loss_highloss":81433809,"loss_lowloss":74628799},{"category":null,"slab":"2) Upto 100","billed_kewide":11762159371,"recovery_kewide":9210957240,"billed_highloss":4141494327,"recovery_highloss":2838778679,"billed_lowloss":7620665044,"recovery_lowloss":6372178561,"loss_kewide":2551202131,"rr_kewide":78.3,"loss_highloss":1302715648,"loss_lowloss":1248486483},{"category":"Protected","slab":"3) Upto 200","billed_kewide":15690986181,"recovery_kewide":13034140727,"billed_highloss":5048584109,"recovery_highloss":3636106899,"billed_lowloss":10642402072,"recovery_lowloss":9398033828,"loss_kewide":2656845454,"rr_kewide":83.1,"loss_highloss":1412477210,"loss_lowloss":1244368244},{"category":null,"slab":"2) Upto 100","billed_kewide":7596788637,"recovery_kewide":7331346243,"billed_highloss":2117944016,"recovery_highloss":1652686316,"billed_lowloss":5478844621,"recovery_lowloss":5678659927,"loss_kewide":265442394,"rr_kewide":96.5,"loss_highloss":465257700,"loss_lowloss":-199815306},{"category":null,"slab":"3) Upto 200","billed_kewide":31717044352,"recovery_kewide":28656328377,"billed_highloss":7546507151,"recovery_highloss":5567346191,"billed_lowloss":24170537201,"recovery_lowloss":23088982186,"loss_kewide":3060715975,"rr_kewide":90.3,"loss_highloss":1979160960,"loss_lowloss":1081555015},{"category":null,"slab":"4) Upto 300","billed_kewide":47747218607,"recovery_kewide":37907924086,"billed_highloss":10710219177,"recovery_highloss":6151372416,"billed_lowloss":37036999430,"recovery_lowloss":31756551670,"loss_kewide":9839294521,"rr_kewide":79.4,"loss_highloss":4558846761,"loss_lowloss":5280447760},{"category":null,"slab":"5) Upto 400","billed_kewide":30647024476,"recovery_kewide":22863838702,"billed_highloss":5590843346,"recovery_highloss":2616338887,"billed_lowloss":25056181130,"recovery_lowloss":20247499815,"loss_kewide":7783185774,"rr_kewide":74.6,"loss_highloss":2974504459,"loss_lowloss":4808681315},{"category":null,"slab":"6) Upto 500","billed_kewide":19168654820,"recovery_kewide":13529906570,"billed_highloss":3349800735,"recovery_highloss":1194775753,"billed_lowloss":15818854085,"recovery_lowloss":12335130817,"loss_kewide":5638748250,"rr_kewide":70.6,"loss_highloss":2155024982,"loss_lowloss":3483723268},{"category":null,"slab":"7) Upto 600","billed_kewide":13411598798,"recovery_kewide":8591041112,"billed_highloss":2477601316,"recovery_highloss":632527500,"billed_lowloss":10933997482,"recovery_lowloss":7958513612,"loss_kewide":4820557686,"rr_kewide":64.1,"loss_highloss":1845073816,"loss_lowloss":2975483870},{"category":null,"slab":"8) Upto 700","billed_kewide":9598314478,"recovery_kewide":5620972035,"billed_highloss":2177151999,"recovery_highloss":367433978,"billed_lowloss":7421162479,"recovery_lowloss":5253538057,"loss_kewide":3977342443,"rr_kewide":58.6,"loss_highloss":1809718021,"loss_lowloss":2167624422},{"category":null,"slab":"9) Above 700","billed_kewide":25123539148,"recovery_kewide":16002763186,"billed_highloss":3612367115,"recovery_highloss":954800661,"billed_lowloss":21511172033,"recovery_lowloss":15047962525,"loss_kewide":9120775962,"rr_kewide":63.7,"loss_highloss":2657566454,"loss_lowloss":6463209508},{"category":"Residential - ToU","slab":"Unprotected","billed_kewide":68739788047,"recovery_kewide":68337414115,"billed_highloss":2871356610,"recovery_highloss":2714330411,"billed_lowloss":65868431437,"recovery_lowloss":65623083704,"loss_kewide":402373932,"rr_kewide":99.4,"loss_highloss":157026199,"loss_lowloss":245347733}],"total_loss_kewide_bn":50.82,"total_loss_highloss_bn":21.65,"total_loss_lowloss_bn":29.17,"highloss_share_pct":42.6,"lowloss_share_pct":57.4,"loss_400plus_bn":31.34,"loss_400plus_share_of_nontou_pct":62.2},"recovery_categories":[{"category":"Lifeline","slab":"Upto 50","recovery_rate":0.284,"gross_billed_pkrm":786,"gross_recovered_pkrm":223,"not_recovered_pkrm":563,"pct_of_not_recovered":0.010636288067709514},{"category":null,"slab":"Upto 100","recovery_rate":0.554,"gross_billed_pkrm":443,"gross_recovered_pkrm":245,"not_recovered_pkrm":198,"pct_of_not_recovered":0.003740648379052369},{"category":"Protected","slab":"Upto 100","recovery_rate":0.609,"gross_billed_pkrm":7582,"gross_recovered_pkrm":4618,"not_recovered_pkrm":2964,"pct_of_not_recovered":0.05599637270460213},{"category":null,"slab":"k","recovery_rate":0.788,"gross_billed_pkrm":13653,"gross_recovered_pkrm":10753,"not_recovered_pkrm":2900,"pct_of_not_recovered":0.05478727423864581},{"category":"Unprotected","slab":"Upto 100","recovery_rate":0.727,"gross_billed_pkrm":3542,"gross_recovered_pkrm":2575,"not_recovered_pkrm":967,"pct_of_not_recovered":0.018268722134058793},{"category":null,"slab":"Upto 200","recovery_rate":0.846,"gross_billed_pkrm":19345,"gross_recovered_pkrm":16362,"not_recovered_pkrm":2983,"pct_of_not_recovered":0.056355323811682914},{"category":null,"slab":"Upto 300","recovery_rate":0.765,"gross_billed_pkrm":34886,"gross_recovered_pkrm":26670,"not_recovered_pkrm":8216,"pct_of_not_recovered":0.15521801556714274},{"category":null,"slab":"Upto 400","recovery_rate":0.734,"gross_billed_pkrm":22583,"gross_recovered_pkrm":16578,"not_recovered_pkrm":6005,"pct_of_not_recovered":0.11344744200105795},{"category":null,"slab":"Upto 500","recovery_rate":0.683,"gross_billed_pkrm":16033,"gross_recovered_pkrm":10949,"not_recovered_pkrm":5084,"pct_of_not_recovered":0.09604775938940527},{"category":null,"slab":"Upto 600","recovery_rate":0.646,"gross_billed_pkrm":11390,"gross_recovered_pkrm":7360,"not_recovered_pkrm":4030,"pct_of_not_recovered":0.0761354190281871},{"category":null,"slab":"Upto 700","recovery_rate":0.616,"gross_billed_pkrm":8052,"gross_recovered_pkrm":4958,"not_recovered_pkrm":3094,"pct_of_not_recovered":0.05845235396357591},{"category":null,"slab":"700+","recovery_rate":0.658,"gross_billed_pkrm":21678,"gross_recovered_pkrm":14259,"not_recovered_pkrm":7419,"pct_of_not_recovered":0.14016096123328042},{"category":"Residential ToU","slab":null,"recovery_rate":0.977,"gross_billed_pkrm":52747,"gross_recovered_pkrm":51537,"not_recovered_pkrm":1210,"pct_of_not_recovered":0.0228595178719867},{"category":"Commercial <5kW","slab":null,"recovery_rate":0.84,"gross_billed_pkrm":32051,"gross_recovered_pkrm":26933,"not_recovered_pkrm":5118,"pct_of_not_recovered":0.09669009294944457},{"category":"Commercial >5kW","slab":null,"recovery_rate":0.98,"gross_billed_pkrm":44410,"gross_recovered_pkrm":43543,"not_recovered_pkrm":867,"pct_of_not_recovered":0.01637950578100204},{"category":"General","slab":null,"recovery_rate":0.94,"gross_billed_pkrm":6820,"gross_recovered_pkrm":6407,"not_recovered_pkrm":413,"pct_of_not_recovered":0.007802463538124386},{"category":"Agricultural","slab":null,"recovery_rate":2.45,"gross_billed_pkrm":-59,"gross_recovered_pkrm":145,"not_recovered_pkrm":-204,"pct_of_not_recovered":-0.003854001360235774},{"category":"Others","slab":null,"recovery_rate":0.886,"gross_billed_pkrm":9707,"gross_recovered_pkrm":8602,"not_recovered_pkrm":1105,"pct_of_not_recovered":0.02087584070127711},{"category":"Total","slab":null,"recovery_rate":0.827,"gross_billed_pkrm":305649,"gross_recovered_pkrm":252717,"not_recovered_pkrm":52932,"pct_of_not_recovered":1}],"default_stats":{"total_consumers":3780720,"running_defaulters":591827,"running_default_pkrmn":148869,"pct_defaulters":15.7,"default_gt_100k_n":260639,"default_gt_100k_pkrmn":139960,"default_gt_100k_share_of_defaulters_pct":44.0,"default_gt_100k_share_of_amount_pct":94.0,"avg_default_gt100k_pkr":536988.0,"pct_of_total_consumers_gt100k":6.89},"loss_bridge":{"years":["2023-24","2024-25","2025-26","2026-27","2027-28","2028-29","2029-30"],"td_loss_nepra_approved_pct":[14.58,14.27,13.83,13.39,13.07,12.82,12.63],"total_recommended_pct":[12.46,12.46,11.66,11.16,10.46,10.46,9.76],"distribution_loss_sheet_alt_recommended_pct":[13.09,12.99,12.99,12.59,12.59,12.39,12.39],"fy2324_components":{"labels":["Theoretical Technical Loss","Law & Order Margin","Theft & Other Controllable Losses","Transmission Loss","Total"],"recommended":[6.51,1.7,3.5,0.75,12.46],"nepra_approved":[6.51,3.39,3.38,1.3,14.58]}},"tds_savings":{"years":["2023-24","2024-25","2025-26","2026-27","2027-28","2028-29","2029-30"],"td_nepra_pct":[14.58,14.27,13.83,13.39,13.07,12.82,12.63],"td_recommended_pct":[12.46,12.46,11.66,11.16,10.46,10.46,9.76],"tds_savings_td_pkrbn":[15.9,13.6,16.3,16.7,19.6,17.7,21.5],"rr_petitioned_pct":[93.2,93.2,93.6,94.1,94.6,95.0,95.5],"rr_recommended_pct":[95.0,95.0,95.5,96.0,96.3,96.5,96.8],"tds_savings_rr_pkrbn":[13.5,13.5,14.2,14.3,12.4,11.2,9.4],"cumulative_tds_savings_pkrbn":[29.4,27.07,30.52,30.98,31.95,28.95,30.9]},"total_cumulative_savings":209.8,"gen_cost":{"plants":["BQPS-I","BQPS-II","KCCPP","KTGEPS","SGEPS","BQPS-III (new/RLNG)"],"fuel":["FO","RLNG","RLNG","RLNG","RLNG","RLNG"],"net_capacity_mw":[693.08,494.53,220.83,92.05,92.73,899.6],"energy_purchase_price":[34.43,31.38,32.17,53.18,35.57,21.07],"fuel_cost_component":[34.1,30.69,30.4,50.75,33.69,20.67],"total_tariff":[38.08,36.76,38.03,59.06,39.69,24.37]},"avg_fuel_cost_retiring":35.93,"grid_energy_cost":12.0};
+
+/* ---------- Executive summary findings (Class-tagged) ---------- */
+const EXEC_FINDINGS = [
+  {cls:'b', title:'Overall recovery ratio deteriorated and does not recover under KE\u2019s own glide path', ev:'FY22 peak 94.9% \u2192 FY24 actual 92.8%; petitioned trajectory does not regain the FY22 level until FY29.', ref:'Exhibit 1 \u00b7 \u00a701'},
+  {cls:'b', title:'Domestic segment is the only major consumer class in structural decline', ev:'2019\u201322 average 90.3% \u2192 2023 84.4% \u2192 2024 82.0%, an 8.3 pp fall, while Commercial (95.8%) and Industrial (99.8%) held broadly flat.', ref:'Exhibit 6 \u00b7 \u00a703'},
+  {cls:'a', title:'K-Electric is the only major DISCO whose domestic recovery rate fell over 2020\u201324', ev:'CPPA-basket average improved 85.16% \u2192 91.64%; KE fell 92.25% \u2192 81.99% over the same window.', ref:'Exhibit 3 \u00b7 \u00a702'},
+  {cls:'a', title:'Deterioration has accelerated into FY25', ev:'July\u2013Dec 2024 domestic recovery: peer DISCOs 98\u2013112%, KE 78.4%; KE trails peers at every slab.', ref:'Exhibits 4\u20135 \u00b7 \u00a702'},
+  {cls:'b', title:'The six "Bad DISCO" IBCs are a subset of the 455 High-Loss Feeders, not the same population', ev:'LPA sent-out 2.76 TWh vs. HLF 4.14 TWh (1.38 TWh gap); LPA metrics are materially milder than the full HLF block.', ref:'Exhibit 8 \u00b7 \u00a704'},
+  {cls:'c', title:'Theft/excess loss is not confined to the officially designated high-risk IBCs', ev:'Of the "Bad DISCO theft" dataset\u2019s 1,047.5 GWh, 34.6% (362.7 GWh, \u2248PKR 21.5 bn) sits in 18 other IBCs nominally classed Good DISCO.', ref:'Exhibits 9\u201310 \u00b7 \u00a705'},
+  {cls:'b', title:'Good DISCO areas contribute more to domestic billing losses than Bad DISCO areas', ev:'57.4% of KE-wide domestic billing loss (Dec-2024, PKR 50.8 bn base) originates in low-loss ("Good DISCO") areas vs. 42.6% in high-loss areas.', ref:'Exhibit 12 \u00b7 \u00a706'},
+  {cls:'b', title:'Losses concentrate in middle/upper consumption slabs, not lifeline consumers', ev:'\u224862% of non-ToU domestic billing losses sit in the 400\u2013700+ unit slabs; the 700+ slab alone carries PKR 9.1 bn of unrecovered billing.', ref:'Exhibit 11 \u00b7 \u00a706'},
+  {cls:'b', title:'Default balances are extremely concentrated', ev:'6.9% of all consumers (44% of running defaulters) carry balances >PKR 100,000, accounting for 94% of total default value; average balance PKR 536,989.', ref:'Exhibit 13 \u00b7 \u00a707'},
+  {cls:'a', title:'Write-off due-diligence safeguards were diluted between original design and determination', ev:'Ageing test, CNIC/address disclosure, duplicate-claim safeguard, and independent verification were each weakened or dropped.', ref:'\u00a707 Table'},
+  {cls:'a', title:'Distribution/transmission loss allowance appears to carry excess margin', ev:'Actual law & order differential (\u22481.7%) is lower than the allowed margin (3.39%); actual transmission loss (\u22480.75%) is below the approved 1.3%.', ref:'Exhibits 14\u201315 \u00b7 \u00a708'},
+  {cls:'a', title:'Retiring generation is far more expensive than the grid basket', ev:'Legacy KE thermal plants average \u2248PKR 34\u201337/kWh fuel cost vs. \u2248PKR 11\u201312/kWh for the CPPA grid basket.', ref:'Exhibit 16 \u00b7 \u00a709'},
+  {cls:'c', title:'The petition\u2019s own cumulative-savings arithmetic does not reconcile internally', ev:'Slide claims PKR 176.8 bn cumulative savings alongside "~PKR 30 bn per year" \u2014 seven years at PKR 30bn is PKR 210bn; line-by-line rebuild ties to PKR 209.8 bn, not 176.8bn.', ref:'\u00a710 \u00b7 Anomaly #1'},
+];
+
+/* ---------- Consolidated anomaly register ---------- */
+const ANOMALIES = [
+  {n:1, sev:'high', type:'Internal inconsistency', finding:'Petition\u2019s "PKR 176.8 bn cumulative savings" does not reconcile with its own "~PKR 30 bn/year" claim or the re-summed year-by-year table (PKR 209.8 bn).', impl:'Ask KE to show derivation before the figure is relied upon in any filing.', ref:'\u00a710', cls:'c'},
+  {n:2, sev:'high', type:'Version discrepancy', finding:'Underlying workbook\u2019s "Distribution Loss" sheet carries an alternate "Recommended T&D" trajectory (13.09%\u201312.39%) inconsistent with the final petition-deck trajectory (12.46%\u20139.76%).', impl:'Confirm with KE/advisors which trajectory is the authoritative, filed figure.', ref:'\u00a708, \u00a710', cls:'c'},
+  {n:3, sev:'med', type:'Definitional gap', finding:'The six-IBC "Low Performing Areas" are a subset of the 455 High-Loss Feeders, not an equivalent population (1.38 TWh of HLF energy sits outside the six IBCs).', impl:'Do not treat LPA and HLF as interchangeable in tariff design; request a feeder\u2192IBC mapping.', ref:'\u00a704', cls:'a/b'},
+  {n:4, sev:'high', type:'Mischaracterization risk', finding:'34.6% of theft/excess loss in the "Bad DISCO" dataset sits in 19 IBCs outside the six officially designated areas.', impl:'Challenge any framing that treats recovery loss as confined to "law and order" no-go areas.', ref:'\u00a705', cls:'c'},
+  {n:5, sev:'high', type:'Contradicts stated rationale', finding:'Good DISCO (low-loss) areas contribute 57.4% of domestic billing losses, more than Bad DISCO (42.6%).', impl:'Central evidentiary basis for rejecting a blanket, non-differentiated recovery-loss allowance.', ref:'\u00a706', cls:'b'},
+  {n:6, sev:'med', type:'Distributional concern', finding:'\u224862% of non-ToU domestic billing losses concentrate in the 400\u2013700+ unit slabs, not lifeline consumers.', impl:'A recovery-rate allowance benefiting non-payment should not be framed as protecting vulnerable consumers.', ref:'\u00a706', cls:'b'},
+  {n:7, sev:'high', type:'Concentration risk', finding:'6.9% of consumers (44% of defaulters) hold balances >PKR 100,000 and account for 94% of default value; average balance PKR 536,989.', impl:'Require differentiated treatment/exclusion of large defaulters from any blended recovery-loss mechanism.', ref:'\u00a707', cls:'b'},
+  {n:8, sev:'high', type:'Governance dilution', finding:'Four write-off safeguards (ageing test, CNIC/address disclosure, duplicate-claim check, independent verification) were weakened between original design and determination.', impl:'Red line: reinstate all four safeguards as pre-conditions for write-offs entering the tariff base.', ref:'\u00a707', cls:'a'},
+  {n:9, sev:'med', type:'Margin overstatement', finding:'Approved law & order margin (3.39%) exceeds the actual KE-vs-BD distribution loss differential (1.7%) by \u22481.69 pp.', impl:'Direct, quantified basis for reducing the law & order margin in the MYT determination.', ref:'\u00a708', cls:'a/b'},
+  {n:10, sev:'med', type:'Margin overstatement', finding:'Approved transmission loss allowance (1.3%) exceeds KE\u2019s own posted actual (0.75%).', impl:'Straightforward, KE-evidenced adjustment.', ref:'\u00a708', cls:'a'},
+  {n:11, sev:'med', type:'Self-acknowledged controllable loss', finding:'KE\u2019s own internal assessment attributes 2 pp of technical loss to "bad connections" (workmanship-related, controllable).', impl:'Should not be funded through consumer tariff without a remediation plan and timeline.', ref:'\u00a708', cls:'a'},
+  {n:12, sev:'low', type:'Cost padding', finding:'Proposed short-term debt spread (K+0.65%) exceeds KE\u2019s actual borrowing cost (K+0.1% or lower).', impl:'Reduce spread assumption in the working-capital allowance.', ref:'\u00a709', cls:'a'},
+  {n:13, sev:'low', type:'Double-counting risk', finding:'Working capital was calculated separately for four business units (Transmission/Distribution/Supply/Generation) of a single legal entity.', impl:'Actualize to KE\u2019s consolidated financial-statement working-capital position.', ref:'\u00a709', cls:'a'},
+  {n:14, sev:'low', type:'Scope/period mismatch', finding:'KE Recovery Rate workbook (FY24 full-year, all classes, PKR 52.9 bn shortfall) and Slab Data workbook (Dec-2024 YTD, domestic-only, PKR 50.8 bn shortfall) cover different scopes and should not be conflated.', impl:'Keep data-cut labels explicit in any filing that cites either figure.', ref:'\u00a706', cls:'c'},
+  {n:15, sev:'low', type:'Valuation ambiguity', finding:'Different implied tariff/energy values appear across files: \u2248PKR 59/kWh (HLF tie-out; theft dataset) vs. \u2248PKR 42/kWh (LPA average).', impl:'Clarify which tariff basis KE used for each monetized claim before citing PKR-value figures externally.', ref:'\u00a704, \u00a705', cls:'c'},
+];
+
+
+/* ============================================================
+   Chart.js configuration
+   ============================================================ */
+const COLOR = {
+  navy:'#1B3A5C', navyLight:'#5B87AC', amber:'#C8923A', amberLight:'#E3BE85',
+  red:'#9B2335', redLight:'#D48A96', green:'#3F7D5C', greenLight:'#8FC1A8',
+  gray:'#96907F', grayLight:'#D8D3C6', ink:'#1A1A1A'
+};
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 11.5;
+Chart.defaults.color = '#5C5850';
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.boxWidth = 7;
+Chart.defaults.plugins.legend.labels.boxHeight = 7;
+Chart.defaults.plugins.tooltip.backgroundColor = '#1A1A1A';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.titleFont = {weight:600, size:12};
+Chart.defaults.plugins.tooltip.bodyFont = {size:11.5};
+Chart.defaults.plugins.tooltip.cornerRadius = 6;
+Chart.defaults.elements.point.radius = 3;
+Chart.defaults.elements.line.tension = 0.25;
+
+function pctFmt(v){ return v + '%'; }
+const gridCfg = { color:'#EEEBE3', drawTicks:false };
+const baseScales = { x:{grid:{display:false}, ticks:{font:{size:10.5}}}, y:{grid:gridCfg, ticks:{font:{size:10.5}}} };
+
+/* 1 — Overall Recovery Ratio FY17-30 */
+(function(){
+  const rt = KE_DATA.recovery_trend;
+  const actualN = rt.type.filter(t=>t==='actual').length;
+  const actualData = rt.actual_or_petitioned.map((v,i)=> i<actualN ? v : null);
+  const petData = rt.actual_or_petitioned.map((v,i)=> i>=actualN-1 ? v : null);
+  new Chart(document.getElementById('chartOverallRR'), {
+    type:'line',
+    data:{ labels:rt.years, datasets:[
+      {label:'Actual', data:actualData, borderColor:COLOR.navy, backgroundColor:COLOR.navy, borderWidth:2.5, spanGaps:false},
+      {label:'KE Petitioned Glide Path', data:petData, borderColor:COLOR.amber, backgroundColor:COLOR.amber, borderWidth:2.5, borderDash:[5,3], spanGaps:false},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{...baseScales, y:{...baseScales.y, min:83, max:98, ticks:{...baseScales.y.ticks, callback:pctFmt}}}
+    }
+  });
+})();
+
+/* 2 — Domestic Recovery Ratio 2019-2024 */
+(function(){
+  const d = KE_DATA.domestic_recovery_2019_2024;
+  new Chart(document.getElementById('chartDomesticRR'), {
+    type:'line',
+    data:{ labels:d.years, datasets:[
+      {label:'Domestic Recovery Rate', data:d.rate_pct, borderColor:COLOR.red, backgroundColor:'rgba(155,35,53,0.08)', fill:true, borderWidth:2.5, pointBackgroundColor:d.years.map(y=>y>=2023?COLOR.red:COLOR.navy), pointRadius:5},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}},
+        annotation: undefined},
+      scales:{...baseScales, y:{...baseScales.y, min:75, max:96, ticks:{...baseScales.y.ticks, callback:pctFmt}}}
+    }
+  });
+})();
+
+/* 3 — Cross DISCO (toggle) */
+let crossDiscoChart;
+(function(){
+  const ctx = document.getElementById('chartCrossDisco');
+  function build(period){
+    const d = period==='2020-21' ? KE_DATA.cross_disco_2020_21 : KE_DATA.cross_disco_2023_24;
+    const colors = d.disco.map(x=> x==='K-Electric'?COLOR.red : (x.includes('Good KE')?COLOR.amber : (x.includes('CPPA')?COLOR.gray:COLOR.navy)));
+    if(crossDiscoChart) crossDiscoChart.destroy();
+    crossDiscoChart = new Chart(ctx, {
+      type:'bar',
+      data:{ labels:d.disco, datasets:[{data:d.rate_pct, backgroundColor:colors, borderRadius:4, maxBarThickness:34}]},
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}}},
+        scales:{ x:{grid:{display:false}, ticks:{font:{size:10}, maxRotation:40, minRotation:40}}, y:{grid:gridCfg, min:70, ticks:{callback:pctFmt}} }
+      }
+    });
+  }
+  build('2020-21');
+  document.querySelectorAll('[data-bench]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('[data-bench]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      build(btn.dataset.bench);
+    });
+  });
+})();
+
+/* 4 — Jul-Dec 2024 */
+(function(){
+  const d = KE_DATA.cross_disco_jul_dec_2024;
+  const colors = d.disco.map(x=> x==='K-Electric'?COLOR.red : (x.includes('CPPA')?COLOR.gray:COLOR.navy));
+  new Chart(document.getElementById('chartJulDec'), {
+    type:'bar',
+    data:{ labels:d.disco, datasets:[{data:d.rate_pct, backgroundColor:colors, borderRadius:4, maxBarThickness:38}]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}}},
+      scales:{ x:{grid:{display:false}}, y:{grid:gridCfg, ticks:{callback:pctFmt}} }
+    }
+  });
+})();
+
+/* 5 — Slabwise cross disco */
+(function(){
+  const d = KE_DATA.slabwise_cross_disco;
+  new Chart(document.getElementById('chartSlabwiseCross'), {
+    type:'line',
+    data:{ labels:d.slabs, datasets:[
+      {label:'GEPCO', data:d.GEPCO, borderColor:COLOR.grayLight, borderWidth:1.4, pointRadius:2},
+      {label:'FESCO', data:d.FESCO, borderColor:COLOR.grayLight, borderWidth:1.4, pointRadius:2},
+      {label:'IESCO', data:d.IESCO, borderColor:COLOR.grayLight, borderWidth:1.4, pointRadius:2},
+      {label:'MEPCO', data:d.MEPCO, borderColor:COLOR.grayLight, borderWidth:1.4, pointRadius:2},
+      {label:'K-Electric', data:d['K-Electric'], borderColor:COLOR.red, borderWidth:3, pointRadius:3.5, pointBackgroundColor:COLOR.red},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{ x:{grid:{display:false}, ticks:{font:{size:9.5}, maxRotation:40, minRotation:40}}, y:{grid:gridCfg, ticks:{callback:pctFmt}} }
+    }
+  });
+})();
+
+/* 6 — Segment recovery */
+(function(){
+  const sr = KE_DATA.segment_recovery;
+  const series = [['Domestic',COLOR.red,3],['Commercial',COLOR.amber,1.8],['Industrial',COLOR.green,1.8],['Total',COLOR.navy,2.2]];
+  new Chart(document.getElementById('chartSegmentRR'), {
+    type:'line',
+    data:{ labels:sr.years, datasets: series.map(([cat,color,w])=>({label:cat, data:sr[cat], borderColor:color, borderWidth:w, pointRadius:3})) },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{...baseScales, y:{...baseScales.y, ticks:{...baseScales.y.ticks, callback:pctFmt}}}
+    }
+  });
+})();
+
+/* 7 — Segment mix stacked */
+(function(){
+  const sw = KE_DATA.segment_weight;
+  const cats = [['Domestic',COLOR.red],['Commercial',COLOR.amber],['Industrial',COLOR.green],['Bulk Supply',COLOR.navy],['General Services',COLOR.gray],['Public',COLOR.navyLight],['Agricultural',COLOR.grayLight]];
+  new Chart(document.getElementById('chartSegmentMix'), {
+    type:'bar',
+    data:{ labels:sw.years, datasets: cats.map(([cat,color])=>({label:cat, data:sw[cat], backgroundColor:color, stack:'s'})) },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{font:{size:9.5}}}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{ x:{stacked:true, grid:{display:false}}, y:{stacked:true, max:100, grid:gridCfg, ticks:{callback:pctFmt}} }
+    }
+  });
+})();
+
+/* 8 — Feeder tie-out grouped */
+(function(){
+  const tf = KE_DATA.tieout_feeder_basis;
+  new Chart(document.getElementById('chartFeederTieout'), {
+    type:'bar',
+    data:{ labels:['Actual Distribution Loss (%)','Actual Recovery Loss (%)','Avg. Tariff (Rs/kWh, ÷2)'],
+      datasets:[
+        {label:'Overall KE Network', data:[tf.actual_dloss_pct[0], tf.actual_rloss_pct[0], tf.avg_tariff[0]/2], backgroundColor:COLOR.navy, borderRadius:4},
+        {label:'455 High-Loss Feeders', data:[tf.actual_dloss_pct[1], tf.actual_rloss_pct[1], tf.avg_tariff[1]/2], backgroundColor:COLOR.red, borderRadius:4},
+        {label:'Excluding 455 HLF', data:[tf.actual_dloss_pct[2], tf.actual_rloss_pct[2], tf.avg_tariff[2]/2], backgroundColor:COLOR.green, borderRadius:4},
+      ]},
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=> c.dataIndex===2 ? ` ${c.dataset.label}: Rs ${(c.parsed.x*2).toFixed(2)}/kWh` : ` ${c.dataset.label}: ${c.parsed.x.toFixed(1)}%`}}},
+      scales:{ x:{grid:gridCfg}, y:{grid:{display:false}, ticks:{font:{size:10.5}}} }
+    }
+  });
+})();
+
+/* 8b — Feeder econ mini (GD vs BD) */
+(function(){
+  const g = KE_DATA.gdbd_feeder_econ;
+  new Chart(document.getElementById('chartFeederEcon'), {
+    type:'bar',
+    data:{ labels:['Billing Efficiency','Recovery Rate','AT&C Loss','GWh / Feeder'],
+      datasets:[
+        {label:'Bad DISCO', data:[g.billing_efficiency_pct[0], g.recovery_rate_pct[0], g.atc_loss_pct[0], g.gwh_per_feeder[0]*8], backgroundColor:COLOR.red, borderRadius:4},
+        {label:'Good DISCO', data:[g.billing_efficiency_pct[1], g.recovery_rate_pct[1], g.atc_loss_pct[1], g.gwh_per_feeder[1]*8], backgroundColor:COLOR.green, borderRadius:4},
+      ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=> c.dataIndex===3 ? ` ${c.dataset.label}: ${(c.parsed.y/8).toFixed(2)} GWh/feeder` : ` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}}},
+      scales:{ x:{grid:{display:false}, ticks:{font:{size:9.5}}}, y:{grid:gridCfg, display:false} }
+    }
+  });
+})();
+
+/* 9 — Theft Pareto (combo) */
+(function(){
+  const top = KE_DATA.theft_summary.by_ibc.slice(0,15);
+  const official = new Set(['Gadap','Baldia','Lyari – I','Lyari – II','Surjani','Landhi','Orangi – I','Orangi – II']);
+  new Chart(document.getElementById('chartTheftPareto'), {
+    data:{ labels:top.map(t=>t.ibc), datasets:[
+      {type:'bar', label:'Excess/Theft (GWh)', data:top.map(t=>t.gwh), backgroundColor:top.map(t=>official.has(t.ibc)?COLOR.red:COLOR.amber), borderRadius:3, yAxisID:'y'},
+      {type:'line', label:'Cumulative Share (%)', data:top.map(t=>t.cum_pct), borderColor:COLOR.navy, borderWidth:2, pointRadius:3, yAxisID:'y1'},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=> c.dataset.type==='line' ? ` Cumulative: ${c.parsed.y}%` : ` ${c.label}: ${c.parsed.y} GWh`}}},
+      scales:{
+        x:{grid:{display:false}, ticks:{font:{size:9.5}, maxRotation:45, minRotation:45}},
+        y:{grid:gridCfg, position:'left', title:{display:true, text:'GWh', font:{size:10}}},
+        y1:{grid:{display:false}, position:'right', min:0, max:100, ticks:{callback:pctFmt}}
+      }
+    }
+  });
+})();
+
+/* 10 — Theft donut */
+(function(){
+  const ts = KE_DATA.theft_summary;
+  new Chart(document.getElementById('chartTheftDonut'), {
+    type:'doughnut',
+    data:{ labels:['Officially designated 6 "Bad DISCO" IBCs', `Other ${ts.n_other_ibcs} IBCs (nominally "Good DISCO")`],
+      datasets:[{data:[ts.official_6_share_pct, ts.other_ibcs_share_pct], backgroundColor:[COLOR.red, COLOR.amber], borderWidth:3, borderColor:'#fff'}]},
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{legend:{position:'bottom', labels:{font:{size:10.5}}}, tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed}%`}}}
+    }
+  });
+})();
+
+/* 11 — Slab loss waterfall */
+(function(){
+  const rows = KE_DATA.slab_summary.rows.filter(r=>r.category !== 'Residential - ToU');
+  const highlight = ['5) Upto 400','6) Upto 500','7) Upto 600','8) Upto 700','9) Above 700'];
+  const labels = rows.map(r=> r.slab || r.category);
+  new Chart(document.getElementById('chartSlabWaterfall'), {
+    type:'bar',
+    data:{ labels, datasets:[{data:rows.map(r=>+(r.loss_kewide/1e9).toFixed(2)), backgroundColor:rows.map(r=>highlight.includes(r.slab)?COLOR.red:COLOR.navy), borderRadius:3}]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>` PKR ${c.parsed.y} bn unrecovered`}}},
+      scales:{ x:{grid:{display:false}, ticks:{font:{size:9}, maxRotation:45, minRotation:45}}, y:{grid:gridCfg, title:{display:true,text:'PKR bn',font:{size:10}}} }
+    }
+  });
+})();
+
+/* 12 — GD vs BD loss share donut */
+(function(){
+  const ss = KE_DATA.slab_summary;
+  new Chart(document.getElementById('chartGdBdShare'), {
+    type:'doughnut',
+    data:{ labels:['Good DISCO (Low-Loss Areas)','Bad DISCO (High-Loss Areas)'],
+      datasets:[{data:[ss.lowloss_share_pct, ss.highloss_share_pct], backgroundColor:[COLOR.amber, COLOR.red], borderWidth:3, borderColor:'#fff'}]},
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed}%`}}}
+    }
+  });
+})();
+
+/* 13 — Default concentration */
+(function(){
+  const ds = KE_DATA.default_stats;
+  new Chart(document.getElementById('chartDefaults'), {
+    type:'bar',
+    data:{ labels:['All Running Defaulters','Defaulters > PKR 100,000'],
+      datasets:[
+        {label:'% of Total Consumers', data:[ds.pct_defaulters, ds.pct_of_total_consumers_gt100k], backgroundColor:COLOR.navy, borderRadius:4},
+        {label:'% of Total Default Amount', data:[100, ds.default_gt_100k_share_of_amount_pct], backgroundColor:COLOR.red, borderRadius:4},
+      ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{ x:{grid:{display:false}}, y:{grid:gridCfg, max:105, ticks:{callback:pctFmt}} }
+    }
+  });
+})();
+
+/* 14 — Loss bridge FY23-24 */
+(function(){
+  const lb = KE_DATA.loss_bridge.fy2324_components;
+  new Chart(document.getElementById('chartLossBridge'), {
+    type:'bar',
+    data:{ labels:lb.labels, datasets:[
+      {label:'Recommended', data:lb.recommended, backgroundColor:COLOR.green, borderRadius:4},
+      {label:'NEPRA-Approved', data:lb.nepra_approved, backgroundColor:COLOR.red, borderRadius:4},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{ x:{grid:{display:false}, ticks:{font:{size:9.5}}}, y:{grid:gridCfg, ticks:{callback:pctFmt}} }
+    }
+  });
+})();
+
+/* 15 — Glide path */
+(function(){
+  const lb = KE_DATA.loss_bridge;
+  new Chart(document.getElementById('chartGlidePath'), {
+    type:'line',
+    data:{ labels:lb.years, datasets:[
+      {label:'Petitioned (NEPRA-Approved)', data:lb.td_loss_nepra_approved_pct, borderColor:COLOR.red, borderWidth:2.5, pointRadius:3},
+      {label:'Recommended', data:lb.total_recommended_pct, borderColor:COLOR.green, borderWidth:2.5, pointRadius:3},
+      {label:'Alt. workbook trajectory (unreconciled)', data:lb.distribution_loss_sheet_alt_recommended_pct, borderColor:COLOR.gray, borderWidth:1.6, borderDash:[3,3], pointRadius:2},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{font:{size:9.5}}}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{ x:{grid:{display:false}, ticks:{font:{size:9.5}}}, y:{grid:gridCfg, ticks:{callback:pctFmt}} }
+    }
+  });
+})();
+
+/* 16 — Generation cost */
+(function(){
+  const gc = KE_DATA.gen_cost;
+  new Chart(document.getElementById('chartGenCost'), {
+    type:'bar',
+    data:{ labels:gc.plants, datasets:[{data:gc.fuel_cost_component, backgroundColor:gc.plants.map(p=>p.includes('III')?COLOR.green:COLOR.red), borderRadius:4}]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>` Rs ${c.parsed.y}/kWh`}}},
+      scales:{ x:{grid:{display:false}}, y:{grid:gridCfg, title:{display:true, text:'PKR/kWh', font:{size:10}}} }
+    },
+    plugins:[{
+      id:'gridline',
+      afterDraw(chart){
+        const {ctx, chartArea:{left,right}, scales:{y}} = chart;
+        const yPos = y.getPixelForValue(KE_DATA.grid_energy_cost);
+        ctx.save(); ctx.strokeStyle=COLOR.navy; ctx.setLineDash([5,4]); ctx.lineWidth=1.6;
+        ctx.beginPath(); ctx.moveTo(left,yPos); ctx.lineTo(right,yPos); ctx.stroke();
+        ctx.fillStyle=COLOR.navy; ctx.font='600 10.5px sans-serif'; ctx.setLineDash([]);
+        ctx.fillText('Grid basket ≈ Rs '+KE_DATA.grid_energy_cost+'/kWh', left+6, yPos-6);
+        ctx.restore();
+      }
+    }]
+  });
+})();
+
+/* 17 — TDS savings stacked */
+(function(){
+  const ts = KE_DATA.tds_savings;
+  new Chart(document.getElementById('chartTdsSavings'), {
+    type:'bar',
+    data:{ labels:ts.years, datasets:[
+      {label:'Savings via T&D Loss Adjustment', data:ts.tds_savings_td_pkrbn, backgroundColor:COLOR.navy, stack:'s', borderRadius:{topLeft:0,topRight:0}},
+      {label:'Savings via Recovery Rate Adjustment', data:ts.tds_savings_rr_pkrbn, backgroundColor:COLOR.amber, stack:'s', borderRadius:4},
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: PKR ${c.parsed.y}bn`}}},
+      scales:{ x:{stacked:true, grid:{display:false}}, y:{stacked:true, grid:gridCfg, title:{display:true, text:'PKR bn', font:{size:10}}} }
+    }
+  });
+})();
+
+
+/* ============================================================
+   Dynamic content: exec findings, IBC table, recovery table, ledger
+   ============================================================ */
+
+/* ---------- Exec findings cards ---------- */
+function renderExecFindings(filter){
+  const wrap = document.getElementById('execFindings');
+  const items = EXEC_FINDINGS.filter(f => filter==='all' || f.cls===filter);
+  wrap.innerHTML = `<div class="table-scroll"><table class="data-table"><thead><tr>
+      <th style="width:34%">Finding</th><th style="width:46%">Evidence</th><th style="width:8%">Class</th><th style="width:12%">Reference</th>
+    </tr></thead><tbody>` +
+    items.map(f => `<tr>
+        <td class="txt"><b>${f.title}</b></td>
+        <td class="txt">${f.ev}</td>
+        <td><span class="pill ${f.cls}">${f.cls}</span></td>
+        <td class="txt" style="color:var(--accent-dark); font-weight:600;">${f.ref}</td>
+      </tr>`).join('') +
+    `</tbody></table></div>`;
+}
+renderExecFindings('all');
+document.querySelectorAll('[data-filter]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-filter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderExecFindings(btn.dataset.filter);
+  });
+});
+
+/* ---------- IBC theft table ---------- */
+const OFFICIAL_IBCS = new Set(['Gadap','Baldia','Lyari – I','Lyari – II','Surjani','Landhi','Orangi – I','Orangi – II']);
+let ibcSort = {key:'share_pct', dir:-1};
+let ibcFilterMode = 'all';
+function renderIbcTable(){
+  const q = (document.getElementById('ibcSearch').value || '').toLowerCase();
+  let rows = KE_DATA.theft_summary.by_ibc.filter(r=>{
+    if(ibcFilterMode==='official' && !OFFICIAL_IBCS.has(r.ibc)) return false;
+    if(ibcFilterMode==='other' && OFFICIAL_IBCS.has(r.ibc)) return false;
+    return r.ibc.toLowerCase().includes(q);
+  });
+  rows = rows.slice().sort((a,b)=> (a[ibcSort.key]>b[ibcSort.key]?1:-1)*ibcSort.dir);
+  document.getElementById('ibcTableBody').innerHTML = rows.map(r => `
+    <tr class="${OFFICIAL_IBCS.has(r.ibc)?'hl':''}">
+      <td class="txt">${r.ibc}</td>
+      <td class="num-cell">${r.share_pct.toFixed(2)}%</td>
+      <td class="num-cell">${r.gwh.toFixed(1)}</td>
+      <td class="num-cell">${r.rsmn.toLocaleString(undefined,{maximumFractionDigits:1})}</td>
+      <td class="num-cell">${r.cum_pct.toFixed(1)}%</td>
+    </tr>`).join('');
+}
+renderIbcTable();
+document.getElementById('ibcSearch').addEventListener('input', renderIbcTable);
+document.querySelectorAll('[data-ibcfilter]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-ibcfilter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); ibcFilterMode = btn.dataset.ibcfilter; renderIbcTable();
+  });
+});
+document.querySelectorAll('#ibcTable th.sortable').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const key = th.dataset.key;
+    ibcSort.dir = (ibcSort.key===key) ? -ibcSort.dir : -1;
+    ibcSort.key = key;
+    document.querySelectorAll('#ibcTable th .arrow').forEach(a=>a.textContent='');
+    th.querySelector('.arrow').textContent = ibcSort.dir===1 ? '▲' : '▼';
+    renderIbcTable();
+  });
+});
+
+/* ---------- Recovery categories table ---------- */
+let rcSort = {key:'not_recovered_pkrm', dir:-1};
+function renderRcTable(){
+  const q = (document.getElementById('rcSearch').value || '').toLowerCase();
+  let rows = KE_DATA.recovery_categories
+    .filter(r=>r.recovery_rate!==null)
+    .map(r=>({...r, label: (r.category ? `${r.slab||''} (${r.category})` : (r.slab||'')).trim() || 'Grand Total'}));
+  rows = rows.filter(r=>r.label.toLowerCase().includes(q));
+  rows = rows.slice().sort((a,b)=>{
+    const av = rcSort.key==='label' ? a.label : a[rcSort.key];
+    const bv = rcSort.key==='label' ? b.label : b[rcSort.key];
+    return (av>bv?1:-1)*rcSort.dir;
+  });
+  document.getElementById('rcTableBody').innerHTML = rows.map(r => `
+    <tr class="${r.label==='Grand Total'?'total-row':''}">
+      <td class="txt">${r.label}</td>
+      <td class="num-cell">${(r.recovery_rate*100).toFixed(1)}%</td>
+      <td class="num-cell">${r.gross_billed_pkrm.toLocaleString()}</td>
+      <td class="num-cell">${r.gross_recovered_pkrm.toLocaleString()}</td>
+      <td class="num-cell">${r.not_recovered_pkrm.toLocaleString()}</td>
+      <td class="num-cell">${(r.pct_of_not_recovered*100).toFixed(1)}%</td>
+    </tr>`).join('');
+}
+renderRcTable();
+document.getElementById('rcSearch').addEventListener('input', renderRcTable);
+document.querySelectorAll('#rcTable th.sortable').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const key = th.dataset.key;
+    rcSort.dir = (rcSort.key===key) ? -rcSort.dir : -1;
+    rcSort.key = key;
+    document.querySelectorAll('#rcTable th .arrow').forEach(a=>a.textContent='');
+    th.querySelector('.arrow').textContent = rcSort.dir===1 ? '▲' : '▼';
+    renderRcTable();
+  });
+});
+
+/* ---------- Anomaly ledger ---------- */
+let anomalySevFilter = 'all';
+function renderLedger(){
+  const q = (document.getElementById('anomalySearch').value || '').toLowerCase();
+  const rows = ANOMALIES.filter(a=>{
+    if(anomalySevFilter!=='all' && a.sev!==anomalySevFilter) return false;
+    return (a.finding+a.type+a.impl).toLowerCase().includes(q);
+  });
+  document.getElementById('anomalyLedger').innerHTML = rows.map(a => `
+    <div class="ledger-row">
+      <div class="ledger-num">${String(a.n).padStart(2,'0')}</div>
+      <div class="ledger-body">
+        <div class="ledger-top">
+          <span class="severity-dot sev-${a.sev}"></span>
+          <span class="ledger-type">${a.type}</span>
+          <span class="pill ${a.cls==='c'?'c':(a.cls==='a'?'a':'b')}" style="margin-left:auto;">${a.cls}</span>
+        </div>
+        <div class="ledger-finding">${a.finding}</div>
+        <div class="ledger-impl"><b>Implication:</b> ${a.impl}</div>
+      </div>
+      <div class="ledger-ref">${a.ref}</div>
+    </div>`).join('') || '<div style="padding:2rem; text-align:center; color:var(--text-tertiary); font-size:13px;">No matching findings.</div>';
+}
+renderLedger();
+document.getElementById('anomalySearch').addEventListener('input', renderLedger);
+document.querySelectorAll('[data-sevfilter]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-sevfilter]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); anomalySevFilter = btn.dataset.sevfilter; renderLedger();
+  });
+});
+
+/* ============================================================
+   Navigation, scroll-spy, mobile menu, back-to-top
+   ============================================================ */
+const navlinks = document.querySelectorAll('.navlink');
+const sections = Array.from(navlinks).map(l => document.getElementById(l.dataset.target)).filter(Boolean);
+
+navlinks.forEach(link=>{
+  link.addEventListener('click', ()=>{
+    const el = document.getElementById(link.dataset.target);
+    if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    document.getElementById('sidebar').classList.remove('open');
+  });
+});
+
+function onScroll(){
+  let current = sections[0];
+  const scrollPos = window.scrollY + 120;
+  for(const sec of sections){ if(sec.offsetTop <= scrollPos) current = sec; }
+  navlinks.forEach(l=> l.classList.toggle('active', l.dataset.target === current.id));
+
+  const topBtn = document.getElementById('topBtn');
+  topBtn.classList.toggle('show', window.scrollY > 600);
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+document.getElementById('topBtn').addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+
+const menuToggle = document.getElementById('menuToggle');
+if(menuToggle){
+  menuToggle.addEventListener('click', ()=> document.getElementById('sidebar').classList.toggle('open'));
+}
+document.addEventListener('click', (e)=>{
+  const sidebar = document.getElementById('sidebar');
+  if(window.innerWidth <= 840 && sidebar.classList.contains('open')){
+    if(!sidebar.contains(e.target) && e.target !== menuToggle){ sidebar.classList.remove('open'); }
+  }
+});
+
+</script>
+
+</body>
+</html>
