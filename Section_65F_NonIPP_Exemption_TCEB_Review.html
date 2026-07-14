@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section 65F Non-IPP Extension — An Independent TCEB Review</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bg2: #FAFAFA;
+  --bg3: #F7F4EF;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --accent2: #A97924;
+  --green: #52B788;
+  --green2: #1a6b3c;
+  --red: #9B2335;
+  --blue: #6EA8C4;
+  --slate: #667085;
+  --text: #1A1A1A;
+  --text2: #666666;
+  --text3: #999999;
+  --shadow: rgba(26,26,26,0.05);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--bg);color:#2D2D2D;line-height:1.6;font-size:14px}
+.container{max-width:1180px;margin:0 auto;padding:0 1.5rem 4rem}
+
+.doc-header{border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;margin-bottom:1.5rem;position:relative}
+.doc-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.75rem}
+.doc-title{font-family:Georgia,serif;font-size:38px;font-weight:400;color:var(--text);line-height:1.16;margin-bottom:0.75rem;max-width:980px}
+.doc-sub{font-size:15px;color:var(--text2);margin-bottom:1.25rem;max-width:940px}
+.doc-meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:12px;color:var(--text3);padding-top:1rem;border-top:1px solid var(--border)}
+.doc-meta span strong{color:var(--text);font-weight:600}
+.nav-strip{position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(10px);z-index:10;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0.75rem 1.5rem;display:flex;gap:1.2rem;flex-wrap:wrap;font-size:12px;color:var(--text3)}
+.nav-inner a{text-decoration:none;color:var(--text2)}
+.nav-inner a:hover{color:var(--accent)}
+
+.section{margin:3rem 0 2rem}
+.section-eyebrow{font-size:12px;font-weight:500;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.5rem}
+.section-title{font-family:Georgia,serif;font-size:25px;font-weight:400;color:var(--text);margin-bottom:0.5rem}
+.section-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;max-width:920px}
+.exhibit-tag{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.4rem}
+hr.divider{border:none;border-top:1px solid var(--border);margin:2.75rem 0}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:0.85rem}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.6rem}
+.kpi-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.35rem;border-top:3px solid var(--border);transition:border-color 0.2s;box-shadow:0 6px 20px var(--shadow)}
+.kpi-box.amber{border-top-color:var(--accent)}
+.kpi-box.green{border-top-color:var(--green)}
+.kpi-box.red{border-top-color:var(--red)}
+.kpi-box.slate{border-top-color:#888}
+.kpi-box.blue{border-top-color:var(--blue)}
+.kpi-num{font-family:Georgia,serif;font-size:28px;font-weight:400;color:var(--text);line-height:1.1}
+.kpi-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.55rem}
+.kpi-note{font-size:12px;color:var(--accent);margin-top:0.45rem;font-weight:500;line-height:1.4}
+
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.45rem;box-shadow:0 6px 20px var(--shadow)}
+.panel.white{background:var(--bg)}
+.panel-title{font-family:Georgia,serif;font-size:16px;font-weight:400;color:var(--text);margin-bottom:0.25rem}
+.panel-sub{font-size:12px;color:var(--text3);margin-bottom:1rem}
+.callout{border-left:3px solid var(--accent);padding:1rem 1.25rem;background:var(--bg2);border-radius:0 4px 4px 0;margin:1.2rem 0;font-size:13px;color:var(--text2)}
+.callout strong{color:var(--text);font-weight:600}
+.callout.red{border-left-color:var(--red)}
+.callout.green{border-left-color:var(--green)}
+
+.ch-wrap{position:relative;width:100%}
+.ch-220{height:220px}.ch-240{height:240px}.ch-260{height:260px}.ch-300{height:300px}.ch-340{height:340px}.ch-380{height:380px}
+
+.est-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--bg)}
+.est-table th{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);padding:0.62rem 0.75rem;border-bottom:2px solid var(--border);background:var(--bg);text-align:left;white-space:nowrap}
+.est-table td{padding:0.68rem 0.75rem;border-bottom:1px solid var(--border);color:#2D2D2D;vertical-align:top}
+.est-table tr:last-child td{border-bottom:none}
+.est-table tr:hover td{background:#FAFAFA}
+.est-table .mono{font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;color:var(--text3)}
+.est-table .val{font-family:Georgia,serif;font-size:13px;font-weight:400;text-align:right;white-space:nowrap;color:var(--text)}
+.est-table .small{font-size:11px;color:var(--text2);line-height:1.45}
+.badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+.b-scale{background:#FDF3E6;color:#8B5E1A}.b-opt{background:#EAF5EF;color:#1a6b3c}.b-reg{background:#EBF3FB;color:#1a4f7a}.b-risk{background:#FFF3F3;color:#7a1a2a}.b-dev{background:#F5F5F5;color:#555}
+
+.model-shell{display:grid;grid-template-columns:340px 1fr;gap:1.25rem;align-items:start}
+.control-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.1rem;margin-bottom:0.9rem}
+.control-head{display:flex;justify-content:space-between;align-items:baseline;gap:0.75rem;margin-bottom:0.55rem}
+.control-label{font-size:12px;font-weight:600;color:var(--text);letter-spacing:0.02em}
+.control-value{font-family:Georgia,serif;font-size:18px;color:var(--accent)}
+.control-help{font-size:11px;color:var(--text3);line-height:1.4;margin-bottom:0.65rem}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.scenario-buttons{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem}
+.scenario-buttons button{border:1px solid var(--border);background:var(--bg);border-radius:6px;padding:0.6rem 0.5rem;font-size:11px;color:var(--text2);cursor:pointer;transition:0.15s;line-height:1.3}
+.scenario-buttons button:hover{border-color:var(--accent);color:var(--text)}
+.scenario-buttons button.primary{background:var(--accent);color:white;border-color:var(--accent)}
+
+.output-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:0.85rem;margin-bottom:1rem}
+.out-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.9rem;border-left:3px solid var(--border)}
+.out-card.amber{border-left-color:var(--accent)}.out-card.green{border-left-color:var(--green)}.out-card.blue{border-left-color:var(--blue)}.out-card.red{border-left-color:var(--red)}
+.out-val{font-family:Georgia,serif;font-size:22px;color:var(--text);line-height:1}
+.out-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:0.45rem}
+.out-note{font-size:11px;color:var(--text2);margin-top:0.4rem;line-height:1.35}
+
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem}
+.road-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1.15rem;border-top:3px solid var(--border)}
+.road-card.amber{border-top-color:var(--accent)}.road-card.green{border-top-color:var(--green)}.road-card.blue{border-top-color:var(--blue)}.road-card.red{border-top-color:var(--red)}
+.road-title{font-family:Georgia,serif;font-size:15px;color:var(--text);margin-bottom:0.25rem}
+.road-meta{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.6rem}
+.road-card ul{padding-left:1rem;color:var(--text2);font-size:12px;line-height:1.55}
+
+.heat-table{width:100%;border-collapse:separate;border-spacing:5px;font-size:11px}
+.heat-table th{color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;padding:0.4rem;text-align:center}
+.heat-table td{padding:0.55rem;border-radius:4px;text-align:center;font-family:Georgia,serif;border:1px solid rgba(255,255,255,0.6)}
+.heat-good{background:#EAF5EF;color:#1a6b3c}.heat-mid{background:#FDF3E6;color:#8B5E1A}.heat-high{background:#FFF3F3;color:#7a1a2a}.heat-neutral{background:#F5F5F5;color:#555}
+
+.verdict{background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.5rem;margin:1.5rem 0 0}
+.verdict-label{font-size:11px;font-weight:600;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:0.5rem}
+.verdict-text{font-size:14px;color:#2D2D2D;line-height:1.7;font-weight:500}
+
+.numbered{counter-reset:crit}
+.crit-card{position:relative;padding-left:3rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);padding-top:1.25rem;padding-bottom:1.25rem;padding-right:1.25rem;margin-bottom:1rem}
+.crit-card::before{counter-increment:crit;content:counter(crit);position:absolute;left:1.1rem;top:1.15rem;font-family:Georgia,serif;font-size:20px;color:var(--accent);border:1px solid var(--accent);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.crit-title{font-family:Georgia,serif;font-size:16px;color:var(--text);margin-bottom:0.4rem}
+.crit-body{font-size:13px;color:var(--text2);line-height:1.6}
+.crit-body strong{color:var(--text)}
+
+.doc-footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:3rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:12px;color:var(--text3)}
+.doc-footer strong{color:var(--text)}
+.note{font-size:11px;color:var(--text3);line-height:1.5;margin-top:0.8rem}
+.formula{font-family:'SFMono-Regular',Consolas,monospace;background:#fff;border:1px solid var(--border);border-radius:4px;padding:0.6rem;font-size:11px;color:var(--text2);overflow:auto}
+
+@media (max-width:900px){
+  .g2,.g3,.g4,.g5,.kpi-grid,.roadmap,.output-strip{grid-template-columns:1fr}
+  .model-shell{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="nav-strip">
+  <div class="nav-inner">
+    <a href="#verdict">Verdict</a>
+    <a href="#ask">The Ask</a>
+    <a href="#breakdown">Where It Breaks Down</a>
+    <a href="#trajectory">Realistic Trajectory</a>
+    <a href="#model">Scenario Model</a>
+    <a href="#sensitivity">Sensitivity</a>
+    <a href="#institutional">Jurisdiction</a>
+    <a href="#recommendation">Recommendation</a>
+    <a href="#annex">Annex</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="doc-header">
+    <div class="doc-eyebrow">TCTDC · Member Finance &amp; Power — Independent Review</div>
+    <div class="doc-title">Section 65F Non-IPP Extension: Does the Business Case Hold Up?</div>
+    <div class="doc-sub">A review of SECMC's July 2026 proposal to extend the Section 65F income-tax exemption from IPP coal sales to non-IPP (industrial/merchant) sales — tested against SECMC's own scale-up roadmap and TCEB's own electrification mandate, rather than against a single transitional year.</div>
+    <div class="doc-meta">
+      <span><strong>Subject document:</strong> "Unlocking Pakistan's Energy Potential: 65F Extension to Non-IPP" (SECMC, July 2026)</span>
+      <span><strong>Prepared:</strong> July 2026</span>
+      <span><strong>Basis:</strong> SECMC MYT Determination, TCEB Roadmap analysis, SECMC's own capacity &amp; electrification plans</span>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <section id="verdict" class="section">
+    <div class="section-eyebrow">Executive Verdict</div>
+    <div class="section-title">The case as submitted is internally inconsistent — and once corrected, mostly self-resolving</div>
+    <div class="section-sub">SECMC argues, in the same deck, that scale will make Thar coal ever-cheaper <em>and</em> that it is uncompetitive today without a tax exemption. Both can be true only if "today" is a single, cherry-picked transitional year. A realistic multi-year view — using SECMC's own committed capacity roadmap and TCEB's own mandated electrification programme — shows the competitiveness gap closes on its own within roughly four years, with or without the exemption.</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-box red">
+        <div class="kpi-num">Yr-1 only</div>
+        <div class="kpi-label">Basis of SECMC's Case</div>
+        <div class="kpi-note">Uses Phase III's highest-cost transitional year (Oct 2026), not a 30-year or even 5-year view</div>
+      </div>
+      <div class="kpi-box amber">
+        <div class="kpi-num">2029–2030</div>
+        <div class="kpi-label">When Thar Becomes Competitive Anyway</div>
+        <div class="kpi-note">Even with <strong>zero</strong> tax relief, on scale-up + electrification already committed/mandated</div>
+      </div>
+      <div class="kpi-box green">
+        <div class="kpi-num">4 of 4</div>
+        <div class="kpi-label">Sensitivity Scenarios Converge</div>
+        <div class="kpi-note">On-time or delayed delivery, rationalized or elevated import prices — all reach parity by 2030 at the latest</div>
+      </div>
+      <div class="kpi-box slate">
+        <div class="kpi-num">Federal</div>
+        <div class="kpi-label">Actual Decision Venue</div>
+        <div class="kpi-note">65F sits in the Income Tax Ordinance — this is an FBR/Finance Division question, not a TCEB tariff matter</div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">Bottom line</div>
+      <div class="verdict-text">A permanent, blanket 65F extension to all non-IPP sales is not supported by the underlying economics. The narrow case that does hold up is for a <strong>short, milestone-linked bridge</strong> covering roughly FY2026–FY2029 — the exact window in which SECMC's own scale-up and TCEB's own mandated electrification programme have not yet fully landed. Beyond that window, the deck's own numbers, honestly extended, argue against relief rather than for it.</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- THE ASK -->
+  <section id="ask" class="section">
+    <div class="section-eyebrow">As Presented — July 2026 Deck</div>
+    <div class="section-title">What SECMC is asking for, and on what evidence</div>
+    <div class="section-sub">Reproduced from the submitted deck for reference. The genuine public-interest facts here (forex savings, jobs, scale) are not in dispute — what is in dispute is whether they establish a case for a permanent, sector-wide income-tax carve-out.</div>
+
+    <div class="g3" style="margin-bottom:1.25rem">
+      <div class="kpi-box blue">
+        <div class="kpi-num">~$1.7 Bn</div>
+        <div class="kpi-label">Forex Savings Since Inception</div>
+      </div>
+      <div class="kpi-box blue">
+        <div class="kpi-num">3,800+</div>
+        <div class="kpi-label">Jobs Created</div>
+      </div>
+      <div class="kpi-box blue">
+        <div class="kpi-num">11.2 → 20.0</div>
+        <div class="kpi-label">MTPA Roadmap, 2026 → 2031</div>
+      </div>
+    </div>
+
+    <div class="g2">
+      <div class="panel white">
+        <div class="exhibit-tag">Exhibit A-1 — As Presented</div>
+        <div class="panel-title">The price-competitiveness waterfall SECMC submitted</div>
+        <div class="panel-sub">Phase III, Year 1 (effective Oct 2026) — the single year the entire ask is benchmarked against</div>
+        <div class="ch-wrap ch-260"><canvas id="askWaterfall"></canvas></div>
+        <div class="note">Coal price 3.98 + Freight 1.12 + Income Tax 0.74 + Development Payment 0.27 = 6.11 USD/MMBTU landed at Port Qasim, vs RB1 imported coal at 5.35 USD/MMBTU — a ~14% gap presented as "uncompetitive."</div>
+      </div>
+      <div class="panel white">
+        <div class="exhibit-tag">Exhibit A-2 — As Presented</div>
+        <div class="panel-title">SECMC's own committed capacity roadmap</div>
+        <div class="panel-sub">Mine capacity, MTPA — the scale-up this ask is being compared against as if it weren't happening</div>
+        <div class="ch-wrap ch-260"><canvas id="askRoadmap"></canvas></div>
+        <div class="note">This roadmap — 11.2 MTPA (2026) to 20.0 MTPA (2031) — is SECMC's own submission and does not depend on whether 65F is extended.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- BREAKDOWN -->
+  <section id="breakdown" class="section">
+    <div class="section-eyebrow">Critical Review</div>
+    <div class="section-title">Where the business case breaks down</div>
+    <div class="section-sub">Four distinct problems — each sufficient on its own to warrant rejecting the ask as framed.</div>
+
+    <div class="numbered">
+      <div class="crit-card">
+        <div class="crit-title">The deck argues both sides of the same coin</div>
+        <div class="crit-body">SECMC's own scale-economics narrative — repeated across its tariff filings — is that capacity payment per tonne has already fallen <strong>46% from Phase I COD to the Phase III contract-stage review</strong> (USD 31.90/t → USD 17.02/t), purely from spreading fixed costs over a larger base, before any electrification benefit is even counted. The 65F deck simultaneously argues Thar coal will keep getting cheaper <em>and</em> that it cannot survive today without a permanent tax shield. Both claims can be true only if "today" means the single highest-cost year of a 30-year tariff — which is exactly the year the deck uses.</div>
+      </div>
+      <div class="crit-card">
+        <div class="crit-title">"With exemption, every industry is competitive" is not an economic argument — it's a tautology</div>
+        <div class="crit-body">Removing a cost from a price comparison always makes the price look better; that is true of literally any tax, on any industry, at any margin. It is not evidence of a market failure, an infant-industry case, or a national-interest imperative — it is arithmetic. The deck needs to show <strong>why Thar coal specifically</strong> deserves this treatment when cement, textiles, and every other trade-exposed sector could make an identical argument. As framed, it proves too much to prove anything.</div>
+      </div>
+      <div class="crit-card">
+        <div class="crit-title">The IPP exemption already did its job — extending it to merchant sales is a different policy problem</div>
+        <div class="crit-body">TCEB's own determination orders record that IPP-sale tariffs carry <strong>no provision for income tax at all</strong> — "if the Petitioner is obligated to pay any tax, the exact amount will be reimbursed by the off-taker" (Phase-I COD Determination). The 2011 FBR SEZ notification granting the exemption was framed as parity with IPP-style incentives precisely because IPP sales sit inside a regulated, cost-plus, single-buyer, sovereign-guaranteed structure where a tax charge simply inflates the tariff paid by consumers. Non-IPP sales are ordinary merchant transactions — SECMC negotiates price with cement plants, captive power plants, and fertilizer companies the way any commercial supplier does. There is no consumer tariff to protect from a tax mark-up. Treating the two as the same policy problem is a category error, not an extension of an existing principle.</div>
+      </div>
+      <div class="crit-card">
+        <div class="crit-title">The comparison is apples-to-oranges: a single bad year vs. a levelized, efficiency-adjusted future</div>
+        <div class="crit-body">The 3.98 USD/MMBTU mine-mouth figure is Phase III's front-loaded first year — debt service and capacity payment are heaviest before the 11.2→20 MTPA scale-up dilutes them, and before TCEB's own MYT-mandated electrification programme (grid dewatering, EV haul pilots, IPCC/conveyor feasibility) delivers any savings at all. A non-IPP industrial buyer signs a multi-year offtake, not a one-year contract. The right comparison is the multi-year trajectory below — not the peak of the curve.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- REALISTIC TRAJECTORY -->
+  <section id="trajectory" class="section">
+    <div class="section-eyebrow">Corrected Analysis</div>
+    <div class="section-title">A realistic multi-year view: 2026–2031</div>
+    <div class="section-sub">Same starting point SECMC submitted for 2026 (3.98 mine-mouth / 6.11 landed incl. tax), carried forward using SECMC's own capacity roadmap and TCEB's own mandated efficiency programme (Q9/Q10 of the MYT Comprehensive Responses) — not a new, invented baseline.</div>
+
+    <div class="panel white" style="margin-bottom:1.25rem">
+      <div class="exhibit-tag">Exhibit B-1</div>
+      <div class="panel-title">Landed cost at Port Qasim: RB1 import benchmark vs. Thar coal, with and without 65F</div>
+      <div class="panel-sub">USD/MMBTU, 2026–2031 · rationalized (war-normalized) import price basis, on-schedule efficiency delivery</div>
+      <div class="ch-wrap ch-380"><canvas id="trajectoryChart"></canvas></div>
+    </div>
+
+    <div class="g3">
+      <div class="out-card red">
+        <div class="out-val">+15.3%</div>
+        <div class="out-lbl">2026 Gap, No Exemption</div>
+        <div class="out-note">Matches SECMC's own submitted ~14% figure — this transitional year is genuinely tight</div>
+      </div>
+      <div class="out-card amber">
+        <div class="out-val">+1.0%</div>
+        <div class="out-lbl">2029 Gap, No Exemption</div>
+        <div class="out-note">Effectively at parity within three years, on scale-up alone</div>
+      </div>
+      <div class="out-card green">
+        <div class="out-val">-11.1%</div>
+        <div class="out-lbl">2031 Gap, No Exemption</div>
+        <div class="out-note">Thar cheaper than imported coal with zero tax relief, at 20 MTPA</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:1.25rem">
+      <strong>Reading this chart:</strong> the grey "no exemption" line starts above RB1 in 2026 — SECMC's point holds for that one year — but crosses below RB1 by 2029/2030 purely on the back of the 11.2→20 MTPA scale-up and the grid-connection/EV/IPCC programme TCEB has already mandated in the MYT Determination. The gold "with 65F" line is shown for reference; it is uniformly better than "no exemption," which is true by construction and therefore not, on its own, an argument for granting it.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SCENARIO MODEL -->
+  <section id="model" class="section">
+    <div class="section-eyebrow">Interactive Model</div>
+    <div class="section-title">Stress-testing the case: does the exemption survive scrutiny?</div>
+    <div class="section-sub">Adjust the pace of efficiency delivery, the import-coal price environment, and the assumed effective tax loading to see whether — and for how long — the case for relief actually holds.</div>
+
+    <div class="model-shell">
+      <div>
+        <div class="control-card">
+          <div class="control-head"><span class="control-label">Efficiency &amp; electrification delivery pace</span><span class="control-value" id="paceVal">100%</span></div>
+          <div class="control-help">100% = TCEB's own mandated schedule (grid dewatering by 2026, EV/IPCC ramp through 2031). Below 100% = slippage; above 100% = ahead of schedule.</div>
+          <input type="range" id="pace" min="30" max="150" value="100" step="5" oninput="updateModel()">
+        </div>
+        <div class="control-card">
+          <div class="control-head"><span class="control-label">Import coal price environment</span><span class="control-value" id="importVal">Rationalized</span></div>
+          <div class="control-help">0% = SECMC's own war-normalized RB1 forecast. 100% = SECMC's own elevated/geopolitical-premium forecast sustained through 2031.</div>
+          <input type="range" id="importScn" min="0" max="100" value="0" step="10" oninput="updateModel()">
+        </div>
+        <div class="control-card">
+          <div class="control-head"><span class="control-label">Effective income-tax loading</span><span class="control-value" id="taxVal">18.6%</span></div>
+          <div class="control-help">SECMC's own submitted numbers imply an 18.6% loading (0.74 on a 3.98 base). Adjust to test sensitivity to this assumption.</div>
+          <input type="range" id="taxRate" min="5" max="35" value="18.6" step="0.5" oninput="updateModel()">
+        </div>
+        <div class="scenario-buttons">
+          <button onclick="setScenario('base')">TCEB Base Case</button>
+          <button onclick="setScenario('slip')">Efficiency Slips 2 Yrs</button>
+          <button onclick="setScenario('elevated')">Imports Stay Elevated</button>
+          <button onclick="setScenario('worst')">Slippage + Elevated</button>
+          <button onclick="setScenario('best')" class="primary">Accelerated Delivery</button>
+          <button onclick="setScenario('secmc')">SECMC's Framing (Yr-1)</button>
+        </div>
+      </div>
+      <div>
+        <div class="output-strip">
+          <div class="out-card amber">
+            <div class="out-val" id="firstYearOut">2030</div>
+            <div class="out-lbl">First Year Competitive, No Exemption</div>
+          </div>
+          <div class="out-card blue">
+            <div class="out-val" id="gap2031Out">-11.1%</div>
+            <div class="out-lbl">2031 Gap vs RB1, No Exemption</div>
+          </div>
+          <div class="out-card green">
+            <div class="out-val" id="needOut">~4 years</div>
+            <div class="out-lbl">Window Where Relief Would Matter</div>
+          </div>
+        </div>
+        <div class="panel white">
+          <div class="exhibit-tag">Exhibit C-1</div>
+          <div class="panel-title">Live projection under selected assumptions</div>
+          <div class="ch-wrap ch-340"><canvas id="modelChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SENSITIVITY -->
+  <section id="sensitivity" class="section">
+    <div class="section-eyebrow">Robustness Check</div>
+    <div class="section-title">Does this conclusion survive across all four corners of the uncertainty?</div>
+    <div class="section-sub">Combining the two axes that matter most — delivery of TCEB's own efficiency mandate, and the trajectory of global coal prices — across all four combinations.</div>
+
+    <div class="panel white">
+      <table class="est-table">
+        <thead>
+          <tr><th>Scenario</th><th>2026 Gap (no exemption)</th><th>2029 Gap</th><th>2031 Gap</th><th>Competitive without any exemption by</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>On-time delivery × Rationalized (SECMC's own) import forecast</td><td class="val">+15.3%</td><td class="val">+1.0%</td><td class="val">-11.1%</td><td><span class="badge b-opt">2030</span></td></tr>
+          <tr><td>On-time delivery × Elevated/sustained-premium import forecast</td><td class="val">-7.4%</td><td class="val">-14.8%</td><td class="val">-24.8%</td><td><span class="badge b-opt">2026 (immediately)</span></td></tr>
+          <tr><td>Efficiency delivery slips 2 years × Rationalized import forecast</td><td class="val">+15.3%</td><td class="val">+2.3%</td><td class="val">-10.6%</td><td><span class="badge b-opt">2030</span></td></tr>
+          <tr><td>Efficiency delivery slips 2 years × Elevated import forecast</td><td class="val">-7.4%</td><td class="val">-13.8%</td><td class="val">-24.3%</td><td><span class="badge b-opt">2026 (immediately)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:1.25rem">
+      <strong>What this means:</strong> under every combination tested — including the pessimistic case where TCEB's own mandated efficiency programme slips two full years — Thar coal reaches cost parity with imported coal <strong>without any tax relief</strong> by 2030 at the latest. The only scenario where relief would need to run <em>longer</em> than that is one this deck itself does not argue for: a benign, falling global coal price environment combined with stalled electrification. And the only scenario where relief is not needed <em>at all, from day one,</em> is the one where global coal prices stay structurally elevated — which is precisely the case SECMC's own "Cheapest Fuel Source" exhibit treats as the anomaly, not the base case.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- SUPPORTING STRUCTURAL EVIDENCE -->
+  <section class="section">
+    <div class="section-eyebrow">Supporting Evidence</div>
+    <div class="section-title">The scale and cost curves this ask is being compared against</div>
+    <div class="section-sub">These are not projections built for this review — they are SECMC's own historical determination record and TCEB's own capital-intensity analysis.</div>
+
+    <div class="g2">
+      <div class="panel white">
+        <div class="exhibit-tag">Exhibit D-1 — TCEB Determination Record</div>
+        <div class="panel-title">Capacity payment has already fallen 46% since Phase I</div>
+        <div class="panel-sub">USD/tonne, mine-mouth, by regulatory stage</div>
+        <div class="ch-wrap ch-300"><canvas id="capacityHistChart"></canvas></div>
+        <div class="note">Production payment (variable cost) has stayed roughly flat — confirming that the gains SECMC cites come from scale (capacity payment), while the efficiency gains being asked to be tax-subsidized haven't been delivered yet.</div>
+      </div>
+      <div class="panel white">
+        <div class="exhibit-tag">Exhibit D-2 — TCEB Capital-Intensity Analysis</div>
+        <div class="panel-title">Incremental capex per MTPA has fallen ~88% since Phase I</div>
+        <div class="panel-sub">USD Mn per MTPA of added capacity, by phase — with equity IRR</div>
+        <div class="ch-wrap ch-300"><canvas id="capexChart"></canvas></div>
+        <div class="note">The same logic used to justify Phase IV's lower IRR (15–16% vs Phase I's 20%) — declining marginal capital risk — applies equally to the tax question: the mine is not the fragile, first-of-kind project the exemption was designed for in 2011.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- INSTITUTIONAL -->
+  <section id="institutional" class="section">
+    <div class="section-eyebrow">Jurisdictional Note</div>
+    <div class="section-title">This is a federal tax question, not a TCEB tariff question</div>
+    <div class="section-sub">Worth stating plainly, especially given TCEB's own recent position on regulatory independence.</div>
+
+    <div class="g2">
+      <div class="panel white">
+        <div class="panel-title">Where 65F actually sits</div>
+        <div class="crit-body" style="font-size:13px;color:var(--text2);line-height:1.7">
+          Section 65F is a provision of the <strong>Income Tax Ordinance, 2001</strong> — a federal statute administered by the Federal Board of Revenue under the Finance Division. TCEB's mandate under the Thar Coal &amp; Energy Board Act, 2011 (Section 5(m)) is coal <em>tariff determination</em> — a distinct and provincial competence. Extending 65F to non-IPP sales is a federal fiscal-policy decision. TCEB can and should supply the analytical evidence (as this review attempts to do), but the ask itself belongs with FBR and the Finance Division, not with the tariff-setting process.
+        </div>
+      </div>
+      <div class="panel white">
+        <div class="panel-title">A point of internal consistency</div>
+        <div class="crit-body" style="font-size:13px;color:var(--text2);line-height:1.7">
+          TCEB has, in recent correspondence, firmly asserted its own independence from federal Power Division involvement in coal-pricing matters, on the grounds that this is a provincial subject under the TCEB Act. There is a real tension in TCEB actively championing a <em>federal tax</em> carve-out on SECMC's behalf while simultaneously resisting federal involvement in its own tariff domain. The cleaner institutional posture is: TCEB provides the cost evidence; FBR/Finance Division decides the tax policy question on its own merits.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- RECOMMENDATION -->
+  <section id="recommendation" class="section">
+    <div class="section-eyebrow">Recommendation</div>
+    <div class="section-title">What actually makes sense</div>
+    <div class="section-sub">Four options, in order of preference — none of them the blanket, permanent, sector-wide exemption as submitted.</div>
+
+    <div class="roadmap">
+      <div class="road-card red">
+        <div class="road-title">Not Recommended</div>
+        <div class="road-meta">Permanent blanket 65F extension</div>
+        <ul>
+          <li>Locks in relief long after the underlying cost gap closes (2030 at the latest, per every scenario tested).</li>
+          <li>Removes the pressure to actually deliver the electrification programme TCEB has already mandated.</li>
+          <li>Sets a sector-wide precedent: any trade-exposed industry can make the identical argument.</li>
+        </ul>
+      </div>
+      <div class="road-card amber">
+        <div class="road-title">Preferred Option</div>
+        <div class="road-meta">Time-bound, milestone-linked bridge</div>
+        <ul>
+          <li>Relief through FY2026–FY2029 only, matching the window where the gap is real under every tested scenario.</li>
+          <li>Conditioned on delivery milestones already in the MYT Determination: HESCO grid connection, EV pilot results, IPCC/conveyor BFS.</li>
+          <li>Mandatory sunset and joint TCEB/FBR review at the next MYT cycle — no automatic renewal.</li>
+        </ul>
+      </div>
+      <div class="road-card blue">
+        <div class="road-title">Alternative</div>
+        <div class="road-meta">Formula-based, self-terminating relief</div>
+        <ul>
+          <li>Relief scales with the actual observed gap between Thar's landed cost and a published import index (e.g., McCloskey RB1).</li>
+          <li>Automatically shrinks to zero as the gap closes — no discretionary renewal decision needed.</li>
+          <li>Avoids a flat-rate subsidy that overpays once competitiveness is achieved.</li>
+        </ul>
+      </div>
+      <div class="road-card green">
+        <div class="road-title">Complementary, Regardless of Tax Decision</div>
+        <div class="road-meta">Attack the cost, not the tax</div>
+        <ul>
+          <li>Fast-track tariff recognition for verified electrification savings (grid, EV, IPCC) — the lever that closes the gap for good.</li>
+          <li>Treat the Fauji Fertilizer coal-to-urea case as a targeted, project-specific decision on its own food-security merits — not bundled into a blanket exemption for cement, CPP, and gasification buyers alike.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ANNEX -->
+  <section id="annex" class="section">
+    <div class="section-eyebrow">Annex</div>
+    <div class="section-title">Methodology, assumptions, and open questions</div>
+    <div class="section-sub">This model is deliberately transparent and editable — every assumption below can be challenged and the chart above will update accordingly if rebuilt with revised inputs.</div>
+
+    <div class="panel white">
+      <table class="est-table">
+        <thead><tr><th>Input</th><th>Value / Source</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>2026 mine-mouth reference price</td><td class="val">3.98 USD/MMBTU</td><td class="small">SECMC's own submitted Phase III Year-1 figure — used as-is, not replaced, to keep the model anchored to the deck under review.</td></tr>
+          <tr><td>Freight to Port Qasim</td><td class="val">1.12 USD/MMBTU</td><td class="small">SECMC's own figure; held constant across years (conservative — logistics/IPCC gains could lower this further).</td></tr>
+          <tr><td>Development payment</td><td class="val">0.27 USD/MMBTU</td><td class="small">Per SECMC's own slide; not an income tax and therefore unaffected by the 65F decision either way.</td></tr>
+          <tr><td>Implied effective income-tax loading</td><td class="val">18.6%</td><td class="small">Back-solved from SECMC's own 0.74-on-3.98 figures; adjustable in the interactive model.</td></tr>
+          <tr><td>Capacity roadmap 2026–2031</td><td class="val">11.2 → 20.0 MTPA</td><td class="small">SECMC's own submitted "Driving Thar Coal Expansion &amp; Utilization" roadmap.</td></tr>
+          <tr><td>Scale elasticity of capacity payment</td><td class="val">0.55</td><td class="small">Fitted to the observed capacity-payment compression across SECMC's actual determination stages (Phase I COD → Phase III CS review).</td></tr>
+          <tr><td>Efficiency ramp (grid / EV / IPCC / dispatch)</td><td class="val">Phased 2026–2031</td><td class="small">Timelines drawn directly from TCEB's MYT Determination mandate and SECMC's own Q9/Q10 responses (HESCO grid connection 2026; EV pilot 2025–2027; IPCC BFS within 2 months of Oct 2025 Determination).</td></tr>
+          <tr><td>RB1 (rationalized) import forecast</td><td class="val">~5.30 → 5.52 USD/MMBTU</td><td class="small">Anchored to SECMC's own "Cheapest Fuel Source" exhibit, war-normalized series.</td></tr>
+          <tr><td>RB1 (elevated) import forecast</td><td class="val">~6.60 → 6.52 USD/MMBTU</td><td class="small">Anchored to SECMC's own actual/unrationalized series from the same exhibit.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:1.25rem">
+      <strong>Open questions worth putting to SECMC directly:</strong> (i) what is the actual, audited effective tax rate on non-IPP margins, as opposed to the back-solved 18.6% loading used here; (ii) is the Development Payment itself under review, or is only the income-tax component in scope; (iii) does SECMC's own internal model show a different — presumably less favorable to this ask — multi-year trajectory than the one reconstructed here, and if so, why wasn't it submitted instead of the single-year snapshot.
+    </div>
+  </section>
+
+  <div class="doc-footer">
+    <div>Prepared for internal TCTDC review · Not a public document</div>
+    <div><strong>Basis:</strong> SECMC 65F deck (Jul 2026) · SECMC MYT Determination (Oct 2025) · TCEB Roadmap &amp; Comprehensive Responses analysis</div>
+  </div>
+
+</div>
+
+<script>
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.color = '#666666';
+const acc = '#C8923A', grn = '#52B788', red = '#9B2335', blue = '#6EA8C4', slate='#888888', dark='#1A1A1A';
+const grid = {color:'#F0F0F0'};
+const tick = {font:{size:10}};
+const usdTick = v => '$'+v.toFixed(1);
+const defTooltip = {backgroundColor:'#1A1A1A',titleFont:{size:11},bodyFont:{size:11},padding:8,cornerRadius:4};
+
+function makeChart(id, config){ return new Chart(document.getElementById(id).getContext('2d'), config); }
+
+// ---------- Exhibit A-1: As-presented waterfall ----------
+makeChart('askWaterfall', {
+  type:'bar',
+  data:{labels:['RB1\n(imported)','Coal price\n(mine-mouth)','+ Freight','+ Income Tax','+ Development\nPayment'],
+    datasets:[{data:[5.35,3.98,1.12,0.74,0.27],backgroundColor:[blue,dark,slate,red,'#C9A227'],borderRadius:3,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` USD ${c.raw.toFixed(2)}/MMBTU`}}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid,ticks:{...tick,callback:usdTick},title:{display:true,text:'USD/MMBTU',font:{size:10}}}}}
+});
+
+// ---------- Exhibit A-2: capacity roadmap ----------
+makeChart('askRoadmap', {
+  type:'bar',
+  data:{labels:['2019','2022','2026','2028','2029','2030','2031'],
+    datasets:[{label:'Mine capacity (MTPA)',data:[3.8,7.6,11.2,12.2,14.0,16.8,20.0],backgroundColor:acc,borderRadius:3,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.raw} MTPA`}}},
+    scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:tick,title:{display:true,text:'MTPA',font:{size:10}}}}}
+});
+
+// ---------- Exhibit B-1: realistic trajectory (fixed, on-schedule x rationalized) ----------
+const trajYears = ['2026','2027','2028','2029','2030','2031'];
+const trajRB1     = [5.30,5.35,5.40,5.44,5.48,5.52];
+const trajNoExempt= [6.110,6.034,5.791,5.497,5.166,4.906];
+const traj65F     = [5.370,5.306,5.101,4.853,4.574,4.355];
+makeChart('trajectoryChart', {
+  type:'line',
+  data:{labels:trajYears, datasets:[
+    {label:'RB1 imported coal (rationalized)', data:trajRB1, borderColor:blue, backgroundColor:'rgba(110,168,196,0.08)', borderDash:[5,4], fill:false, tension:0.25, pointRadius:3},
+    {label:'Thar — no exemption (full tax)', data:trajNoExempt, borderColor:red, backgroundColor:'rgba(155,35,53,0.08)', fill:false, tension:0.25, pointRadius:3},
+    {label:'Thar — with 65F extended', data:traj65F, borderColor:acc, backgroundColor:'rgba(200,146,58,0.12)', fill:true, tension:0.25, pointRadius:3}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/MMBTU`}}},
+    scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:{...tick,callback:usdTick},title:{display:true,text:'USD/MMBTU, landed at Port Qasim',font:{size:10}}}}}
+});
+
+// ---------- Exhibit D-1: historical capacity vs production payment ----------
+makeChart('capacityHistChart', {
+  type:'bar',
+  data:{labels:['2015\nContract Stage','Phase I\nCOD','Phase II\nFC','Phase II\nCOD','Phase III\nCS Review','Initial\nMYT'],
+    datasets:[
+      {label:'Capacity payment', data:[32.49,31.90,25.06,20.37,17.02,19.23], backgroundColor:blue, borderRadius:3, borderSkipped:false, stack:'s'},
+      {label:'Production payment', data:[13.64,16.03,15.77,16.34,14.99,15.53], backgroundColor:acc, borderRadius:3, borderSkipped:false, stack:'s'}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/t`}}},
+    scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:9}}},y:{stacked:true,grid,ticks:{...tick,callback:usdTick},title:{display:true,text:'USD/tonne',font:{size:10}}}}}
+});
+
+// ---------- Exhibit D-2: capex per MTPA ----------
+makeChart('capexChart', {
+  type:'bar',
+  data:{labels:['Phase I\n(20% IRR)','Phase II\n(20% IRR)','Phase III\n(18% IRR)','Phase IV\n(15–16% IRR, indicative)'],
+    datasets:[{label:'USD Mn / MTPA', data:[158,119,18.6,18.6], backgroundColor:[red,acc,grn,'#2E8B57'], borderRadius:3, borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...defTooltip,callbacks:{label:c=>` USD ${c.raw}M / MTPA`}}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid,ticks:tick,title:{display:true,text:'USD Mn per MTPA',font:{size:10}}}}}
+});
+
+// ============ INTERACTIVE MODEL (Exhibit C-1) ============
+const baseCapacityPay = 19.23;
+const baseFuel = 6.0835, basePower = 1.3380, baseAsset = 3.1934, baseOther = 4.9150, floorProd = 7.58;
+const elasticity = 0.55, baseCap = 11.2;
+const capacityByYear = {2026:11.2, 2027:11.2, 2028:12.2, 2029:14.0, 2030:16.8, 2031:20.0};
+const rampOntime = {
+  2026:{grid:20, ev:0,  ipcc:0,  fuel:5,  fin:0},
+  2027:{grid:40, ev:5,  ipcc:0,  fuel:8,  fin:2},
+  2028:{grid:55, ev:15, ipcc:10, fuel:10, fin:4},
+  2029:{grid:65, ev:25, ipcc:20, fuel:12, fin:6},
+  2030:{grid:75, ev:35, ipcc:30, fuel:15, fin:8},
+  2031:{grid:80, ev:45, ipcc:35, fuel:15, fin:10}
+};
+const anchorMineMouth2026 = 3.98, freight = 1.12, devPayment = 0.27;
+const rb1Low  = {2026:5.30, 2027:5.35, 2028:5.40, 2029:5.44, 2030:5.48, 2031:5.52};
+const rb1High = {2026:6.60, 2027:6.55, 2028:6.50, 2029:6.45, 2030:6.50, 2031:6.52};
+
+function scaledRamp(base, pace){
+  return {
+    grid: Math.min(100, base.grid*pace/100),
+    ev:   Math.min(100, base.ev*pace/100),
+    ipcc: Math.min(100, base.ipcc*pace/100),
+    fuel: Math.min(20,  base.fuel*pace/100),
+    fin:  Math.min(15,  base.fin*pace/100)
+  };
+}
+function calcTariff(capacity, r){
+  const scaleFactor = Math.pow(baseCap/capacity, elasticity);
+  const financeFactor = 1 - (r.fin/100)*0.35;
+  const capacityPayment = baseCapacityPay*scaleFactor*financeFactor;
+  const fuel = baseFuel*(1-r.fuel/100)*(1-0.55*r.ev/100)*(1-0.45*r.ipcc/100);
+  const power = basePower*(1-0.25*r.grid/100);
+  const asset = baseAsset*(1-0.08*r.ev/100)*(1-0.05*r.ipcc/100);
+  const other = baseOther*(1-0.04*Math.max(0,capacity-baseCap)/(30-baseCap))*(1-0.04*r.ipcc/100);
+  const prod = Math.max(floorProd, fuel+power+asset+other);
+  return capacityPayment+prod;
+}
+
+let modelChart;
+function val(id){ return parseFloat(document.getElementById(id).value); }
+
+function computeSeries(pace, importPct, taxRatePct){
+  const years = [2026,2027,2028,2029,2030,2031];
+  const t2026 = calcTariff(capacityByYear[2026], scaledRamp(rampOntime[2026], pace));
+  const out = {years, mineMouth:[], withTax:[], with65F:[], rb1:[]};
+  years.forEach(y=>{
+    const r = scaledRamp(rampOntime[y], pace);
+    const t = calcTariff(capacityByYear[y], r);
+    const rel = t/t2026;
+    const mm = anchorMineMouth2026*rel;
+    const taxAddon = mm*(taxRatePct/100);
+    const withTax = mm+freight+taxAddon+devPayment;
+    const with65F = mm+freight+devPayment;
+    const rb1 = rb1Low[y] + (rb1High[y]-rb1Low[y])*(importPct/100);
+    out.mineMouth.push(mm); out.withTax.push(withTax); out.with65F.push(with65F); out.rb1.push(rb1);
+  });
+  return out;
+}
+
+function updateModel(){
+  const pace = val('pace'), importPct = val('importScn'), taxRate = val('taxRate');
+  document.getElementById('paceVal').innerText = pace+'%';
+  document.getElementById('importVal').innerText = importPct===0?'Rationalized':(importPct===100?'Elevated':importPct+'% toward elevated');
+  document.getElementById('taxVal').innerText = taxRate.toFixed(1)+'%';
+
+  const s = computeSeries(pace, importPct, taxRate);
+
+  let firstYear = null;
+  for(let i=0;i<s.years.length;i++){ if(s.withTax[i] <= s.rb1[i]){ firstYear = s.years[i]; break; } }
+  document.getElementById('firstYearOut').innerText = firstYear ? firstYear : 'beyond 2031';
+  const gap2031 = ((s.withTax[5]-s.rb1[5])/s.rb1[5]*100);
+  document.getElementById('gap2031Out').innerText = (gap2031>=0?'+':'')+gap2031.toFixed(1)+'%';
+  const windowYears = firstYear ? (firstYear-2026) : 6;
+  document.getElementById('needOut').innerText = windowYears<=0 ? 'None needed' : ('~'+windowYears+' years');
+
+  if(!modelChart){
+    modelChart = makeChart('modelChart', {
+      type:'line',
+      data:{labels:s.years, datasets:[
+        {label:'RB1 imported coal', data:s.rb1, borderColor:blue, backgroundColor:'rgba(110,168,196,0.08)', borderDash:[5,4], fill:false, tension:0.25, pointRadius:3},
+        {label:'Thar — no exemption', data:s.withTax, borderColor:red, backgroundColor:'rgba(155,35,53,0.08)', fill:false, tension:0.25, pointRadius:3},
+        {label:'Thar — with 65F', data:s.with65F, borderColor:acc, backgroundColor:'rgba(200,146,58,0.12)', fill:true, tension:0.25, pointRadius:3}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},tooltip:{...defTooltip,callbacks:{label:c=>` ${c.dataset.label}: USD ${c.raw.toFixed(2)}/MMBTU`}}},
+        scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:{...tick,callback:usdTick},title:{display:true,text:'USD/MMBTU',font:{size:10}}}}}
+    });
+  } else {
+    modelChart.data.labels = s.years;
+    modelChart.data.datasets[0].data = s.rb1;
+    modelChart.data.datasets[1].data = s.withTax;
+    modelChart.data.datasets[2].data = s.with65F;
+    modelChart.update();
+  }
+}
+
+function setScenario(name){
+  const map = {
+    base:    {pace:100, importScn:0,   taxRate:18.6},
+    slip:    {pace:55,  importScn:0,   taxRate:18.6},
+    elevated:{pace:100, importScn:100, taxRate:18.6},
+    worst:   {pace:55,  importScn:100, taxRate:18.6},
+    best:    {pace:130, importScn:0,   taxRate:18.6},
+    secmc:   {pace:100, importScn:0,   taxRate:18.6}
+  }[name];
+  document.getElementById('pace').value = map.pace;
+  document.getElementById('importScn').value = map.importScn;
+  document.getElementById('taxRate').value = map.taxRate;
+  updateModel();
+}
+
+updateModel();
+</script>
+</body>
+</html>
