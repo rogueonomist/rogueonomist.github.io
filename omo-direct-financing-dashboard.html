@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Bank In The Middle: OMOs, SBP Profit, and the Cost of Not Financing Directly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+<style>
+  :root{
+    --ncgcl-blue:#0C688D; --ncgcl-green:#39A935;
+    --petrol-900:#042B3B; --petrol-800:#004C66; --petrol-700:#035076; --petrol-600:#0C688D;
+    --petrol-400:#007AA0; --petrol-200:#A7C7D6; --petrol-100:#E3EEF3;
+    --green-700:#2B8129; --green-600:#39A935; --green-100:#E6F4E2;
+    --ink-900:#061626; --ink-800:#0E2841; --ink-700:#1E293B;
+    --slate-500:#5B6B7A; --slate-400:#7F7F7F; --slate-300:#AEAEAE;
+    --slate-200:#C8D6E0; --slate-150:#E2E8F0; --slate-100:#EEF1F4; --slate-50:#F6F8FA;
+    --risk-high:#C00000; --risk-low:#2B8129;
+    --font-sans:"Figtree","Google Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--slate-50);color:var(--ink-800);font-family:var(--font-sans);}
+  .shell{max-width:920px;margin:0 auto;background:#fff;}
+  .cover{background:var(--petrol-900);color:#fff;padding:56px 56px 40px;}
+  .eyebrow{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--petrol-200);}
+  h1{font-size:38px;font-weight:700;letter-spacing:-0.02em;line-height:1.1;margin:14px 0 0;color:#fff;}
+  .sub{font-size:16px;color:#B9CFDA;margin-top:14px;line-height:1.55;max-width:640px;}
+  .meta{margin-top:26px;font-size:12.5px;color:#8FB0C0;font-family:var(--font-mono);}
+  .kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--slate-200);border-bottom:1px solid var(--slate-200);}
+  .kpi{padding:22px 24px;border-left:1px solid var(--slate-200);}
+  .kpi:first-child{border-left:none;}
+  .kpi .rule{width:28px;height:3px;background:var(--ncgcl-blue);margin-bottom:12px;}
+  .kpi .rule.g{background:var(--ncgcl-green);}
+  .kpi .val{font-family:var(--font-mono);font-size:26px;font-weight:600;letter-spacing:-0.01em;color:var(--ink-800);line-height:1.1;}
+  .kpi .lab{font-size:12.5px;font-weight:600;color:var(--ink-700);margin-top:8px;}
+  .kpi .cap{font-size:11.5px;color:var(--slate-400);margin-top:3px;line-height:1.4;}
+  main{padding:8px 56px 40px;}
+  section{padding:36px 0;border-bottom:1px solid var(--slate-150);}
+  section:last-of-type{border-bottom:none;}
+  h2{font-size:22px;font-weight:700;letter-spacing:-0.01em;color:var(--ink-800);margin:0 0 4px;}
+  h2 .num{color:var(--ncgcl-blue);font-family:var(--font-mono);margin-right:8px;}
+  h3{font-size:15px;font-weight:700;color:var(--ink-700);margin:26px 0 10px;}
+  p{font-size:15.5px;line-height:1.68;color:var(--ink-700);margin:0 0 14px;}
+  p.punch{font-weight:600;color:var(--ink-800);font-size:16.5px;}
+  .chart-wrap{position:relative;width:100%;height:340px;margin:22px 0 10px;background:var(--slate-50);border:1px solid var(--slate-200);border-radius:8px;padding:16px;}
+  .chart-wrap.short{height:300px;}
+  .caption{font-size:12.5px;color:var(--slate-400);line-height:1.55;margin:0 0 20px;}
+  .legend-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:8px;font-size:12px;color:var(--slate-500);}
+  .legend-row span{display:flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:2px;display:inline-block;}
+  .callout{background:var(--petrol-100);border-left:3px solid var(--ncgcl-blue);border-radius:0 8px 8px 0;padding:18px 22px;margin:16px 0;}
+  .callout p{margin-bottom:8px;font-size:14.5px;}
+  .callout p:last-child{margin-bottom:0;}
+  .callout .k{font-weight:600;color:var(--ink-800);}
+  .methodology{background:var(--slate-50);border:1px solid var(--slate-200);border-radius:8px;padding:24px 26px;margin-top:10px;}
+  .methodology dl{margin:0;}
+  .methodology dt{font-family:var(--font-mono);font-size:12.5px;font-weight:600;color:var(--ncgcl-blue);margin-top:14px;}
+  .methodology dt:first-child{margin-top:0;}
+  .methodology dd{margin:4px 0 0;font-size:13.5px;color:var(--ink-700);line-height:1.6;}
+  footer{padding:22px 56px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--slate-200);background:var(--slate-50);}
+  footer .org{font-size:12px;color:var(--slate-400);}
+  footer .pg{font-family:var(--font-mono);font-size:12px;color:var(--slate-400);}
+  .disclaimer{font-size:11.5px;color:var(--slate-400);line-height:1.6;margin-top:10px;max-width:640px;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="cover">
+    <div class="eyebrow">Pakistan monetary financing · FY2021&ndash;FY2028</div>
+    <h1>The Bank In The Middle</h1>
+    <div class="sub">What routing government borrowing through commercial banks, instead of straight to the State Bank, has actually cost, and what it will keep costing.</div>
+    <div class="meta">Prepared July 2026 &middot; Author's own analysis, not an institutional position</div>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi"><div class="rule"></div><div class="val">Rs 15.2T</div><div class="lab">Net OMO Position, Jul 2026</div><div class="cap">Up from under Rs 2T five years ago</div></div>
+    <div class="kpi"><div class="rule g"></div><div class="val">6.1pp</div><div class="lab">Peak SBP Profit Offset</div><div class="cap">FY24, vs 1.3&ndash;1.9pp in FY21&ndash;22</div></div>
+    <div class="kpi"><div class="rule"></div><div class="val">Rs 103B</div><div class="lab">Recoverable, FY21&ndash;FY25</div><div class="cap">Marginal-yield direct-financing model</div></div>
+    <div class="kpi"><div class="rule g"></div><div class="val">Rs 246B</div><div class="lab">Cumulative Through FY28</div><div class="cap">Projected, 100bps/yr rate-cut case</div></div>
+  </div>
+
+  <main>
+
+  <section>
+    <p>In January 2022, Pakistan's parliament amended the SBP Act and shut the door on direct central bank financing of the budget. The government did not stop borrowing from the State Bank. It just stopped borrowing from it directly. Every rupee since then runs through the same detour: banks buy the government's T-bills and PIBs, then fund that position by borrowing back from SBP through open market operations, or OMOs. This note traces what that detour has cost, and what a straight line would have saved.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">1</span>How OMOs took off</h2>
+    <p>For most of 2008 to 2014, SBP's net OMO position (what it was injecting into banks, net of what it was mopping up) sat under Rs 300 billion, and was negative as often as it was positive. That is what a central bank's ordinary plumbing looks like: smoothing day-to-day cash swings, nothing more.</p>
+    <p>Two waves followed: a modest build-up during the 2013 EFF programme, a bigger one in 2015&ndash;17. Then, from 2021 onward, a near-vertical line. Net OMO support went from under Rs 2 trillion to over Rs 15 trillion in five years, and the steepest years, FY22 through FY24, line up with the SBP Act ban taking hold, not with any single IMF review.</p>
+    <p class="punch">This isn't a liquidity story. It's a financing story wearing a liquidity costume.</p>
+    <div class="legend-row">
+      <span><span class="dot" style="background:#2a78d6"></span>Net OMO position (Rs bn)</span>
+      <span><span class="dot" style="background:#93c4f0"></span>IMF programme active</span>
+    </div>
+    <div class="chart-wrap"><canvas id="omoChart" role="img" aria-label="Net SBP OMO position from 2008 to 2026, rising from near zero to over Rs 15 trillion, with IMF programme periods shaded"></canvas></div>
+    <p class="caption">Shaded bands mark IMF programme periods; the dashed line marks the SBP Act amendment (Jan 2022). The OMO stock kept climbing long after the 2019 EFF ended and the 2023 SBA came and went. The growth engine here is the ban on direct financing, not fund conditionality.</p>
+
+    <h3>How much of this is real cash demand?</h3>
+    <p>Currency in circulation, cash leaving the banking system, is the one legitimate, non-discretionary driver of OMO growth: every rupee that leaves as cash has to be replaced if banks are to keep lending and clearing normally. Between FY21 and FY25, currency in circulation grew by Rs 4.5 trillion. Net OMO support grew by Rs 10.2 trillion in the same window.</p>
+    <p class="punch">Less than half the increase can be explained by cash demand. The rest is deficit financing in a liquidity-operations disguise.</p>
+    <div class="legend-row">
+      <span><span class="dot" style="background:#2a78d6"></span>OMO growth</span>
+      <span><span class="dot" style="background:#eda100"></span>Currency in circulation growth</span>
+    </div>
+    <div class="chart-wrap short"><canvas id="cicChart" role="img" aria-label="Bar chart comparing year over year OMO growth to currency in circulation growth, FY2021 to FY2025"></canvas></div>
+    <p class="caption">FY24 is the starkest year: OMO support grew by Rs 3,388bn while currency in circulation grew by just Rs 4bn.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span>Gross vs net: what SBP profit actually offsets</h2>
+    <p>Government pays banks a market yield on its T-bills and PIBs. SBP earns a profit on its own operations, including the OMO facility itself, and hands most of that profit back to government as a dividend. Netting the two gives a truer sense of what domestic debt actually costs the state, not just what the budget line item says.</p>
+    <p>The gross effective rate (mark-up on domestic debt divided by the average domestic debt stock) rose from 10.5% in FY21 to a peak of 16.8% in FY24, tracking the policy rate's climb to 22%, then eased to 15.6% in FY25.</p>
+    <p>Net it against SBP profit on a simple cash basis (what actually shows up in that same year's budget accounts) and the picture gets noisy: 7.7%, 8.0%, 12.7%, 14.5%, 10.4%. That noise isn't economics, it's timing. SBP's dividend reflects profit earned roughly a year earlier, audited and approved after the fact.</p>
+    <p>Match each year's interest cost to the SBP profit it actually generated, instead of the profit that happened to land in the accounts that year, and the noise mostly disappears. The lag-matched net rate stayed inside an 8.4%&ndash;10.9% band across all five years, even while the gross rate swung by more than 7 percentage points.</p>
+    <div class="legend-row">
+      <span><span class="dot" style="background:#2a78d6"></span>Gross effective rate</span>
+      <span><span class="dot" style="background:#eda100"></span>Net, same-year cash basis</span>
+      <span><span class="dot" style="background:#1baf7a"></span>Net, lag-matched to year earned</span>
+    </div>
+    <div class="chart-wrap"><canvas id="rateChart" role="img" aria-label="Line chart comparing gross effective interest rate on domestic debt to two SBP-profit-adjusted net rates, FY2021 to FY2025"></canvas></div>
+    <p class="caption">Lag-matched pairs each year's domestic interest cost with the SBP profit booked in the following fiscal year, which is when that profit is actually paid out.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span>The profit-rate delta</h2>
+    <p>Subtract the lag-matched net rate from the gross rate and you get the SBP-profit offset in percentage points: how many points of interest cost the central bank's own earnings wiped out that year.</p>
+    <p>That offset held near 1.3&ndash;1.9 points in FY21&ndash;22, doubled to 2.8 points in FY23, then jumped to 6.1 points in FY24 (the year SBP's own profit hit a record Rs 3.42 trillion off a full year at the 22% policy rate) before easing to 4.7 points in FY25 as rates came down.</p>
+    <p class="punch">The rebate isn't a stable subsidy. It's a rate-cycle dividend, biggest exactly when the gross cost is highest.</p>
+    <div class="chart-wrap short"><canvas id="deltaChart" role="img" aria-label="Bar chart of the SBP profit offset in percentage points, FY2021 to FY2025, peaking at 6.1 in FY24"></canvas></div>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span>What direct financing would have saved</h2>
+    <p>Now the question this note was built to answer: if the SBP Act had never been amended, and government could still borrow straight from the central bank, how much less would it have paid?</p>
+    <p>Not by comparing rates on the whole debt stock. Most of that book was issued years ago and reprices slowly. The right comparison is marginal: what banks earn on the specific paper they are funding through OMOs right now, against what they pay SBP for that funding.</p>
+
+    <div class="callout">
+      <p><span class="k">The model, in plain terms:</span> take the gap between the marginal T-bill yield banks earn and the policy rate they pay SBP for OMO funding. Multiply by the average OMO stock outstanding that year: that is the raw margin banks pocket on the trade.</p>
+      <p>Under direct financing, that income would mostly have gone to SBP and flowed back to government as profit. Under the actual system, banks keep it, and government only recovers a slice through corporate tax. So the <span class="k">recoverable saving</span> = raw margin &times; (80% SBP profit payout &minus; 40% effective bank tax) = raw margin &times; 40%. Both the 80% and 40% are stated assumptions, not measured figures.</p>
+    </div>
+
+    <p>Run that for FY21&ndash;FY25 and the margin is thin in flat-rate years: near zero in FY21 and FY24, when the policy rate barely moved all year and T-bills had nothing new to price in. It opens up in hiking or cutting years: about Rs 19 billion recoverable in FY22, Rs 40 billion in FY23, Rs 45 billion in FY25. <span class="punch">Five-year total: roughly Rs 103 billion.</span></p>
+
+    <p>Extend this to FY26&ndash;FY28 on one clear assumption: the policy rate keeps falling by 100 basis points a year from the FY26 level, and OMO stock growth decelerates from its recent pace to 12% in FY27 and 10% in FY28, roughly matching the deceleration already visible in total public debt growth. FY26 itself uses real data: an actual average OMO stock of Rs 13,483 billion and a real day-weighted policy rate of 10.91%.</p>
+    <p>Because a steady cutting cycle keeps recreating the same forward-pricing spread seen in FY25 (roughly 1 percentage point), both FY27 and FY28 show a real recoverable margin (Rs 60 billion and Rs 66 billion) instead of the near-zero a flat rate would produce.</p>
+    <p class="punch">Cumulative, FY21 through FY28: about Rs 246 billion. Real money, but two orders of magnitude below the Rs 15 trillion OMO headline, because in a reasonably arbitraged money market, the same-tenor spread banks can extract is inherently thin.</p>
+
+    <div class="legend-row">
+      <span><span class="dot" style="background:#1baf7a"></span>Annual recoverable saving (actual, FY21&ndash;25)</span>
+      <span><span class="dot" style="background:rgba(27,175,122,0.4)"></span>Projected (FY26&ndash;28, 100bps/yr cuts)</span>
+      <span><span class="dot" style="background:#2a78d6;width:14px;height:2px;border-radius:0;"></span>Cumulative total</span>
+    </div>
+    <div class="chart-wrap"><canvas id="savingsChart" role="img" aria-label="Combination chart of annual and cumulative recoverable savings from a hypothetical direct SBP financing scenario, FY2021 through projected FY2028, reaching about Rs 246 billion by FY28"></canvas></div>
+
+    <p style="margin-top:22px;">The uncomfortable part isn't the size of the number. It's what it implies about the debate itself. Rs 246 billion over eight years is not a fiscal emergency, but it is also not nothing, and it is a transfer that happens quietly, every year, to the banking sector, ultimately funded by whoever holds the government's paper on the other side of the ledger. Whether that is an acceptable price for keeping the central bank out of direct budget financing is a governance choice. It should be made as one, not left to default by omission.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">&middot;</span>Methodology and assumptions</h2>
+    <div class="methodology">
+      <dl>
+        <dt>OMO stock</dt>
+        <dd>SBP's own published average-outstanding figures (Pakistan Economic Survey 2024-25, Table 5.5) for FY21&ndash;FY25; FY26 reconstructed from raw auction data (uploaded Repo/Mop-up and Reverse Repo/Injection history), cross-checked against SBP's figures to within 1&ndash;9% each year. FY27&ndash;28 projected at 12% and 10% annual growth.</dd>
+        <dt>Domestic debt stock and mark-up paid</dt>
+        <dd>Ministry of Finance Budget in Brief documents, FY2021-22 through FY2025-26 editions, using each year's own "revised estimate" as the actual proxy. Domestic debt stock (end-June) from the Annual Debt Review FY25 and Economic Survey 2021-22.</dd>
+        <dt>SBP profit (cash basis)</dt>
+        <dd>Same Budget in Brief documents, "SBP Profit" non-tax revenue line, each year's revised estimate.</dd>
+        <dt>Policy rate</dt>
+        <dd>SBP Monetary Policy Committee decisions, day-weighted fiscal-year average, computed from the full history of rate-change effective dates through July 2026.</dd>
+        <dt>Marginal T-bill yield</dt>
+        <dd>Midpoint of SBP's reported weighted-average 3-month T-bill auction yield range per fiscal year (Economic Survey 2024-25, Table 5.6). FY26 uses an assumed 0.3pp spread over the actual policy rate (a mixed cut-then-hike year); FY27&ndash;28 assume a 1.0pp spread, matching the pattern seen in FY25's easing cycle.</dd>
+        <dt>SBP profit payout ratio</dt>
+        <dd>80%: an assumption based on market commentary around the FY24 profit distribution, applied uniformly across all years.</dd>
+        <dt>Effective bank tax rate</dt>
+        <dd>40%: an assumption reflecting Pakistan's banking-sector tax and super-tax regime, applied uniformly across all years.</dd>
+        <dt>Currency in circulation</dt>
+        <dd>SBP data via Pakistan Economic Survey 2024-25, "Money and Credit" chapter, and SBP's weekly monetary aggregates release for the June 2025 figure.</dd>
+        <dt>IMF programme dates</dt>
+        <dd>IMF Executive Board press releases, 2008 SBA through the ongoing 2024 EFF.</dd>
+        <dt>Important limits</dt>
+        <dd>FY26&ndash;28 figures are projections built on stated assumptions, not measured outcomes. Treat them directionally, not as point forecasts. The model does not capture the additional term premium banks may earn funding longer-dated PIBs (rather than T-bills) with short-term OMO money, which would likely raise the true recoverable figure, particularly in FY24&ndash;25. It also does not weigh the macroeconomic cost of direct central bank financing itself (higher inflation risk and currency pressure), which is the standard argument for the ban in the first place, independent of the interest-cost arithmetic above.</dd>
+      </dl>
+    </div>
+    <div class="disclaimer">This document reflects the author's independent analysis using publicly available Ministry of Finance and State Bank of Pakistan data. It does not represent an institutional position of National Credit Guarantee Company Limited.</div>
+  </section>
+
+  </main>
+
+  <footer>
+    <span class="org">Prepared July 2026 &middot; Sources: Ministry of Finance, State Bank of Pakistan, IMF</span>
+    <span class="pg">1 / 1</span>
+  </footer>
+
+</div>
+
+<script>
+// ---- Chart 1: OMO history + IMF bands ----
+(function(){
+  const raw = [-5.3,-18.4,-25.9,8.1,26.6,45.9,-24.7,-9.6,-17.8,-25.7,-9.6,47.6,47.1,26.0,-14.1,32.7,53.3,106.4,122.5,129.8,104.2,97.4,67.7,36.6,-17.8,21.1,6.2,27.3,64.3,-27.8,5.9,-15.7,20.1,16.2,50.2,3.5,-10.9,6.1,74.1,152.2,240.6,262.1,332.7,296.2,238.7,304.9,304.4,188.4,140.8,131.6,221.1,461.1,427.2,599.1,531.3,572.4,606.2,557.9,458.6,454.2,295.5,348.8,156.3,-124.5,-139.4,18.2,-127.1,69.8,29.8,81.2,91.3,235.8,303.3,48.0,48.3,51.5,89.9,123.1,249.9,469.1,562.4,669.3,816.6,948.4,672.5,613.9,759.1,1125.0,1234.1,1295.4,1287.5,1280.0,1235.7,809.7,1291.5,1415.9,1236.4,1502.3,1332.8,874.5,1074.1,1019.1,784.2,778.1,912.9,946.3,1022.6,1181.8,1280.7,1338.8,1324.1,1375.8,1437.7,1428.0,1511.2,1651.6,1133.3,1338.3,917.3,523.4,636.3,1285.4,757.5,1803.0,528.8,-418.3,-1008.5,629.9,-1148.2,277.7,-362.5,-766.9,-786.0,828.7,949.3,1459.9,1612.6,1294.2,587.9,845.8,875.3,747.1,1057.7,1175.3,797.3,1324.9,932.6,833.9,980.6,819.0,787.8,860.4,960.5,1171.4,1343.4,1781.2,2455.8,2158.0,2084.8,2273.7,2019.6,2022.8,1874.7,1727.3,2168.9,2859.8,2917.8,3092.5,3487.3,3465.6,4567.6,4913.4,5043.0,4900.9,5101.1,4818.1,5826.1,5822.8,6073.6,7451.6,7494.4,7944.1,8367.0,8914.1,8429.7,8367.0,8112.5,8726.6,9824.8,9816.2,9780.8,10320.9,10802.8,11690.5,11806.0,11786.0,11530.9,9731.2,9727.8,10321.3,10995.1,11077.3,11578.6,12600.1,12791.3,13295.9,13275.2,13136.4,12280.4,12563.2,12745.1,12732.2,13372.6,13485.2,14052.9,14525.7,14245.5,15419.2,15216.4];
+  const startYear=2008, startMonth=5;
+  function idxToLabel(i){
+    const m = startMonth-1+i, y = startYear+Math.floor(m/12), mm = m%12;
+    const names=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return names[mm]+' '+y;
+  }
+  const labels = raw.map((v,i)=>idxToLabel(i));
+  const imfBands = [{s:6,e:40},{s:64,e:100},{s:134,e:181},{s:182,e:191},{s:196,e:218}];
+  const bandLabels = ['2008 SBA','2013 EFF','2019 EFF','2023 SBA','2024 EFF'];
+  const annotations = {};
+  imfBands.forEach((b,i)=>{
+    annotations['box'+i]={type:'box',xMin:b.s,xMax:b.e,backgroundColor:'rgba(147,196,240,0.28)',borderWidth:0};
+    annotations['lab'+i]={type:'label',xValue:(b.s+b.e)/2,yValue:15700,content:bandLabels[i],font:{size:9},color:'#0C688D'};
+  });
+  annotations['sbpAct']={type:'line',xMin:164,xMax:164,borderColor:'#993c1d',borderWidth:1.5,borderDash:[4,3]};
+  annotations['sbpActLabel']={type:'label',xValue:164,yValue:13300,content:['SBP Act amended:','direct financing banned'],font:{size:9},color:'#993c1d',xAdjust:58};
+  new Chart(document.getElementById('omoChart'), {
+    type:'line',
+    data:{labels:labels, datasets:[{data:raw, borderColor:'#0C688D', backgroundColor:'rgba(12,104,141,0.08)', borderWidth:2, pointRadius:0, fill:true, tension:0.15}]},
+    options:{responsive:true, maintainAspectRatio:false,
+      scales:{ x:{ticks:{maxTicksLimit:9, color:'#7F7F7F', font:{size:11}}, grid:{display:false}},
+               y:{title:{display:true,text:'Rs billion', color:'#7F7F7F', font:{size:11}}, ticks:{color:'#7F7F7F',font:{size:11}}, grid:{color:'#E2E8F0'}} },
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:(c)=>'Rs '+c.parsed.y.toLocaleString()+'bn'}}, annotation:{annotations:annotations} }
+    }
+  });
+})();
+
+// ---- Chart: OMO growth vs currency-in-circulation growth ----
+new Chart(document.getElementById('cicChart'), {
+  type:'bar',
+  data:{ labels:['FY21','FY22','FY23','FY24','FY25'], datasets:[
+    { label:'OMO growth', data:[230.0,1324.2,3753.2,3387.5,1527.5], backgroundColor:'#0C688D', borderRadius:4, maxBarThickness:26 },
+    { label:'Currency in circulation growth', data:[767.9,662.6,1576.2,4.4,1481.4], backgroundColor:'#eda100', borderRadius:4, maxBarThickness:26 }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    scales:{ x:{grid:{display:false}, ticks:{color:'#7F7F7F',font:{size:11}}},
+             y:{title:{display:true,text:'Rs billion',color:'#7F7F7F',font:{size:11}}, ticks:{color:'#7F7F7F',font:{size:11}}, grid:{color:'#E2E8F0'}} },
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.dataset.label+': Rs '+c.parsed.y.toLocaleString()+'bn'}} }
+  }
+});
+
+// ---- Chart: gross vs net (cash) vs net (lag) ----
+new Chart(document.getElementById('rateChart'), {
+  type:'line',
+  data:{ labels:['FY21','FY22','FY23','FY24','FY25'], datasets:[
+    { label:'Gross', data:[10.54,9.66,13.72,16.78,15.56], borderColor:'#0C688D', backgroundColor:'#0C688D', borderWidth:2, tension:0.15, pointRadius:4 },
+    { label:'Net (cash basis)', data:[7.71,8.01,12.66,14.51,10.40], borderColor:'#eda100', backgroundColor:'#eda100', borderWidth:2, tension:0.15, pointRadius:4, borderDash:[5,3] },
+    { label:'Net (lag-matched)', data:[8.63,8.37,10.94,10.68,10.84], borderColor:'#1baf7a', backgroundColor:'#1baf7a', borderWidth:2, tension:0.15, pointRadius:4 }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    scales:{ x:{grid:{display:false}, ticks:{color:'#7F7F7F',font:{size:11}}},
+             y:{title:{display:true,text:'Percent per annum',color:'#7F7F7F',font:{size:11}}, ticks:{color:'#7F7F7F',font:{size:11},callback:(v)=>v+'%'}, grid:{color:'#E2E8F0'}} },
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.dataset.label+': '+c.parsed.y+'%'}} }
+  }
+});
+
+// ---- Chart: profit-rate delta ----
+new Chart(document.getElementById('deltaChart'), {
+  type:'bar',
+  data:{ labels:['FY21','FY22','FY23','FY24','FY25'], datasets:[
+    { label:'SBP profit offset', data:[1.91,1.29,2.78,6.09,4.72], backgroundColor:'#1baf7a', borderRadius:4, maxBarThickness:36 }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    scales:{ x:{grid:{display:false}, ticks:{color:'#7F7F7F',font:{size:11}}},
+             y:{title:{display:true,text:'Percentage points',color:'#7F7F7F',font:{size:11}}, ticks:{color:'#7F7F7F',font:{size:11},callback:(v)=>v+'pp'}, grid:{color:'#E2E8F0'}} },
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:(c)=>'Offset: '+c.parsed.y+'pp'}} }
+  }
+});
+
+// ---- Chart: cumulative recoverable savings FY21-FY28 ----
+(function(){
+  const labels = ['FY21','FY22','FY23','FY24','FY25','FY26','FY27','FY28'];
+  const annual = [-0.3,18.7,39.8,-0.1,45.2,16.2,60.4,66.4];
+  const cumulative = [-0.3,18.4,58.2,58.1,103.3,119.5,179.9,246.3];
+  const isProjected = [false,false,false,false,false,true,true,true];
+  new Chart(document.getElementById('savingsChart'), {
+    data:{ labels:labels, datasets:[
+      { type:'bar', label:'Annual saving', data:annual,
+        backgroundColor: annual.map((v,i)=> isProjected[i] ? 'rgba(27,175,122,0.4)' : '#1baf7a'),
+        borderRadius:4, maxBarThickness:32, order:2 },
+      { type:'line', label:'Cumulative total', data:cumulative,
+        borderColor:'#0C688D', backgroundColor:'#0C688D', borderWidth:2, tension:0.1,
+        pointRadius:4, pointBackgroundColor:'#0C688D',
+        segment:{ borderDash: ctx => isProjected[ctx.p1DataIndex] ? [5,4] : undefined },
+        order:1 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ x:{grid:{display:false}, ticks:{color:'#7F7F7F',font:{size:11}}},
+               y:{title:{display:true,text:'Rs billion',color:'#7F7F7F',font:{size:11}}, ticks:{color:'#7F7F7F',font:{size:11}}, grid:{color:'#E2E8F0'}} },
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:(c)=> c.dataset.label+': Rs '+c.parsed.y.toLocaleString()+'bn'+(isProjected[c.dataIndex]?' (projected)':'')}} }
+    }
+  });
+})();
+</script>
+</body>
+</html>
