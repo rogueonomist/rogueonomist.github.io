@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NCGCL — 11th Board Meeting · Board Reference Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ncgcl-blue:#0C688D; --ncgcl-green:#39A935;
+    --petrol-900:#042B3B; --petrol-800:#004C66; --petrol-700:#035076; --petrol-600:#0C688D;
+    --petrol-400:#007AA0; --petrol-200:#A7C7D6; --petrol-100:#E3EEF3;
+    --green-800:#1F6A1D; --green-700:#2B8129; --green-600:#39A935; --green-100:#E6F4E2;
+    --ink-900:#061626; --ink-800:#0E2841; --ink-700:#1E293B;
+    --slate-500:#5B6B7A; --slate-400:#7F7F7F; --slate-300:#AEAEAE; --slate-200:#C8D6E0;
+    --slate-150:#E2E8F0; --slate-100:#EEF1F4; --slate-50:#F6F8FA; --paper:#FFFFFF;
+    --risk-high:#C00000; --risk-high-bg:#FBE8E8;
+    --risk-med:#BF9000; --risk-med-bg:#FBF1DA;
+    --risk-low:#2B8129; --risk-low-bg:#E6F4E2;
+    --font-sans:'Figtree','Segoe UI',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono','Courier New',monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--font-sans); color:var(--ink-800); background:var(--slate-50);
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px 80px;}
+
+  /* ---------- HEADER ---------- */
+  .masthead{background:var(--petrol-900);color:#fff;padding:28px 0 0;}
+  .masthead-inner{max-width:1120px;margin:0 auto;padding:0 28px 22px;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:24px;
+    border-bottom:3px solid var(--ncgcl-green);}
+  .masthead-left{display:flex;align-items:center;gap:16px;}
+  .masthead-left img{height:46px;width:auto;display:block;}
+  .masthead-title{}
+  .eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--petrol-200);}
+  .masthead h1{font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;margin:4px 0 2px;color:#fff;}
+  .masthead .meta{font-size:0.82rem;color:#CFE1E9;}
+  .masthead-right{text-align:right;font-size:0.78rem;color:#CFE1E9;min-width:220px;}
+  .masthead-right .big{font-family:var(--font-mono);font-size:1.05rem;color:#fff;font-weight:700;}
+
+  /* KPI STRIP */
+  .kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:0;background:var(--petrol-800);}
+  .kpi{padding:16px 20px;border-right:1px solid rgba(255,255,255,0.14);}
+  .kpi:last-child{border-right:none;}
+  .kpi-val{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:#fff;}
+  .kpi-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:#AFCBD6;margin-top:2px;}
+
+  /* ---------- QUICK NAV ---------- */
+  .quicknav{background:#fff;border-bottom:1px solid var(--slate-200);position:sticky;top:0;z-index:10;
+    overflow-x:auto;white-space:nowrap;}
+  .quicknav-inner{max-width:1120px;margin:0 auto;padding:10px 28px;display:flex;gap:6px;}
+  .quicknav a{font-size:0.72rem;font-weight:600;color:var(--ink-700);text-decoration:none;
+    padding:6px 11px;border-radius:5px;border:1px solid var(--slate-200);white-space:nowrap;flex:0 0 auto;}
+  .quicknav a:hover{background:var(--petrol-100);border-color:var(--petrol-200);color:var(--petrol-600);}
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{padding:34px 0 6px;}
+  .section-head{margin-bottom:16px;}
+  .section-head .eyebrow{color:var(--ncgcl-blue);}
+  .section-head h2{font-size:1.3rem;font-weight:800;letter-spacing:-0.01em;margin:4px 0 4px;color:var(--ink-800);}
+  .section-head .sub{font-size:0.85rem;color:var(--slate-500);max-width:760px;}
+
+  /* ---------- AT-A-GLANCE TABLE ---------- */
+  .glance{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--slate-200);border-radius:8px;overflow:hidden;}
+  .glance th{text-align:left;font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+    color:var(--slate-500);background:var(--slate-50);padding:9px 12px;border-bottom:1px solid var(--slate-200);}
+  .glance td{padding:10px 12px;font-size:0.8rem;border-top:1px solid var(--slate-150);vertical-align:top;}
+  .glance tr:hover td{background:var(--slate-50);}
+  .glance .num{font-family:var(--font-mono);color:var(--slate-500);font-weight:600;}
+  .glance a{color:var(--ncgcl-blue);text-decoration:none;font-weight:700;}
+
+  /* ---------- CHIPS ---------- */
+  .chip{display:inline-block;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;
+    padding:3px 9px;border-radius:20px;white-space:nowrap;}
+  .chip-decision{background:var(--petrol-100);color:var(--petrol-700);border:1px solid var(--petrol-200);}
+  .chip-noting{background:var(--slate-100);color:var(--slate-500);border:1px solid var(--slate-200);}
+  .chip-info{background:var(--green-100);color:var(--green-800);border:1px solid #BFE3B8;}
+  .chip-flag{background:var(--risk-high-bg);color:var(--risk-high);border:1px solid #F2C4C4;}
+  .chip-ok{background:var(--risk-low-bg);color:var(--risk-low);border:1px solid #BFE3B8;}
+
+  /* ---------- CARD ---------- */
+  .card{background:#fff;border:1px solid var(--slate-200);border-radius:8px;padding:20px 22px;margin-bottom:16px;
+    box-shadow:0 1px 2px rgba(12,104,141,0.05);}
+  .card.flagged{border-left:3px solid var(--risk-high);}
+  .card.clean{border-left:3px solid var(--ncgcl-green);}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px;}
+  .card-top-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .num-badge{background:var(--ink-800);color:#fff;font-family:var(--font-mono);font-weight:700;font-size:0.72rem;
+    width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .card h3{font-size:1.02rem;font-weight:700;margin:0;color:var(--ink-800);}
+  .card-meta{font-size:0.72rem;color:var(--slate-500);margin-top:1px;}
+  .card-body{font-size:0.86rem;color:var(--ink-700);}
+  .card-body p{margin:6px 0;}
+  .card-body ul{margin:6px 0 6px 18px;padding:0;}
+  .card-body li{margin-bottom:3px;}
+
+  .subhead{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--slate-500);
+    margin:14px 0 5px;}
+  .subhead:first-child{margin-top:2px;}
+
+  .decision-box{background:var(--green-100);border:1px solid #BFE3B8;border-left:3px solid var(--ncgcl-green);
+    border-radius:6px;padding:12px 14px;margin-top:10px;font-size:0.84rem;color:var(--ink-800);}
+  .decision-box b{color:var(--green-800);}
+  .flag-box{background:var(--risk-high-bg);border:1px solid #F2C4C4;border-left:3px solid var(--risk-high);
+    border-radius:6px;padding:12px 14px;margin-top:10px;font-size:0.84rem;color:var(--ink-800);}
+  .flag-box b{color:var(--risk-high);}
+  .info-box{background:var(--slate-100);border:1px solid var(--slate-200);border-left:3px solid var(--slate-400);
+    border-radius:6px;padding:12px 14px;margin-top:10px;font-size:0.84rem;color:var(--ink-700);}
+
+  /* ---------- FACT GRID ---------- */
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0;}
+  .fact{background:var(--slate-50);border:1px solid var(--slate-150);border-radius:6px;padding:8px 10px;}
+  .fact-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate-500);font-weight:700;}
+  .fact-val{font-family:var(--font-mono);font-size:0.86rem;font-weight:700;color:var(--ink-800);margin-top:2px;}
+
+  /* ---------- GUARANTEE TABLE ---------- */
+  .gtable-wrap{overflow-x:auto;border:1px solid var(--slate-200);border-radius:8px;background:#fff;}
+  table.gtable{width:100%;border-collapse:collapse;min-width:760px;}
+  .gtable th{text-align:left;font-size:0.64rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--slate-500);background:var(--slate-50);padding:10px 12px;border-bottom:1px solid var(--slate-200);}
+  .gtable td{padding:11px 12px;font-size:0.78rem;border-top:1px solid var(--slate-150);vertical-align:top;}
+  .gtable td.num{font-family:var(--font-mono);font-weight:700;color:var(--ink-800);}
+  .gtable tr.flag-row{background:#FDF5F5;}
+  .gtable tfoot td{font-weight:700;background:var(--petrol-100);border-top:2px solid var(--petrol-200);}
+
+  /* bar viz */
+  .barviz{margin-top:14px;}
+  .barrow{display:grid;grid-template-columns:170px 1fr 90px;align-items:center;gap:10px;margin-bottom:7px;font-size:0.76rem;}
+  .barrow .name{color:var(--ink-700);font-weight:600;}
+  .bartrack{background:var(--slate-100);border-radius:4px;height:16px;overflow:hidden;}
+  .barfill{height:100%;background:var(--ncgcl-blue);border-radius:4px 0 0 4px;}
+  .barfill.flag{background:var(--risk-high);}
+  .barrow .amt{font-family:var(--font-mono);text-align:right;color:var(--ink-800);font-weight:700;}
+
+  /* ---------- FOOTER ---------- */
+  footer{margin-top:40px;padding:18px 0;border-top:1px solid var(--slate-200);
+    display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;color:var(--slate-500);}
+  footer .brand{color:var(--ncgcl-green);font-weight:700;}
+
+  /* ---------- PRINT ---------- */
+  @media print{
+    .quicknav{display:none;}
+    body{background:#fff;}
+    .masthead{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .kpi-strip{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .card{page-break-inside:avoid;box-shadow:none;}
+    section{page-break-inside:avoid;}
+  }
+  @media (max-width:820px){
+    .kpi-strip{grid-template-columns:repeat(3,1fr);}
+    .kpi:nth-child(4),.kpi:nth-child(5){border-top:1px solid rgba(255,255,255,0.14);}
+    .facts{grid-template-columns:repeat(2,1fr);}
+    .masthead-inner{flex-direction:column;gap:10px;}
+    .masthead-right{text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-left">
+      <img src="data:image/png;base64,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" alt="NCGCL"/>
+      <div class="masthead-title">
+        <div class="eyebrow">Board Reference Dashboard</div>
+        <h1>11th Meeting of the Board of Directors</h1>
+        <div class="meta">National Credit Guarantee Company Limited (NCGCL)</div>
+      </div>
+    </div>
+    <div class="masthead-right">
+      <div class="big">Friday, 17 July 2026 · 1000 hrs PKT</div>
+      <div>NCGCL Corporate Office, 19th Floor, Sumya Sky View<br/>Dr Ziauddin Ahmed Road, Karachi</div>
+      <div style="margin-top:4px;">Company Secretary: Ms. Falak Raja</div>
+    </div>
+  </div>
+  <div class="kpi-strip">
+    <div class="kpi"><div class="kpi-val">13</div><div class="kpi-label">Decisions Before the Board</div></div>
+    <div class="kpi"><div class="kpi-val">PKR 10.46B</div><div class="kpi-label">New Guarantee Exposure Sought</div></div>
+    <div class="kpi"><div class="kpi-val">5</div><div class="kpi-label">Guarantee Facilities (Agenda 3)</div></div>
+    <div class="kpi"><div class="kpi-val">2</div><div class="kpi-label">Policy Deviations Flagged</div></div>
+    <div class="kpi"><div class="kpi-val">PKR 15.49M</div><div class="kpi-label">Additional CAPEX Sought</div></div>
+  </div>
+</div>
+
+<div class="quicknav">
+  <div class="quicknav-inner">
+    <a href="#glance">At a Glance</a>
+    <a href="#a1">1 · Minutes &amp; Actions</a>
+    <a href="#a2">2 · BAC</a>
+    <a href="#a3">3 · Guarantees (BCGC)</a>
+    <a href="#a4">4 · HRR&amp;NC</a>
+    <a href="#a5">5 · CAPEX</a>
+    <a href="#a6">6 · GMS Demo</a>
+    <a href="#a7">7 · Impact Assessment</a>
+    <a href="#a8">8 · Circulation</a>
+    <a href="#a9">9 · AOB — SME Export</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- AT A GLANCE -->
+  <section id="glance">
+    <div class="section-head">
+      <div class="eyebrow">Quick Scan</div>
+      <h2>At a Glance</h2>
+      <div class="sub">All nine agenda items, what each one asks of the Board, and whether a vote is required. Use this table to navigate; full detail follows below.</div>
+    </div>
+    <div class="gtable-wrap">
+    <table class="glance">
+      <thead>
+        <tr><th style="width:34px;">#</th><th style="width:210px;">Agenda Item</th><th style="width:150px;">Presenter</th><th style="width:90px;">Time</th><th style="width:100px;">Status</th><th>What the Board Is Asked</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="num">1</td><td><a href="#a1">Minutes &amp; Compliance Report</a></td><td>Company Secretary</td><td class="num">1000–1010</td><td><span class="chip chip-decision">Decision</span></td><td>Approve 10th meeting minutes; note action-item status</td></tr>
+        <tr><td class="num">2</td><td><a href="#a2">Recommendations — Board Audit Committee</a></td><td>Committee Chair &amp; CEO</td><td class="num">1010–1025</td><td><span class="chip chip-decision">Decision</span></td><td>Appoint KPMG as Internal Auditor; approve Finance Manual amendment</td></tr>
+        <tr><td class="num">3</td><td><a href="#a3">Recommendations — Board Credit Guarantee Committee</a></td><td>Committee Chair &amp; CEO</td><td class="num">1025–1105</td><td><span class="chip chip-decision">Decision</span></td><td>Approve 5 guarantee facilities totalling ~PKR 10.46B; 2 require policy waivers</td></tr>
+        <tr><td class="num">4</td><td><a href="#a4">Recommendations — HRR&amp;N Committee</a></td><td>Committee Chair &amp; CEO</td><td class="num">1105–1145</td><td><span class="chip chip-decision">Decision</span></td><td>Approve Board Evaluation Framework and April 2026 HR Manual (incl. vehicle allowance)</td></tr>
+        <tr><td class="num">5</td><td><a href="#a5">Additional CAPEX — NCGCL Offices</a></td><td>CEO</td><td class="num">1145–1155</td><td><span class="chip chip-decision">Decision</span></td><td>Ratify Karachi overrun; approve Islamabad top-up — PKR 15.49M combined</td></tr>
+        <tr><td class="num">6</td><td><a href="#a6">Guarantee Management System — Demo</a></td><td>Management</td><td class="num">1155–1230</td><td><span class="chip chip-info">Demonstration</span></td><td>No paper, no vote — live system walkthrough</td></tr>
+        <tr><td colspan="6" style="text-align:center;font-size:0.72rem;color:var(--slate-500);background:var(--slate-50);font-style:italic;">Jumma &amp; Lunch Break</td></tr>
+        <tr><td class="num">7</td><td><a href="#a7">NCGCL Impact Assessment Framework</a></td><td>Management</td><td class="num">1400–1500</td><td><span class="chip chip-noting">Noting</span></td><td>Note FY26 logframe results (SRQ model / Karandaaz PSI score) — informational</td></tr>
+        <tr><td class="num">8</td><td><a href="#a8">Noting of Resolutions by Circulation</a></td><td>Company Secretary</td><td class="num">1500–1505</td><td><span class="chip chip-noting">Noting</span></td><td>Note resolutions passed by circulation since the 10th meeting</td></tr>
+        <tr><td class="num">9</td><td><a href="#a9">Any Other Item — SME Export Guarantee Programme</a></td><td>CEO / Chair's permission</td><td class="num">1505–1510</td><td><span class="chip chip-decision">Decision</span></td><td>Approve deployment framework for the PKR 1B federal export-SME grant</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- AGENDA 1 -->
+  <section id="a1">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 1 · 1000–1010 · Company Secretary</div>
+      <h2>Confirmation of Minutes &amp; Compliance Report on Action Items</h2>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">1a</span><h3>Confirmation of Minutes of the 10th Board Meeting</h3></div>
+        <span class="chip chip-decision">Decision</span>
+      </div>
+      <div class="card-body">
+        <p>Draft minutes of the 10th Board meeting (13 March 2026, held online) have been circulated for confirmation.</p>
+        <div class="decision-box"><b>Decision required:</b> Approve the minutes of the 10th Board Meeting as circulated, incorporating any final comments from Directors.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">1b</span><h3>Compliance Report on Action Items</h3></div>
+        <span class="chip chip-noting">Noting</span>
+      </div>
+      <div class="card-body">
+        <p>Status of open items carried from the 10th meeting:</p>
+        <ul>
+          <li><b>Impact &amp; Sustainability Committee</b> — reconstituted (Taimoor Ali as Chair, with Faresa Ahsan and Amna Shabbir); closed.</li>
+          <li><b>Karandaaz Pakistan SLA</b> — concluded 31 March 2026; management to table a concluding report acknowledging KRN's role in NCGCL's build phase.</li>
+          <li><b>Guarantee &amp; data strategy</b> — HBL Microfinance Bank micro-business data circulation to the Board, and a comprehensive portfolio overview, were both directed for this meeting — see Agenda 3 and Agenda 7.</li>
+          <li><b>AI/automation in credit decisioning</b> — noted; no partner bank yet runs fully automated underwriting.</li>
+          <li><b>TCF partnership exploration</b> — management directed to engage The Citizens Foundation on education-linked financing as a data/additionality partner.</li>
+        </ul>
+        <div class="info-box">No vote required — the Board is asked to note progress against each item.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA 2 -->
+  <section id="a2">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 2 · 1010–1025 · Committee Chair &amp; CEO</div>
+      <h2>Recommendations from the Board Audit Committee (BAC)</h2>
+      <div class="sub">Two recommendations forwarded by the BAC for Board approval.</div>
+    </div>
+
+    <div class="card clean">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">2a</span><h3>Appointment of NCGCL Internal Auditor</h3></div>
+        <span class="chip chip-decision">Decision</span>
+      </div>
+      <div class="card-body">
+        <p>Following introductory sessions with shortlisted firms KPMG and EY (21 May 2026), Director <b>Mr. Adeeb A. Mirza</b> — mandated by the BAC to lead methodology review — formally recommends <b>KPMG Taseer Hadi &amp; Co.</b> over EY.</p>
+        <div class="facts">
+          <div class="fact"><div class="fact-label">Recommended Firm</div><div class="fact-val">KPMG Taseer Hadi &amp; Co.</div></div>
+          <div class="fact"><div class="fact-label">Annual Fee</div><div class="fact-val">PKR 6.0 million</div></div>
+          <div class="fact"><div class="fact-label">Engagement Partner</div><div class="fact-val">Abbas Naqvi</div></div>
+          <div class="fact"><div class="fact-label">Approach</div><div class="fact-val">Continuous risk-based audit</div></div>
+        </div>
+        <p style="margin-top:8px;">Rationale: deeper technical expertise in IFRS 9 Expected Credit Loss calculations, a more structured dual-layered (design + transaction compliance) methodology, and prior audit/tax experience across the Karandaaz Group (Infra Zamin Pakistan, PMIC, Parwaaz Financial Services) — giving KPMG working familiarity with NCGCL's governance model. Engagement partner attendance at BAC sessions is secured as part of the appointment.</p>
+        <div class="decision-box"><b>Decision required:</b> Approve appointment of KPMG as NCGCL's Internal Auditor at a negotiated fee of PKR 6.0 million per year.</div>
+      </div>
+    </div>
+
+    <div class="card clean">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">2b</span><h3>Amendment to the Finance &amp; Administration Manual</h3></div>
+        <span class="chip chip-decision">Decision</span>
+      </div>
+      <div class="card-body">
+        <p>The current Manual is silent on intangible assets. The proposed <b>Section 7b — Intangible Assets Accounting Guidelines</b> closes this gap for software products the Company controls and expects to benefit from for more than one year.</p>
+        <ul>
+          <li>Recognition and measurement aligned to <b>IAS 38</b>; carried at cost less accumulated amortization and impairment.</li>
+          <li><b>Amortization:</b> straight-line at 25% per year, from the date the software is ready for use until derecognition.</li>
+          <li>Intangibles with indefinite useful lives are excluded from amortization.</li>
+        </ul>
+        <div class="decision-box"><b>Decision required:</b> Approve the addition of Section 7b to the Finance &amp; Administration Manual.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA 3 : GUARANTEES -->
+  <section id="a3">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 3 · 1025–1105 · Committee Chair &amp; CEO</div>
+      <h2>Recommendations from the Board Credit Guarantee Committee (BCGC)</h2>
+      <div class="sub">Five new guarantee facilities recommended by the BCGC, totalling approximately <b>PKR 10.46 billion</b> in new NCGCL exposure. Two carry material deviations from Guarantee Policy 2025 and require an explicit Board waiver.</div>
+    </div>
+
+    <div class="gtable-wrap">
+      <table class="gtable">
+        <thead>
+          <tr><th>Partner Institution</th><th>Facility</th><th>Structure</th><th>NCGCL Exposure</th><th>Tenor</th><th>Rating</th><th>Policy Status</th></tr>
+        </thead>
+        <tbody>
+          <tr class="flag-row">
+            <td><b>HBL Zarai Services Ltd</b></td>
+            <td>Portfolio Trade Credit Guarantee (pilot)</td>
+            <td>4-stage loss waterfall: pari passu 11–30% + tail 31–45%</td>
+            <td class="num">PKR 37.5M</td>
+            <td>2026–27 Kharif &amp; Rabi (1 season)</td>
+            <td>Unrated</td>
+            <td><span class="chip chip-flag">Waiver Required</span></td>
+          </tr>
+          <tr>
+            <td><b>JS Bank Limited</b></td>
+            <td>Portfolio Pari Passu (on-lending to MFIs/DFIs/NBFCs)</td>
+            <td>Tiered pari passu 20%/30%/40% across 7 partner entities</td>
+            <td class="num">PKR 2,000M</td>
+            <td>12 months</td>
+            <td>—</td>
+            <td><span class="chip chip-ok">Compliant</span></td>
+          </tr>
+          <tr>
+            <td><b>Bank Alfalah Ltd</b></td>
+            <td>Portfolio SME + Agri Value Chain Guarantee</td>
+            <td>Second-loss 10% (SME) + pari passu up to 40% (Agri)</td>
+            <td class="num">PKR 4,000M</td>
+            <td>Up to 5 years</td>
+            <td>AAA/A1+</td>
+            <td><span class="chip chip-ok">Compliant</span></td>
+          </tr>
+          <tr class="flag-row">
+            <td><b>HBL Microfinance Bank</b></td>
+            <td>Account-Level Guarantee (Crop / Livestock / Microenterprise)</td>
+            <td>Pari passu up to 50%, account level</td>
+            <td class="num">PKR 2,500M</td>
+            <td>Up to 5 years</td>
+            <td>A+/A1 (Positive)</td>
+            <td><span class="chip chip-flag">Waiver Required</span></td>
+          </tr>
+          <tr>
+            <td><b>Bank of Punjab</b></td>
+            <td>Housing Guarantee (ACAG) + On-Lending Facility</td>
+            <td>Second-loss (Housing, post-GoPb layer) + pari passu 20–40% (On-Lending)</td>
+            <td class="num">PKR 1,920M</td>
+            <td>4 yrs / 3 yrs</td>
+            <td>AAA/A1+</td>
+            <td><span class="chip chip-ok">Compliant</span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="3">Total New Guarantee Exposure Sought</td><td class="num">PKR 10,457.5M</td><td colspan="3"></td></tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="barviz card" style="margin-top:16px;">
+      <div class="subhead" style="margin-top:0;">Exposure by Partner Institution</div>
+      <div class="barrow"><div class="name">Bank Alfalah</div><div class="bartrack"><div class="barfill" style="width:100%"></div></div><div class="amt">4,000M</div></div>
+      <div class="barrow"><div class="name">HBL Microfinance Bank</div><div class="bartrack"><div class="barfill flag" style="width:62.5%"></div></div><div class="amt">2,500M</div></div>
+      <div class="barrow"><div class="name">JS Bank</div><div class="bartrack"><div class="barfill" style="width:50%"></div></div><div class="amt">2,000M</div></div>
+      <div class="barrow"><div class="name">Bank of Punjab</div><div class="bartrack"><div class="barfill" style="width:48%"></div></div><div class="amt">1,920M</div></div>
+      <div class="barrow"><div class="name">HBL Zarai</div><div class="bartrack"><div class="barfill flag" style="width:1%"></div></div><div class="amt">37.5M</div></div>
+    </div>
+
+    <div class="subhead">Facility-by-Facility Detail</div>
+
+    <div class="card flagged">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">3a</span><h3>HBL Zarai Services Ltd — PKR 37.5M</h3></div>
+        <span class="chip chip-flag">Policy Deviation</span>
+      </div>
+      <div class="card-body">
+        <p><b>Overview:</b> A controlled, evidence-first pilot of Zarai's deferred-settlement / receivables financing model across four Dera hubs in Punjab (~1,500 acres, 2026 Kharif &amp; Rabi seasons). NCGCL absorbs 25% of a PKR 150M receivables portfolio through a two-layer waterfall — pari passu (11–30% loss band, PKR 15M) and a tail layer (31–45% loss band, PKR 22.5M).</p>
+        <p><b>Risk mitigants:</b> mandatory parametric crop insurance, harvest mechanization via Zarai's machinery pool, weekly GPS-tagged field visits, anti-collusion field-team rotation, and unannounced NCGCL spot-checks (minimum 25 growers).</p>
+        <div class="flag-box"><b>Policy deviations flagged:</b> Zarai is not a regulated/licensed financial institution under SBP or SECP; its lending track record falls short of the 3-year threshold; and it is unrated by a local credit rating agency (Guarantee Policy 2025 §5.1(a), §5.2(a)/(e), §9.2).</div>
+        <div class="decision-box"><b>Decision required:</b> Approve the PKR 37.5M pilot facility <i>and</i> waive the above policy provisions for this one-season sandbox deployment, ahead of an end-of-season review before any Rabi 2026 continuation.</div>
+      </div>
+    </div>
+
+    <div class="card clean">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">3b</span><h3>JS Bank Limited — PKR 2,000M</h3></div>
+        <span class="chip chip-ok">Compliant</span>
+      </div>
+      <div class="card-body">
+        <p><b>Overview:</b> Wholesale on-lending guarantee supporting JSBL's lending to seven pre-agreed MFIs/DFIs/NBFCs (incl. Pak China Investment Co., Saudi Pak Industrial &amp; Agricultural Investment Co., PMRC, ASA Microfinance Bank, RCDP, Kashf Foundation, JWS Pakistan, DAMEN, Agahe Pakistan), with guarantee cover tiered 20%/30%/40% by counterparty.</p>
+        <p><b>Institution:</b> JSBL 9M-Sep-2025 PAT of PKR 2,570M; CAR 13.94% (vs SBP 11.5% requirement); gross infection ratio rising to 10.63% — a watch item, offset by improved provision coverage (76%) and strong liquidity (LCR 189%).</p>
+        <div class="decision-box"><b>Decision required:</b> Approve the PKR 2,000M portfolio pari passu guarantee facility; no policy deviations observed.</div>
+      </div>
+    </div>
+
+    <div class="card clean">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">3c</span><h3>Bank Alfalah Limited — PKR 4,000M</h3></div>
+        <span class="chip chip-ok">Compliant</span>
+      </div>
+      <div class="card-body">
+        <p><b>Overview:</b> Combines a portfolio second-loss SME facility (10% cover, PKR 2,000M) with an Agri Value Chain pari passu facility (up to 40% cover, PKR 2,000M, with 500M/100M short/long-tenor Agri sub-limits). The second-loss design means NCGCL absorbs no loss until SBP's first-loss band is exhausted.</p>
+        <p><b>Institution:</b> Bank Alfalah — AAA/A1+, Abu Dhabi Group-backed (56.06% sponsor holding); total assets PKR 3,038B; CAR 16.22% (Mar-2026); 1,179 branches nationwide.</p>
+        <div class="decision-box"><b>Decision required:</b> Approve the combined PKR 4,000M SME + Agri facility; no policy deviations observed.</div>
+      </div>
+    </div>
+
+    <div class="card flagged">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">3d</span><h3>HBL Microfinance Bank — PKR 2,500M</h3></div>
+        <span class="chip chip-flag">Policy Deviation</span>
+      </div>
+      <div class="card-body">
+        <p><b>Overview:</b> Account-level pari passu guarantee (up to 50% loss coverage) on new/enhanced lending to crop farmers, livestock borrowers, and microenterprises — split PKR 1,000M (Crop), PKR 1,000M (Livestock), PKR 500M (Microenterprise).</p>
+        <p><b>Institution:</b> HBL MFB — A+/A1 (Positive), anchored by AAA/A1+ parent HBL within the Aga Khan Development Network; returned to profit in CY25 (PBT PKR 1,600M vs prior-year PKR 5,900M loss); CAR comfortably above regulatory floor; conservative provisioning (~142% of NPLs).</p>
+        <div class="flag-box"><b>Policy deviation flagged:</b> Guarantee Policy 2025 caps single-obligor exposure for an A+-rated entity at <b>PKR 1,260M</b>; the proposed PKR 2,500M exceeds this threshold by roughly PKR 1,240M.</div>
+        <div class="decision-box"><b>Decision required:</b> Approve the PKR 2,500M facility <i>and</i> explicitly waive the single-obligor concentration cap under Guarantee Policy 2025 given HBL MFB's credit standing and parent-backed rating.</div>
+      </div>
+    </div>
+
+    <div class="card clean">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">3e</span><h3>Bank of Punjab — PKR 1,920M</h3></div>
+        <span class="chip chip-ok">Compliant</span>
+      </div>
+      <div class="card-body">
+        <p><b>Overview:</b> Two facilities — (i) a Housing Guarantee (PKR 1,000M second-loss, attaching after the Government of Punjab's PKR 5,400M first-loss layer, within a PKR 60,000M covered portfolio under the Apni Chat Apna Ghar scheme; 4-year guarantee tenor) and (ii) an On-Lending Facility (PKR 920M, 40% pari passu across 7 pre-agreed MFIs/NBFCs, 3-year tenor).</p>
+        <p><b>Institution:</b> Bank of Punjab — AAA/A1+, 57.47% Government of Punjab-owned; total assets PKR 2,599B; CAR 13.37% (Mar-2026); PAT PKR 4,774M; LCR 192%, NSFR 166%.</p>
+        <div class="decision-box"><b>Decision required:</b> Approve the combined PKR 1,920M Housing + On-Lending facilities; no policy deviations observed.</div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-bottom:20px;">For information only — a separate HBL portfolio guarantee (PKR 2,500M, wholesale on-lending to five MFIs, Feb 2026) is included in the pack for reference; it is not before the Board for decision at this meeting.</div>
+  </section>
+
+  <!-- AGENDA 4 -->
+  <section id="a4">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 4 · 1105–1145 · Committee Chair &amp; CEO</div>
+      <h2>Recommendations from the Board HR, Remuneration &amp; Nomination Committee (HRR&amp;NC)</h2>
+    </div>
+
+    <div class="card clean">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">4a</span><h3>Board Evaluation Framework</h3></div>
+        <span class="chip chip-decision">Decision</span>
+      </div>
+      <div class="card-body">
+        <p><b>Overview:</b> A formal Board Evaluation Framework, developed against the 4Q24 Due Diligence report's recommendations, assessed across four lenses: the whole Board (strategy, risk, culture), Board committees (TOR fit and output quality), individual directors (preparation, independence, ethics), and the Chairperson (leadership).</p>
+        <ul>
+          <li><b>Cadence:</b> annual internal self-assessment, biennial peer review, triennial external evaluation — steered by the HRR&amp;N Committee with Company Secretary support.</li>
+          <li><b>Tools:</b> detailed scorecards, a living Skills &amp; Competency Matrix (financial, risk, digital, ESG, diversity), and anonymous digital surveys.</li>
+          <li><b>Output:</b> a confidential evaluation report followed by an action plan with named owners and timelines.</li>
+        </ul>
+        <div class="decision-box"><b>Decision required:</b> Approve the Board Evaluation Framework and the accompanying NCGCL Board Self-Evaluation Questionnaire.</div>
+      </div>
+    </div>
+
+    <div class="card clean">
+      <div class="card-top">
+        <div class="card-top-left"><span class="num-badge">4b</span><h3>Amendments to the NCGCL HR Manual (incl. Employee Vehicle Policy)</h3></div>
+        <span class="chip chip-decision">Decision</span>
+      </div>
+      <div class="card-body">
+        <p><b>Overview:</b> The April 2026 HR Manual (Master Consolidated Edition, v2.0) is a substantive rewrite of the October 2025 Manual — not a light edit — repositioning it from a process-heavy handbook into a governance document for a lean, matrix-structured institution.</p>
+        <ul>
+          <li><b>Governance front matter:</b> document control, effective date, review cycle, and a clear policy hierarchy.</li>
+          <li><b>Matrix orientation:</b> a new "Manager Fundamentals" section — 1:1s, goal clarity, early feedback, structured hiring, inclusive leadership.</li>
+          <li><b>Performance &amp; bonus architecture:</b> a 13-week RACI-based quarterly operating cycle layered onto the annual PMS.</li>
+          <li><b>Formalization:</b> internships, remote work, and professional-examination sponsorship are now codified.</li>
+          <li><b>Employee vehicle policy:</b> Car Monetization Allowance provisions are retained within Part D (Compensation &amp; Benefits) of the redraft.</li>
+        </ul>
+        <div class="info-box">Management and the Committee have confirmed that <b>no compensation limits, benefit amounts, or monetary entitlements previously approved by the Board have been changed</b> — this is a restructuring and clarity exercise, not a compensation change.</div>
+        <div class="decision-box"><b>Decision required:</b> Approve the April 2026 HR Manual as the Master Consolidated Edition, superseding the October 2025 version.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA 5 -->
+  <section id="a5">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 5 · 1145–1155 · CEO</div>
+      <h2>Approval for Additional CAPEX — NCGCL Offices</h2>
+      <div class="sub">Two office-specific requests totalling <b>PKR 15,489,758</b> in additional CAPEX, against a Board-approved programme of PKR 102.50M.</div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="facts">
+          <div class="fact"><div class="fact-label">Karachi — Overrun Ratification</div><div class="fact-val">PKR 10,595,963</div></div>
+          <div class="fact"><div class="fact-label">Islamabad — New Allocation</div><div class="fact-val">PKR 4,893,795</div></div>
+          <div class="fact"><div class="fact-label">Combined Programme (Revised)</div><div class="fact-val">PKR 117.99M</div></div>
+          <div class="fact"><div class="fact-label">Overall Financial Completion</div><div class="fact-val">84.8%</div></div>
+        </div>
+        <p style="margin-top:10px;"><b>Karachi:</b> office is complete and operational. Final contracted cost of PKR 74,095,963 against an approved budget of PKR 63,500,000 — a 16.7% overrun, driven by sales-tax adjustments and fuel-crisis-linked increases in raw material costs. Remaining PKR 7.24M relates solely to certified milestones; no further escalation expected.</p>
+        <p><b>Islamabad:</b> civil/architectural works are contracted at PKR 28,076,596 and progressing to schedule. The operational-readiness requirement (furniture PKR 9.0M, air conditioning PKR 1.81M, meeting-room technology PKR 2.57M, UPS PKR 1.0M, ~10% contingency) totals PKR 15,817,199 — funded first from PKR 10,923,404 of civil-works savings within the approved budget, with only the PKR 4,893,795 balance sought as new money.</p>
+        <div class="decision-box"><b>Decision required:</b> (i) Ratify the PKR 10,595,963 Karachi cost overrun; (ii) approve the additional PKR 4,893,795 allocation for Islamabad operational readiness.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA 6 -->
+  <section id="a6">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 6 · 1155–1230 · Management</div>
+      <h2>Guarantee Management System (GMS) — Live Demonstration</h2>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>Management will walk the Board through the Guarantee Management System live. No working paper accompanies this item and no Board resolution is required — it is a capability demonstration ahead of the Jumma and lunch break.</p>
+        <div class="info-box">No decision required — informational demonstration only.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA 7 -->
+  <section id="a7">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 7 · 1400–1500 · Management</div>
+      <h2>NCGCL Impact Assessment Framework</h2>
+      <div class="sub">Informational session covering the Steward Redqueen (SRQ) economic-impact model, the Karandaaz Productive-Sustainable-Inclusion (PSI) Impact Score, and FY26 Logframe results (June 2025–May 2026).</div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="facts">
+          <div class="fact"><div class="fact-label">Revenue Generated</div><div class="fact-val">PKR 15.5B (309% of target)</div></div>
+          <div class="fact"><div class="fact-label">Jobs Supported</div><div class="fact-val">14,340 (143% of target)</div></div>
+          <div class="fact"><div class="fact-label">Guarantee Instruments Issued</div><div class="fact-val">11 (110% of target)</div></div>
+          <div class="fact"><div class="fact-label">Export-Oriented Allocation</div><div class="fact-val">48.42% (242% of target)</div></div>
+        </div>
+        <p style="margin-top:10px;">The SRQ model (developed under Karandaaz's Enterprise and Asset Growth Programme, DFID-funded) estimates transformational effects on investee revenue growth, GDP contribution, and employment. The PSI Impact Score, developed by British International Investment, benchmarks NCGCL's portfolio on Productive, Sustainable, and Inclusion dimensions.</p>
+        <div class="info-box">No vote required — the Board is asked to note the FY26 impact results.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA 8 -->
+  <section id="a8">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 8 · 1500–1505 · Company Secretary</div>
+      <h2>Noting of Resolutions Passed by Circulation</h2>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>Standing item — the Company Secretary will table any resolutions passed by circulation since the 10th Board meeting, for the Board's formal noting.</p>
+        <div class="info-box">No vote required — for noting only.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA 9 -->
+  <section id="a9">
+    <div class="section-head">
+      <div class="eyebrow">Agenda 9 · 1505–1510 · Any Other Item, With Permission of the Chair</div>
+      <h2>SME Export Structured Finance &amp; Guarantee Programme</h2>
+      <div class="sub">Raised under Any Other Item — this paper is not one of the nine numbered items on the printed notice, but is marked "For Decision" in the working paper itself and is included here for the Board's awareness ahead of the meeting.</div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p><b>Overview:</b> The Federal Budget FY2026-27 has allocated a <b>PKR 1 billion non-returnable grant</b> to NCGCL for the promotion of export-oriented SMEs. The proposed Export-Oriented SME Structuring &amp; Guarantee Programme deploys this as catalytic risk capital across nine chartered product windows (trade finance, productivity enhancement, working capital), delivered through Partner Financial Institutions and EXIM Bank in a bundled model.</p>
+        <div class="facts">
+          <div class="fact"><div class="fact-label">Grant (Risk Capital)</div><div class="fact-val">PKR 1B</div></div>
+          <div class="fact"><div class="fact-label">Guarantee Face (Planning Range)</div><div class="fact-val">PKR 2–4B</div></div>
+          <div class="fact"><div class="fact-label">PFI Lending Mobilised</div><div class="fact-val">PKR 5–15B</div></div>
+          <div class="fact"><div class="fact-label">Incremental Annual Exports</div><div class="fact-val">US$47.9–53.9M</div></div>
+        </div>
+        <p style="margin-top:8px;">The market case targets 1,471 addressable export SMEs across 43 HS chapters (TDAP exporter registers, FY2020-21 basis). The paper argues Pakistan's binding constraint is not loanable funds but a structuring/bankability gap at the "discovery margin" — new products, buyers, or markets — which existing concessional schemes (EFS, LTFF) do not reach. Deployment is proposed over a phased 24-month roadmap with a Phase 4 evidence gate before scale-up.</p>
+        <div class="decision-box"><b>Decision required (pending Chair's permission to table under AOB):</b> Approve the framework for deployment of the PKR 1B grant as catalytic risk capital under the Programme.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div><span class="brand">NCGCL</span> · Board Reference Dashboard · 11th Meeting of the Board of Directors</div>
+    <div>Prepared from Board working papers circulated ahead of 17 July 2026 — for Director use only</div>
+  </footer>
+
+</div>
+</body>
+</html>
