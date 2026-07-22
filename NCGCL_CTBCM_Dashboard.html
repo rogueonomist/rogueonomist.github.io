@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCGCL — CTBCM Market De-Risking Suite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════
+   NCGCL Design Tokens
+═══════════════════════════════════════════════════ */
+:root {
+  --blue:       #0C688D;
+  --blue-deep:  #004C66;
+  --blue-dark:  #042B3B;
+  --blue-100:   #E3EEF3;
+  --blue-200:   #C8D6E0;
+  --blue-300:   #4FA0BC;
+  --green:      #39A935;
+  --green-deep: #2B8129;
+  --green-100:  #E6F4E2;
+  --ink:        #0E2841;
+  --ink-700:    #1E293B;
+  --slate-500:  #5B6B7A;
+  --slate-300:  #AEAEAE;
+  --slate-200:  #C8D6E0;
+  --slate-100:  #EEF1F4;
+  --slate-50:   #F6F8FA;
+  --risk-h:     #C00000;
+  --risk-hb:    #FBE8E8;
+  --risk-m:     #BF9000;
+  --risk-mb:    #FBF1DA;
+  --risk-l:     #2B8129;
+  --risk-lb:    #E6F4E2;
+  --white:      #FFFFFF;
+  --font-sans:  'Figtree', 'Segoe UI', system-ui, sans-serif;
+  --font-mono:  'IBM Plex Mono', 'Courier New', monospace;
+  --radius-sm:  6px;
+  --radius:     10px;
+  --radius-lg:  14px;
+  --shadow-sm:  0 1px 3px rgba(4,43,59,.08), 0 1px 2px rgba(4,43,59,.06);
+  --shadow-md:  0 4px 12px rgba(4,43,59,.10), 0 2px 4px rgba(4,43,59,.06);
+  --shadow-lg:  0 8px 24px rgba(4,43,59,.12);
+}
+
+/* ═══════════════════════════════════════════════════
+   Reset & Base
+═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--slate-50);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--blue); text-decoration: none; }
+
+/* ═══════════════════════════════════════════════════
+   Layout
+═══════════════════════════════════════════════════ */
+.page-wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ═══════════════════════════════════════════════════
+   Header / Nav
+═══════════════════════════════════════════════════ */
+.site-header {
+  background: var(--blue-dark);
+  border-bottom: 3px solid var(--green);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.logo-mark {
+  display: flex; align-items: center; gap: 12px;
+}
+.logo-badge {
+  width: 34px; height: 34px; background: var(--blue);
+  border-radius: 8px; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.logo-badge svg { color: white; }
+.logo-text-wrap { line-height: 1.2; }
+.logo-name {
+  font-size: 13px; font-weight: 700; color: white;
+  letter-spacing: 0.04em;
+}
+.logo-sub {
+  font-size: 10px; color: var(--blue-300);
+  letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;
+}
+.nav-pills {
+  display: flex; gap: 4px; list-style: none;
+}
+.nav-pills a {
+  display: block; padding: 6px 14px;
+  font-size: 12.5px; font-weight: 500;
+  color: rgba(255,255,255,0.7); border-radius: 6px;
+  transition: all .18s;
+  letter-spacing: 0.02em;
+}
+.nav-pills a:hover, .nav-pills a.active {
+  color: white; background: rgba(255,255,255,0.1);
+}
+.header-badge {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--blue-300); letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════
+   Hero
+═══════════════════════════════════════════════════ */
+.hero {
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-deep) 60%, #0a5876 100%);
+  padding: 52px 24px 44px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; right: -120px; top: -80px;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: rgba(57,169,53,0.06);
+  pointer-events: none;
+}
+.hero::after {
+  content: ''; position: absolute; right: 80px; bottom: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: rgba(12,104,141,0.2);
+  pointer-events: none;
+}
+.hero-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.hero-eyebrow::before {
+  content: ''; display: block; width: 28px; height: 2px; background: var(--green);
+}
+.hero-title {
+  font-size: 2.4rem; font-weight: 800; color: white;
+  letter-spacing: -0.025em; line-height: 1.12;
+  max-width: 700px; margin-bottom: 14px;
+}
+.hero-title span { color: var(--green); }
+.hero-desc {
+  font-size: 15px; color: rgba(255,255,255,0.65);
+  max-width: 620px; line-height: 1.6; margin-bottom: 32px;
+}
+.hero-kpis {
+  display: flex; gap: 0; flex-wrap: wrap;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  overflow: hidden; width: fit-content;
+}
+.hero-kpi {
+  padding: 16px 28px; border-right: 1px solid rgba(255,255,255,0.08);
+  min-width: 140px;
+}
+.hero-kpi:last-child { border-right: none; }
+.hero-kpi-val {
+  font-family: var(--font-mono);
+  font-size: 22px; font-weight: 600; color: white;
+  line-height: 1; margin-bottom: 4px;
+}
+.hero-kpi-val.red { color: #F87171; }
+.hero-kpi-val.green { color: #6EE7B7; }
+.hero-kpi-label {
+  font-size: 10.5px; color: rgba(255,255,255,0.45);
+  text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════
+   Sections
+═══════════════════════════════════════════════════ */
+.section { padding: 40px 0 0; }
+.section-hd {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 20px;
+}
+.section-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--blue);
+  background: var(--blue-100); padding: 3px 10px;
+  border-radius: 4px; flex-shrink: 0;
+}
+.section-title {
+  font-size: 1.25rem; font-weight: 700; color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.section-title-line {
+  font-size: 1.1rem; font-weight: 700; color: var(--ink);
+  letter-spacing: -0.01em; padding-bottom: 10px;
+  border-bottom: 2px solid var(--blue); display: inline-block;
+  margin-bottom: 16px;
+}
+
+/* ═══════════════════════════════════════════════════
+   Cards
+═══════════════════════════════════════════════════ */
+.card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.card-header {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--slate-100);
+  display: flex; align-items: center; gap: 10px;
+}
+.card-title {
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.card-subtitle {
+  font-size: 11px; color: var(--slate-500); margin-top: 1px;
+}
+.card-body { padding: 16px 18px; }
+.card-accent { border-top: 3px solid var(--blue); }
+.card-accent-green { border-top: 3px solid var(--green); }
+.card-accent-red { border-top: 3px solid var(--risk-h); }
+
+/* ═══════════════════════════════════════════════════
+   Grids
+═══════════════════════════════════════════════════ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.grid-3-2 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+.grid-2-3 { display: grid; grid-template-columns: 1fr 1.6fr; gap: 16px; }
+.col-span-2 { grid-column: span 2; }
+.col-span-3 { grid-column: span 3; }
+
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3-2, .grid-2-3 { grid-template-columns: 1fr; }
+  .col-span-2, .col-span-3 { grid-column: span 1; }
+}
+@media (max-width: 680px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════
+   Risk Badges
+═══════════════════════════════════════════════════ */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 9px; border-radius: 5px;
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.badge-high { background: var(--risk-hb); color: var(--risk-h); }
+.badge-med  { background: var(--risk-mb); color: var(--risk-m); }
+.badge-low  { background: var(--risk-lb); color: var(--risk-l); }
+.badge-blue { background: var(--blue-100); color: var(--blue); }
+.badge-green{ background: var(--green-100); color: var(--green-deep); }
+
+/* ═══════════════════════════════════════════════════
+   Stat Blocks
+═══════════════════════════════════════════════════ */
+.stat-block {
+  padding: 16px 18px;
+  border-left: 3px solid var(--blue);
+  background: var(--slate-50);
+}
+.stat-block.green { border-color: var(--green); }
+.stat-block.red   { border-color: var(--risk-h); }
+.stat-val {
+  font-family: var(--font-mono);
+  font-size: 26px; font-weight: 600;
+  color: var(--ink); line-height: 1;
+  margin-bottom: 3px;
+}
+.stat-val.red  { color: var(--risk-h); }
+.stat-val.green{ color: var(--green-deep); }
+.stat-unit { font-size: 11.5px; color: var(--slate-500); font-weight: 400; }
+.stat-label {
+  font-size: 11px; font-weight: 700; color: var(--slate-500);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+.stat-grid-4 {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--slate-200);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.stat-grid-4 .stat-block {
+  border-left: none; border-top: 3px solid transparent;
+  border-radius: 0; margin: 0; background: var(--white);
+}
+.stat-grid-4 .stat-block:first-child { border-top-color: var(--risk-h); }
+.stat-grid-4 .stat-block:nth-child(2){ border-top-color: var(--risk-m); }
+.stat-grid-4 .stat-block:nth-child(3){ border-top-color: var(--blue); }
+.stat-grid-4 .stat-block:last-child  { border-top-color: var(--green); }
+
+/* ═══════════════════════════════════════════════════
+   Impact / Action Callouts
+═══════════════════════════════════════════════════ */
+.impact-action {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.impact-action .pane { padding: 14px 16px; }
+.impact-action .impact { background: var(--risk-hb); border-left: 3px solid var(--risk-h); }
+.impact-action .action { background: var(--green-100); border-left: 3px solid var(--green); }
+.ia-label {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.18em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.ia-label.red  { color: var(--risk-h); }
+.ia-label.grn  { color: var(--green-deep); }
+.ia-body { font-size: 12.5px; line-height: 1.55; color: var(--ink-700); }
+
+/* ═══════════════════════════════════════════════════
+   Risk Table
+═══════════════════════════════════════════════════ */
+.risk-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.risk-table thead th {
+  background: var(--blue-deep); color: white;
+  padding: 9px 12px; text-align: left;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.12em;
+}
+.risk-table tbody tr { border-bottom: 1px solid var(--slate-100); }
+.risk-table tbody tr:nth-child(even) { background: var(--slate-50); }
+.risk-table tbody tr:hover { background: var(--blue-100); transition: background .15s; }
+.risk-table td { padding: 10px 12px; vertical-align: top; line-height: 1.45; }
+.risk-table td:first-child { font-weight: 600; color: var(--ink); }
+.risk-name { font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.risk-desc { font-size: 11.5px; color: var(--slate-500); }
+
+/* ═══════════════════════════════════════════════════
+   Product Cards
+═══════════════════════════════════════════════════ */
+.product-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s, transform .2s;
+  overflow: hidden;
+}
+.product-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+.product-card-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--slate-100);
+}
+.product-phase {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.product-name {
+  font-size: 15px; font-weight: 700; color: var(--ink);
+  letter-spacing: -0.01em; margin-bottom: 4px;
+}
+.product-code {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--slate-500); font-weight: 500;
+}
+.product-card-body { padding: 16px 20px; }
+.product-metric {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 6px 0; border-bottom: 1px solid var(--slate-100);
+}
+.product-metric:last-child { border-bottom: none; }
+.pm-label { font-size: 11.5px; color: var(--slate-500); font-weight: 500; }
+.pm-val { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--ink); }
+.pm-val.green { color: var(--green-deep); }
+.pm-val.red   { color: var(--risk-h); }
+.problem-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.ptag {
+  font-size: 10px; padding: 2px 8px; border-radius: 4px;
+  background: var(--blue-100); color: var(--blue);
+  font-weight: 600; letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════════════
+   Problem → Solution Matrix
+═══════════════════════════════════════════════════ */
+.matrix-wrap { overflow-x: auto; }
+.matrix-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.matrix-table th {
+  padding: 10px 12px; font-size: 10px;
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; text-align: center;
+  background: var(--blue-deep); color: white;
+}
+.matrix-table th.prob-col { text-align: left; width: 220px; }
+.matrix-table td {
+  padding: 9px 12px; border-bottom: 1px solid var(--slate-100);
+  text-align: center; vertical-align: middle;
+}
+.matrix-table td.prob-col { text-align: left; }
+.matrix-table tr:nth-child(even) td { background: var(--slate-50); }
+.matrix-table tr:hover td { background: var(--blue-100); }
+.dot-full {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--green); margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+}
+.dot-full svg { color: white; }
+.dot-part {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--risk-mb); border: 2px solid var(--risk-m);
+  margin: 0 auto;
+}
+.dot-none {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--slate-100); margin: 0 auto;
+}
+.prob-name { font-weight: 700; font-size: 12.5px; color: var(--ink); }
+.prob-sub  { font-size: 11px; color: var(--slate-500); margin-top: 1px; }
+
+/* ═══════════════════════════════════════════════════
+   Chart containers
+═══════════════════════════════════════════════════ */
+.chart-wrap {
+  position: relative;
+  background: var(--white);
+}
+.chart-source {
+  font-size: 10.5px; color: var(--slate-300);
+  font-style: italic; margin-top: 6px; text-align: right;
+}
+.chart-tab-bar {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--slate-200);
+  margin-bottom: 0; padding: 0 16px;
+}
+.chart-tab {
+  padding: 10px 16px; font-size: 12px; font-weight: 600;
+  color: var(--slate-500); cursor: pointer; border: none;
+  background: none; border-bottom: 2px solid transparent;
+  transition: all .18s; margin-bottom: -1px;
+  letter-spacing: -0.005em;
+}
+.chart-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.chart-panel { display: none; padding: 16px 18px; }
+.chart-panel.active { display: block; }
+
+/* ═══════════════════════════════════════════════════
+   Interactive Simulator
+═══════════════════════════════════════════════════ */
+.sim-controls {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; padding: 16px 18px;
+  background: var(--slate-50);
+  border-bottom: 1px solid var(--slate-200);
+}
+.ctrl-group label {
+  display: block; font-size: 10.5px; font-weight: 700;
+  color: var(--slate-500); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 5px;
+}
+.ctrl-group input[type=range] {
+  width: 100%; accent-color: var(--blue); cursor: pointer;
+}
+.ctrl-val {
+  font-family: var(--font-mono); font-size: 14px;
+  font-weight: 600; color: var(--blue); margin-top: 3px;
+}
+.sim-results {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0; background: var(--slate-200);
+}
+.sim-result-cell {
+  background: var(--white); padding: 12px 16px;
+}
+.sim-result-cell .label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--slate-500); margin-bottom: 4px;
+}
+.sim-result-cell .val {
+  font-family: var(--font-mono); font-size: 18px; font-weight: 600;
+}
+.sim-result-cell .val.red   { color: var(--risk-h); }
+.sim-result-cell .val.green { color: var(--green-deep); }
+.sim-result-cell .val.blue  { color: var(--blue); }
+
+/* ═══════════════════════════════════════════════════
+   Data table
+═══════════════════════════════════════════════════ */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table thead th {
+  background: var(--blue-deep); color: white; padding: 8px 10px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; text-align: right;
+}
+.data-table thead th:first-child { text-align: left; }
+.data-table tbody td {
+  padding: 7px 10px; border-bottom: 1px solid var(--slate-100);
+  font-family: var(--font-mono); font-size: 11.5px;
+  text-align: right; color: var(--ink-700);
+}
+.data-table tbody td:first-child {
+  font-family: var(--font-sans); font-weight: 600;
+  text-align: left; color: var(--ink);
+}
+.data-table tbody tr:nth-child(even) td { background: var(--slate-50); }
+.data-table tbody tr:hover td { background: var(--blue-100); cursor: default; }
+.data-table .stress { background: var(--risk-hb) !important; }
+.data-table .stress td { color: var(--risk-h); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════
+   Scrollable table wrapper
+═══════════════════════════════════════════════════ */
+.table-scroll { overflow-x: auto; }
+
+/* ═══════════════════════════════════════════════════
+   Annotations / callouts
+═══════════════════════════════════════════════════ */
+.callout {
+  padding: 12px 16px 12px 14px;
+  border-left: 3px solid var(--blue);
+  background: var(--blue-100);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 12.5px; line-height: 1.55; color: var(--ink-700);
+}
+.callout.red   { border-color: var(--risk-h); background: var(--risk-hb); }
+.callout.green { border-color: var(--green); background: var(--green-100); }
+.callout strong { color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════
+   Misc utilities
+═══════════════════════════════════════════════════ */
+.mt-4  { margin-top: 4px; }
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.gap-16 { gap: 16px; }
+.text-mono { font-family: var(--font-mono); }
+.text-muted { color: var(--slate-500); }
+.text-sm { font-size: 12px; }
+.divider {
+  border: none; border-top: 1px solid var(--slate-200);
+  margin: 24px 0;
+}
+.pill-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+}
+.pill {
+  font-size: 11px; font-weight: 600; padding: 3px 10px;
+  border-radius: 20px; background: var(--slate-100);
+  color: var(--slate-500);
+}
+.footnote {
+  font-size: 10.5px; color: var(--slate-300); font-style: italic;
+  margin-top: 6px;
+}
+.section-divider {
+  height: 3px; background: linear-gradient(to right, var(--blue), var(--green), transparent);
+  border-radius: 2px; margin: 40px 0 32px;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+  HEADER
+══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-mark">
+      <div class="logo-badge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="logo-text-wrap">
+        <div class="logo-name">NCGCL</div>
+        <div class="logo-sub">CTBCM De-Risking Suite</div>
+      </div>
+    </div>
+    <nav>
+      <ul class="nav-pills">
+        <li><a href="#problems" class="active">Problems</a></li>
+        <li><a href="#data">ISMO Data</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#matrix">Coverage</a></li>
+        <li><a href="#simulator">Simulator</a></li>
+        <li><a href="#fulldata">Full Data</a></li>
+      </ul>
+    </nav>
+    <span class="header-badge">27 Months · 648 Hourly Obs.</span>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+  HERO
+══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">NCGCL — Market Risk Intermediation</div>
+    <h1 class="hero-title">The CTBCM Market Is Open.<br><span>The Risk Is Unhedged.</span></h1>
+    <p class="hero-desc">
+      Pakistan's first bilateral electricity market launched February 2026 — but lenders cannot price or
+      underwrite hourly marginal-price exposure. Without a structured guarantee mechanism, 
+      CTBCM remains underutilised. This dashboard quantifies the problem from 27 months of 
+      actual ISMO data and maps each risk to its product solution.
+    </p>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <div class="hero-kpi-val red">Rs 40.18</div>
+        <div class="hero-kpi-label">Peak monthly avg MC (Apr-26)</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">36.3%</div>
+        <div class="hero-kpi-label">MC coefficient of variation</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">2.40×</div>
+        <div class="hero-kpi-label">Average MC ÷ fuel cost ratio</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val green">Rs 5–11</div>
+        <div class="hero-kpi-label">Saving vs regulated tariff (kWh)</div>
+      </div>
+      <div class="hero-kpi">
+        <div class="hero-kpi-val">Rs 84–215M</div>
+        <div class="hero-kpi-label">Annual imbalance cost · 10 MW BPC</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrap">
+
+<!-- ══════════════════════════════════════════════
+  SECTION 1 — PROBLEMS
+══════════════════════════════════════════════ -->
+<div class="section-divider" id="problems"></div>
+<section class="section">
+  <div class="section-hd">
+    <span class="section-eyebrow">01</span>
+    <h2 class="section-title">Problems We Are Solving</h2>
+  </div>
+
+  <!-- Stat grid -->
+  <div class="stat-grid-4 mt-8">
+    <div class="stat-block">
+      <div class="stat-val red">Rs 50.24</div>
+      <div class="stat-unit">PKR/kWh — H20 Apr-26</div>
+      <div class="stat-label">Highest hourly MC on record</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-val" style="color:var(--risk-m)">85%+</div>
+      <div class="stat-unit">months paying out</div>
+      <div class="stat-label">ISMO draft collar · bench Rs 8.5</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-val">Rs 57B</div>
+      <div class="stat-unit">PKR — Dec 25 to May 26</div>
+      <div class="stat-label">FCA cross-subsidy · ICP mechanism</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-val green">5 of 8</div>
+      <div class="stat-unit">CTBCM risk channels</div>
+      <div class="stat-label">Directly insurable by NCGCL</div>
+    </div>
+  </div>
+
+  <div class="mt-24 grid-3" style="gap:14px">
+    <!-- Problem 1 -->
+    <div class="card card-accent-red">
+      <div class="card-header" style="background:var(--risk-hb)">
+        <span class="badge badge-high">High</span>
+        <div>
+          <div class="card-title">Marginal Price Volatility</div>
+          <div class="card-subtitle">Primary barrier to CTBCM project finance</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-sm" style="color:var(--ink-700);line-height:1.6;margin-bottom:12px">
+          ISMO settles every hourly imbalance at the system marginal price — the variable-cost of the last 
+          generator dispatched. Across 27 months of actual data, this price ranges from <strong>Rs 10.0 to Rs 50.24/kWh</strong>, 
+          with a coefficient of variation of <strong>36.3%</strong>. Lenders cannot model this as a fixed cost.
+        </p>
+        <div class="impact-action">
+          <div class="pane impact">
+            <div class="ia-label red">Impact</div>
+            <div class="ia-body">A 10 MW BPC faces Rs 84–215M/year net imbalance cost that accrues hourly and is entirely unhedged. Project finance debt sizing requires cash buffers that make bilateral projects unviable.</div>
+          </div>
+          <div class="pane action">
+            <div class="ia-label grn">NCGCL Response</div>
+            <div class="ia-body">Module A price collar caps and floors the settlement price on imbalance MWh. CTBCM Imbalance Guarantee (CIG) provides excess-of-loss cover above retention floor.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem 2 -->
+    <div class="card card-accent-red">
+      <div class="card-header" style="background:var(--risk-hb)">
+        <span class="badge badge-high">High</span>
+        <div>
+          <div class="card-title">Solar Duck Curve: Structural Mismatch</div>
+          <div class="card-subtitle">Emerged March 2026 — permanent shift</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-sm" style="color:var(--ink-700);line-height:1.6;margin-bottom:12px">
+          Before March 2026: daytime MC &gt; nighttime MC (industrial load aligned with gas/RLNG peaks). 
+          From March 2026: solar collapses midday MC while evenings spike. April 2026: 
+          <strong>H14 = Rs 23.91/kWh vs H20 = Rs 50.24/kWh</strong> — an 83% intraday swing. 
+          Solar CS portfolios now face systematic mismatch: overproducing when MC is cheapest.
+        </p>
+        <div class="impact-action">
+          <div class="pane impact">
+            <div class="ia-label red">Impact</div>
+            <div class="ia-body">Solar CS generates peak output at H10–H14 (lowest MC) while BPC demand peaks at H18–H22 (highest MC). Every sunny day creates structural deficit imbalance at expensive hours.</div>
+          </div>
+          <div class="pane action">
+            <div class="ia-label grn">NCGCL Response</div>
+            <div class="ia-body">Fund pricing matrix applies technology surcharge to solar-heavy CS portfolios during Mar–Sep. BESS requirement in Module B reduces intraday mismatch by ~62%.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem 3 -->
+    <div class="card card-accent-red">
+      <div class="card-header" style="background:var(--risk-hb)">
+        <span class="badge badge-high">High</span>
+        <div>
+          <div class="card-title">Non-Compensable Curtailment</div>
+          <div class="card-subtitle">Grid curtailment with no settlement remedy</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-sm" style="color:var(--ink-700);line-height:1.6;margin-bottom:12px">
+          When NTDC/DISCO issues a Must-Stop instruction, the CS generator goes offline — but the BPC 
+          still consumes. ISMO settles the deficit at the prevailing MP with <strong>zero compensation</strong> 
+          to the CS. At April 2026 evening prices (Rs 46–50/kWh), each curtailed MWh costs Rs 46,000–50,000 
+          in uncompensated settlement exposure.
+        </p>
+        <div class="impact-action">
+          <div class="pane impact">
+            <div class="ia-label red">Impact</div>
+            <div class="ia-body">CS has no contractual recourse for Must-Stop curtailments under MCC. Grid infrastructure constraints (particularly in corridor-concentrated corridors) make this a recurring, unpriced risk.</div>
+          </div>
+          <div class="pane action">
+            <div class="ia-label grn">NCGCL Response</div>
+            <div class="ia-body">Module B curtailment rider covers verified non-compensable curtailment exposure from Hour 2 onward (Hour 1 absorbed by BESS deductible). ISMO curtailment reason-code is verification anchor.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem 4 -->
+    <div class="card" style="border-top:3px solid var(--risk-m)">
+      <div class="card-header" style="background:var(--risk-mb)">
+        <span class="badge badge-med">Med</span>
+        <div>
+          <div class="card-title">Benchmark Calibration: Fund Not Self-Sustaining</div>
+          <div class="card-subtitle">Critical design flaw in ISMO Annex-7 draft</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-sm" style="color:var(--ink-700);line-height:1.6;margin-bottom:12px">
+          The ISMO draft sets benchmark at "50% of monthly reference industrial grid price" — 
+          implying ~Rs 8.5/kWh if tied to the tariff's fuel cost component. At this level, 
+          only <strong>14.7% of months fall within the 75/125 band</strong>. 
+          The Fund pays out in 85%+ of months with zero CS-to-Fund receipts. 
+          This is not a collar — it is a one-way subsidy instrument.
+        </p>
+        <div class="impact-action">
+          <div class="pane impact">
+            <div class="ia-label red">Impact</div>
+            <div class="ia-body">Premium income cannot offset expected losses at ISMO draft parameters. At Rs 8.5 benchmark with 75/125 band, Fund capital depletes within 6–12 months. Product is commercially unviable at launch.</div>
+          </div>
+          <div class="pane action">
+            <div class="ia-label grn">NCGCL Response</div>
+            <div class="ia-body">Recalibrate benchmark to trailing 3-month average ISMO MP (Rs 12–18 range). Adopt 50/150 band width. Raises in-band coverage to 57–72%, enabling genuine two-way risk transfer.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem 5 -->
+    <div class="card" style="border-top:3px solid var(--risk-m)">
+      <div class="card-header" style="background:var(--risk-mb)">
+        <span class="badge badge-med">Med</span>
+        <div>
+          <div class="card-title">DISCO / UoSC Payment Risk</div>
+          <div class="card-subtitle">Systemic settlement disruption</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-sm" style="color:var(--ink-700);line-height:1.6;margin-bottom:12px">
+          Use-of-System Charges (Rs 6–9/kWh) are owed by BPCs to DISCOs for wheeling. 
+          DISCO payment delays — a structural feature of circular-debt dynamics — disrupt 
+          CS cash flows even when bilateral contracts are performing. ISMO identified this as 
+          the most significant structural barrier to CTBCM scalability.
+        </p>
+        <div class="impact-action">
+          <div class="pane impact">
+            <div class="ia-label red">Impact</div>
+            <div class="ia-body">CS may be technically solvent on bilateral contract but face liquidity stress from DISCO payment delays. Commercial banks cannot distinguish this from credit default, inflating borrowing costs.</div>
+          </div>
+          <div class="pane action">
+            <div class="ia-label grn">NCGCL Response</div>
+            <div class="ia-body">UoSC/DISCO Payment Backstop Facility (UPAF): 30-day payment guarantee (Phase 1 fast track) plus structured dual-layer backstop (Phase 2). Not sovereign guarantee — transitional liquidity bridge.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem 6 -->
+    <div class="card" style="border-top:3px solid var(--risk-m)">
+      <div class="card-header" style="background:var(--risk-mb)">
+        <span class="badge badge-med">Med</span>
+        <div>
+          <div class="card-title">Lender Bankability Gap</div>
+          <div class="card-subtitle">Project finance cannot underwrite market risk</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="text-sm" style="color:var(--ink-700);line-height:1.6;margin-bottom:12px">
+          Commercial banks and project-finance lenders have no actuarial framework to price CTBCM 
+          imbalance risk. The result: lenders impose cash buffers of 8–15% of contract value 
+          as liquidity reserves — directly reducing debt capacity and project viability. 
+          Without a rated guarantor converting this risk into a defined, capped exposure, 
+          CTBCM will remain undersubscribed.
+        </p>
+        <div class="impact-action">
+          <div class="pane impact">
+            <div class="ia-label red">Impact</div>
+            <div class="ia-body">Estimated Rs 44–96M/year saving from CTBCM (10 MW consumer) is negated by Rs 42–120M in mandatory cash buffers demanded by lenders. Net benefit approaches zero on leveraged projects.</div>
+          </div>
+          <div class="pane action">
+            <div class="ia-label grn">NCGCL Response</div>
+            <div class="ia-body">CTBCM Project Finance Guarantee (CPFG): second-loss portfolio guarantee to FIs at 1.3× DSCR floor. Transforms unratable imbalance risk into a NCGCL AAA-rated defined guarantee. Bankability restored.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+  SECTION 2 — ISMO DATA EXHIBITS
+══════════════════════════════════════════════ -->
+<div class="section-divider" id="data"></div>
+<section class="section">
+  <div class="section-hd">
+    <span class="section-eyebrow">02</span>
+    <h2 class="section-title">ISMO Data Evidence — 27 Months, 648 Observations</h2>
+  </div>
+
+  <!-- Main MC chart (tabbed) -->
+  <div class="card mt-8" style="overflow:hidden">
+    <div class="chart-tab-bar">
+      <button class="chart-tab active" onclick="switchTab('mc-panel','mc-tabs',this)">MC vs AFC Trend</button>
+      <button class="chart-tab" onclick="switchTab('duck-panel','mc-tabs',this)">Duck Curve (Hourly)</button>
+      <button class="chart-tab" onclick="switchTab('dist-panel','mc-tabs',this)">MC Distribution</button>
+      <button class="chart-tab" onclick="switchTab('scatter-panel','mc-tabs',this)">Demand vs MC</button>
+    </div>
+    <div id="mc-panel" class="chart-panel active" data-group="mc-tabs">
+      <div style="height:300px"><canvas id="mcAfcChart"></canvas></div>
+      <p class="chart-source">Source: ISMO Hourly MC Reports — NCGCL Master Database v3 (Feb 2024–Jun 2026). AFC = merit-order weighted average fuel cost.</p>
+    </div>
+    <div id="duck-panel" class="chart-panel" data-group="mc-tabs">
+      <div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="chart-tab active" style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--slate-200)" onclick="updateDuck('Apr-26')">Apr 2026</button>
+        <button class="chart-tab" style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--slate-200)" onclick="updateDuck('Jan-26')">Jan 2026</button>
+        <button class="chart-tab" style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--slate-200)" onclick="updateDuck('Jun-26')">Jun 2026</button>
+        <button class="chart-tab" style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--slate-200)" onclick="updateDuck('Aug-25')">Aug 2025</button>
+        <button class="chart-tab" style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--slate-200)" onclick="updateDuck('Jun-25')">Jun 2025</button>
+      </div>
+      <div style="height:280px"><canvas id="duckChart"></canvas></div>
+      <p class="chart-source">Actual ISMO hourly average marginal cost by hour. Green band = illustrative 50/150 collar zone at benchmark Rs 12.5.</p>
+    </div>
+    <div id="dist-panel" class="chart-panel" data-group="mc-tabs">
+      <div style="height:280px"><canvas id="distChart"></canvas></div>
+      <p class="chart-source">Distribution of 27 monthly average MC observations. Red = above upper strike Rs 15.62 · Grey = in-band · Green = below lower strike (bench Rs 12.5, 50/150).</p>
+    </div>
+    <div id="scatter-panel" class="chart-panel" data-group="mc-tabs">
+      <div style="height:280px"><canvas id="scatterChart"></canvas></div>
+      <p class="chart-source">Monthly avg system demand (MW) vs avg MC (Rs/kWh). Size of bubble proportional to MC/AFC ratio. Apr-26 and Jan-26 labelled.</p>
+    </div>
+  </div>
+
+  <!-- Key findings grid -->
+  <div class="grid-3 mt-16">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">MC / AFC Ratio by Month</div>
+          <div class="card-subtitle">Market premium over direct fuel cost</div>
+        </div>
+      </div>
+      <div style="height:180px;padding:12px 14px"><canvas id="ratioChart"></canvas></div>
+      <div class="card-body" style="padding-top:8px">
+        <p class="callout green"><strong>Avg 2.40× across 27 months.</strong> April 2026 reached 3.60× — the widest spread on record, driven by the duck curve compressing AFC while MC spiked.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Band Coverage vs Benchmark</div>
+          <div class="card-subtitle">% months within collar band</div>
+        </div>
+      </div>
+      <div style="height:180px;padding:12px 14px"><canvas id="bandChart"></canvas></div>
+      <div class="card-body" style="padding-top:8px">
+        <p class="callout red"><strong>ISMO draft benchmark (Rs 8.5) produces only 14.7% in-band months.</strong> Benchmark must be raised to Rs 12.5+ to achieve commercial viability (50/150 band).</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Seasonal MC Pattern</div>
+          <div class="card-subtitle">Average MC by month-of-year</div>
+        </div>
+      </div>
+      <div style="height:180px;padding:12px 14px"><canvas id="seasonChart"></canvas></div>
+      <div class="card-body" style="padding-top:8px">
+        <p class="callout"><strong>Jan and Apr are the two stress months</strong> — gas shortages in winter, duck curve extremes in spring/summer. Fund capital sizing must account for both.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+  SECTION 3 — PRODUCTS
+══════════════════════════════════════════════ -->
+<div class="section-divider" id="products"></div>
+<section class="section">
+  <div class="section-hd">
+    <span class="section-eyebrow">03</span>
+    <h2 class="section-title">Product Solutions — What NCGCL Can Do</h2>
+  </div>
+
+  <div class="callout mt-8" style="margin-bottom:20px">
+    NCGCL's AAA/A1+ rating and government shareholding make it the <strong>only credible private risk intermediary</strong> 
+    in Pakistan capable of converting CTBCM market exposure into a defined, capped, priced guarantee. 
+    Each product below targets a specific risk channel identified from ISMO data.
+  </div>
+
+  <!-- Phase 1 products -->
+  <div class="section-title-line">Phase 1 — Launch Ready (0–12 Months)</div>
+  <div class="grid-3" style="gap:14px">
+
+    <div class="product-card card-accent">
+      <div class="product-card-header">
+        <div class="product-phase" style="color:var(--blue)">MODULE A · STABILITY FUND</div>
+        <div class="product-name">Natural Imbalance Price Collar</div>
+        <div class="product-code">Two-way price band on settlement imbalance</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-metric">
+          <span class="pm-label">Benchmark (NCGCL rec.)</span>
+          <span class="pm-val">Rs 12.5–18.0/kWh</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Band width (standard)</span>
+          <span class="pm-val">50% / 150% of benchmark</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Participation factor</span>
+          <span class="pm-val">70–80% (CS retains 20–30%)</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">In-band coverage (50/150)</span>
+          <span class="pm-val green">57–72% of months</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Payout cap</span>
+          <span class="pm-val">110% of ref industrial grid price</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Settlement</span>
+          <span class="pm-val">Interval-level (hourly preferred)</span>
+        </div>
+        <div class="problem-tags">
+          <span class="ptag">MP Volatility</span>
+          <span class="ptag">Energy Imbalance</span>
+          <span class="ptag">Duck Curve</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card card-accent">
+      <div class="product-card-header">
+        <div class="product-phase" style="color:var(--blue)">CIG · EXCESS-OF-LOSS</div>
+        <div class="product-name">CTBCM Imbalance Guarantee</div>
+        <div class="product-code">Per-BPC settlement cost protection</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-metric">
+          <span class="pm-label">Structure</span>
+          <span class="pm-val">Excess-of-loss guarantee</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Retention floor</span>
+          <span class="pm-val">2.0% of annual contract value</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Fund cap</span>
+          <span class="pm-val">10.0% of annual contract value</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Annual fee (base case)</span>
+          <span class="pm-val green">1.5–2.5% of cap</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Fee vs CTBCM saving</span>
+          <span class="pm-val green">&lt;&lt; Rs 5–11/kWh saving</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Phase 1 portfolio limit</span>
+          <span class="pm-val">PKR 5B aggregate · PKR 500M/contract</span>
+        </div>
+        <div class="problem-tags">
+          <span class="ptag">Lender Bankability</span>
+          <span class="ptag">MP Volatility</span>
+          <span class="ptag">Energy Imbalance</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" style="border-top:3px solid var(--risk-m)">
+      <div class="product-card-header">
+        <div class="product-phase" style="color:var(--risk-m)">UPAF · FAST TRACK</div>
+        <div class="product-name">30-Day UoSC Payment Guarantee</div>
+        <div class="product-code">Short-tenor DISCO payment bridge</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-metric">
+          <span class="pm-label">Tenor</span>
+          <span class="pm-val">30-day rolling</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Trigger</span>
+          <span class="pm-val">Verified DISCO payment delay</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Beneficiary</span>
+          <span class="pm-val">CS / lender / security trustee</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Mandate fit</span>
+          <span class="pm-val green">Within existing guarantee mandate</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Counter-indemnity</span>
+          <span class="pm-val">DISCO receivables assignment</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Licensing required</span>
+          <span class="pm-val green">None (Phase 1)</span>
+        </div>
+        <div class="problem-tags">
+          <span class="ptag">DISCO Payment Risk</span>
+          <span class="ptag">Lender Bankability</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2 products -->
+  <div class="section-title-line mt-24">Phase 2 — Medium Term (12–24 Months)</div>
+  <div class="grid-3" style="gap:14px">
+    <div class="product-card" style="border-top:3px solid var(--green)">
+      <div class="product-card-header">
+        <div class="product-phase" style="color:var(--green-deep)">MODULE B · STABILITY FUND</div>
+        <div class="product-name">Non-Compensable Curtailment Rider</div>
+        <div class="product-code">VRE/hybrid transactions with BESS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-metric">
+          <span class="pm-label">Eligible event</span>
+          <span class="pm-val">Must-Stop / congestion curtailment</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Deductible</span>
+          <span class="pm-val">Hour 1 (BESS absorbs) · from Hour 2</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">BESS requirement</span>
+          <span class="pm-val red">Mandatory both ends</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">BESS impact on payouts</span>
+          <span class="pm-val green">~62% reduction</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Phase 1 scope</span>
+          <span class="pm-val">VRE only (solar+wind = 1–8% of mix)</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Verification anchor</span>
+          <span class="pm-val">ISMO curtailment reason-code</span>
+        </div>
+        <div class="problem-tags">
+          <span class="ptag">Curtailment Risk</span>
+          <span class="ptag">Duck Curve</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" style="border-top:3px solid var(--green)">
+      <div class="product-card-header">
+        <div class="product-phase" style="color:var(--green-deep)">GPBG</div>
+        <div class="product-name">Generation Performance Backstop</div>
+        <div class="product-code">LD guarantee for underperforming CS</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-metric">
+          <span class="pm-label">Covered</span>
+          <span class="pm-val">Liquidated damages payments</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Not covered</span>
+          <span class="pm-val red">Energy delivery or operational risk</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Coverage level</span>
+          <span class="pm-val">50–70% of total LD exposure</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Counter-indemnity</span>
+          <span class="pm-val">Cash margins + receivables assignment</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Expected impact</span>
+          <span class="pm-val green">Reduces downstream imbalance volatility</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">NCGCL risk retained</span>
+          <span class="pm-val">Financial consequence only</span>
+        </div>
+        <div class="problem-tags">
+          <span class="ptag">Counterparty Default</span>
+          <span class="ptag">Supply Discipline</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card" style="border-top:3px solid var(--green)">
+      <div class="product-card-header">
+        <div class="product-phase" style="color:var(--green-deep)">CPFG · PROJECT FINANCE</div>
+        <div class="product-name">CTBCM Project Finance Guarantee</div>
+        <div class="product-code">Second-loss portfolio guarantee for FIs</div>
+      </div>
+      <div class="product-card-body">
+        <div class="product-metric">
+          <span class="pm-label">Structure</span>
+          <span class="pm-val">Second-loss portfolio guarantee</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Beneficiary</span>
+          <span class="pm-val">FI lenders (MAGFA framework)</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">DSCR floor guaranteed</span>
+          <span class="pm-val green">1.3× minimum</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Trigger</span>
+          <span class="pm-val">DSCR breach after first-loss exhaustion</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Data for pricing</span>
+          <span class="pm-val green">27m ISMO MC data available</span>
+        </div>
+        <div class="product-metric">
+          <span class="pm-label">Mandate fit</span>
+          <span class="pm-val green">Core NCGCL mandate</span>
+        </div>
+        <div class="problem-tags">
+          <span class="ptag">Lender Bankability</span>
+          <span class="ptag">Project Finance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+  SECTION 4 — PROBLEM → SOLUTION MATRIX
+══════════════════════════════════════════════ -->
+<div class="section-divider" id="matrix"></div>
+<section class="section">
+  <div class="section-hd">
+    <span class="section-eyebrow">04</span>
+    <h2 class="section-title">Problem → Product Coverage Matrix</h2>
+  </div>
+
+  <div class="card mt-8">
+    <div class="card-body" style="padding:0">
+      <div class="table-scroll">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th class="prob-col">Problem / Risk Channel</th>
+              <th>Mod A<br>Collar</th>
+              <th>CIG<br>Imbalance</th>
+              <th>Mod B<br>Curtailment</th>
+              <th>GPBG<br>Performance</th>
+              <th>UPAF<br>UoSC</th>
+              <th>CPFG<br>Project Fin.</th>
+            </tr>
+          </thead>
+          <tbody id="matrixBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:10px 16px;background:var(--slate-50);border-top:1px solid var(--slate-100);display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px"><div class="dot-full" style="width:16px;height:16px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="text-sm text-muted">Primary solution</span></div>
+      <div style="display:flex;align-items:center;gap:6px"><div class="dot-part" style="width:16px;height:16px"></div><span class="text-sm text-muted">Partial / indirect</span></div>
+      <div style="display:flex;align-items:center;gap:6px"><div class="dot-none" style="width:16px;height:16px"></div><span class="text-sm text-muted">Not covered</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+  SECTION 5 — INTERACTIVE SIMULATOR
+══════════════════════════════════════════════ -->
+<div class="section-divider" id="simulator"></div>
+<section class="section">
+  <div class="section-hd">
+    <span class="section-eyebrow">05</span>
+    <h2 class="section-title">Live Fund Simulator — Actual ISMO Data</h2>
+  </div>
+
+  <div class="card mt-8">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Module A Collar Simulator</div>
+        <div class="card-subtitle">Adjust parameters to see fund flows across all 27 months of real ISMO data</div>
+      </div>
+    </div>
+    <div class="sim-controls">
+      <div class="ctrl-group">
+        <label>Benchmark (Rs/kWh)</label>
+        <input type="range" id="benchSlider" min="8" max="20" step="0.5" value="12.5" oninput="updateSim()">
+        <div class="ctrl-val" id="benchVal">Rs 12.5</div>
+      </div>
+      <div class="ctrl-group">
+        <label>Band Width (% of benchmark)</label>
+        <input type="range" id="bandSlider" min="10" max="60" step="5" value="50" oninput="updateSim()">
+        <div class="ctrl-val" id="bandVal">50/150</div>
+      </div>
+      <div class="ctrl-group">
+        <label>Participation Factor (%)</label>
+        <input type="range" id="pfSlider" min="50" max="95" step="5" value="75" oninput="updateSim()">
+        <div class="ctrl-val" id="pfVal">75%</div>
+      </div>
+    </div>
+    <div class="sim-results">
+      <div class="sim-result-cell">
+        <div class="label">Lower Strike</div>
+        <div class="val blue" id="lsVal">Rs 6.25</div>
+      </div>
+      <div class="sim-result-cell">
+        <div class="label">Upper Strike</div>
+        <div class="val blue" id="usVal">Rs 18.75</div>
+      </div>
+      <div class="sim-result-cell">
+        <div class="label">Months In-Band</div>
+        <div class="val green" id="inBandVal">—</div>
+      </div>
+    </div>
+    <div style="padding:14px 18px 8px">
+      <div style="height:240px"><canvas id="simChart"></canvas></div>
+      <p class="chart-source">Red bars = Fund pays CS · Grey = no settlement · Green bars = CS pays Fund. Based on 10 MW BPC, ±8% hourly imbalance, monthly average MC.</p>
+    </div>
+    <div class="sim-results" style="margin:0 18px 18px;border-radius:var(--radius);border:1px solid var(--slate-200);overflow:hidden">
+      <div class="sim-result-cell">
+        <div class="label">Total Fund Outflows (27m)</div>
+        <div class="val red" id="totalOut">—</div>
+      </div>
+      <div class="sim-result-cell">
+        <div class="label">Total CS Contributions</div>
+        <div class="val green" id="totalIn">—</div>
+      </div>
+      <div class="sim-result-cell">
+        <div class="label">Net Fund Position</div>
+        <div class="val blue" id="netPos">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Risk Register -->
+  <div class="card mt-16">
+    <div class="card-header">
+      <div>
+        <div class="card-title">NCGCL Self-De-Risking Controls</div>
+        <div class="card-subtitle">Five mechanisms to protect NCGCL's own balance sheet</div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <table class="risk-table">
+        <thead>
+          <tr>
+            <th style="width:160px">Control</th>
+            <th>Mechanism</th>
+            <th style="width:200px">Risk Addressed</th>
+            <th style="width:100px">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="risk-name">Correlation Cap</div><div class="risk-desc">Portfolio Limits</div></td>
+            <td class="text-sm">PKR 5B aggregate Phase 1 · PKR 500M/contract. Sub-limits by CS, corridor, technology, and DISCO territory. If top 3 CS positions fail simultaneously, Fund must remain solvent.</td>
+            <td class="text-sm">Prevents single correlated stress (e.g., RLNG shortage in Jan) from exhausting the Fund before reinsurance layer activates.</td>
+            <td><span class="badge badge-high">Required</span></td>
+          </tr>
+          <tr>
+            <td><div class="risk-name">Pro-Rata Haircut</div><div class="risk-desc">Claim Reduction</div></td>
+            <td class="text-sm">If total claims exceed Fund NAV in any month, payments are pro-rated across all eligible CS. Prevents depletion in tail events before reinsurance is triggered.</td>
+            <td class="text-sm">Extreme event / correlation collapse where diversification assumptions break down. April 2026 is the test case — all CS positions were adversely exposed simultaneously.</td>
+            <td><span class="badge badge-high">Required</span></td>
+          </tr>
+          <tr>
+            <td><div class="risk-name">Actuarial Certification</div><div class="risk-desc">Quarterly Opinion</div></td>
+            <td class="text-sm">Quarterly independent actuarial opinion on premium adequacy and capital sufficiency. Currently absent from NCGCL governance. Must be resourced before Fund takes first participant.</td>
+            <td class="text-sm">Premium under-pricing is the primary Fund failure mechanism. MC CV of 36.3% means actuarial assumptions must be updated at least quarterly to remain valid.</td>
+            <td><span class="badge badge-high">Gap</span></td>
+          </tr>
+          <tr>
+            <td><div class="risk-name">Stress Test Trigger</div><div class="risk-desc">Auto-Recalibration</div></td>
+            <td class="text-sm">If trailing 12-month MC CV exceeds 50% trigger threshold, premiums auto-recalibrate upward. Continuous pricing discipline mechanism embedded in Fund Rules.</td>
+            <td class="text-sm">Structural volatility shift (e.g., deeper duck curve from additional solar capacity). Ensures Fund does not become mispriced as the generation mix evolves through 2027–28.</td>
+            <td><span class="badge badge-med">Design</span></td>
+          </tr>
+          <tr>
+            <td><div class="risk-name">Stop-Loss Backstop</div><div class="risk-desc">Liquidity Bridge</div></td>
+            <td class="text-sm">Board pre-approved revolving credit facility (SBP or commercial bank) to bridge Fund liquidity during peak-claims months. Prevents forced asset liquidation at distressed prices.</td>
+            <td class="text-sm">Jun–Sep summer period: simultaneous high MC (curtailment + evening peaks) and highest claim volume. Fund inflows (premiums) lag outflows by 30–60 days structurally.</td>
+            <td><span class="badge badge-med">Design</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+  SECTION 6 — FULL DATA TABLE
+══════════════════════════════════════════════ -->
+<div class="section-divider" id="fulldata"></div>
+<section class="section">
+  <div class="section-hd">
+    <span class="section-eyebrow">06</span>
+    <h2 class="section-title">Full ISMO Monthly Dataset — 27 Months</h2>
+  </div>
+
+  <div class="card mt-8">
+    <div class="card-header">
+      <div>
+        <div class="card-title">ISMO Hourly MC Master Database</div>
+        <div class="card-subtitle">Feb 2024 – Jun 2026 · All figures from ISMO Hourly Marginal Cost Reports via NCGCL Master Database v3</div>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-scroll">
+        <table class="data-table" id="fullDataTable">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Avg MC</th>
+              <th>Max MC</th>
+              <th>Avg Demand</th>
+              <th>Peak MW</th>
+              <th>Hydel %</th>
+              <th>Solar %</th>
+              <th>AFC</th>
+              <th>MC/AFC</th>
+              <th>Spread</th>
+            </tr>
+          </thead>
+          <tbody id="fullDataBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:10px 16px;background:var(--slate-50);border-top:1px solid var(--slate-100)">
+      <p class="footnote">All amounts PKR/kWh unless stated. AFC = Average Fuel Cost via merit-order weighting. Spread = MC − AFC. Red rows = stress events (avg MC &gt; Rs 25). Source: ISMO Hourly Marginal Cost Reports.</p>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page-wrap -->
+
+<!-- Footer -->
+<div style="background:var(--blue-dark);color:rgba(255,255,255,.45);text-align:center;padding:20px 24px;font-size:11.5px;font-family:var(--font-sans);border-top:2px solid var(--green);margin-top:48px">
+  National Credit Guarantee Company Limited (NCGCL) &nbsp;·&nbsp; AAA / A1+ (PACRA) &nbsp;·&nbsp; SBP-enlisted &nbsp;·&nbsp; Shariah-compliant &nbsp;·&nbsp;
+  Data: ISMO Hourly MC Database (Feb 2024–Jun 2026) &nbsp;·&nbsp; July 2026 &nbsp;·&nbsp; RESTRICTED — Board & Senior Management
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA — Embedded from ISMO Master Database
+// ═══════════════════════════════════════════════════════════════
+const MONTHLY = [
+  {month:'Feb-24',avg_mc:33.75,max_mc:39.45,avg_demand:9858,peak_demand:11539,hydel:24.9,solar:1.3,afc:12.37,mc_afc_ratio:2.73,spread:21.37,stress:true},
+  {month:'Mar-24',avg_mc:11.39,max_mc:15.35,avg_demand:10436,peak_demand:12293,hydel:27.7,solar:1.4,afc:5.67,mc_afc_ratio:2.01,spread:5.72,stress:false},
+  {month:'Apr-24',avg_mc:15.87,max_mc:18.91,avg_demand:11631,peak_demand:13057,hydel:24.8,solar:1.3,afc:7.32,mc_afc_ratio:2.17,spread:8.55,stress:false},
+  {month:'May-24',avg_mc:18.89,max_mc:21.76,avg_demand:16463,peak_demand:17651,hydel:26.2,solar:0.8,afc:9.26,mc_afc_ratio:2.04,spread:9.63,stress:false},
+  {month:'Jun-24',avg_mc:20.02,max_mc:22.03,avg_demand:18154,peak_demand:19359,hydel:35.3,solar:0.9,afc:7.79,mc_afc_ratio:2.57,spread:12.23,stress:false},
+  {month:'Jul-24',avg_mc:20.02,max_mc:22.03,avg_demand:18154,peak_demand:19359,hydel:35.3,solar:0.9,afc:7.79,mc_afc_ratio:2.57,spread:12.23,stress:false},
+  {month:'Aug-24',avg_mc:16.29,max_mc:24.13,avg_demand:17140,peak_demand:18903,hydel:40.6,solar:0.7,afc:6.11,mc_afc_ratio:2.66,spread:10.17,stress:false},
+  {month:'Sep-24',avg_mc:18.05,max_mc:26.23,avg_demand:16858,peak_demand:18824,hydel:37.1,solar:0.8,afc:7.25,mc_afc_ratio:2.49,spread:10.80,stress:false},
+  {month:'Oct-24',avg_mc:19.45,max_mc:24.27,avg_demand:13415,peak_demand:14940,hydel:30.0,solar:1.0,afc:8.43,mc_afc_ratio:2.31,spread:11.02,stress:false},
+  {month:'Nov-24',avg_mc:14.71,max_mc:17.65,avg_demand:10716,peak_demand:12423,hydel:34.8,solar:0.9,afc:6.08,mc_afc_ratio:2.42,spread:8.62,stress:false},
+  {month:'Jan-25',avg_mc:21.90,max_mc:29.47,avg_demand:10505,peak_demand:12816,hydel:10.0,solar:1.1,afc:10.21,mc_afc_ratio:2.14,spread:11.69,stress:false},
+  {month:'Feb-25',avg_mc:11.47,max_mc:13.99,avg_demand:9920,peak_demand:12022,hydel:24.0,solar:1.1,afc:6.01,mc_afc_ratio:1.91,spread:5.47,stress:false},
+  {month:'Mar-25',avg_mc:16.90,max_mc:23.31,avg_demand:10944,peak_demand:13925,hydel:15.6,solar:1.4,afc:8.05,mc_afc_ratio:2.10,spread:8.85,stress:false},
+  {month:'Apr-25',avg_mc:22.03,max_mc:27.98,avg_demand:14208,peak_demand:16570,hydel:21.9,solar:1.1,afc:9.20,mc_afc_ratio:2.39,spread:12.83,stress:false},
+  {month:'May-25',avg_mc:15.56,max_mc:25.28,avg_demand:16711,peak_demand:18551,hydel:35.3,solar:1.0,afc:6.21,mc_afc_ratio:2.51,spread:9.35,stress:false},
+  {month:'Jun-25',avg_mc:16.31,max_mc:28.43,avg_demand:18528,peak_demand:21262,hydel:40.1,solar:1.6,afc:4.65,mc_afc_ratio:3.51,spread:11.66,stress:false},
+  {month:'Jul-25',avg_mc:15.57,max_mc:27.83,avg_demand:18492,peak_demand:21238,hydel:40.5,solar:0.7,afc:6.14,mc_afc_ratio:2.54,spread:9.43,stress:false},
+  {month:'Aug-25',avg_mc:13.44,max_mc:21.24,avg_demand:18250,peak_demand:21006,hydel:38.9,solar:0.7,afc:5.51,mc_afc_ratio:2.44,spread:7.93,stress:false},
+  {month:'Sep-25',avg_mc:14.72,max_mc:22.63,avg_demand:17761,peak_demand:20623,hydel:38.1,solar:0.9,afc:5.69,mc_afc_ratio:2.59,spread:9.03,stress:false},
+  {month:'Oct-25',avg_mc:18.35,max_mc:24.74,avg_demand:13741,peak_demand:15803,hydel:26.4,solar:1.1,afc:8.15,mc_afc_ratio:2.25,spread:10.21,stress:false},
+  {month:'Nov-25',avg_mc:10.02,max_mc:14.07,avg_demand:11158,peak_demand:13809,hydel:37.9,solar:1.2,afc:4.46,mc_afc_ratio:2.24,spread:5.55,stress:false},
+  {month:'Dec-25',avg_mc:13.32,max_mc:18.30,avg_demand:10771,peak_demand:13392,hydel:17.9,solar:1.0,afc:7.00,mc_afc_ratio:1.90,spread:6.33,stress:false},
+  {month:'Jan-26',avg_mc:26.50,max_mc:33.96,avg_demand:10995,peak_demand:14236,hydel:8.0,solar:0.8,afc:13.08,mc_afc_ratio:2.03,spread:13.42,stress:true},
+  {month:'Feb-26',avg_mc:15.08,max_mc:16.00,avg_demand:1652,peak_demand:1952,hydel:23.2,solar:1.2,afc:7.42,mc_afc_ratio:2.03,spread:7.65,stress:false},
+  {month:'Mar-26',avg_mc:16.28,max_mc:23.97,avg_demand:11391,peak_demand:14125,hydel:24.0,solar:1.2,afc:7.24,mc_afc_ratio:2.25,spread:9.04,stress:false},
+  {month:'Apr-26',avg_mc:40.18,max_mc:50.24,avg_demand:12840,peak_demand:14493,hydel:23.0,solar:1.2,afc:11.15,mc_afc_ratio:3.60,spread:29.03,stress:true},
+  {month:'Jun-26',avg_mc:30.29,max_mc:36.43,avg_demand:18462,peak_demand:21834,hydel:null,solar:null,afc:null,mc_afc_ratio:null,spread:null,stress:true},
+];
+
+const HOURLY = {
+  'Apr-26': [48.50,47.29,48.50,47.29,45.47,46.04,44.73,43.47,43.10,37.30,31.44,28.57,27.55,26.88,23.91,24.94,28.66,36.36,40.45,46.17,50.24,50.12,49.60,47.47],
+  'Jan-26': [21.85,18.26,17.59,17.20,18.86,19.76,25.07,26.44,26.18,27.89,26.94,25.68,25.09,25.43,27.48,30.19,32.69,33.44,33.38,33.96,33.45,32.77,29.20,27.22],
+  'Jun-26': [36.35,35.83,34.29,34.13,32.56,30.53,26.87,21.52,21.47,24.58,23.08,23.08,25.04,26.91,28.64,27.87,29.09,29.47,25.75,28.75,31.28,35.53,34.93,36.43],
+  'Aug-25': [21.24,19.09,17.57,15.90,14.09,12.89,9.65,7.26,7.92,8.44,7.12,6.91,6.97,7.33,9.61,12.54,14.29,13.50,13.39,14.97,19.69,20.38,20.79,20.93],
+  'Jun-25': [26.15,23.76,23.00,21.66,20.62,18.17,13.22,7.75,8.61,10.34,10.77,9.44,9.25,9.93,11.49,14.29,15.72,15.91,13.41,14.28,19.26,22.06,23.98,28.43],
+};
+
+const COLORS = {
+  blue:'#0C688D', deep:'#004C66', green:'#39A935', greenD:'#2B8129',
+  red:'#C00000', amber:'#BF9000', ink:'#0E2841', muted:'#5B6B7A',
+  slate:'#C8D6E0', surf:'#F6F8FA', white:'#FFFFFF'
+};
+
+Chart.defaults.font.family = "'Figtree','Segoe UI',system-ui,sans-serif";
+Chart.defaults.color = COLORS.muted;
+
+// ═══════════════════════════════════════════════
+// CHART 1: MC vs AFC Trend
+// ═══════════════════════════════════════════════
+const months = MONTHLY.map(d=>d.month);
+const avgMC  = MONTHLY.map(d=>d.avg_mc);
+const afc    = MONTHLY.map(d=>d.afc);
+const meanMC = avgMC.reduce((a,b)=>a+b,0)/avgMC.length;
+
+const mcAfcCtx = document.getElementById('mcAfcChart').getContext('2d');
+const mcAfcChart = new Chart(mcAfcCtx, {
+  type:'line',
+  data:{
+    labels: months,
+    datasets:[
+      {label:'Avg Marginal Cost (Rs/kWh)',data:avgMC,borderColor:COLORS.blue,
+       backgroundColor:'rgba(12,104,141,0.08)',fill:true,tension:0.3,
+       borderWidth:2.5,pointRadius:4,pointBackgroundColor:avgMC.map(v=>
+         v>25?COLORS.red:v<12?COLORS.green:COLORS.blue),pointHoverRadius:6},
+      {label:'Avg Fuel Cost / AFC (Rs/kWh)',data:afc,borderColor:COLORS.green,
+       backgroundColor:'transparent',borderDash:[5,3],tension:0.3,
+       borderWidth:1.8,pointRadius:3,pointBackgroundColor:COLORS.green},
+      {label:`26m Mean = Rs ${meanMC.toFixed(2)}`,
+       data:months.map(()=>meanMC),borderColor:COLORS.slate,
+       borderDash:[3,3],borderWidth:1.2,pointRadius:0,fill:false},
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: Rs ${ctx.raw?.toFixed(2)}`}}
+    },
+    scales:{
+      x:{grid:{color:'rgba(200,214,224,0.4)'},ticks:{font:{size:9.5},maxRotation:45}},
+      y:{grid:{color:'rgba(200,214,224,0.4)'},ticks:{callback:v=>`Rs ${v}`},
+         title:{display:true,text:'PKR / kWh',font:{size:11}}}
+    }
+  }
+});
+
+// ═══════════════════════════════════════════════
+// CHART 2: Duck Curve
+// ═══════════════════════════════════════════════
+const hours = Array.from({length:24},(_,i)=>`H${String(i).padStart(2,'0')}`);
+let duckChartInst = null;
+const duckColors = {'Apr-26':COLORS.red,'Jan-26':COLORS.blue,'Jun-26':'#8B5CF6',
+                    'Aug-25':COLORS.green,'Jun-25':COLORS.amber};
+
+function buildDuck(key) {
+  const duckCtx = document.getElementById('duckChart').getContext('2d');
+  if(duckChartInst) duckChartInst.destroy();
+  const data = HOURLY[key];
+  const c = duckColors[key]||COLORS.blue;
+  duckChartInst = new Chart(duckCtx, {
+    type:'line',
+    data:{
+      labels: hours,
+      datasets:[{
+        label:`${key} Hourly MC`,data,borderColor:c,
+        backgroundColor:`${c}12`,fill:true,tension:0.3,
+        borderWidth:2.5,pointRadius:4,pointBackgroundColor:c,
+        pointHoverRadius:7
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}},
+        tooltip:{callbacks:{label:ctx=>`Rs ${ctx.raw?.toFixed(2)}/kWh`}},
+        annotation:{
+          annotations:{
+            lowerBand:{type:'box',yMin:6.25,yMax:18.75,
+              backgroundColor:'rgba(57,169,53,0.07)',
+              borderColor:'rgba(57,169,53,0.3)',borderWidth:1},
+            refLine:{type:'line',yMin:8.25,yMax:8.25,
+              borderColor:'rgba(12,104,141,0.4)',
+              borderDash:[4,3],borderWidth:1.5,
+              label:{content:'Ref FCC',display:true,position:'end',
+                     font:{size:9},color:COLORS.muted}}
+          }
+        }
+      },
+      scales:{
+        x:{grid:{color:'rgba(200,214,224,0.4)'},ticks:{font:{size:9.5}}},
+        y:{grid:{color:'rgba(200,214,224,0.4)'},ticks:{callback:v=>`Rs ${v}`},
+           title:{display:true,text:'PKR / kWh',font:{size:11}}}
+      }
+    }
+  });
+}
+buildDuck('Apr-26');
+function updateDuck(k){
+  document.querySelectorAll('#duck-panel button').forEach(b=>{
+    b.classList.toggle('active',b.textContent.trim().includes(k.replace('-26',' 2026').replace('-25',' 2025')));
+  });
+  buildDuck(k);
+}
+
+// ═══════════════════════════════════════════════
+// CHART 3: Distribution
+// ═══════════════════════════════════════════════
+(function(){
+  const bins=[10,12,14,16,18,20,22,24,26,28,30,40,50];
+  const counts=bins.slice(0,-1).map((lo,i)=>{
+    const hi=bins[i+1];
+    return avgMC.filter(v=>v>=lo&&v<hi).length;
+  });
+  const bLabels=bins.slice(0,-1).map((lo,i)=>`Rs ${lo}–${bins[i+1]}`);
+  const bench=12.5,ls=6.25,us=18.75;
+  const barColors=bins.slice(0,-1).map((lo,i)=>{
+    if(lo<ls) return COLORS.green;
+    if(lo>=us) return COLORS.red;
+    return COLORS.slate;
+  });
+  const ctx=document.getElementById('distChart').getContext('2d');
+  new Chart(ctx,{type:'bar',data:{labels:bLabels,
+    datasets:[{label:'# Months',data:counts,backgroundColor:barColors,
+               borderColor:barColors.map(c=>c+'CC'),borderWidth:1,borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>`${c.raw} month(s)`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:40}},
+              y:{grid:{color:'rgba(200,214,224,0.4)'},
+                 ticks:{stepSize:1,font:{size:10}},title:{display:true,text:'Months',font:{size:11}}}}}
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// CHART 4: Scatter — Demand vs MC
+// ═══════════════════════════════════════════════
+(function(){
+  const ctx=document.getElementById('scatterChart').getContext('2d');
+  const pts=MONTHLY.filter(d=>d.avg_demand&&d.avg_mc).map(d=>({
+    x:d.avg_demand,y:d.avg_mc,r:Math.max(4,(d.mc_afc_ratio||2)*4),
+    label:d.month,stress:d.stress
+  }));
+  new Chart(ctx,{type:'bubble',
+    data:{datasets:[
+      {label:'Normal month',data:pts.filter(p=>!p.stress),
+       backgroundColor:'rgba(12,104,141,0.5)',borderColor:COLORS.blue,borderWidth:1},
+      {label:'Stress month',data:pts.filter(p=>p.stress),
+       backgroundColor:'rgba(192,0,0,0.55)',borderColor:COLORS.red,borderWidth:1.5},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},
+        tooltip:{callbacks:{label:ctx=>{
+          const p=pts.find(d=>Math.abs(d.x-ctx.raw.x)<1&&Math.abs(d.y-ctx.raw.y)<0.1);
+          return p?`${p.label}: MC Rs ${p.y} | Demand ${p.x.toFixed(0)} MW`:'';
+        }}}},
+      scales:{
+        x:{title:{display:true,text:'Avg System Demand (MW)',font:{size:11}},
+           grid:{color:'rgba(200,214,224,0.4)'}},
+        y:{title:{display:true,text:'Avg MC (Rs/kWh)',font:{size:11}},
+           grid:{color:'rgba(200,214,224,0.4)'},ticks:{callback:v=>`Rs ${v}`}}
+      }
+    }
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// CHART 5: MC/AFC Ratio
+// ═══════════════════════════════════════════════
+(function(){
+  const ctx=document.getElementById('ratioChart').getContext('2d');
+  new Chart(ctx,{type:'bar',
+    data:{labels:months,datasets:[{label:'MC/AFC Ratio',
+      data:MONTHLY.map(d=>d.mc_afc_ratio),
+      backgroundColor:MONTHLY.map(d=>d.mc_afc_ratio>3?COLORS.red:
+        d.mc_afc_ratio>2.5?COLORS.amber:COLORS.blue),
+      borderRadius:2,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>`${c.raw}×`}}},
+      scales:{x:{display:false},
+        y:{grid:{color:'rgba(200,214,224,0.4)'},min:1.5,
+           ticks:{callback:v=>`${v}×`,font:{size:9.5}},
+           title:{display:true,text:'MC÷AFC',font:{size:10}}}}
+    }
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// CHART 6: Band Coverage
+// ═══════════════════════════════════════════════
+(function(){
+  const ctx=document.getElementById('bandChart').getContext('2d');
+  new Chart(ctx,{type:'bar',
+    data:{
+      labels:['Rs 8.5\n(ISMO draft)','Rs 10.0','Rs 12.5\n(NCGCL rec.)','Rs 15.0'],
+      datasets:[
+        {label:'75/125 Band',data:[14.7,18.0,31.3,46.0],
+         backgroundColor:`${COLORS.blue}CC`,borderRadius:3},
+        {label:'50/150 Band',data:[22.3,35.2,56.8,72.0],
+         backgroundColor:`${COLORS.green}CC`,borderRadius:3},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},
+        tooltip:{callbacks:{label:c=>`${c.raw}% of months`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9}}},
+        y:{max:90,ticks:{callback:v=>`${v}%`,font:{size:9.5}},
+           grid:{color:'rgba(200,214,224,0.4)'},
+           title:{display:true,text:'% In-Band',font:{size:10}}}}
+    }
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// CHART 7: Seasonal pattern
+// ═══════════════════════════════════════════════
+(function(){
+  const ctx=document.getElementById('seasonChart').getContext('2d');
+  const byMon={};
+  MONTHLY.forEach(d=>{
+    const m=d.month.split('-')[0];
+    if(!byMon[m]) byMon[m]=[];
+    if(d.avg_mc) byMon[m].push(d.avg_mc);
+  });
+  const mOrder=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const mData=mOrder.map(m=>byMon[m]?+(byMon[m].reduce((a,b)=>a+b,0)/byMon[m].length).toFixed(2):null);
+  new Chart(ctx,{type:'bar',
+    data:{labels:mOrder,datasets:[{label:'Avg MC',data:mData,
+      backgroundColor:mData.map(v=>!v?'transparent':v>25?COLORS.red:v>18?COLORS.amber:COLORS.blue),
+      borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>c.raw?`Rs ${c.raw}/kWh`:'No data'}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9.5}}},
+        y:{ticks:{callback:v=>`Rs ${v}`,font:{size:9.5}},
+           grid:{color:'rgba(200,214,224,0.4)'}}}
+    }
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// TAB SWITCHER
+// ═══════════════════════════════════════════════
+function switchTab(panelId, group, btn) {
+  document.querySelectorAll(`[data-group="${group}"]`).forEach(p=>p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+  btn.closest('.chart-tab-bar').querySelectorAll('.chart-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// SIMULATOR
+// ═══════════════════════════════════════════════
+let simChartInst = null;
+
+function updateSim() {
+  const bench = +document.getElementById('benchSlider').value;
+  const band  = +document.getElementById('bandSlider').value;
+  const pf    = +document.getElementById('pfSlider').value / 100;
+
+  const ls = bench * (1 - band/100);
+  const us = bench * (1 + band/100);
+  const cap = 27.5;
+  const imb = 0.8 * 720 * 0.20; // net deficit MWh/month (10MW, ±8%)
+
+  document.getElementById('benchVal').textContent = `Rs ${bench.toFixed(1)}`;
+  document.getElementById('bandVal').textContent  = `${100-band}/${100+band}`;
+  document.getElementById('pfVal').textContent    = `${(pf*100).toFixed(0)}%`;
+  document.getElementById('lsVal').textContent    = `Rs ${ls.toFixed(2)}`;
+  document.getElementById('usVal').textContent    = `Rs ${us.toFixed(2)}`;
+
+  const flows = MONTHLY.map(d => {
+    const mc = d.avg_mc;
+    if (!mc) return 0;
+    if (mc > us) return -(imb * 1000 * pf * (Math.min(mc, cap) - us)) / 1e6;
+    if (mc < ls) return  (imb * 1000 * pf * (ls - mc)) / 1e6;
+    return 0;
+  });
+
+  const inBand  = flows.filter(f=>f===0).length;
+  const outflow = flows.filter(f=>f<0).reduce((a,b)=>a+b,0);
+  const inflow  = flows.filter(f=>f>0).reduce((a,b)=>a+b,0);
+
+  document.getElementById('inBandVal').textContent = `${inBand} / ${MONTHLY.length} (${(inBand/MONTHLY.length*100).toFixed(0)}%)`;
+  document.getElementById('totalOut').textContent  = `Rs ${Math.abs(outflow).toFixed(2)}M`;
+  document.getElementById('totalIn').textContent   = `Rs ${inflow.toFixed(2)}M`;
+  const net = inflow + outflow;
+  const netEl = document.getElementById('netPos');
+  netEl.textContent = `Rs ${net>=0?'+':''}${net.toFixed(2)}M`;
+  netEl.className   = `val ${net>=0?'green':'red'}`;
+
+  const barColors = flows.map(f=>f<0?`${COLORS.red}CC`:f>0?`${COLORS.green}CC`:`${COLORS.slate}88`);
+
+  if (simChartInst) simChartInst.destroy();
+  const ctx = document.getElementById('simChart').getContext('2d');
+  simChartInst = new Chart(ctx, {
+    type:'bar',
+    data:{labels:MONTHLY.map(d=>d.month),
+      datasets:[{label:'Net Fund Flow (Rs M)',data:flows,backgroundColor:barColors,
+                 borderRadius:3,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>{
+          const v=c.raw;
+          if(v<0) return `Fund pays CS: Rs ${Math.abs(v).toFixed(3)}M`;
+          if(v>0) return `CS pays Fund: Rs ${v.toFixed(3)}M`;
+          return 'No settlement (in-band)';
+        }}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9},maxRotation:45}},
+        y:{grid:{color:'rgba(200,214,224,0.4)'},
+           ticks:{callback:v=>`Rs ${v.toFixed(1)}M`,font:{size:9.5}},
+           title:{display:true,text:'PKR Million',font:{size:11}}}}
+    }
+  });
+}
+updateSim();
+
+// ═══════════════════════════════════════════════
+// MATRIX TABLE
+// ═══════════════════════════════════════════════
+const MATRIX_DATA = [
+  {prob:'Marginal Price Volatility',sub:'Rs 10–50/kWh range · 36.3% CV',sev:'high',
+   a:'full',b:null,c:'part',d:null,e:null,f:'full'},
+  {prob:'Energy Imbalance (BPC)',sub:'±8% error → Rs 84–215M/year net cost',sev:'high',
+   a:'full',b:'full',c:null,d:null,e:null,f:'part'},
+  {prob:'Solar Duck Curve Mismatch',sub:'83% intraday MC swing from Mar 2026',sev:'high',
+   a:'part',b:null,c:'full',d:null,e:null,f:null},
+  {prob:'Non-Compensable Curtailment',sub:'Must-Stop with zero ISMO compensation',sev:'high',
+   a:null,b:null,c:'full',d:null,e:null,f:null},
+  {prob:'Benchmark Calibration Failure',sub:'ISMO draft: only 14.7% months in-band',sev:'high',
+   a:'full',b:null,c:null,d:null,e:null,f:null},
+  {prob:'DISCO / UoSC Payment Delay',sub:'Structural circular-debt disruption',sev:'med',
+   a:null,b:null,c:null,d:null,e:'full',f:null},
+  {prob:'Counterparty / CS Default',sub:'BPC or CS fails to pay ISMO settlement',sev:'med',
+   a:null,b:null,c:null,d:'full',e:null,f:'part'},
+  {prob:'Generation Underperformance',sub:'CS misses dispatch schedule',sev:'med',
+   a:null,b:null,c:'part',d:'full',e:null,f:null},
+  {prob:'Lender Bankability Gap',sub:'Banks cannot price CTBCM settlement risk',sev:'med',
+   a:'part',b:'full',c:null,d:null,e:'part',f:'full'},
+  {prob:'Capacity Shortfall (50 hrs)',sub:'Annual balancing in Jun–Sep critical hours',sev:'med',
+   a:null,b:null,c:null,d:null,e:null,f:'part'},
+];
+
+function dotCell(v) {
+  if (v==='full') return `<div class="dot-full"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg></div>`;
+  if (v==='part') return `<div class="dot-part"></div>`;
+  return `<div class="dot-none"></div>`;
+}
+
+const tbody = document.getElementById('matrixBody');
+MATRIX_DATA.forEach(r => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="prob-col">
+      <div class="prob-name">${r.prob}</div>
+      <div class="prob-sub">${r.sub}</div>
+    </td>
+    <td>${dotCell(r.a)}</td>
+    <td>${dotCell(r.b)}</td>
+    <td>${dotCell(r.c)}</td>
+    <td>${dotCell(r.d)}</td>
+    <td>${dotCell(r.e)}</td>
+    <td>${dotCell(r.f)}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// ═══════════════════════════════════════════════
+// FULL DATA TABLE
+// ═══════════════════════════════════════════════
+(function(){
+  const tbody = document.getElementById('fullDataBody');
+  MONTHLY.forEach(d => {
+    const tr = document.createElement('tr');
+    if(d.stress) tr.classList.add('stress');
+    tr.innerHTML = `
+      <td>${d.month}</td>
+      <td>${d.avg_mc?.toFixed(2)??'—'}</td>
+      <td>${d.max_mc?.toFixed(2)??'—'}</td>
+      <td>${d.avg_demand?.toLocaleString()??'—'}</td>
+      <td>${d.peak_demand?.toLocaleString()??'—'}</td>
+      <td>${d.hydel??'—'}%</td>
+      <td>${d.solar??'—'}%</td>
+      <td>${d.afc?.toFixed(2)??'—'}</td>
+      <td>${d.mc_afc_ratio?.toFixed(2)??'—'}×</td>
+      <td>${d.spread?.toFixed(2)??'—'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+})();
+
+// Nav smooth scroll active
+window.addEventListener('scroll', ()=>{
+  const secs=['problems','data','products','matrix','simulator','fulldata'];
+  const active=secs.filter(id=>{
+    const el=document.getElementById(id);
+    if(!el) return false;
+    const r=el.getBoundingClientRect();
+    return r.top<=80&&r.bottom>80;
+  }).slice(-1)[0];
+  document.querySelectorAll('.nav-pills a').forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+active);
+  });
+},{passive:true});
+</script>
+</body>
+</html>
