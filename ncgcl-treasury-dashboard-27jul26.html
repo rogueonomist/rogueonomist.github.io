@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCGCL Treasury Decision Framework — 27 July 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap");
+
+:root{
+  --blue:#0C688D; --green:#39A935;
+  --p900:#042B3B; --p800:#004C66; --p700:#035076; --p600:#0C688D;
+  --p200:#A7C7D6; --p100:#E3EEF3; --p50:#F0F6FA;
+  --g800:#1F6A1D; --g700:#2B8129; --g100:#E6F4E2;
+  --ink:#061626; --ink8:#0E2841; --ink7:#1E293B;
+  --s500:#5B6B7A; --s400:#7F8F99; --s300:#AEBECC; --s200:#C8D6E0;
+  --s150:#E2E8F0; --s100:#EEF1F4; --s50:#F6F8FA;
+  --red:#C00000; --amber:#BF9000; --low:#2B8129;
+  --font:"Figtree",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --r-sm:5px; --r-md:8px; --r-lg:12px;
+  --sh-sm:0 1px 3px rgba(6,22,38,.08),0 1px 2px rgba(6,22,38,.04);
+  --sh-md:0 4px 12px rgba(6,22,38,.08),0 2px 4px rgba(6,22,38,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--s50);color:var(--ink7);font-family:var(--font);font-size:13.5px;line-height:1.55;}
+.wrap{max-width:1200px;margin:0 auto;padding:28px 32px 64px;}
+.mono{font-family:var(--mono);}
+
+/* HEADER */
+.hdr{display:flex;align-items:center;gap:20px;padding-bottom:20px;margin-bottom:28px;border-bottom:2px solid var(--blue);}
+.hdr-mark{width:44px;height:44px;background:var(--p900);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--mono);font-weight:700;font-size:13px;flex:none;}
+.hdr-titles{flex:1;}
+.eyebrow{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--blue);margin-bottom:4px;}
+.hdr h1{font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin:0;}
+.hdr-sub{font-size:12px;color:var(--s400);margin-top:3px;}
+.hdr-badge{background:var(--p900);color:#fff;font-family:var(--mono);font-size:12px;font-weight:600;padding:8px 14px;border-radius:var(--r-sm);text-align:center;line-height:1.6;flex:none;}
+.hdr-badge span{display:block;font-family:var(--font);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--p200);margin-bottom:2px;}
+.alert-banner{background:#FDF4F4;border:1px solid #F5C6C6;border-left:4px solid var(--red);border-radius:var(--r-md);padding:12px 16px;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+.alert-banner .ab-icon{font-size:18px;flex:none;}
+.alert-banner .ab-text{font-size:13px;color:var(--ink7);}
+.alert-banner strong{color:var(--red);}
+
+/* SECTION */
+.sec{margin:36px 0 16px;}
+.sec-hd{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--s150);}
+.sec-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--blue);background:var(--p100);padding:2px 7px;border-radius:3px;}
+.sec-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--s400);}
+.sec-big{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+
+/* KPI STRIP */
+.kpi-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;margin-bottom:20px;}
+.kpi{background:#fff;border:1px solid var(--s150);border-radius:var(--r-md);box-shadow:var(--sh-sm);padding:14px 14px 12px;}
+.kpi .rule{width:24px;height:3px;background:var(--blue);border-radius:2px;margin-bottom:8px;}
+.kpi .rule.g{background:var(--green);}
+.kpi .rule.r{background:var(--red);}
+.kpi .rule.a{background:var(--amber);}
+.kpi .val{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--ink);line-height:1.1;letter-spacing:-.01em;}
+.kpi .val.pos{color:var(--g700);}
+.kpi .val.neg{color:var(--red);}
+.kpi .val.warn{color:var(--amber);}
+.kpi .lab{font-size:10.5px;font-weight:600;color:var(--ink7);margin-top:7px;text-transform:uppercase;letter-spacing:.03em;}
+.kpi .cap{font-size:10.5px;color:var(--s400);margin-top:2px;}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--s150);border-radius:var(--r-md);box-shadow:var(--sh-sm);padding:18px;}
+.card.pt-blue{border-top:3px solid var(--blue);}
+.card.pt-green{border-top:3px solid var(--green);}
+.card.pt-red{border-top:3px solid var(--red);}
+.card.pt-amber{border-top:3px solid var(--amber);}
+.card-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.card-sub{font-size:11px;color:var(--s400);margin-bottom:14px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.g14{display:grid;grid-template-columns:1fr 3fr;gap:16px;}
+.g41{display:grid;grid-template-columns:3fr 1fr;gap:16px;}
+
+/* TABLE */
+.tw{overflow-x:auto;border:1px solid var(--s150);border-radius:var(--r-md);background:#fff;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+thead th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--s400);padding:10px 12px;background:var(--s100);border-bottom:1px solid var(--s150);white-space:nowrap;}
+tbody td{padding:9px 12px;border-top:1px solid var(--s100);color:var(--ink7);vertical-align:middle;}
+tbody tr:hover td{background:var(--s50);}
+td.r,th.r{text-align:right;font-family:var(--mono);}
+td.c,th.c{text-align:center;}
+tr.total td{font-weight:700;background:var(--p100);border-top:1.5px solid var(--s200);}
+tr.borrow td{color:var(--red);font-style:italic;}
+tr.net-row td{font-weight:700;background:var(--g100);border-top:1.5px solid var(--s200);}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:3px;white-space:nowrap;}
+.badge.pass{background:var(--g100);color:var(--g800);}
+.badge.fail{background:#FBE8E8;color:var(--red);}
+.badge.warn{background:#FBF1DA;color:#8A6800;}
+.badge.na{background:var(--s100);color:var(--s500);border:1px solid var(--s150);}
+.badge.gap{background:#FDF4F4;color:var(--red);border:1px solid #F5C6C6;}
+.badge.flag{background:#FBF1DA;color:#8A6800;border:1px solid #E8D8A0;}
+.badge.info{background:var(--p100);color:var(--p700);}
+.badge .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex:none;}
+
+/* CALLOUT */
+.callout{border-radius:var(--r-md);padding:14px 16px;border-left:4px solid var(--s300);background:var(--s100);margin-bottom:12px;}
+.callout.high{border-left-color:var(--red);background:#FDF4F4;}
+.callout.med{border-left-color:var(--amber);background:#FEFAF0;}
+.callout.blue{border-left-color:var(--blue);background:var(--p100);}
+.callout.low{border-left-color:var(--green);background:var(--g100);}
+.callout .ct{font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:6px;}
+.callout p{font-size:12.5px;color:var(--ink7);line-height:1.55;margin-top:4px;}
+.callout p+p{margin-top:6px;}
+
+/* CHART */
+.ch-wrap{position:relative;height:220px;}
+.ch-wrap.tall{height:260px;}
+
+/* ENSEMBLE LAYERS */
+.layer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.layer{background:var(--s50);border:1px solid var(--s150);border-radius:var(--r-md);padding:14px;position:relative;}
+.layer.distorted{border-color:#F5C6C6;background:#FDF4F4;}
+.layer.stale{border-color:#E8D8A0;background:#FEFAF0;}
+.layer-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--s400);margin-bottom:8px;}
+.layer-val{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--ink);line-height:1;}
+.layer-sub{font-size:10.5px;color:var(--s500);margin-top:6px;}
+.layer-flag{position:absolute;top:10px;right:10px;}
+
+/* SIGNAL TIER TABLE */
+.tier-row{display:grid;grid-template-columns:120px 1fr 1fr 80px;gap:8px;padding:10px 12px;border-bottom:1px solid var(--s100);align-items:center;font-size:12.5px;}
+.tier-row.hd{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--s400);background:var(--s100);border-radius:var(--r-sm) var(--r-sm) 0 0;}
+
+/* PROJECTION TABLE */
+.proj-table{display:grid;grid-template-columns:100px repeat(4,1fr);gap:1px;background:var(--s150);border-radius:var(--r-md);overflow:hidden;}
+.proj-cell{background:#fff;padding:10px 12px;font-size:12.5px;}
+.proj-cell.hd{background:var(--s100);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--s400);}
+.proj-cell.scenario{background:var(--p50);font-weight:600;font-size:12px;}
+.proj-val{font-family:var(--mono);font-weight:600;color:var(--ink);}
+.proj-val.up{color:var(--red);}
+.proj-val.dn{color:var(--g700);}
+
+/* DECISION CARD */
+.decision{background:#fff;border:2px solid var(--blue);border-radius:var(--r-lg);padding:20px;margin-bottom:16px;}
+.decision.urgent{border-color:var(--red);}
+.decision.moderate{border-color:var(--amber);}
+.d-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.d-deadline{font-family:var(--mono);font-size:10.5px;font-weight:700;color:#fff;background:var(--red);padding:3px 9px;border-radius:3px;}
+.d-deadline.days{background:var(--amber);color:#4A3600;}
+.d-deadline.passed{background:var(--s300);color:var(--s500);}
+.d-title{font-size:15px;font-weight:700;color:var(--ink);}
+.d-amount{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--blue);margin-left:auto;}
+.d-body{font-size:12.5px;color:var(--ink7);line-height:1.6;}
+.d-req{background:var(--p900);color:#fff;border-radius:var(--r-sm);padding:10px 14px;margin-top:12px;font-size:12.5px;}
+.d-req strong{color:var(--p200);}
+
+/* QA */
+.qa-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--s100);font-size:12.5px;}
+.qa-num{font-family:var(--mono);font-weight:700;color:var(--blue);min-width:28px;}
+.qa-body{flex:1;color:var(--ink7);line-height:1.5;}
+.qa-status{font-size:10.5px;font-weight:600;color:var(--s400);white-space:nowrap;}
+
+/* OPEN ITEMS */
+.oi-item{display:flex;gap:10px;padding:9px 12px;background:#fff;border:1px solid var(--s150);border-radius:var(--r-sm);margin-bottom:6px;font-size:12.5px;}
+.oi-n{font-family:var(--mono);font-weight:700;color:var(--blue);min-width:26px;}
+.oi-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--s400);min-width:80px;}
+.oi-text{flex:1;color:var(--ink7);}
+.oi-pri{font-size:10px;padding:1px 6px;border-radius:2px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.oi-pri.hi{background:#FBE8E8;color:var(--red);}
+.oi-pri.med{background:#FBF1DA;color:#8A6800;}
+.oi-pri.lo{background:var(--g100);color:var(--g800);}
+
+.note{font-size:11.5px;color:var(--s400);margin-top:8px;line-height:1.5;}
+.spacer{margin-top:16px;}
+.mt8{margin-top:8px;}
+.mt4{margin-top:4px;}
+hr.divider{border:none;border-top:1px solid var(--s150);margin:20px 0;}
+
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(4,1fr);}
+  .g2,.g3,.g14,.g41{grid-template-columns:1fr;}
+  .layer-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:540px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .wrap{padding:16px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-mark">NC<br>GCL</div>
+  <div class="hdr-titles">
+    <div class="eyebrow">National Credit Guarantee Company Limited</div>
+    <h1>Treasury Decision Framework</h1>
+    <div class="hdr-sub">General Liquidity Reserves Portfolio · Week ending 27 July 2026 · CEO Review & Investment Committee</div>
+  </div>
+  <div class="hdr-badge"><span>Portfolio Rating</span>AAA / A1+</div>
+</div>
+
+<!-- MPC ALERT BANNER -->
+<div class="alert-banner">
+  <div class="ab-icon">⚡</div>
+  <div class="ab-text"><strong>MPC LIVE — Decision Pending:</strong> SBP Monetary Policy Committee meeting today (27 Jul). Market consensus: <strong>HOLD at 11.5%</strong> (97% of survey participants). This dashboard is pre-announcement. Ensemble model and trading decisions must be recalibrated post-MPC statement. Governor press conference scheduled for today.</div>
+</div>
+
+<!-- ============================================================
+     SECTION 1: MARKET SNAPSHOT
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 1</span>
+    <span class="sec-title">Market Snapshot · Capture</span>
+    <span class="sec-big">Policy, Inflation &amp; External Markets</span>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="rule"></div><div class="val mono">11.50%</div><div class="lab">Policy Rate</div><div class="cap">SBP · hold since Apr-26</div></div>
+    <div class="kpi"><div class="rule a"></div><div class="val mono warn">11.1%</div><div class="lab">CPI YoY</div><div class="cap">June 2026 · PBS</div></div>
+    <div class="kpi"><div class="rule"></div><div class="val mono">11.61%</div><div class="lab">3M KIBOR</div><div class="cap">Offer · ledger ref D6</div></div>
+    <div class="kpi"><div class="rule"></div><div class="val mono">11.44%</div><div class="lab">3M PKRV</div><div class="cap">24 Jul · SBP MUFAP</div></div>
+    <div class="kpi"><div class="rule"></div><div class="val mono">11.99%</div><div class="lab">12M T-Bill</div><div class="cap">Cut-off · 22 Jul auction</div></div>
+    <div class="kpi"><div class="rule r"></div><div class="val mono neg">$97.04</div><div class="lab">Brent Crude</div><div class="cap">24 Jul · +34% in 3 wks</div></div>
+    <div class="kpi"><div class="rule a"></div><div class="val mono">278.30</div><div class="lab">USD/PKR</div><div class="cap">Interbank · 26 Jul</div></div>
+    <div class="kpi"><div class="rule g"></div><div class="val mono pos">+0.4%</div><div class="lab">Real Rate</div><div class="cap">Nominal 11.5% − CPI 11.1%</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card pt-blue">
+      <div class="card-title">PKRV Yield Curve — Spot vs. Prior Week</div>
+      <div class="card-sub">% p.a. · SBP/MUFAP · 14 Jul vs 24 Jul 2026 · Tenor in months</div>
+      <div class="ch-wrap tall">
+        <canvas id="chartPKRV"></canvas>
+      </div>
+      <p class="note mt8">Curve has <strong>steepened materially at the 4M–1Y segment</strong> (+15–30bps) while the very short end (1W–3M) is flat/fractionally lower. The hump at 9M–1Y (11.85–11.90%) reflects the oil/geopolitical risk premium being priced in for the 3–12 month horizon. Flat 2Y-trough then re-steepens to 5Y.</p>
+    </div>
+
+    <div class="card pt-red">
+      <div class="card-title">Brent Crude Price Trajectory</div>
+      <div class="card-sub">USD/bbl · spot · July 2026 — Middle East / Hormuz escalation</div>
+      <div class="ch-wrap tall">
+        <canvas id="chartBrent"></canvas>
+      </div>
+      <div class="callout high mt8">
+        <div class="ct">⚠️ Sustained Geopolitical Oil Shock</div>
+        <p>Brent surged from <strong>$72.36</strong> (6 Jul) to <strong>$97.04</strong> (24 Jul) — a <strong>+34% move in 18 days</strong>, driven by US–Iran hostilities, Hormuz disruption fears, and Houthi Red Sea blockade threats. The move continues the +22% episode flagged at last cadence ($88.10, 19 Jul). This is the key invalidation event for the oil→PKRV easing signal and the primary justification for the suspended duration extension thesis.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Latest T-Bill Auction — 22 July 2026</div>
+      <div class="card-sub">Settlement 23 Jul · SBP Primary Dealer Auction</div>
+      <div class="tw mt8">
+        <table>
+          <thead><tr><th>Tenor</th><th class="r">Cut-off Yield</th><th class="r">Accepted (PKRbn)</th><th class="r">Total Bids</th></tr></thead>
+          <tbody>
+            <tr><td>1-Month</td><td class="r">11.35%</td><td class="r">15.00</td><td class="r">990.49</td></tr>
+            <tr><td>3-Month</td><td class="r">11.51%</td><td class="r">100.39</td><td class="r">540.10</td></tr>
+            <tr><td>6-Month</td><td class="r">11.79%</td><td class="r">98.26</td><td class="r">229.26</td></tr>
+            <tr><td>12-Month</td><td class="r"><strong>11.99%</strong></td><td class="r">162.43</td><td class="r">337.94</td></tr>
+            <tr class="total"><td>Total Raised</td><td class="r" colspan="3">PKR 768.4bn · Cut-offs rose across 3 tenors vs. prior auction</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note mt8">12M led by volume accepted (Rs 162bn). Yields rose across 3 of 4 tenors vs. the 8 Jul auction, confirming market pricing in a higher-for-longer path. 1M eased marginally (MPC hold priced). 6M KIBOR ~11.67% per market; 3M KIBOR 11.61% per ledger.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">CPI Inflation Snapshot</div>
+      <div class="card-sub">PBS · June 2026 — latest available reading</div>
+      <div class="tw mt8">
+        <table>
+          <thead><tr><th>Measure</th><th class="r">Jun-26</th><th class="r">May-26</th><th class="r">Jun-25</th></tr></thead>
+          <tbody>
+            <tr><td>Headline YoY</td><td class="r warn mono"><strong>11.10%</strong></td><td class="r mono">11.70%</td><td class="r mono">3.20%</td></tr>
+            <tr><td>Headline MoM</td><td class="r mono">−0.30%</td><td class="r mono">+0.50%</td><td class="r mono">+0.20%</td></tr>
+            <tr><td>Core NFNE (urban) YoY</td><td class="r mono">8.70%</td><td class="r mono">9.00%</td><td class="r mono">—</td></tr>
+            <tr><td>SPI YoY</td><td class="r mono">12.80%</td><td class="r mono">12.00%</td><td class="r mono">—</td></tr>
+            <tr><td>WPI YoY</td><td class="r mono">10.70%</td><td class="r mono">12.70%</td><td class="r mono">—</td></tr>
+            <tr><td>SBP target range</td><td class="r">5–7%</td><td colspan="2" class="r">FY27 target: 8.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note mt8">Inflation eased for the second consecutive month but remains far above target. Transport drove the MoM decline (−7.2%). Real policy rate: +0.4% — barely positive; SBP stance remains mildly restrictive. FY26 average: 7.05% (vs. 4.49% FY25).</p>
+    </div>
+    <div class="card">
+      <div class="card-title">MPC Outcome Probabilities</div>
+      <div class="card-sub">Pre-decision · 27 Jul 2026</div>
+      <div class="tw mt8">
+        <table>
+          <thead><tr><th>Outcome</th><th class="r">Market Poll</th><th class="r">Model Probit</th><th class="r">Override</th></tr></thead>
+          <tbody>
+            <tr><td>Cut 100bps → 10.5%</td><td class="r mono">3%</td><td class="r mono">24.9%</td><td class="r"><span class="badge warn">↓ Adj. Down</span></td></tr>
+            <tr><td><strong>Hold at 11.5%</strong></td><td class="r mono"><strong>97%</strong></td><td class="r mono">59.8%</td><td class="r"><span class="badge pass">↑ Adj. Up</span></td></tr>
+            <tr><td>Hike 25–50bps</td><td class="r mono">~0%</td><td class="r mono">15.3%</td><td class="r"><span class="badge warn">↑ Adj. Up</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout blue mt8">
+        <div class="ct">Qualitative Override Active</div>
+        <p>The probit model (cut: 24.9%) is materially more dovish than market consensus (cut: 3%). The qualitative override weights <strong>HOLD as the dominant path</strong>. Rationale: Brent at $97 makes a cut almost untenable for the MPC, which cited geopolitical uncertainty. Hike risk is non-trivial (oil, transport inflation) but low probability this cycle. Model weights adjusted qualitatively; frozen-rule discipline maintained — no mechanical recalibration.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 2: POSITION VALIDATION
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 2</span>
+    <span class="sec-title">Position Validation · WoW</span>
+    <span class="sec-big">Full Position Detail &amp; Return Attribution</span>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(6,1fr);">
+    <div class="kpi"><div class="rule g"></div><div class="val mono pos">10.73%</div><div class="lab">Adjusted Return</div><div class="cap">Levered net · annualised</div></div>
+    <div class="kpi"><div class="rule"></div><div class="val mono">10.61%</div><div class="lab">Benchmark</div><div class="cap">3MK−1% = 11.61%−1%</div></div>
+    <div class="kpi"><div class="rule g"></div><div class="val mono pos">+11.82bp</div><div class="lab">Weekly Alpha</div><div class="cap">Ledger · adjusted basis</div></div>
+    <div class="kpi"><div class="rule"></div><div class="val mono">10.86%</div><div class="lab">Unlevered Return</div><div class="cap">Gross / gross AUM × 365/7</div></div>
+    <div class="kpi"><div class="rule r"></div><div class="val mono neg">−12.8bp</div><div class="lab">Leverage Drag</div><div class="cap">Unlevered − adjusted</div></div>
+    <div class="kpi"><div class="rule"></div><div class="val mono">9,497mn</div><div class="lab">Gross AUM (PKR)</div><div class="cap">NAV/unit 82.59</div></div>
+  </div>
+
+  <div class="callout med">
+    <div class="ct">Alpha Attribution — Gross vs. Net Gap Explained</div>
+    <p>Gross unlevered return (10.86%) reflects the portfolio's organic performance across all instruments. The reported adjusted return (10.73%) is the levered/net figure. The <strong>12.8bp leverage drag</strong> represents the net cost of the Pak Oman facility: borrowing at 11.71% to fund a COI yielding 10.05% (pre-tax). Post-tax, the COI/facility pair is positive carry (+PKR 16.0mn p.a.) due to the 39% tax shield on finance cost vs. 20% on COI profit — but the drag on the reported yield metric persists because the AUM base is larger in the adjusted computation. The per-instrument table below does not capture this drag standalone — it must be read alongside the unlevered/levered comparison above.</p>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="card-title" style="margin-bottom:10px;">2.1 · Full Position Ledger — Week Ending 27 July 2026</div>
+  <div class="tw">
+    <table>
+      <thead>
+        <tr>
+          <th>Instrument</th><th>Group</th>
+          <th class="r">Cost of Placement<br>(PKR)</th>
+          <th class="r">Prior Week Value<br>(PKR)</th>
+          <th class="r">Current Week Value<br>(PKR)</th>
+          <th class="r">7-Day Return<br>(PKR)</th>
+          <th class="r">Annl. Gross Yield</th>
+          <th class="r">% Gross AUM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>MTBs (1Y) — Aug-06 tranche</strong></td><td><span class="badge info">T-Bill 1Y label</span></td><td class="r mono">1,999,988,012</td><td class="r mono">2,195,528,758</td><td class="r mono">2,199,701,883</td><td class="r mono">4,173,126</td><td class="r mono">10.88%</td><td class="r mono">23.2%</td></tr>
+        <tr><td>MTBs (3M) — tranche A</td><td><span class="badge info">T-Bill 3M label</span></td><td class="r mono">487,976,500</td><td class="r mono">493,129,532</td><td class="r mono">494,222,599</td><td class="r mono">1,093,067</td><td class="r mono">11.68%</td><td class="r mono">5.2%</td></tr>
+        <tr><td>MTBs (1Y) — tranche B</td><td><span class="badge info">T-Bill 1Y label</span></td><td class="r mono">1,199,982,431</td><td class="r mono">1,252,355,911</td><td class="r mono">1,254,783,820</td><td class="r mono">2,427,910</td><td class="r mono">10.55%</td><td class="r mono">13.2%</td></tr>
+        <tr><td>MTBs (1Y) — tranche C</td><td><span class="badge info">T-Bill 1Y label</span></td><td class="r mono">384,022,350</td><td class="r mono">399,445,319</td><td class="r mono">400,233,354</td><td class="r mono">788,035</td><td class="r mono">10.70%</td><td class="r mono">4.2%</td></tr>
+        <tr><td>MTBs (1Y) — tranche D</td><td><span class="badge info">T-Bill 1Y label</span></td><td class="r mono">451,587,500</td><td class="r mono">469,757,896</td><td class="r mono">470,686,311</td><td class="r mono">928,414</td><td class="r mono">10.72%</td><td class="r mono">5.0%</td></tr>
+        <tr><td>MTBs (1Y) — tranche E</td><td><span class="badge info">T-Bill 1Y label</span></td><td class="r mono">451,709,500</td><td class="r mono">469,935,669</td><td class="r mono">470,866,933</td><td class="r mono">931,264</td><td class="r mono">10.75%</td><td class="r mono">5.0%</td></tr>
+        <tr><td>MTBs (1Y) — tranche F</td><td><span class="badge info">T-Bill 1Y label</span></td><td class="r mono">356,930,000</td><td class="r mono">366,514,304</td><td class="r mono">367,342,577</td><td class="r mono">828,273</td><td class="r mono">12.10%</td><td class="r mono">3.9%</td></tr>
+        <tr><td>MTBs (1Y) — tranche G</td><td><span class="badge info">T-Bill 1Y label</span></td><td class="r mono">357,247,600</td><td class="r mono">366,761,153</td><td class="r mono">367,583,311</td><td class="r mono">822,159</td><td class="r mono">12.00%</td><td class="r mono">3.9%</td></tr>
+        <tr><td>MTBs (3M) — tranche B</td><td><span class="badge info">T-Bill 3M label</span></td><td class="r mono">388,239,600</td><td class="r mono">395,961,845</td><td class="r mono">396,862,774</td><td class="r mono">900,929</td><td class="r mono">12.10%</td><td class="r mono">4.2%</td></tr>
+        <tr><td>MTBs (3M) — tranche C</td><td><span class="badge info">T-Bill 3M label</span></td><td class="r mono">388,286,400</td><td class="r mono">396,041,490</td><td class="r mono">396,946,251</td><td class="r mono">904,761</td><td class="r mono">12.15%</td><td class="r mono">4.2%</td></tr>
+        <tr><td>MTBs (6M) — tranche A</td><td><span class="badge info">T-Bill 6M label</span></td><td class="r mono">187,841,800</td><td class="r mono">191,701,563</td><td class="r mono">192,151,869</td><td class="r mono">450,306</td><td class="r mono">12.50%</td><td class="r mono">2.0%</td></tr>
+        <tr><td>Faysal Bank TDR</td><td><span class="badge na">Bank Placement</span></td><td class="r mono">238,441,556</td><td class="r mono">238,441,556</td><td class="r mono">238,441,556</td><td class="r mono">514,446</td><td class="r mono">11.25%</td><td class="r mono">2.5%</td></tr>
+        <tr><td>Samba Bank</td><td><span class="badge na">Bank</span></td><td class="r mono">—</td><td class="r mono">—</td><td class="r mono">—</td><td class="r mono">—</td><td class="r mono">—</td><td class="r mono">—</td></tr>
+        <tr><td><strong>Pak Oman COI</strong> <span class="badge flag">IPS Flag</span></td><td><span class="badge warn">DFI/COI</span></td><td class="r mono">1,300,000,000</td><td class="r mono">1,331,734,247</td><td class="r mono">1,334,476,712</td><td class="r mono">2,742,466</td><td class="r mono">11.00%*</td><td class="r mono">14.1%</td></tr>
+        <tr><td>SELECT — STS Sukuk</td><td><span class="badge na">Corp Sukuk</span></td><td class="r mono">260,000,000</td><td class="r mono">260,541,940</td><td class="r mono">261,174,203</td><td class="r mono">632,263</td><td class="r mono">12.68%</td><td class="r mono">2.8%</td></tr>
+        <tr><td>PREMA — STS Sukuk</td><td><span class="badge na">Corp Sukuk</span></td><td class="r mono">104,000,000</td><td class="r mono">107,543,465</td><td class="r mono">107,796,570</td><td class="r mono">253,105</td><td class="r mono">12.69%</td><td class="r mono">1.1%</td></tr>
+        <tr><td>DAEWOO — STS Sukuk</td><td><span class="badge na">Corp Sukuk</span></td><td class="r mono">275,000,000</td><td class="r mono">289,300,377</td><td class="r mono">289,990,740</td><td class="r mono">690,363</td><td class="r mono">13.09%</td><td class="r mono">3.1%</td></tr>
+        <tr><td>LIBERTY — STS Sukuk</td><td><span class="badge na">Corp Sukuk</span></td><td class="r mono">250,000,000</td><td class="r mono">253,169,452</td><td class="r mono">253,821,986</td><td class="r mono">652,534</td><td class="r mono">13.61%</td><td class="r mono">2.7%</td></tr>
+        <tr class="total"><td><strong>GROSS TOTAL</strong></td><td></td><td class="r mono">9,081,253,249</td><td class="r mono">9,477,864,475</td><td class="r mono">9,497,083,449</td><td class="r mono">19,733,419</td><td class="r mono">11.32%</td><td class="r mono">100%</td></tr>
+        <tr class="borrow"><td>Pak Oman Facility (Borrowing)</td><td><span class="badge fail">Liability</span></td><td class="r mono">(1,238,000,000)</td><td class="r mono">(1,238,000,000)</td><td class="r mono">(1,238,000,000)</td><td class="r mono">(2,780,243)</td><td class="r mono">11.71%</td><td></td></tr>
+        <tr class="net-row"><td><strong>NET (Post-Borrowing)</strong></td><td></td><td class="r mono">7,843,253,249</td><td class="r mono">8,239,864,475</td><td class="r mono">8,259,083,449</td><td class="r mono">16,953,177</td><td class="r mono"><strong>10.73%</strong></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">*COI annualised yield computed from ledger 7-day return on face value; nominal contracted rate is 10.05%. Implied yield of 11.00% vs. contracted 10.05% — QA flag raised in §9.</p>
+
+  <div class="spacer"></div>
+  <div class="card-title" style="margin-bottom:10px;">2.2 · Asset Class Breakdown &amp; WoW Change</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Asset Class</th><th class="r">Current Week Value</th><th class="r">% Gross AUM</th><th class="r">Implied Yield</th><th class="r">WoW Change</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>T-Bills</strong> (all tenors)</td><td class="r mono">7,011,381,682</td><td class="r mono">73.8%</td><td class="r mono">11.17%</td><td class="r mono">+19,218,974</td><td>11 tranches; bucketing by remaining maturity — see §3</td></tr>
+        <tr><td>Corp Sukuk (STS)</td><td class="r mono">912,783,499</td><td class="r mono">9.6%</td><td class="r mono">13.07%</td><td class="r mono">+stable</td><td>SELECT, PREMA, DAEWOO, LIBERTY — ratings pending (open item)</td></tr>
+        <tr><td>COI / DFI</td><td class="r mono">1,334,476,712</td><td class="r mono">14.1%</td><td class="r mono">11.00%</td><td class="r mono">+2,742,466</td><td>Matures 31 Jul — rollover decision required (§8)</td></tr>
+        <tr><td>Bank Placements</td><td class="r mono">238,441,556</td><td class="r mono">2.5%</td><td class="r mono">11.25%</td><td class="r mono">+514,446</td><td>Faysal Bank only; Samba at zero (standing rule)</td></tr>
+        <tr class="total"><td><strong>Gross Total</strong></td><td class="r mono">9,497,083,449</td><td class="r mono">100%</td><td class="r mono">11.32%</td><td class="r mono">+19,218,974</td><td></td></tr>
+        <tr class="borrow"><td>Pak Oman Facility</td><td class="r mono">(1,238,000,000)</td><td class="r mono">—</td><td class="r mono">11.71%</td><td class="r mono">0</td><td>Facility principal unchanged; rate locked until Sep-29 reset</td></tr>
+        <tr class="net-row"><td><strong>Net AUM</strong></td><td class="r mono">8,259,083,449</td><td class="r mono">—</td><td class="r mono"><strong>10.73%</strong></td><td class="r mono">+19,218,974</td><td>NAV/unit: 82.59 (prior: 82.40)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 3: ANALYSIS
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 3</span>
+    <span class="sec-title">Analysis</span>
+    <span class="sec-big">Risk Limit Checklist · New Flags · Carry · Relative Value</span>
+  </div>
+
+  <div class="card-title" style="margin-bottom:10px;">3.1 · IPS Risk Limit Checklist — 27 July 2026</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>IPS Limit / Governance Rule</th><th>Reference</th><th class="r">Current Reading</th><th>IPS Limit</th><th class="c">Status</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>T-Bills &lt;3M (remaining maturity)</td><td>IPS §3 table</td><td class="r mono">≥23.1%*</td><td>IPS band — tbc</td><td class="c"><span class="badge warn">⚠ DATA GAP</span></td><td>Aug-06 tranche confirmed &lt;90d. Other tranche dates needed.</td></tr>
+        <tr><td>T-Bills 3–12M (remaining maturity)</td><td>IPS §3 table</td><td class="r mono">est. 50.7%*</td><td>IPS band — tbc</td><td class="c"><span class="badge warn">⚠ ESTIMATE</span></td><td>*Maturity dates required to confirm bucketing (standing open item)</td></tr>
+        <tr><td>Max instrument tenor ≤3 years</td><td>IPS §3.2(a)</td><td class="r mono">MTBs: ≤1Y · STS: ~1Y</td><td>≤3 years</td><td class="c"><span class="badge pass">PASS</span></td><td>All T-Bills issued as ≤12M. STS tenors to be confirmed.</td></tr>
+        <tr><td>Avg. portfolio duration ≤360 days</td><td>IPS §3.2(a)</td><td class="r mono">~115 days (est.)</td><td>≤360 days</td><td class="c"><span class="badge pass">PASS ✓</span></td><td>Very short-duration portfolio dominated by near-maturity T-Bills</td></tr>
+        <tr><td>PVBP ≤3bp of portfolio per 1bp move</td><td>IPS §3.2(e)</td><td class="r mono">~PKR 0.30mn (est.)</td><td>≤PKR 2.85mn</td><td class="c"><span class="badge pass">PASS ✓</span></td><td>Estimated from ~115d weighted avg duration. Well within limit.</td></tr>
+        <tr><td>Bank Placements (AAA/AA+)</td><td>IPS §3.3</td><td class="r mono">2.5% of AUM</td><td>Within band</td><td class="c"><span class="badge warn">PENDING</span></td><td>Faysal Bank rating unconfirmed (open item). Samba zero.</td></tr>
+        <tr><td>DFI (AAA/AA+) ≤15% of 75% bucket</td><td>IPS §3.2(b)</td><td class="r mono">14.1% of AUM</td><td>≤15%</td><td class="c"><span class="badge warn">NEAR LIMIT</span></td><td>COI/Pak Oman DFI exposure at 14.1% approaching the ceiling</td></tr>
+        <tr><td>Corp/Sukuk/CP ≤30% of portfolio</td><td>IPS §3.2(b)</td><td class="r mono">9.6%</td><td>≤30%</td><td class="c"><span class="badge pass">PASS ✓</span></td><td>STS instruments at 9.6% — comfortable headroom</td></tr>
+        <tr><td>Single instrument ≤10% issue size</td><td>IPS §3.2(d)</td><td class="r mono">COI: unknown share of issue</td><td>≤10%</td><td class="c"><span class="badge warn">UNKNOWN</span></td><td>Issue size for COI not on file (open item)</td></tr>
+        <tr><td><strong>Single instrument ≤20% non-sov/bank FI</strong></td><td><strong>IPS §3.2(d)</strong></td><td class="r mono"><strong>COI: ~59% of Corp+DFI sleeve</strong></td><td><strong>≤20%</strong></td><td class="c"><span class="badge fail">FLAG ACTIVE</span></td><td>COI = PKR 1,334mn of Corp+DFI total ~PKR 2,247mn. MATERIAL BREACH. Board/IC interpretation required.</td></tr>
+        <tr><td>Sector diversification ≤20% (ex. sov/bank)</td><td>IPS §3.2(c)</td><td class="r mono">STS: 9.6% (4 issuers)</td><td>≤20%</td><td class="c"><span class="badge pass">PASS ✓</span></td><td>Transport/DFI sector — classification pending</td></tr>
+        <tr><td>Min bank placements / liquidity 2%</td><td>IPS §5</td><td class="r mono">2.5% (Faysal Bank)</td><td>≥2%</td><td class="c"><span class="badge pass">PASS ✓</span></td><td>Faysal Bank TDR satisfies minimum liquidity requirement</td></tr>
+        <tr><td>Current/non-remunerative account ≤PKR 10mn</td><td>IPS §3.3</td><td class="r mono">Not reported</td><td>≤10mn</td><td class="c"><span class="badge na">NOT REPORTED</span></td><td>Need confirmation from Finance team</td></tr>
+        <tr><td>Core Capital in ≤90-day T-Bills</td><td>IPS §5</td><td class="r mono">Designation pending</td><td>100% of Core Capital</td><td class="c"><span class="badge warn">PENDING</span></td><td>Board designation of Core Capital PKR figure required (open item)</td></tr>
+        <tr style="background:#FDF4F4;"><td><strong>Borrowing/leverage ratio vs. NAV</strong></td><td><strong>GOVERNANCE GAP</strong></td><td class="r mono"><strong>15.0%</strong> (1,238/8,259)</td><td><em>NO IPS CEILING</em></td><td class="c"><span class="badge gap">GOV. GAP</span></td><td>No maximum borrowing ratio documented in IPS. Governance gap — must be raised with Board.</td></tr>
+        <tr style="background:#FDF4F4;"><td><strong>Lender/borrowing counterparty concentration</strong></td><td><strong>GOVERNANCE GAP</strong></td><td class="r mono"><strong>100%</strong> Pak Oman</td><td><em>NO IPS LIMIT</em></td><td class="c"><span class="badge gap">GOV. GAP</span></td><td>No lender concentration limit documented. Single-lender dependency risk unmitigated.</td></tr>
+        <tr style="background:#FDF4F4;"><td><strong>Floating-rate liability interest-rate risk</strong></td><td><strong>GOVERNANCE GAP</strong></td><td class="r mono">Pak Oman at 3MK−0.05% (floating)</td><td><em>ASSETS ONLY</em></td><td class="c"><span class="badge gap">GOV. GAP</span></td><td>IPS §3.2(e) PVBP covers assets only. Floating-rate liability creates unhedged duration mismatch on funding side.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="card-title" style="margin-bottom:10px;">3.2 · New Flags This Cycle</div>
+  <div class="g2">
+    <div>
+      <div class="callout high">
+        <div class="ct">3.2(a) · Oil Shock — Duration Extension Thesis Remains Suspended</div>
+        <p>Brent crude at $97/bbl (Jul 24), up +34% in 18 days from $72.36 (Jul 6). This materially invalidates any near-term rate-cut conviction. The duration extension thesis suspended at the Jul 13 cadence remains suspended with elevated conviction. No PIB/long-tenor T-Bill extension trades recommended until oil stabilises below $85 and at least one MPC cut has been delivered.</p>
+      </div>
+      <div class="callout high">
+        <div class="ct">3.2(b) · IPS §3.2(d) Concentration — COI Flag Remains Active</div>
+        <p>COI at PKR 1,334mn represents ~59% of the non-sovereign/non-bank FI sleeve against a 20% single-instrument limit. The COI rollover on 31 Jul creates a natural opportunity to address this — however, it also represents a forced continuation of the position (Pak Oman COI is the collateral for the facility). Board/IC interpretation remains the required gate before any structural change.</p>
+      </div>
+    </div>
+    <div>
+      <div class="callout med">
+        <div class="ct">3.2(c) · Credit Line Tab Rate Inconsistency — NEW FLAG</div>
+        <p>The Credit Line tab's "Currently Placed" KIBOR reading of <strong>10.63%</strong> → Facility Rate <strong>10.58%</strong> is <strong>stale and inconsistent</strong> with the ledger-implied rate of <strong>11.71%</strong> (confirmed from 7-day borrowing cost). Additionally, the tab's "Reset KIBOR Analysis" date of <strong>27 Jul 2026</strong> does not correspond to an actual quarterly reset date (Dec-29 / Mar-29 / Jun-29 / Sep-29 cadence). The Jul 27 analysis appears to be a hypothetical scenario cell, not an upcoming reset. The next actual reset is <strong>29 September 2026</strong>. Facility rate 11.71% from ledger remains authoritative. This discrepancy must be resolved with the Finance/treasury team.</p>
+      </div>
+      <div class="callout med">
+        <div class="ct">3.2(d) · 23-Jul MTB Sell-Off Window — Passed Without Action</div>
+        <p>The Jul-19 cadence identified a potential MTB sell-off opportunity on 23 Jul. The position is unchanged week-on-week, indicating no sell was executed. The opportunity window has passed. The 6-Aug MTB reinvestment decision (PKR 2,195mn) is the next critical execution point — see §8.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="card-title" style="margin-bottom:10px;">3.3 · Carry Economics — COI / Pak Oman Leverage</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Line Item</th><th class="r">Rate</th><th class="r">Principal (PKR)</th><th class="r">Annual Gross (PKR)</th><th class="r">Tax Treatment</th><th class="r">Annual Post-Tax (PKR)</th></tr></thead>
+      <tbody>
+        <tr><td>COI Income (Pak Oman)</td><td class="r mono">10.05%</td><td class="r mono">1,300,000,000</td><td class="r mono">130,650,000</td><td class="r mono">20% on profit</td><td class="r mono pos">104,520,000</td></tr>
+        <tr><td>Pak Oman Facility Cost</td><td class="r mono">11.71%*</td><td class="r mono">1,238,000,000</td><td class="r mono">(145,089,800)</td><td class="r mono">39% shield on interest</td><td class="r mono neg">(88,504,778)</td></tr>
+        <tr class="total"><td><strong>Net Carry</strong></td><td class="r mono neg"><strong>−1.44% pre-tax</strong></td><td></td><td class="r mono neg"><strong>(14,439,800)</strong></td><td></td><td class="r mono pos"><strong>+16,015,222</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout low mt8">
+    <div class="ct">Carry Economics — Framing Matters</div>
+    <p><strong>Pre-tax: NEGATIVE</strong> (facility cost exceeds COI income by PKR 14.4mn p.a.). <strong>Post-tax: POSITIVE</strong> (+PKR 16.0mn p.a.) due to asymmetric tax treatment — finance cost shielded at 39% vs. COI profit taxed at only 20%. This framing is critical for any Investment Committee presentation on the rollover decision. *Rate 11.71% is the ledger-authoritative figure; Credit Line tab "currently placed" of 10.58% is stale — see §3.2(c).</p>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="card-title" style="margin-bottom:10px;">3.4 · Relative Value — Short End</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Instrument / Tenor</th><th class="r">Yield / Rate</th><th class="r">vs. 3M PKRV (11.44%)</th><th class="r">vs. 3MK−1% Benchmark (10.61%)</th><th>Assessment</th></tr></thead>
+      <tbody>
+        <tr><td>3M T-Bill (auction cut-off)</td><td class="r mono">11.51%</td><td class="r mono">+7bp</td><td class="r mono">+90bp</td><td>At-market. Reinvest short-end proceeds here if roll needed.</td></tr>
+        <tr><td>6M T-Bill (auction cut-off)</td><td class="r mono">11.79%</td><td class="r mono">+35bp</td><td class="r mono">+118bp</td><td>28bp pickup vs. 3M. Attractive with HOLD expected, but oil adds tail risk.</td></tr>
+        <tr><td>12M T-Bill (auction cut-off)</td><td class="r mono">11.99%</td><td class="r mono">+55bp</td><td class="r mono">+138bp</td><td>Duration extension thesis suspended. Avoid until oil risk resolves.</td></tr>
+        <tr><td>COI (existing, at rollover)</td><td class="r mono">10.05%</td><td class="r mono">−139bp</td><td class="r mono">−56bp</td><td>Below benchmark and below 3M PKRV. New rollover rate likely 10.5–11.5%.</td></tr>
+        <tr><td>Faysal Bank TDR</td><td class="r mono">11.25%*</td><td class="r mono">−19bp</td><td class="r mono">+64bp</td><td>Slightly below 3M PKRV; IPS limit on bank placements applies. *Implied from 7-day return.</td></tr>
+        <tr><td>PKRV 3M (market ref)</td><td class="r mono">11.44%</td><td class="r mono">—</td><td class="r mono">+83bp</td><td>Reference rate; our portfolio broadly at or above market for T-Bills.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 4: FIVE-LAYER ENSEMBLE
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 4</span>
+    <span class="sec-title">Interest Rate Forecast</span>
+    <span class="sec-big">Five-Layer Ensemble · Weights &amp; Readings</span>
+  </div>
+
+  <div class="layer-grid">
+    <div class="layer distorted">
+      <div class="layer-name">Taylor Rule <span class="layer-flag"><span class="badge fail">DISTORTED</span></span></div>
+      <div class="layer-val">17.28%</div>
+      <div class="layer-sub">Gap vs. actual: +5.78pp<br>Weight: 26%<br>Vintage: Jul-13</div>
+    </div>
+    <div class="layer stale">
+      <div class="layer-name">BVAR Model <span class="layer-flag"><span class="badge warn">STALE</span></span></div>
+      <div class="layer-val">10.91%</div>
+      <div class="layer-sub">3M path; 6M: 11.46%<br>12M: 13.01%<br>Panel vintage: Apr-26 ⚠</div>
+    </div>
+    <div class="layer">
+      <div class="layer-name">Ordered Probit <span class="layer-flag"><span class="badge info">PRE-MPC</span></span></div>
+      <div class="layer-val">59.8%</div>
+      <div class="layer-sub">P(Hold) · dominant<br>P(Cut): 24.9% | P(Hike): 15.3%<br>Weight: 26%</div>
+    </div>
+    <div class="layer">
+      <div class="layer-name">Nelson-Siegel</div>
+      <div class="layer-val">11.31%</div>
+      <div class="layer-sub">Fwd 3M; 6M: 11.36%<br>12M: 11.37% · signal: stable<br>Weight: 16%</div>
+    </div>
+    <div class="layer" style="border:1px dashed var(--s300);background:var(--s50);">
+      <div class="layer-name">IMF Overlay</div>
+      <div class="layer-val" style="font-size:16px;color:var(--s400);">NOT SET</div>
+      <div class="layer-sub">Manual toggle required<br>binding / not binding / unclear<br>Must be set by CEO/IC each cycle</div>
+    </div>
+  </div>
+
+  <div class="g2 spacer">
+    <div class="callout high">
+      <div class="ct">⚠ Taylor Rule Mechanical Distortion — Active Flag</div>
+      <p>Taylor-implied rate: <strong>17.28%</strong> vs. actual policy rate 11.5%. Gap: <strong>+5.78pp</strong>, well above the ≥3pp distortion threshold. Primary driver: CPI YoY at 11.1% (June) remains far above the 5–7% target range, producing a large inflation gap. This distortion flag prevents the Taylor layer from dragging the ensemble average upward without caveat. The mechanically weighted ensemble result of −7bps next-meeting expectation (from JSON) must be read as structurally biased by this distortion — the actual signal from Taylor is strongly toward hold/hike, not cut. Flag persists until CPI approaches target or a new neutral-rate calibration is completed.</p>
+    </div>
+    <div class="callout med">
+      <div class="ct">⚠ Cross-Layer Tension — No Consensus on Path</div>
+      <p><strong>BVAR</strong> projects a U-shaped path: 3M at 10.91% (mild easing) then rising to 13.01% at 12M — this is inconsistent with any near-term cut holding. <strong>NS curve</strong> signals stability (11.31–11.37% forward) but is now materially below observed PKRV (11.44–11.90%), suggesting NS is lagging the oil/geopolitical risk premium. <strong>Probit</strong> at Hold 59.8% is qualitatively the most credible layer pre-MPC. <strong>Taylor</strong> is a non-informative outlier given the distortion. These layers do not agree on direction or magnitude — the blended ensemble output should be treated as illustrative, not predictive, this cycle.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ensemble Forecast Summary — As of 13 July 2026 (Stale · Pre-MPC recalibration required)</div>
+    <div class="tw mt8">
+      <table>
+        <thead><tr><th>Layer</th><th class="r">Weight</th><th class="r">Next MPC Signal</th><th class="r">6M Rate</th><th class="r">12M Rate</th><th>Flag</th></tr></thead>
+        <tbody>
+          <tr><td>Modified Taylor Rule</td><td class="r mono">26%</td><td class="r mono">17.28% implied</td><td class="r mono">n/a</td><td class="r mono">n/a</td><td><span class="badge fail">DISTORTED ≥3pp gap</span></td></tr>
+          <tr><td>BVAR</td><td class="r mono">32%</td><td class="r mono">10.91% (3M)</td><td class="r mono">11.46%</td><td class="r mono">13.01%</td><td><span class="badge warn">STALE — Apr-26 panel</span></td></tr>
+          <tr><td>Ordered Probit</td><td class="r mono">26%</td><td class="r mono">Hold 60% / Cut 25%</td><td class="r mono">—</td><td class="r mono">—</td><td><span class="badge info">PRE-MPC · active window</span></td></tr>
+          <tr><td>Nelson-Siegel</td><td class="r mono">16%</td><td class="r mono">stable · 11.31% fwd</td><td class="r mono">11.36%</td><td class="r mono">11.37%</td><td><span class="badge warn">Below PKRV 11.73% — oil lag</span></td></tr>
+          <tr><td>IMF Overlay</td><td class="r mono">—</td><td class="r mono">—</td><td class="r mono">—</td><td class="r mono">—</td><td><span class="badge na">NOT SET — manual required</span></td></tr>
+          <tr class="total"><td><strong>Blended Ensemble</strong></td><td class="r mono">100%</td><td class="r mono"><strong>−7bps</strong> (stale)</td><td class="r mono"><strong>11.96%</strong></td><td class="r mono"><strong>13.63%</strong></td><td><span class="badge warn">POST-MPC RECAL REQUIRED</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note mt8"><strong>Post-MPC Action Required:</strong> Once the July 27 decision is announced, recalibrate: (1) reset probit probabilities for the Sep-14 meeting; (2) update BVAR panel with the Jun CPI reading (11.1%); (3) re-read NS curve vs. new PKRV post-announcement; (4) set IMF overlay disposition for FY27. Weights remain at prior (Taylor 26 / BVAR 32 / Probit 26 / NS 16) until a deliberate methodology change is approved.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 5: OIL → PKRV TRANSMISSION
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 5</span>
+    <span class="sec-title">Oil → 3M PKRV Transmission Layer</span>
+    <span class="sec-big">Signal Tier Status · Episode Tracker · Invalidation Risk</span>
+  </div>
+
+  <div class="callout high">
+    <div class="ct">🛑 Oil Easing Signal — INVALIDATED · Geopolitical Shock Active</div>
+    <p>The oil→PKRV model tracks Brent crude as a leading indicator for domestic rate CUTS. All three signal tiers require a Brent <em>decline</em> streak of ≥2 months and a 3-month change of ≤−10%. Current 3-week trajectory is the <strong>opposite: +34%</strong>. The episode-start logic (only first month of a continuous easing signal counts as a new alert) does not apply — no easing episode is active. The prior cadence's note of oil risk as the key invalidation event is fully confirmed this cycle. Monthly-frequency caveat: sub-monthly oil moves do not formally trigger or de-trigger the model rules, but the magnitude (+34% in 18 days) leaves no analytical ambiguity.</p>
+  </div>
+
+  <div class="tier-row hd"><div>Signal Tier</div><div>Rule Condition</div><div>Current Status</div><div class="c">Active?</div></div>
+  <div class="tier-row"><div><strong>Level 1</strong><br><small>Early Warning</small></div><div>Brent decline streak ≥2 consecutive months <strong>AND</strong> 3-month Brent change ≤−10%</div><div>Brent: +34% (3-week) · Monthly streak: RISING · 3M change: strongly positive</div><div class="c"><span class="badge fail">NO</span></div></div>
+  <div class="tier-row"><div><strong>Level 2</strong><br><small>Domestic Trigger</small></div><div>Level 1 rule applied to Brent × PKR/USD domestic price index</div><div>Brent×PKR rising (both components higher). USD/PKR: 278.30 (stable).</div><div class="c"><span class="badge fail">NO</span></div></div>
+  <div class="tier-row" style="border-bottom:none;"><div><strong>Level 3</strong><br><small>High Conviction</small></div><div>Level 2 active AND CPI not rising (YoY) AND FX depreciation ≤2% over 3M</div><div>CPI: 11.1% (elevated). FX: stable. Level 2 not active — Level 3 cannot trigger.</div><div class="c"><span class="badge fail">NO</span></div></div>
+
+  <div class="spacer"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Realized vs. Conditional Path — Episode Tracker</div>
+      <div class="card-sub">3M PKRV actual vs. model's conditional mean — Jul 2026</div>
+      <div class="tw mt8">
+        <table>
+          <thead><tr><th>Date</th><th class="r">Brent ($/bbl)</th><th class="r">3M PKRV Actual</th><th class="r">Conditional Path<br>(model easing)</th><th>Gap</th></tr></thead>
+          <tbody>
+            <tr><td>Jul-06 (start ref)</td><td class="r mono">72.36</td><td class="r mono">~11.45%</td><td class="r mono">≤11.20%</td><td><span class="badge warn">No signal</span></td></tr>
+            <tr><td>Jul-14 (escalation)</td><td class="r mono">86.99</td><td class="r mono">11.45%</td><td class="r mono">—</td><td><span class="badge fail">Oil rising ⚠</span></td></tr>
+            <tr><td>Jul-24 (latest)</td><td class="r mono">97.04</td><td class="r mono">11.44%</td><td class="r mono">—</td><td><span class="badge fail">Invalidated</span></td></tr>
+            <tr class="total"><td><strong>Episode Status</strong></td><td class="r mono"><strong>$97/bbl</strong></td><td class="r mono"><strong>11.44%</strong></td><td colspan="2"><strong>NO ACTIVE EASING EPISODE — Oil signal invalidated by geopolitical shock</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Invalidation Risk &amp; Domestic Filters</div>
+      <div class="card-sub">CPI, FX, and supply-side checks — Jul 2026</div>
+      <div class="tw mt8">
+        <table>
+          <thead><tr><th>Filter</th><th class="r">Current</th><th>Level 3 Gate</th><th class="c">Passed?</th></tr></thead>
+          <tbody>
+            <tr><td>CPI YoY not higher than 3M prior</td><td class="r mono">11.1% Jun (down from 11.7%)</td><td>CPI must be stable/declining</td><td class="c"><span class="badge warn">BORDERLINE</span></td></tr>
+            <tr><td>FX depreciation ≤2% over 3M</td><td class="r mono">278.30 vs. ~278 (3M ago)</td><td>≤2% depreciation</td><td class="c"><span class="badge pass">PASS</span></td></tr>
+            <tr><td>Hormuz supply disruption risk</td><td class="r mono"><strong>ACTIVE</strong> — US-Iran hostilities</td><td>Key invalidation channel</td><td class="c"><span class="badge fail">RISK</span></td></tr>
+            <tr><td>Oil 3-month change ≤−10%</td><td class="r mono"><strong>+34%</strong> (18 days)</td><td>Must be ≤−10%</td><td class="c"><span class="badge fail">FAIL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note mt8">The model spec explicitly names "renewed inflation/FX pressure" and geopolitical/supply events (Hormuz-type) as the main invalidation channels. Both are active. Monthly-frequency caveat applies: these are sub-monthly readings, but the magnitude (Brent +34%) is unambiguous. <strong>No recalibration of thresholds.</strong> Per frozen-rule discipline: thresholds remain unchanged until quarterly/semi-annual re-estimation with new independent episodes. The current episode is a single, highly correlated shock — insufficient basis for threshold revision.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 6: SHORT-HORIZON PROJECTION
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 6</span>
+    <span class="sec-title">Short-Horizon 3M PKRV Projection</span>
+    <span class="sec-big">7 / 14 / 21 / 30-Day Forward Paths · Scenario Matrix</span>
+  </div>
+
+  <div class="callout blue">
+    <div class="ct">Why the Central Path Is Flat to Marginally Higher</div>
+    <p>The oil→PKRV easing signal is invalidated. The MPC is expected to hold at 11.5%. With no active catalyst for rate movement in either direction (barring surprise MPC cut or further oil escalation), the <strong>central path for 3M PKRV is flat at ~11.44–11.50%</strong> for the immediate 7-14 day window. The risk is skewed upward: if oil sustains above $100, the market will price in higher-for-longer or even hike probability, pushing the 3M PKRV toward 11.60–11.75%. Downside path (oil retreat + MPC cut surprise) has very low probability this week (3%).</p>
+    <p>Key sequencing: MPC decision is expected <strong>today</strong> (27 Jul). The COI rollover decision (31 Jul) falls within the projection window and should be priced using scenario-conditional analysis below, not anchored to a single central-path rate. Confirm COI rollover terms with Pak Oman NOW — before MPC outcome affects counterparty pricing.</p>
+  </div>
+
+  <div class="proj-table">
+    <div class="proj-cell hd">Scenario</div><div class="proj-cell hd">+7 Days (3 Aug)</div><div class="proj-cell hd">+14 Days (10 Aug)</div><div class="proj-cell hd">+21 Days (17 Aug)</div><div class="proj-cell hd">+30 Days (26 Aug)</div>
+    <div class="proj-cell scenario">🟢 Central<br>(Hold, Oil ~$97)<br><small>65% prob</small></div>
+    <div class="proj-cell"><span class="proj-val">11.44–11.50%</span><br><small>MPC digested, oil stable</small></div>
+    <div class="proj-cell"><span class="proj-val">11.48–11.55%</span><br><small>Post-6-Aug auction re-pricing</small></div>
+    <div class="proj-cell"><span class="proj-val">11.50–11.60%</span><br><small>Oil premium gradual re-pricing</small></div>
+    <div class="proj-cell"><span class="proj-val">11.52–11.65%</span><br><small>Pre-Sep MPC positioning</small></div>
+    <div class="proj-cell scenario">🔴 Upside<br>(Oil >$105, Hike risk)<br><small>20% prob</small></div>
+    <div class="proj-cell"><span class="proj-val up">11.55–11.70%</span><br><small>Oil shock premium widens</small></div>
+    <div class="proj-cell"><span class="proj-val up">11.65–11.80%</span><br><small>Auction cut-offs rise</small></div>
+    <div class="proj-cell"><span class="proj-val up">11.75–11.90%</span><br><small>Hike expectations build</small></div>
+    <div class="proj-cell"><span class="proj-val up">&gt;11.90%</span><br><small>Re-tightening trade opens</small></div>
+    <div class="proj-cell scenario">🟡 Downside<br>(MPC Cut Surprise)<br><small>3% prob</small></div>
+    <div class="proj-cell"><span class="proj-val dn">10.95–11.10%</span><br><small>Immediate rally</small></div>
+    <div class="proj-cell"><span class="proj-val dn">10.70–10.90%</span><br><small>Curve flattens rapidly</small></div>
+    <div class="proj-cell"><span class="proj-val dn">10.60–10.80%</span><br><small>Duration extension reopens</small></div>
+    <div class="proj-cell"><span class="proj-val dn">10.50–10.70%</span><br><small>Full cut priced; add duration</small></div>
+    <div class="proj-cell scenario">⚫ Oil Retreat<br>(Ceasefire, &lt;$85)<br><small>12% prob</small></div>
+    <div class="proj-cell"><span class="proj-val dn">11.25–11.40%</span><br><small>Oil risk premium unwinds</small></div>
+    <div class="proj-cell"><span class="proj-val dn">11.15–11.30%</span><br><small>Easing signal may re-trigger</small></div>
+    <div class="proj-cell"><span class="proj-val dn">11.10–11.25%</span><br><small>Level 1 oil signal watch</small></div>
+    <div class="proj-cell"><span class="proj-val dn">11.00–11.20%</span><br><small>Re-evaluate thesis</small></div>
+  </div>
+
+  <div class="spacer"></div>
+  <div class="card">
+    <div class="card-title">Assumption Ledger — v1 (Assumptions) → v2 (Data-Validated)</div>
+    <div class="tw mt8">
+      <table>
+        <thead><tr><th>Assumption</th><th>v1 Assumption</th><th>v2 Status</th><th>Action Required</th></tr></thead>
+        <tbody>
+          <tr><td>MPC pass-through coefficient (A1)</td><td>−100bps cut → −50bps on 3M PKRV</td><td><span class="badge warn">V1 — estimate</span></td><td>Local projection estimation from event study — open item</td></tr>
+          <tr><td>Within-window oil coefficient (A2)</td><td>$10 Brent → ~2bp on 3M PKRV (sub-monthly)</td><td><span class="badge warn">V1 — estimate</span></td><td>Regression on PKRV vs. Brent × PKR — open item</td></tr>
+          <tr><td>Priced-MPC-expectation cross-check</td><td>97% Hold = fully priced; no new information on Hold outcome</td><td><span class="badge info">V1.5 — market consensus</span></td><td>Post-MPC statement tone to update</td></tr>
+          <tr><td>Oil/FX data provenance</td><td>Brent $97.04 from tradingeconomics/fortune (web); PKR 278.30 from hamariweb</td><td><span class="badge warn">V1 — web estimate</span></td><td>Official SBP/EIA releases to confirm monthly averages</td></tr>
+          <tr><td>Realised volatility window</td><td>18-day move used for directional signal; not for vol estimation</td><td><span class="badge warn">V1</span></td><td>30-day historical vol estimate needed for projection bands</td></tr>
+          <tr><td>Tail scenario trigger (oil)</td><td>$105 used as upper tail; $85 as ceasefire/retreat threshold</td><td><span class="badge warn">V1</span></td><td>Model spec: if Brent >prior large-move replay, linear matrix understates risk</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 7: RATE SCENARIO ANALYSIS
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 7</span>
+    <span class="sec-title">Rate Scenario Analysis</span>
+    <span class="sec-big">±50bp / ±100bp Parallel Shock — MTM &amp; PVBP Impact</span>
+  </div>
+
+  <div class="callout blue">
+    <div class="ct">Portfolio Interest Rate Sensitivity — Low Given Short Duration</div>
+    <p>The portfolio's weighted average remaining duration is estimated at ~115 days (0.315 years), dominated by the near-maturity T-Bill positions. This produces a very low PVBP — well within the IPS §3.2(e) limit of ≤3bp of portfolio. Rate shock impacts on MTM are modest and short-lived. The primary interest-rate risk is on the <strong>liability side</strong> (Pak Oman facility at floating KIBOR), which is not captured in the IPS asset-side PVBP framework — a confirmed governance gap. All estimates below are illustrative based on a ~115d weighted average duration; confirmed maturity dates are required for precision.</p>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th class="r">Est. PVBP (PKR)</th>
+          <th class="r">MTM Impact — Assets</th>
+          <th class="r">% of Gross AUM</th>
+          <th class="r">Facility Cost Impact<br>(at Sep-29 reset)</th>
+          <th class="r">Net Position</th>
+          <th>Trade Implication</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Current (base)</td><td class="r mono">~299,000</td><td class="r mono">—</td><td class="r mono">—</td><td class="r mono">—</td><td class="r mono">—</td><td>No change to positions recommended pending MPC</td></tr>
+        <tr><td><strong>+50bps (mild tightening)</strong></td><td class="r mono">~299,000</td><td class="r mono neg">(14,950,000)</td><td class="r mono neg">−0.16%</td><td class="r mono neg">+PKR 1.52mn/qtr</td><td class="r mono neg">Net negative</td><td>Hold; T-Bills mature soon, MTM loss temporary</td></tr>
+        <tr><td><strong>+100bps (oil-driven hike)</strong></td><td class="r mono">~299,000</td><td class="r mono neg">(29,900,000)</td><td class="r mono neg">−0.31%</td><td class="r mono neg">+PKR 3.05mn/qtr</td><td class="r mono neg">Net negative</td><td>Duration extension thesis suspended — correct positioning</td></tr>
+        <tr><td><strong>−50bps (one MPC cut)</strong></td><td class="r mono">~299,000</td><td class="r mono pos">+14,950,000</td><td class="r mono pos">+0.16%</td><td class="r mono pos">−PKR 1.52mn/qtr</td><td class="r mono pos">Net positive</td><td>If cut materialises: extend at 6M/12M auction post-decision</td></tr>
+        <tr><td><strong>−100bps (aggressive easing)</strong></td><td class="r mono">~299,000</td><td class="r mono pos">+29,900,000</td><td class="r mono pos">+0.31%</td><td class="r mono pos">−PKR 3.05mn/qtr</td><td class="r mono pos">Net positive</td><td>Low probability (3%); duration extension playbook activates</td></tr>
+        <tr class="total"><td><strong>IPS PVBP Limit</strong></td><td class="r mono"><strong>≤2,849,000</strong></td><td colspan="5" class="r mono"><strong>PASS: Current est. ~299K is 89% below limit. Ample headroom.</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note mt8">PVBP = Gross AUM (PKR 9,497mn) × Estimated Duration (0.315yr) × 0.0001. Facility cost impact uses quarterly billing cycle. IPS PVBP limit = 3bp × gross AUM = PKR 2,849,100. Maturity-confirmed duration estimate is required for the next cadence (open item).</p>
+</div>
+
+<!-- ============================================================
+     SECTION 8: TRADING IDEAS & DECISIONS REQUIRED
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 8</span>
+    <span class="sec-title">Trading Ideas &amp; Decisions Required</span>
+    <span class="sec-big">Time-Bound · Gated on Data · Carried Forward</span>
+  </div>
+
+  <!-- Decision 1: COI Rollover -->
+  <div class="decision urgent">
+    <div class="d-head">
+      <span class="d-deadline">🔴 31 JULY — 4 DAYS</span>
+      <span class="d-title">COI / Pak Oman Rollover</span>
+      <span class="d-amount">PKR 1,300mn COI · PKR 1,238mn Facility</span>
+    </div>
+    <div class="d-body">
+      <p><strong>Situation:</strong> The existing COI (Certificate of Investment) at Pak Oman, PKR 1,300mn at <strong>10.05%</strong>, matures on 31 July 2026. The Pak Oman credit facility (PKR 1,238mn, rate 11.71% from ledger) is the linked borrowing. The rollover of both legs — a new COI placement at whatever rate Pak Oman offers — is the most operationally natural path.</p>
+      <p><strong>Carry improvement on rollover:</strong> Current COI (10.05%) is below market. New COI placement rate will be at prevailing market — likely 10.50–11.50% based on current T-Bill auction yields (3M: 11.51%, 12M: 11.99%). At even the conservative end (10.50%): post-tax carry improves from +PKR 16.0mn p.a. to +PKR 20.2mn p.a. At 11.00%: +PKR 26.0mn p.a. This is a material improvement.</p>
+      <p><strong>IPS constraint:</strong> The IPS §3.2(d) flag is ACTIVE — COI represents ~59% of the non-sovereign/non-bank FI sleeve vs. 20% limit. Rolling extends this breach. Board/IC interpretation is required before rollover is approved. <strong>This flag does not block rollover — it blocks approval without Board/IC sign-off.</strong></p>
+      <p><strong>MPC interaction:</strong> If MPC holds today (97% probability), KIBOR stays at current levels → facility cost unchanged until Sep-29 reset. The rollover economics are not materially affected by today's decision. If MPC cuts (3%), KIBOR drops → facility cost falls at Sep-29 reset → carry improves further, but the new COI rate would also be bid lower. Net effect: still positive carry.</p>
+      <p><strong>Recommended action:</strong> (1) Contact Pak Oman today to confirm COI rollover rate (do not wait for MPC). (2) If Pak Oman offers ≥10.50% — APPROVE ROLLOVER subject to Board/IC IPS interpretation. (3) If Board/IC has not resolved the §3.2(d) flag — CEO must decide to proceed or exit on an interim basis. (4) An alternative is partial redemption of COI (PKR 300–500mn) to reduce concentration — discuss with Pak Oman as they may require full utilisation of facility.</p>
+    </div>
+    <div class="d-req"><strong>Decision Required (CEO):</strong> Approve COI/Pak Oman rollover at prevailing rate, subject to IPS §3.2(d) Board/IC interpretation gate — or direct alternative action by 31 July 2026.</div>
+  </div>
+
+  <!-- Decision 2: 6-Aug MTB Reinvestment -->
+  <div class="decision" style="border-color:var(--amber);">
+    <div class="d-head">
+      <span class="d-deadline days">🟡 6 AUGUST — 10 DAYS</span>
+      <span class="d-title">MTB Reinvestment — Largest Single Event</span>
+      <span class="d-amount">PKR 2,194.9mn (face)</span>
+    </div>
+    <div class="d-body">
+      <p><strong>Situation:</strong> The largest MTB tranche (labeled 1Y, cost PKR 2,000mn, current value PKR 2,199.7mn) matures on approximately 6 August 2026. This is the largest single reinvestment event in the portfolio — PKR 2,195mn face value to be re-deployed at a new auction.</p>
+      <p><strong>Tenor decision:</strong> Duration extension thesis suspended. Current auction cut-offs: 3M at 11.51%, 6M at 11.79%, 12M at 11.99%. With oil at $97 and the MPC hold expected, the yield curve is steep at the 3–12M segment — this spread (28bp for 6M vs. 3M, 48bp for 12M vs. 3M) represents the oil/geopolitical risk premium, not a permanent rate differential.</p>
+      <p><strong>Recommended split:</strong> Conditional on MPC HOLD today — reinvest <strong>60-70% in 3M (PKR 1,300–1,540mn)</strong> and <strong>30-40% in 6M (PKR 650–880mn)</strong>. No 12M extension until oil risk resolves. This preserves optionality for the Sep-14 MPC meeting and captures the 28bp 6M pickup while keeping the majority in ≤3M for flexibility.</p>
+      <p><strong>Conditional action if MPC CUT (3% probability):</strong> Extend 50% to 12M and 30% to 6M, reserving 20% in 3M. The cut scenario is the trigger to re-open the duration extension playbook.</p>
+      <p><strong>Timing gate:</strong> Confirm tenor split <em>after MPC announcement today</em> but <em>before the next T-Bill auction</em> (expected ~5 Aug). Alert the treasury desk accordingly.</p>
+    </div>
+    <div class="d-req"><strong>Decision Required (CEO):</strong> Approve reinvestment split for PKR 2,195mn — recommend 60-70% 3M / 30-40% 6M conditional on HOLD outcome. Confirm post-MPC announcement today.</div>
+  </div>
+
+  <!-- Decision 3: Post-MPC Model Recalibration -->
+  <div class="decision" style="border-color:var(--blue);">
+    <div class="d-head">
+      <span class="d-deadline" style="background:var(--blue);">📋 TODAY / THIS WEEK</span>
+      <span class="d-title">Post-MPC Ensemble Recalibration &amp; IMF Overlay Setting</span>
+      <span class="d-amount">Analytical · No Trade</span>
+    </div>
+    <div class="d-body">
+      <p>Once the MPC statement is released today, the following analytical updates are required for the next cadence: (1) Read the statement tone for forward guidance — is the MPC signalling "data dependent" or anchoring rates? (2) Reset probit probabilities for the Sep-14 meeting using post-decision language. (3) Update ensemble weights if any formal methodology change is approved. (4) Set IMF overlay disposition (binding / not binding / unclear) for FY27 — this has been NOT SET every cycle and must be addressed. (5) Determine if the NS curve forward rates update post-MPC, and whether the current gap vs. PKRV (NS: 11.31-11.37% vs. PKRV: 11.44-11.90%) narrows.</p>
+    </div>
+    <div class="d-req"><strong>Decision Required (CEO/IC):</strong> Set IMF overlay disposition for FY27. Review post-MPC statement and direct analytical recalibration at next cadence session.</div>
+  </div>
+
+  <!-- Carried-forward / low-urgency -->
+  <div class="card mt8" style="border-left:4px solid var(--s300);">
+    <div class="card-title">⬜ Carried Forward — Contingent / Lower Urgency</div>
+    <div class="mt8">
+      <p style="font-size:12.5px;color:var(--ink7);">• <strong>Samba Bank:</strong> Remains at PKR 0. Not an alpha lever. No action recommended. (Standing rule.)</p>
+      <p style="font-size:12.5px;color:var(--ink7);margin-top:6px;">• <strong>STS Sukuk (SELECT, PREMA, DAEWOO, LIBERTY):</strong> Stable accrual. No maturity events in the next 30 days. Monitor credit ratings — still pending (open item). Yield 12.68–13.61% represents the most attractive carry in the portfolio.</p>
+      <p style="font-size:12.5px;color:var(--ink7);margin-top:6px;">• <strong>Faysal Bank TDR:</strong> Stable accrual at 11.25% (implied). Monitor counterparty deposit/equity base ratio compliance (open item). No action this cycle.</p>
+      <p style="font-size:12.5px;color:var(--ink7);margin-top:6px;">• <strong>MTBs (3M tranches B&amp;C + 6M tranche):</strong> Determine maturity dates — critical for accurate IPS bucketing and reinvestment planning. Required for next cadence.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SECTION 9: QA & CONSISTENCY AUDIT
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 9</span>
+    <span class="sec-title">QA &amp; Consistency Audit</span>
+    <span class="sec-big">This Cadence Build — Numbered Checklist</span>
+  </div>
+
+  <div class="qa-item"><div class="qa-num">QA-01</div><div class="qa-body"><strong>KPI Strip Math:</strong> Unlevered return (G29/E29×365/7) = 10.86%; Adjusted (levered) = 10.73%; Leverage drag = 12.8bps. Benchmark = 3MK (11.61%) − 1% = 10.61%. Alpha = 10.73% − 10.61% = +12bps (~11.82bps per ledger; minor rounding). Gross-to-net attribution route: 10.86% → −12.8bp drag → 10.73%. ✓ Internally consistent.</div><div class="qa-status">✓ PASS</div></div>
+  <div class="qa-item"><div class="qa-num">QA-02</div><div class="qa-body"><strong>Instrument contributions sum to unlevered return:</strong> Total gross 7-day return PKR 19,733,419 / gross AUM PKR 9,477,864,475 × 52.143 = 10.86%. All instrument rows sum to 19,733,419 by construction. ✓ Pass.</div><div class="qa-status">✓ PASS</div></div>
+  <div class="qa-item"><div class="qa-num">QA-03</div><div class="qa-body"><strong>PVBP → implied duration internally consistent:</strong> Estimated PVBP ~PKR 299K implies effective duration ~0.315yr = 115 days. Consistent with a T-Bill-heavy portfolio where the largest tranche matures Aug 6 (10 days). IPS limit PKR 2,849,100 — PASS with 89% headroom. ⚠ Estimate only: requires confirmed maturity dates for precision.</div><div class="qa-status">⚠ ESTIMATE</div></div>
+  <div class="qa-item"><div class="qa-num">QA-04</div><div class="qa-body"><strong>Facility/COI shock-table cost deltas foot to leverage-ratio borrowing principal:</strong> Facility principal used in shock table = PKR 1,238mn. Leverage ratio = 1,238/8,259 = 15.0%. Quarterly cost impact (±100bp) = 1,238mn × 1% × 90/365 = PKR 3.05mn ✓. COI shock impact (revenue side) not separately modelled — noted as approximation.</div><div class="qa-status">✓ PASS</div></div>
+  <div class="qa-item"><div class="qa-num">QA-05</div><div class="qa-body"><strong>Taylor Rule distortion flag:</strong> 17.28% implied vs. 11.5% actual = 5.78pp gap. Threshold ≥3pp → FLAG ACTIVE ✓. CPI now at 11.1% (June) — slightly lower than the vintage used in Taylor calculation. Flag persists: even at 11.1% CPI, the Taylor gap remains ≥3pp. Stated in §4 with caveat. ✓</div><div class="qa-status">✓ FLAGGED</div></div>
+  <div class="qa-item"><div class="qa-num">QA-06</div><div class="qa-body"><strong>BVAR panel staleness:</strong> Panel vintage April 2026. As of July 27, lag = 3 months. Stated in §4 with exact vintage date. ✓ BVAR 12M path (13.01%) diverges significantly from current PKRV trajectory and NS forward curve — cross-layer tension surfaced explicitly in §4.</div><div class="qa-status">✓ FLAGGED</div></div>
+  <div class="qa-item"><div class="qa-num">QA-07</div><div class="qa-body"><strong>Cross-layer disagreement surfaced:</strong> Taylor 17.28% vs. BVAR 3M 10.91% vs. NS stable 11.31% vs. Probit Hold 59.8% — materially different signals. Explicit callout in §4: "these layers do not agree on direction or magnitude." ✓ Not blended silently.</div><div class="qa-status">✓ PASS</div></div>
+  <div class="qa-item"><div class="qa-num">QA-08</div><div class="qa-body"><strong>Oil layer target variable kept separate:</strong> Oil → 3M PKRV model targets a <em>market rate</em> (3M PKRV), not the SBP policy rate. Reported separately in §5, not folded into the 4-layer policy-rate ensemble. ✓</div><div class="qa-status">✓ PASS</div></div>
+  <div class="qa-item"><div class="qa-num">QA-09</div><div class="qa-body"><strong>Oil-signal realized-vs-conditional gap checked:</strong> No active easing episode. The oil price has moved OPPOSITE to the model's easing-signal direction (+34% vs. required ≤−10% 3M change). No double-counting risk — the signal is invalidated, not partially realised. ✓ Stated plainly in §5.</div><div class="qa-status">✓ PASS</div></div>
+  <div class="qa-item"><div class="qa-num">QA-10</div><div class="qa-body"><strong>Frozen-rule discipline confirmed:</strong> No threshold or weight changes this cycle. Taylor distortion flag applied at ≥3pp (unchanged). Oil signal tiers at frozen rule parameters. Ensemble weights remain at Taylor 26/BVAR 32/Probit 26/NS 16. No recalibration. ✓</div><div class="qa-status">✓ PASS</div></div>
+  <div class="qa-item"><div class="qa-num">QA-11</div><div class="qa-body"><strong>T-Bill bucketing — maturity-based:</strong> Aug-06 tranche (labeled 1Y) correctly classified as &lt;3M bucket (10 days remaining). Other tranches require confirmed maturity dates for complete bucketing — flagged as open item. Label-based bucketing has NOT been applied. ✓ Discipline maintained; data gap noted.</div><div class="qa-status">⚠ PARTIAL</div></div>
+  <div class="qa-item"><div class="qa-num">QA-12</div><div class="qa-body"><strong>Three leverage governance gap rows present:</strong> §3.1 includes (a) Borrowing/leverage ratio vs. NAV — no IPS ceiling documented; (b) Lender concentration — no IPS limit documented; (c) Floating-rate liability — IPS PVBP covers assets only. All three present. ✓</div><div class="qa-status">✓ PASS</div></div>
+  <div class="qa-item"><div class="qa-num">QA-13</div><div class="qa-body"><strong>NEW FLAG — Credit Line tab rate discrepancy:</strong> Credit Line tab "Currently Placed" KIBOR = 10.63% → Facility 10.58% is STALE. Ledger-implied facility rate = 11.71% (from 7-day borrowing cost PKR 2,780,243 on PKR 1,238mn). The tab's rate appears to be the rate set at the Dec-29 or Mar-29 reset, not the current Jun-29 reset level. Ledger rate is authoritative. Additionally, the "Reset KIBOR Analysis" date of Jul-27 does not correspond to a quarterly reset date (Dec-29/Mar-29/Jun-29/Sep-29 cadence). This cell appears to be a hypothetical scenario model, not a scheduled reset. No mechanical fix applied; discrepancy logged and carried forward.</div><div class="qa-status">🔴 NEW FLAG</div></div>
+  <div class="qa-item"><div class="qa-num">QA-14</div><div class="qa-body"><strong>NEW FLAG — COI ledger-implied yield vs. contracted rate:</strong> The 7-day return for COI (PKR 2,742,466) implies an annualised rate of ~11.00% on face value (PKR 1,300mn), versus the contracted rate of 10.05%. The gap (≈95bp) is unexplained. Possible causes: (a) accrual includes a MTM component; (b) the ledger aggregates two COI tranches at different rates; (c) day-count methodology difference (Actual/365 vs. monthly). This gap must be investigated and explained. Until resolved, the contracted rate of 10.05% is used for carry economics (§3.3).</div><div class="qa-status">🔴 NEW FLAG</div></div>
+  <div class="qa-item"><div class="qa-num">QA-15</div><div class="qa-body"><strong>NS forward curve below PKRV — lag confirmed:</strong> NS fwd 3M = 11.31% vs. PKRV 3M = 11.44% (+13bp gap). NS fwd 6M = 11.36% vs. PKRV 6M = 11.73% (+37bp gap). NS vintage July 10 does not capture the oil shock (Brent was ~$76 on Jul 10 vs. $97 on Jul 24). This explains the lag. The NS model is systematically underestimating the oil/geopolitical risk premium. Not a model failure — an expected lag. Noted for context.</div><div class="qa-status">⚠ LAG NOTED</div></div>
+  <div class="qa-item"><div class="qa-num">QA-16</div><div class="qa-body"><strong>Prior cycle items carried forward:</strong> T-Bill income recognition basis (straight-line vs. EIR) — Finance alignment still pending. Maturity dates for MTB tranches still not confirmed. All carried forward to §10. No items silently dropped.</div><div class="qa-status">✓ CARRIED FWD</div></div>
+</div>
+
+<!-- ============================================================
+     SECTION 10: STANDING OPEN ITEMS
+     ============================================================ -->
+<div class="sec">
+  <div class="sec-hd">
+    <span class="sec-num">§ 10</span>
+    <span class="sec-title">Standing Open Items · Carried Forward</span>
+    <span class="sec-big">Data / Ratings / Governance Gaps — Updated 27 July 2026</span>
+  </div>
+
+  <div class="oi-item"><div class="oi-n">OI-01</div><div class="oi-cat">Governance</div><div class="oi-text"><strong>IPS §3.2(d) Board/IC Interpretation:</strong> COI represents ~59% of non-sov/non-bank FI sleeve vs. 20% limit. Board or IC must formally interpret whether the existing DFI placement (§3.3b) carve-out covers the COI or whether a waiver/limit revision is required. <strong>BLOCKING the COI rollover (§8) unless resolved or CEO exercises override.</strong></div><div class="oi-pri hi">HIGH</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-02</div><div class="oi-cat">Rate/Data</div><div class="oi-text"><strong>Credit Line Tab Facility Rate Inconsistency (NEW):</strong> Tab "Currently Placed" shows 10.58%; ledger-implied = 11.71%. Tab "Reset Analysis" shows Jul-27 date which is not a quarterly reset date. Requires Finance/treasury clarification to correct the Credit Line tab. Next actual reset: Sep-29, 2026.</div><div class="oi-pri hi">HIGH</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-03</div><div class="oi-cat">Rate/Data</div><div class="oi-text"><strong>COI Ledger-Implied Yield vs. Contracted Rate (NEW):</strong> 7-day return implies ~11.00% on face; contracted rate is 10.05%. A ~95bp gap is unexplained. Possible causes: two COI tranches at different rates, MTM accrual component, or day-count difference. Must be clarified with Finance before next cadence.</div><div class="oi-pri hi">HIGH</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-04</div><div class="oi-cat">Data</div><div class="oi-text"><strong>MTB Tranche Maturity Dates:</strong> Confirmed maturity date only for the Aug-06 tranche (largest, PKR 2,195mn). Dates required for: 3M tranche A (487mn), 3M tranches B&amp;C (388mn each), 6M tranche (188mn), and 1Y tranches B–G to complete IPS T-Bill bucketing and the next reinvestment calendar. Critical for PVBP precision.</div><div class="oi-pri hi">HIGH</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-05</div><div class="oi-cat">Governance</div><div class="oi-text"><strong>IMF Overlay Disposition:</strong> Has been "NOT SET" every cycle. For FY27, the CEO/IC must determine whether the IMF's conditionality program is: (a) binding, (b) not binding, or (c) unclear. This qualitative toggle must be set at least at the start of each fiscal year.</div><div class="oi-pri med">MED</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-06</div><div class="oi-cat">Data</div><div class="oi-text"><strong>T-Bill Income Recognition Basis:</strong> Finance team has not confirmed whether T-Bill income is recognised on straight-line vs. effective interest rate (EIR) basis. This affects the financial reporting bridge (Google Sheet financial reconciliation tab). Alignment required with Finance before FY27 reporting begins.</div><div class="oi-pri med">MED</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-07</div><div class="oi-cat">Ratings</div><div class="oi-text"><strong>Credit Ratings for STS Issuers:</strong> PACRA/VIS ratings required for COI (Pak Oman DFI), Faysal Bank, SELECT, PREMA, DAEWOO, and LIBERTY to confirm IPS §3.2(b) credit-quality tier compliance. None confirmed on file.</div><div class="oi-pri med">MED</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-08</div><div class="oi-cat">Data</div><div class="oi-text"><strong>Counterparty Deposit/Equity Base:</strong> Faysal Bank and Pak Oman deposit/equity base figures required to calculate the IPS §3.3 2%/4% bank deposit limits and 10% DFI equity-base limits.</div><div class="oi-pri med">MED</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-09</div><div class="oi-cat">Governance</div><div class="oi-text"><strong>Board-Designated Core Capital (PKR):</strong> The Board must designate the PKR amount of Core Capital so that the IPS §5 liquidity rule (Core Capital must be in ≤90-day T-Bills) can be monitored. Currently not on file.</div><div class="oi-pri med">MED</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-10</div><div class="oi-cat">Analytics</div><div class="oi-text"><strong>v2 Estimates for Projection Assumption Ledger:</strong> MPC pass-through coefficient (A1) and within-window oil coefficient (A2) remain at v1 (qualitative estimates). Both are estimable from available event-study data. Model registry derivation note for next-MPC step-magnitude also pending.</div><div class="oi-pri lo">LOW</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-11</div><div class="oi-cat">Data</div><div class="oi-text"><strong>SBP Official Monthly PKR/USD Average:</strong> Web-sourced provisional PKR 278.30 used this cycle. Official SBP EasyData monthly average required to firm up the domestic oil-trigger reading for the Level 2 signal tier.</div><div class="oi-pri lo">LOW</div></div>
+
+  <div class="oi-item"><div class="oi-n">OI-12</div><div class="oi-cat">Data</div><div class="oi-text"><strong>STS Sector Classification &amp; Issue Sizes:</strong> Required for IPS §3.2(c) sector diversification (≤20%) and §3.2(d) single-instrument (≤10% of issue size) compliance checks. Not available on file.</div><div class="oi-pri lo">LOW</div></div>
+
+  <div class="oi-item" style="background:var(--p50);"><div class="oi-n">OI-13</div><div class="oi-cat">Post-MPC</div><div class="oi-text"><strong>Post-MPC Recalibration (New — Today):</strong> Once the July 27 MPC decision is announced: (a) read statement tone for Sep-14 guidance; (b) reset probit probabilities; (c) set IMF overlay; (d) confirm if PKRV curve reprices. Schedule recalibration at the next cadence session (target: week of Jul 27 post-announcement or Aug 3 cadence).</div><div class="oi-pri hi">TODAY</div></div>
+</div>
+
+<!-- FOOTER -->
+<div style="border-top:1px solid var(--s150);margin-top:40px;padding-top:16px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--s400);">
+  <div><strong style="color:var(--ink7);">NCGCL · Treasury Decision Framework</strong> · 27 July 2026 · Cadence Build</div>
+  <div>Sources: NCGCL Investment Dashboard (Google Sheets) · SBP/MUFAP PKRV · PBS CPI · Topline/AKD pre-MPC poll · TradingEconomics / Fortune / Vantage Markets (Brent) · hamariweb (USD/PKR) · Dawn/Mettis (T-Bill auction)</div>
+  <div style="color:var(--blue);font-weight:700;">CEO Review &amp; Investment Committee</div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ============================================================
+// CHART 1: PKRV Yield Curve
+// ============================================================
+(function(){
+  const labels = ['1W','2W','1M','2M','3M','4M','6M','9M','1Y','1.5Y','2Y','3Y','4Y','5Y'];
+  const jul14  = [11.52,11.52,11.53,11.53,11.45,11.50,11.50,11.60,11.60,11.61,11.61,11.69,11.71,11.80];
+  const jul24  = [11.50,11.47,11.46,11.51,11.44,11.65,11.73,11.85,11.90,11.82,11.78,11.83,11.87,11.92];
+
+  new Chart(document.getElementById('chartPKRV'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '14 Jul 2026',
+          data: jul14,
+          borderColor: '#A7C7D6',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          borderDash: [4,3],
+          pointRadius: 2,
+          tension: 0.3
+        },
+        {
+          label: '24 Jul 2026',
+          data: jul24,
+          borderColor: '#0C688D',
+          backgroundColor: 'rgba(12,104,141,0.05)',
+          borderWidth: 2.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#0C688D',
+          fill: true,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { font:{size:10}, boxWidth:12, padding:8 } },
+        tooltip: {
+          backgroundColor: 'rgba(6,22,38,0.92)',
+          callbacks: {
+            label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + '%'
+          }
+        }
+      },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:10}} },
+        y: {
+          min: 11.30, max: 12.05,
+          grid: { color: 'rgba(200,214,224,0.4)' },
+          ticks: { font:{size:10}, callback: v => v.toFixed(2)+'%' },
+          title: { display: true, text: '% p.a.', font:{size:10}, color:'#7F8F99' }
+        }
+      }
+    }
+  });
+})();
+
+// ============================================================
+// CHART 2: Brent Crude
+// ============================================================
+(function(){
+  const labels = ['Jun-01','Jun-15','Jul-06','Jul-10','Jul-14','Jul-15','Jul-23','Jul-24'];
+  const data   = [75.00,   73.00,   72.36,   76.80,   86.99,   85.92,   98.49,   97.04];
+
+  new Chart(document.getElementById('chartBrent'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Brent ($/bbl)',
+        data,
+        borderColor: '#C00000',
+        backgroundColor: 'rgba(192,0,0,0.08)',
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: data.map((v,i) => i === data.length-1 ? '#C00000' : 'rgba(192,0,0,0.5)'),
+        fill: true,
+        tension: 0.25
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(6,22,38,0.92)',
+          callbacks: { label: ctx => '$' + ctx.parsed.y.toFixed(2) + '/bbl' }
+        },
+        annotation: {
+          annotations: {
+            line1: {
+              type: 'line',
+              yMin: 85, yMax: 85,
+              borderColor: 'rgba(191,144,0,0.5)',
+              borderWidth: 1,
+              borderDash: [4,3],
+              label: { content: 'Oil-signal invalidation zone', enabled: true, position: 'start', font:{size:9}, color:'#BF9000' }
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:10}} },
+        y: {
+          min: 65, max: 105,
+          grid: { color: 'rgba(200,214,224,0.4)' },
+          ticks: { font:{size:10}, callback: v => '$'+v },
+          title: { display: true, text: 'USD/bbl', font:{size:10}, color:'#7F8F99' }
+        }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
