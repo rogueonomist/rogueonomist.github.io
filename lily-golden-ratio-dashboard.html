@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lily Golden Ratio — Sweet Poison Design System</title>
+<style>
+  :root {
+    --primary: #FFFFFF;
+    --secondary: #FAFAFA;
+    --border: #E5E5E5;
+    --accent: #C8923A;
+    --rose: #9B2335;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --success: #52B788;
+    --warning: #9B2335;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: var(--primary);
+    color: #2D2D2D;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* Header */
+  .hero { padding: 3.5rem 0 2.5rem; border-bottom: 1px solid var(--border); }
+  .eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 0.75rem;
+  }
+  h1.title {
+    font-family: Georgia, serif; font-weight: 400; font-size: 42px; line-height: 1.15;
+    color: var(--text-primary); max-width: 720px;
+  }
+  .subtitle { margin-top: 0.9rem; font-size: 15.5px; color: var(--text-secondary); max-width: 620px; }
+  .hero-formula {
+    margin-top: 1.75rem; font-family: Georgia, serif; font-size: 15px; color: var(--text-tertiary);
+  }
+  .hero-formula b { color: var(--text-primary); font-weight: 400; }
+
+  /* Sections */
+  section { padding: 2.75rem 0; border-bottom: 1px solid var(--border); }
+  .section-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-tertiary);
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: var(--text-primary);
+    margin-bottom: 1.25rem; line-height: 1.25;
+  }
+  .lede { font-size: 14.5px; color: var(--text-secondary); max-width: 700px; margin-bottom: 1.75rem; }
+
+  /* Grids */
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  @media (max-width: 860px) {
+    .grid-5, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* KPI */
+  .kpi-card {
+    background: #FFFFFF; border: 1px solid var(--border); border-radius: 8px;
+    padding: 1.25rem 1rem; text-align: center; transition: all .25s ease;
+  }
+  .kpi-card:hover { border-color: var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .kpi-num { font-family: Georgia, serif; font-size: 26px; color: var(--text-primary); }
+  .kpi-label { font-size: 11px; color: var(--text-tertiary); margin-top: .4rem; letter-spacing: .08em; text-transform: uppercase; }
+  .kpi-card.gold .kpi-num { color: var(--accent); }
+
+  /* Panel */
+  .panel { background: var(--secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; }
+  .panel-title { font-size: 12px; font-weight: 600; letter-spacing: .06em; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 1rem; }
+
+  /* Formula block */
+  .formula-block {
+    background: #FFFFFF; border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: 6px; padding: 1.75rem; text-align: center; margin-bottom: 1.5rem;
+  }
+  .formula-big { font-family: Georgia, serif; font-size: 30px; color: var(--text-primary); }
+  .formula-sub { font-size: 13px; color: var(--text-secondary); margin-top: .6rem; }
+
+  /* Table */
+  table.est-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .est-table th {
+    font-size: 11px; font-weight: 600; letter-spacing: .07em; color: var(--text-primary);
+    text-align: left; padding: .7rem .6rem; border-bottom: 1px solid var(--border); background: #fff;
+    text-transform: uppercase;
+  }
+  .est-table td { padding: .7rem .6rem; border-bottom: 1px solid var(--border); color: #2D2D2D; }
+  .est-table tr:hover td { background: #FAFAFA; }
+  .est-table tr.highlight td { background: #FBF3E6; font-weight: 600; }
+
+  /* Narrative / verdict */
+  .narrative.caution {
+    background: var(--secondary); border-left: 4px solid var(--accent); padding: 1.25rem 1.5rem;
+    border-radius: 4px; font-size: 13.5px; color: #3D3D3D; line-height: 1.7;
+  }
+  .verdict-banner {
+    border-radius: 6px; padding: 1rem 1.25rem; font-size: 13.5px; font-weight: 500;
+    border: 1px solid var(--border); border-left: 4px solid var(--text-tertiary); margin-top: 1rem;
+  }
+  .verdict-banner.good { border-left-color: var(--success); background: #F2FBF7; color: #1F5A3E; }
+  .verdict-banner.bad { border-left-color: var(--warning); background: #FBF1F2; color: #6E1521; }
+  .verdict-banner.warn { border-left-color: var(--accent); background: #FDF6EB; color: #5C4416; }
+
+  /* Calculator */
+  .calc-shell { display: grid; grid-template-columns: 1.05fr 1fr; gap: 1.75rem; }
+  @media (max-width: 860px) { .calc-shell { grid-template-columns: 1fr; } }
+  .mode-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
+  .mode-btn {
+    flex: 1; background: #fff; border: 1px solid var(--border); border-radius: 6px;
+    padding: .7rem .5rem; font-size: 12.5px; font-weight: 600; color: var(--text-secondary);
+    cursor: pointer; transition: all .2s;
+  }
+  .mode-btn.active { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+
+  .field { margin-bottom: 1.25rem; }
+  .field label {
+    display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-secondary);
+    margin-bottom: .4rem; font-weight: 500;
+  }
+  .field label span.val { color: var(--text-primary); font-weight: 600; font-family: Georgia, serif; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  input[type=number] {
+    width: 100%; padding: .5rem .6rem; border: 1px solid var(--border); border-radius: 5px;
+    font-size: 14px; color: var(--text-primary); background: #fff;
+  }
+  .field-inline { display: flex; gap: .75rem; }
+  .field-inline > div { flex: 1; }
+
+  .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem 1.25rem; margin-top: 1rem; }
+  .result-row { display: flex; justify-content: space-between; padding: .5rem 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
+  .result-row .rlabel { color: var(--text-secondary); }
+  .result-row .rval { color: var(--text-primary); font-family: Georgia, serif; font-weight: 600; }
+
+  /* SVG stage */
+  .stage { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; display: flex; align-items: center; justify-content: center; }
+  .stage svg { width: 100%; height: auto; max-width: 320px; }
+  .stage-note { text-align: center; font-size: 12px; color: var(--text-tertiary); margin-top: .75rem; font-style: italic; }
+
+  /* Field check cards */
+  .check-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
+  .check-num { font-family: Georgia, serif; font-size: 20px; color: var(--accent); margin-bottom: .4rem; }
+  .check-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-bottom: .35rem; }
+  .check-body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+  footer { padding: 2.5rem 0 3.5rem; }
+  footer .lede { margin-bottom: .5rem; }
+  .footnote { font-size: 12px; color: var(--text-tertiary); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eyebrow">Sweet Poison — Cake Design System</div>
+    <h1 class="title">The Lily Golden Ratio</h1>
+    <p class="subtitle">A measured design specification for placing a stargazer lily on a buttercream tier — derived from ten approved reference cakes and a single governing equation that ties span, angle, and rise together.</p>
+    <div class="hero-formula">Core relationship: <b>L · sin θ ≈ D</b> — lily span, times the sine of its face angle, equals the cake diameter.</div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <section>
+    <div class="section-label">At a Glance</div>
+    <div class="section-title">The five governing constants</div>
+    <div class="grid-5">
+      <div class="kpi-card gold"><div class="kpi-num">1.10 D</div><div class="kpi-label">Lily span (L)</div></div>
+      <div class="kpi-card gold"><div class="kpi-num">65°</div><div class="kpi-label">Face angle (θ)</div></div>
+      <div class="kpi-card gold"><div class="kpi-num">0.50 D</div><div class="kpi-label">Rise above top (R)</div></div>
+      <div class="kpi-card"><div class="kpi-num">0.80 D</div><div class="kpi-label">Cake height (H)</div></div>
+      <div class="kpi-card"><div class="kpi-num">0.618</div><div class="kpi-label">H ÷ silhouette</div></div>
+    </div>
+  </section>
+
+  <!-- GOVERNING EQUATION -->
+  <section>
+    <div class="section-label">The Correction</div>
+    <div class="section-title">Where the golden section actually lives</div>
+    <p class="lede">Lily span to cake diameter is <b>not</b> φ (1.618) — it's ≈1.05–1.10:1. The golden section instead governs the <b>elevation silhouette</b>: cake body occupies 0.618 of the total height, the flower supplies the minor 0.382. Since R = (L⁄2)·sin θ, forcing R = 0.494D collapses span, angle, and rise into one equation.</p>
+    <div class="formula-block">
+      <div class="formula-big">L · sin θ ≈ D</div>
+      <div class="formula-sub">Span × sine(face angle) = cake diameter — the floor is L ≥ D, since sin θ cannot exceed 1.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Trade-off curve</div>
+      <table class="est-table">
+        <tr><th>Span L</th><th>Required θ</th><th>Reads as</th></tr>
+        <tr><td>1.00 D</td><td>90°</td><td>Fully upright, throat hidden — boundary case</td></tr>
+        <tr><td>1.05 D</td><td>72°</td><td>Tall and formal</td></tr>
+        <tr class="highlight"><td>1.10 D</td><td>65°</td><td>The observed sweet spot</td></tr>
+        <tr><td>1.20 D</td><td>56°</td><td>Open, generous, throat fully presented</td></tr>
+        <tr><td>1.35 D</td><td>48°</td><td>Flower dominates — mini-cake territory</td></tr>
+        <tr><td>1.50 D</td><td>42°</td><td>Near-flat; only works below ~4″ tiers</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section id="calculator">
+    <div class="section-label">Interactive</div>
+    <div class="section-title">Lily Golden Ratio calculator</div>
+    <p class="lede">Design a new cake against the ratio, or check a build you've already made. The diagram updates live — watch how the rise stays pinned to the golden section no matter how you set the span.</p>
+
+    <div class="mode-tabs">
+      <button class="mode-btn active" id="tab-design-btn" onclick="switchMode('design')">Design a cake</button>
+      <button class="mode-btn" id="tab-check-btn" onclick="switchMode('check')">Check a build</button>
+    </div>
+
+    <div class="calc-shell">
+      <!-- LEFT: controls -->
+      <div>
+        <!-- DESIGN MODE -->
+        <div id="panel-design">
+          <div class="panel">
+            <div class="field">
+              <label>Cake diameter (D) <span class="val" id="d-val">6.0″</span></label>
+              <input type="range" id="d-slider" min="3" max="10" step="0.25" value="6">
+            </div>
+            <div class="field">
+              <label>Lily span ratio (L ÷ D) <span class="val" id="l-val">1.10</span></label>
+              <input type="range" id="l-slider" min="1.00" max="1.50" step="0.01" value="1.10">
+            </div>
+            <div class="result-grid">
+              <div class="result-row"><span class="rlabel">Regime</span><span class="rval" id="out-regime">Single bloom</span></div>
+              <div class="result-row"><span class="rlabel">Cake height (H)</span><span class="rval" id="out-h">—</span></div>
+              <div class="result-row"><span class="rlabel">Lily span (L)</span><span class="rval" id="out-l">—</span></div>
+              <div class="result-row"><span class="rlabel">Face angle (θ)</span><span class="rval" id="out-theta">—</span></div>
+              <div class="result-row"><span class="rlabel">Rise above top (R)</span><span class="rval" id="out-r">—</span></div>
+              <div class="result-row"><span class="rlabel">Silhouette height</span><span class="rval" id="out-sil">—</span></div>
+              <div class="result-row"><span class="rlabel">Plan overhang (O)</span><span class="rval" id="out-o">—</span></div>
+              <div class="result-row"><span class="rlabel">Throat offset (e)</span><span class="rval" id="out-e">—</span></div>
+              <div class="result-row"><span class="rlabel">Board diameter (B)</span><span class="rval" id="out-b">—</span></div>
+              <div class="result-row"><span class="rlabel">Box needed (approx.)</span><span class="rval" id="out-box">—</span></div>
+            </div>
+            <div id="design-verdict"></div>
+          </div>
+        </div>
+
+        <!-- CHECK MODE -->
+        <div id="panel-check" style="display:none;">
+          <div class="panel">
+            <div class="field-inline">
+              <div class="field">
+                <label>Cake diameter D (in)</label>
+                <input type="number" id="chk-d" value="6" step="0.1" min="1">
+              </div>
+              <div class="field">
+                <label>Measured lily span L (in)</label>
+                <input type="number" id="chk-l" value="6.6" step="0.1" min="0.5">
+              </div>
+            </div>
+            <div class="field-inline">
+              <div class="field">
+                <label>Measured face angle θ (°)</label>
+                <input type="number" id="chk-theta" value="65" step="1" min="1" max="90">
+              </div>
+              <div class="field">
+                <label>Cake height H (in) — optional</label>
+                <input type="number" id="chk-h" placeholder="defaults to 0.80D" step="0.1" min="0.5">
+              </div>
+            </div>
+            <div class="result-grid">
+              <div class="result-row"><span class="rlabel">L ÷ D ratio</span><span class="rval" id="chk-out-ld">—</span></div>
+              <div class="result-row"><span class="rlabel">Governing product L·sinθ</span><span class="rval" id="chk-out-gov">—</span></div>
+              <div class="result-row"><span class="rlabel">Actual rise (R)</span><span class="rval" id="chk-out-r">—</span></div>
+              <div class="result-row"><span class="rlabel">Ideal rise (0.494D)</span><span class="rval" id="chk-out-rideal">—</span></div>
+              <div class="result-row"><span class="rlabel">Silhouette ratio H÷(H+R)</span><span class="rval" id="chk-out-sil">—</span></div>
+              <div class="result-row"><span class="rlabel">Target silhouette ratio</span><span class="rval" id="chk-out-silideal">0.618</span></div>
+            </div>
+            <div id="check-verdict"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: diagram -->
+      <div>
+        <div class="stage">
+          <svg id="cake-svg" viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg">
+            <!-- board -->
+            <rect id="svg-board" x="70" y="290" width="160" height="10" rx="3" fill="#F0EAE0" stroke="#E5E5E5"/>
+            <!-- cake -->
+            <rect id="svg-cake" x="80" y="150" width="140" height="140" rx="10" fill="#FFFDF8" stroke="#C8923A" stroke-width="1.5"/>
+            <!-- rise guide (dashed vertical) -->
+            <line id="svg-rise-guide" x1="150" y1="150" x2="150" y2="60" stroke="#52B788" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <text id="svg-rise-label" x="156" y="105" font-family="Georgia, serif" font-size="11" fill="#1F5A3E">R = 0.50D</text>
+            <!-- angle arc -->
+            <path id="svg-angle-arc" d="" stroke="#999" stroke-width="1" fill="none"/>
+            <text id="svg-theta-label" x="0" y="0" font-family="Georgia, serif" font-size="12" fill="#666"></text>
+            <!-- stem -->
+            <line id="svg-stem" x1="110" y1="150" x2="150" y2="60" stroke="#7A8B5C" stroke-width="3" stroke-linecap="round"/>
+            <!-- petals -->
+            <ellipse id="svg-petal1" cx="150" cy="60" rx="34" ry="12" fill="#C8425A" opacity="0.85"/>
+            <ellipse id="svg-petal2" cx="150" cy="60" rx="30" ry="10" fill="#E07A93" opacity="0.85"/>
+            <circle id="svg-throat" cx="110" cy="150" r="3.5" fill="#7A8B5C"/>
+            <!-- silhouette bracket -->
+            <line x1="245" y1="60" x2="245" y2="290" stroke="#999" stroke-width="1"/>
+            <line x1="240" y1="60" x2="250" y2="60" stroke="#999" stroke-width="1"/>
+            <line x1="240" y1="290" y2="290" x2="250" stroke="#999" stroke-width="1"/>
+            <text x="252" y="178" font-family="Georgia, serif" font-size="11" fill="#666" id="svg-sil-label">1.30D</text>
+            <!-- diameter label -->
+            <text x="150" y="310" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#999">D</text>
+            <text x="150" y="330" text-anchor="middle" font-family="Georgia, serif" font-size="10" fill="#C8923A" id="svg-board-label">Board 1.30D</text>
+          </svg>
+        </div>
+        <div class="stage-note" id="stage-note">Drag the span slider — notice the rise (green dashed line) never moves. That invariance is the golden section holding by construction.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FULL PARAMETER TABLE -->
+  <section>
+    <div class="section-label">Specification</div>
+    <div class="section-title">Consolidated parameters — single dominant lily</div>
+    <table class="est-table">
+      <tr><th>Symbol</th><th>Element</th><th>Preferred</th><th>Working range</th><th>Status</th></tr>
+      <tr><td>D</td><td>Tier diameter</td><td>—</td><td>4–7″</td><td>Input</td></tr>
+      <tr><td>H</td><td>Cake height</td><td>0.80 D</td><td>0.72–0.90 D</td><td>Empirical</td></tr>
+      <tr><td>L</td><td>Lily tip-to-tip span</td><td>1.10 D</td><td>1.00–1.20 D</td><td>Empirical, floor derived</td></tr>
+      <tr><td>θ</td><td>Face angle above cake top</td><td>65°</td><td>56–75°</td><td>Derived from L</td></tr>
+      <tr><td>R</td><td>Rise above cake top</td><td>0.50 D</td><td>0.45–0.55 D</td><td>Derived</td></tr>
+      <tr><td>—</td><td>Total silhouette height</td><td>1.30 D</td><td>—</td><td>H + R</td></tr>
+      <tr><td>O</td><td>Plan overhang (offset side)</td><td>0.15 D</td><td>0.10–0.20 D</td><td>Empirical</td></tr>
+      <tr><td>e</td><td>Throat offset from centre</td><td>0.20 D</td><td>0.15–0.25 D</td><td>Empirical</td></tr>
+      <tr><td>B</td><td>Board diameter</td><td>1.30 D</td><td>1.25–1.40 D</td><td>Practical</td></tr>
+    </table>
+  </section>
+
+  <!-- OVERHANG -->
+  <section>
+    <div class="section-label">Detail</div>
+    <div class="section-title">Overhang is two numbers, not one</div>
+    <p class="lede">Conflating plan overhang with the "one-petal rule" is where builds go wrong. The petal that visually breaks the front rim barely projects past the cake's centre in plan — the composition looks cantilevered but the centre of mass stays inside the footprint.</p>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title">Plan overhang</div>
+        <div class="kpi-num" style="text-align:left;">≈ 0.15–0.18 D</div>
+        <p class="check-body" style="margin-top:.6rem;">On the side the throat is offset toward. O = L⁄2 + e − D⁄2, reduced by tilt foreshortening.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Elevation overhang (one-petal rule)</div>
+        <div class="kpi-num" style="text-align:left;">≈ 0.03 D</div>
+        <p class="check-body" style="margin-top:.6rem;">The front-rim petal's true plan reach — it sits over the centre, but drops below the top-edge sightline, so it <em>reads</em> as overhanging.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLACEMENT & SECONDARY ELEMENTS -->
+  <section>
+    <div class="section-label">Composition</div>
+    <div class="section-title">Placement geometry &amp; secondary elements</div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title">Placement rules</div>
+        <table class="est-table">
+          <tr><td>Throat position</td><td>0.20D behind centreline, 10:30–11:30 or 12:30–2:00</td></tr>
+          <tr><td>Tilt direction</td><td>Forward, toward viewer — opposite the offset</td></tr>
+          <tr><td>Anchor depth</td><td>≈0.40D — half the cake height</td></tr>
+          <tr><td>Barrier</td><td>Posy pick / food-safe sleeve on fresh stems</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Secondary elements</div>
+        <table class="est-table">
+          <tr><th>Element</th><th>Placement</th></tr>
+          <tr><td>Gypsophila / filler</td><td>120–150° around, 0.30–0.40D envelope</td></tr>
+          <tr><td>Leaf spike</td><td>Behind throat, 0.60–0.90D height</td></tr>
+          <tr><td>Candle</td><td>Void quadrant, 0.50–0.70D above top</td></tr>
+          <tr><td>Ribbon tails</td><td>To board edge, not past</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- MULTI-LILY -->
+  <section>
+    <div class="section-label">Scaling Up</div>
+    <div class="section-title">Multi-lily &amp; cascade regimes</div>
+    <p class="lede">Above ≈7″ diameter, a single sugar bloom can no longer satisfy L ≥ D — the envelope takes over the obligation instead of one flower.</p>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title">Two-bloom cluster</div>
+        <table class="est-table">
+          <tr><td>Individual span</td><td>0.70–0.85 D</td></tr>
+          <tr><td>Cluster envelope</td><td>1.10–1.30 D</td></tr>
+          <tr><td>Overlap</td><td>25–35%</td></tr>
+          <tr><td>Centre separation</td><td>0.30–0.45 D</td></tr>
+          <tr><td>Face-angle differential</td><td>10–20°</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Cascade / tiered</div>
+        <table class="est-table">
+          <tr><td>Individual span (local tier)</td><td>0.65–0.90 D</td></tr>
+          <tr><td>Total floral run</td><td>1.4–1.8 D</td></tr>
+          <tr><td>Centre offset</td><td>0.40–0.60 of one bloom span</td></tr>
+          <tr><td>Golden section</td><td>Rotated — ≈0.6 of visible face height</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFERENCE TABLE -->
+  <section>
+    <div class="section-label">Reference</div>
+    <div class="section-title">Sizing table (highlights nearest to your calculator diameter)</div>
+    <table class="est-table" id="ref-table">
+      <tr><th>D</th><th>H</th><th>L</th><th>θ</th><th>R</th><th>Silhouette</th><th>O</th><th>e</th><th>Board</th><th>Regime</th></tr>
+      <tr data-d="4"><td>4″</td><td>3.2</td><td>4.4</td><td>65°</td><td>2.0</td><td>5.2</td><td>0.6</td><td>0.8</td><td>5.2</td><td>Single (flatter)</td></tr>
+      <tr data-d="5"><td>5″</td><td>4.0</td><td>5.5</td><td>65°</td><td>2.5</td><td>6.5</td><td>0.75</td><td>1.0</td><td>6.5</td><td>Single</td></tr>
+      <tr data-d="6"><td>6″</td><td>4.8</td><td>6.6</td><td>65°</td><td>3.0</td><td>7.8</td><td>0.9</td><td>1.2</td><td>7.8</td><td>Single — optimum</td></tr>
+      <tr data-d="7"><td>7″</td><td>5.6</td><td>7.7</td><td>65°</td><td>3.5</td><td>9.1</td><td>1.05</td><td>1.4</td><td>9.1</td><td>Single, at limit</td></tr>
+      <tr data-d="8"><td>8″</td><td>6.4</td><td>8.8</td><td>—</td><td>4.0</td><td>10.4</td><td>1.2</td><td>1.6</td><td>10.4</td><td>Cluster required</td></tr>
+    </table>
+  </section>
+
+  <!-- FAILURE MODES -->
+  <section>
+    <div class="section-label">Guardrails</div>
+    <div class="section-title">Failure modes</div>
+    <table class="est-table">
+      <tr><th>Deviation</th><th>Result</th></tr>
+      <tr><td>L &lt; 1.00 D</td><td>Golden rise unachievable; flower reads as garnish</td></tr>
+      <tr><td>L &gt; 1.25 D on a full tier</td><td>Cake becomes a stand for the flower</td></tr>
+      <tr><td>θ &lt; 50° at D ≥ 6″</td><td>Bloom appears to be lying down; centre of mass nears the rim</td></tr>
+      <tr><td>θ &gt; 80°</td><td>Throat and stamen structure hidden</td></tr>
+      <tr><td>e = 0 (centred)</td><td>Static, symmetrical, stem and mechanics exposed</td></tr>
+      <tr><td>H &lt; 0.70 D</td><td>Top-heavy; flower crushes the profile</td></tr>
+      <tr><td>No filler in opposite quadrant</td><td>Reads as lopsided despite correct geometry</td></tr>
+      <tr><td>Board &lt; span + 20%</td><td>Petals cross the board edge; won't box or travel</td></tr>
+    </table>
+  </section>
+
+  <!-- FIELD CHECKS -->
+  <section>
+    <div class="section-label">No Ruler Required</div>
+    <div class="section-title">Field checks</div>
+    <div class="grid-4">
+      <div class="check-card">
+        <div class="check-num">01</div>
+        <div class="check-title">Lay-across test</div>
+        <div class="check-body">Rest the lily flat across the cake top — it should just overhang both rims by a fingertip's width.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-num">02</div>
+        <div class="check-title">Two-thirds test</div>
+        <div class="check-body">In elevation the cake body should read as roughly two-thirds of total height, flower one-third.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-num">03</div>
+        <div class="check-title">Plumb-line test</div>
+        <div class="check-body">Drop an imaginary vertical from the outermost petal tip — it should land on cake or board, never past it.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-num">04</div>
+        <div class="check-title">Void test</div>
+        <div class="check-body">Find the emptiest quadrant on the top surface. More than a quarter empty means filler is missing.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="narrative caution">
+      <strong>Verification protocol:</strong> current figures come from screenshots with real perspective distortion (±10%). Photograph square-on at cake-top height with a scale reference on the board, one plan view and one elevation per cake, to tighten this to ±3% — and to settle whether θ genuinely tracks the L·sinθ ≈ D curve or the baker holds θ fixed and lets R float.
+    </div>
+    <div class="footnote" style="margin-top:1.5rem;">Sweet Poison — Lily Golden Ratio design system · derived from ten approved reference cakes</div>
+  </footer>
+
+</div>
+
+<script>
+  // ---------- DESIGN MODE ----------
+  const dSlider = document.getElementById('d-slider');
+  const lSlider = document.getElementById('l-slider');
+  const dVal = document.getElementById('d-val');
+  const lVal = document.getElementById('l-val');
+
+  function fmt(n, dp=2){ return Number(n).toFixed(dp); }
+
+  function recalcDesign(){
+    const D = parseFloat(dSlider.value);
+    const Lratio = parseFloat(lSlider.value);
+    dVal.textContent = D.toFixed(2) + '″';
+    lVal.textContent = Lratio.toFixed(2);
+
+    const cluster = Lratio > 1.25 || D > 7.2;
+    const H = 0.80 * D;
+    const L = Lratio * D;
+    // theta derived so that R stays at the golden 0.50D (clamped to valid domain)
+    const sinTheta = Math.min(1 / Lratio, 1);
+    const thetaDeg = Math.asin(sinTheta) * 180 / Math.PI;
+    const R = 0.5 * L * Math.sin(thetaDeg * Math.PI/180);
+    const sil = H + R;
+    const O = 0.15 * D;
+    const e = 0.20 * D;
+    const B = 1.30 * D;
+
+    document.getElementById('out-regime').textContent = cluster ? 'Cluster recommended' : 'Single bloom';
+    document.getElementById('out-h').textContent = fmt(H,2) + '″';
+    document.getElementById('out-l').textContent = fmt(L,2) + '″ (' + Lratio.toFixed(2) + 'D)';
+    document.getElementById('out-theta').textContent = fmt(thetaDeg,1) + '°';
+    document.getElementById('out-r').textContent = fmt(R,2) + '″';
+    document.getElementById('out-sil').textContent = fmt(sil,2) + '″';
+    document.getElementById('out-o').textContent = fmt(O,2) + '″';
+    document.getElementById('out-e').textContent = fmt(e,2) + '″';
+    document.getElementById('out-b').textContent = fmt(B,2) + '″';
+    document.getElementById('out-box').textContent = fmt(B,1) + '″ × ' + fmt(B,1) + '″ × ' + fmt(sil,1) + '″';
+
+    const verdictEl = document.getElementById('design-verdict');
+    if (Lratio < 1.00 + 1e-9) {
+      verdictEl.innerHTML = '<div class="verdict-banner bad">Below the structural floor (L ≥ D). At this span no angle can reach the golden rise — the flower will look undersized.</div>';
+    } else if (cluster) {
+      verdictEl.innerHTML = '<div class="verdict-banner warn">This diameter or span calls for a two-bloom cluster rather than one oversized flower — see the cluster regime below.</div>';
+    } else if (thetaDeg < 56 || thetaDeg > 75) {
+      verdictEl.innerHTML = '<div class="verdict-banner warn">Angle is outside the observed 56–75° comfort band — still geometrically valid, but outside house style.</div>';
+    } else {
+      verdictEl.innerHTML = '<div class="verdict-banner good">Within the Lily Golden Ratio — span, angle and rise are in house-style range.</div>';
+    }
+
+    updateSVG(thetaDeg, Lratio, 0.80);
+    highlightRef(D);
+  }
+
+  // ---------- SVG DIAGRAM ----------
+  function updateSVG(thetaDeg, Lratio, Hratio){
+    const Dpx = 200;         // fixed reference width = D
+    const cx = 150;
+    const boardY = 290;
+    const Hpx = Hratio * Dpx;
+    const cakeTopY = boardY - Hpx;
+    const ePx = 0.20 * Dpx;
+    const throatX = cx - ePx;
+    const throatY = cakeTopY;
+    const thetaRad = thetaDeg * Math.PI/180;
+    const halfLpx = (Lratio * Dpx) / 2;
+    const tipX = throatX + halfLpx * Math.cos(thetaRad);
+    const tipY = throatY - halfLpx * Math.sin(thetaRad);
+
+    document.getElementById('svg-cake').setAttribute('y', cakeTopY);
+    document.getElementById('svg-cake').setAttribute('height', Hpx);
+    document.getElementById('svg-cake').setAttribute('x', cx - Dpx/2);
+    document.getElementById('svg-cake').setAttribute('width', Dpx);
+
+    document.getElementById('svg-throat').setAttribute('cx', throatX);
+    document.getElementById('svg-throat').setAttribute('cy', throatY);
+
+    document.getElementById('svg-stem').setAttribute('x1', throatX);
+    document.getElementById('svg-stem').setAttribute('y1', throatY);
+    document.getElementById('svg-stem').setAttribute('x2', tipX);
+    document.getElementById('svg-stem').setAttribute('y2', tipY);
+
+    document.getElementById('svg-petal1').setAttribute('cx', tipX);
+    document.getElementById('svg-petal1').setAttribute('cy', tipY);
+    document.getElementById('svg-petal1').setAttribute('transform', `rotate(${-(90-thetaDeg)-20} ${tipX} ${tipY})`);
+    document.getElementById('svg-petal2').setAttribute('cx', tipX);
+    document.getElementById('svg-petal2').setAttribute('cy', tipY);
+    document.getElementById('svg-petal2').setAttribute('transform', `rotate(${-(90-thetaDeg)+20} ${tipX} ${tipY})`);
+
+    // rise guide always at 0.5D above throat's horizontal plane, anchored under tip's x
+    const Rpx = 0.5 * Dpx;
+    document.getElementById('svg-rise-guide').setAttribute('x1', throatX);
+    document.getElementById('svg-rise-guide').setAttribute('x2', throatX);
+    document.getElementById('svg-rise-guide').setAttribute('y1', throatY);
+    document.getElementById('svg-rise-guide').setAttribute('y2', throatY - Rpx);
+    document.getElementById('svg-rise-label').setAttribute('x', throatX + 6);
+    document.getElementById('svg-rise-label').setAttribute('y', throatY - Rpx/2);
+
+    // angle arc + label near throat
+    const arcR = 26;
+    const ax = throatX + arcR;
+    const ay = throatY;
+    const bx = throatX + arcR*Math.cos(thetaRad);
+    const by = throatY - arcR*Math.sin(thetaRad);
+    document.getElementById('svg-angle-arc').setAttribute('d', `M ${ax} ${ay} A ${arcR} ${arcR} 0 0 0 ${bx} ${by}`);
+    document.getElementById('svg-theta-label').setAttribute('x', throatX + arcR + 6);
+    document.getElementById('svg-theta-label').setAttribute('y', throatY - 6);
+    document.getElementById('svg-theta-label').textContent = thetaDeg.toFixed(0) + '°';
+
+    document.getElementById('svg-sil-label').textContent = (Hratio + 0.5).toFixed(2) + 'D';
+  }
+
+  function highlightRef(D){
+    document.querySelectorAll('#ref-table tr[data-d]').forEach(row=>{
+      row.classList.remove('highlight');
+    });
+    let closest = null, bestDiff = Infinity;
+    document.querySelectorAll('#ref-table tr[data-d]').forEach(row=>{
+      const rd = parseFloat(row.getAttribute('data-d'));
+      const diff = Math.abs(rd - D);
+      if (diff < bestDiff){ bestDiff = diff; closest = row; }
+    });
+    if (closest) closest.classList.add('highlight');
+  }
+
+  dSlider.addEventListener('input', recalcDesign);
+  lSlider.addEventListener('input', recalcDesign);
+
+  // ---------- CHECK MODE ----------
+  const chkD = document.getElementById('chk-d');
+  const chkL = document.getElementById('chk-l');
+  const chkTheta = document.getElementById('chk-theta');
+  const chkH = document.getElementById('chk-h');
+
+  function recalcCheck(){
+    const D = parseFloat(chkD.value) || 0;
+    const L = parseFloat(chkL.value) || 0;
+    const thetaDeg = parseFloat(chkTheta.value) || 0;
+    const Hinput = parseFloat(chkH.value);
+    const H = (!isNaN(Hinput) && Hinput > 0) ? Hinput : 0.80 * D;
+    if (D <= 0 || L <= 0) return;
+
+    const thetaRad = thetaDeg * Math.PI/180;
+    const LDratio = L / D;
+    const gov = L * Math.sin(thetaRad);
+    const R = 0.5 * L * Math.sin(thetaRad);
+    const Rideal = 0.494 * D;
+    const silRatio = H / (H + R);
+
+    document.getElementById('chk-out-ld').textContent = LDratio.toFixed(2) + 'D';
+    document.getElementById('chk-out-gov').textContent = fmt(gov,2) + '″ (target ' + fmt(D,2) + '″)';
+    document.getElementById('chk-out-r').textContent = fmt(R,2) + '″';
+    document.getElementById('chk-out-rideal').textContent = fmt(Rideal,2) + '″';
+    document.getElementById('chk-out-sil').textContent = silRatio.toFixed(3);
+
+    const govDeviationPct = ((gov - D) / D) * 100;
+    const verdictEl = document.getElementById('check-verdict');
+
+    if (LDratio < 1.00) {
+      verdictEl.innerHTML = '<div class="verdict-banner bad">Span is below the structural floor (L &lt; D). No angle can reach the golden rise here — increase span or move to a cluster.</div>';
+    } else if (Math.abs(govDeviationPct) <= 6 && thetaDeg >= 56 && thetaDeg <= 75 && LDratio <= 1.22) {
+      verdictEl.innerHTML = '<div class="verdict-banner good">Within golden tolerance — this build sits inside house style on span, angle, and rise.</div>';
+    } else {
+      let msg = 'Outside house tolerance. ';
+      if (thetaDeg > 75) msg += 'Angle is steeper than the 56–75° band — throat may read as hidden; consider lowering angle or increasing span. ';
+      if (thetaDeg < 56) msg += 'Angle is flatter than the 56–75° band — bloom may read as lying down; consider raising angle or reducing span. ';
+      if (LDratio > 1.22) msg += 'Span is large relative to diameter — flower risks overpowering the tier.';
+      verdictEl.innerHTML = '<div class="verdict-banner warn">' + msg + '</div>';
+    }
+
+    updateSVG(thetaDeg, LDratio, H/D);
+  }
+
+  [chkD, chkL, chkTheta, chkH].forEach(el => el.addEventListener('input', recalcCheck));
+
+  // ---------- MODE SWITCH ----------
+  function switchMode(mode){
+    const isDesign = mode === 'design';
+    document.getElementById('panel-design').style.display = isDesign ? 'block' : 'none';
+    document.getElementById('panel-check').style.display = isDesign ? 'none' : 'block';
+    document.getElementById('tab-design-btn').classList.toggle('active', isDesign);
+    document.getElementById('tab-check-btn').classList.toggle('active', !isDesign);
+    document.getElementById('stage-note').textContent = isDesign
+      ? "Drag the span slider — notice the rise (green dashed line) never moves. That invariance is the golden section holding by construction."
+      : "Diagram reflects your measured angle and span-to-diameter ratio — compare the rise line to the 0.50D marker.";
+    if (isDesign) recalcDesign(); else recalcCheck();
+  }
+
+  // init
+  recalcDesign();
+</script>
+</body>
+</html>
