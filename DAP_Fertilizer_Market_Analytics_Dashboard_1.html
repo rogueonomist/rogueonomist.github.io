@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan DAP Fertilizer Market — NCGCL Policy Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --ncgcl-blue:#0C688D; --ncgcl-green:#39A935;
+  --petrol-900:#042B3B; --petrol-800:#004C66; --petrol-700:#035076;
+  --petrol-600:#0C688D; --petrol-500:#12678A; --petrol-400:#007AA0;
+  --petrol-300:#4FA0BC; --petrol-200:#A7C7D6; --petrol-100:#E3EEF3;
+  --green-800:#1F6A1D; --green-700:#2B8129; --green-600:#39A935;
+  --green-500:#4EA72E; --green-300:#8CD872; --green-100:#E6F4E2;
+  --ink-900:#061626; --ink-800:#0E2841; --ink-700:#1E293B; --ink-600:#33424F;
+  --slate-500:#5B6B7A; --slate-400:#7F7F7F; --slate-300:#AEAEAE;
+  --slate-200:#C8D6E0; --slate-150:#E2E8F0; --slate-100:#EEF1F4; --slate-50:#F6F8FA;
+  --paper:#FFFFFF; --risk-high:#C00000; --risk-med:#BF9000; --risk-low:#2B8129;
+  --status-positive:#2B8129; --status-negative:#C00000; --status-neutral:#5B6B7A;
+  --color-primary:#0C688D; --color-accent:#39A935;
+  --text-strong:#0E2841; --text-body:#1F2E3A; --text-muted:#7F7F7F;
+  --text-faint:#AEAEAE; --text-on-dark:#FFFFFF; --text-on-dark-muted:#B9CFDA;
+  --surface-page:#FFFFFF; --surface-canvas:#F6F8FA; --surface-card:#FFFFFF;
+  --surface-muted:#EEF1F4; --surface-dark:#004C66; --surface-darker:#042B3B;
+  --surface-accent-soft:#E6F4E2; --surface-primary-soft:#E3EEF3;
+  --border-subtle:#C8D6E0; --border-strong:#9FB5C4; --border-on-dark:rgba(255,255,255,0.16);
+  --font-sans:"Figtree","Google Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --space-1:0.25rem; --space-2:0.5rem; --space-3:0.75rem; --space-4:1rem;
+  --space-5:1.5rem; --space-6:2rem; --space-7:2.5rem; --space-8:3rem;
+  --radius-sm:5px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-pill:999px;
+  --shadow-sm:0 1px 3px rgba(6,22,38,0.08),0 1px 2px rgba(6,22,38,0.04);
+  --shadow-md:0 4px 12px rgba(6,22,38,0.08),0 2px 4px rgba(6,22,38,0.05);
+  --shadow-lg:0 12px 28px rgba(6,22,38,0.12),0 4px 8px rgba(6,22,38,0.06);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--surface-canvas);color:var(--text-body);line-height:1.5;font-size:14px}
+a{color:var(--petrol-400);text-decoration:none}
+button,input,select{font-family:inherit}
+svg.icon{flex-shrink:0}
+.page-wrap{max-width:1240px;margin:0 auto;padding:0 var(--space-6)}
+.g2{display:grid;grid-template-columns:1.08fr .92fr;gap:var(--space-5)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4)}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4)}
+.topbar{background:var(--surface-darker);border-bottom:3px solid var(--color-accent);position:sticky;top:0;z-index:100}
+.topbar-inner{max-width:1240px;margin:0 auto;padding:var(--space-3) var(--space-6);display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);flex-wrap:wrap}
+.topbar-brand{display:flex;align-items:center;gap:var(--space-3)}
+.topbar-mark{width:32px;height:32px;border-radius:var(--radius-sm);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;padding:3px}
+.topbar-mark img{width:100%;height:100%;object-fit:contain}
+.topbar-name{font-size:.875rem;font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.2}
+.topbar-name span{display:block;font-size:.6875rem;font-weight:600;color:var(--text-on-dark-muted);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
+.topbar-chips{display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center}
+.chip{font-size:.6875rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:var(--radius-sm);white-space:nowrap}
+.chip-rating{background:#fff;color:var(--petrol-800)} .chip-outline{background:transparent;border:1px solid var(--border-on-dark);color:var(--text-on-dark-muted)}
+.page-hdr{background:var(--surface-darker);padding:var(--space-8) 0 var(--space-7);position:relative;overflow:hidden}
+.page-hdr::before{content:'';position:absolute;right:-120px;top:-140px;width:540px;height:540px;border-radius:50%;border:1px solid rgba(255,255,255,.06)}
+.page-hdr::after{content:'';position:absolute;right:110px;bottom:-210px;width:370px;height:370px;border-radius:50%;border:1px solid rgba(255,255,255,.045)}
+.page-hdr-inner{position:relative;z-index:1}
+.hdr-eyebrow{font-size:.6875rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green-300);margin-bottom:var(--space-3);display:flex;align-items:center;gap:var(--space-2)}
+.hdr-eyebrow svg,.sec-ey svg,.callout-head svg,.micro svg{width:14px;height:14px;stroke-width:2.25}
+.hdr-title{font-size:2.35rem;font-weight:900;color:#fff;line-height:1.12;letter-spacing:-.025em;margin-bottom:var(--space-3);max-width:32ch}
+.hdr-sub{font-size:.95rem;color:var(--text-on-dark-muted);margin-bottom:var(--space-6);max-width:78ch;line-height:1.65}
+.hdr-kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-4);padding-top:var(--space-5);border-top:1px solid var(--border-on-dark)}
+.hdr-kpi-val{font-family:var(--font-mono);font-size:1.15rem;font-weight:700;color:#fff;line-height:1;letter-spacing:-.01em;margin-bottom:5px}
+.hdr-kpi-lbl{font-size:.6875rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-on-dark-muted)}
+.jnav{background:var(--surface-card);border-bottom:1px solid var(--border-subtle);position:sticky;top:51px;z-index:90;box-shadow:var(--shadow-sm)}
+.jnav-inner{max-width:1240px;margin:0 auto;padding:0 var(--space-6);display:flex;gap:0;overflow-x:auto}
+.jnav a{display:inline-flex;align-items:center;gap:6px;font-size:.6875rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted);padding:var(--space-3) var(--space-4);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:.2s}
+.jnav a:hover,.jnav a.active{color:var(--color-primary);border-bottom-color:var(--color-primary)}
+.jnav svg{width:13px;height:13px;stroke-width:2.25}
+.sec{padding:var(--space-8) 0 var(--space-6)} .sec+.sec{border-top:1px solid var(--border-subtle)}
+.sec-ey{font-size:.6875rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-2);display:flex;align-items:center;gap:6px}
+.sec-title{font-size:1.55rem;font-weight:900;color:var(--text-strong);letter-spacing:-.015em;line-height:1.2;margin-bottom:var(--space-2)}
+.sec-sub{font-size:.875rem;color:var(--text-muted);margin-bottom:var(--space-5);line-height:1.55}
+.card{background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-5);box-shadow:var(--shadow-sm)}
+.card-title{font-size:.95rem;font-weight:850;color:var(--text-strong);margin-bottom:4px;letter-spacing:-.005em;display:flex;justify-content:space-between;gap:1rem;align-items:center}
+.card-sub{font-size:.78rem;color:var(--text-muted);margin-bottom:var(--space-4)}
+.ex{font-size:.6875rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-2)}
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-4);margin-bottom:var(--space-6)}
+.kbox{background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);border-top:3px solid var(--border-subtle);box-shadow:var(--shadow-sm)}
+.kbox.primary{border-top-color:var(--color-primary)} .kbox.accent{border-top-color:var(--color-accent)} .kbox.med{border-top-color:var(--risk-med)} .kbox.neutral{border-top-color:var(--slate-400)} .kbox.teal{border-top-color:var(--petrol-300)}
+.knum{font-family:var(--font-mono);font-size:1.35rem;font-weight:750;color:var(--text-strong);line-height:1;letter-spacing:-.01em}
+.klbl{font-size:.6875rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text-body);margin-top:var(--space-2)}
+.knote{font-size:.75rem;margin-top:var(--space-1);font-weight:600;color:var(--slate-500)} .knote.pos{color:var(--status-positive)} .knote.neg{color:var(--status-negative)} .knote.primary{color:var(--color-primary)}
+.callout{border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);margin-bottom:var(--space-4);border-left:3px solid var(--color-primary);background:var(--surface-primary-soft)}
+.callout.accent{border-left-color:var(--color-accent);background:var(--surface-accent-soft)} .callout.neutral{border-left-color:var(--slate-400);background:var(--surface-muted)}
+.callout-head{font-size:.6875rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--petrol-700);margin-bottom:var(--space-2);display:flex;align-items:center;gap:6px}
+.callout.accent .callout-head{color:var(--green-800)} .callout-body{font-size:.875rem;color:var(--text-body);line-height:1.7} .callout-body strong{font-weight:800;color:var(--text-strong)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:var(--radius-sm);font-size:.6875rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1;white-space:nowrap}
+.badge-primary{background:var(--surface-primary-soft);color:var(--petrol-700)} .badge-accent{background:var(--surface-accent-soft);color:var(--green-800)} .badge-neutral{background:var(--surface-muted);color:var(--ink-700);border:1px solid var(--border-subtle)} .badge-med{background:#FBF1DA;color:#8A6800}
+.ch{position:relative;width:100%} .h210{height:210px} .h250{height:250px} .h280{height:280px} .h320{height:320px} .h360{height:360px}
+.tbl-wrap{overflow:auto;max-height:620px;border:1px solid var(--border-subtle);border-radius:var(--radius-md)}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;background:#fff}
+.tbl th{font-size:.6875rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:var(--text-muted);padding:.65rem .75rem;border-bottom:2px solid var(--border-subtle);background:var(--surface-muted);text-align:left;white-space:nowrap;position:sticky;top:0;z-index:5}
+.tbl td{padding:.62rem .75rem;border-bottom:1px solid var(--border-subtle);color:var(--text-body);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .mono{font-family:var(--font-mono);font-size:11px;color:var(--text-muted)} .tbl .val{font-family:var(--font-mono);font-size:12px;text-align:right;white-space:nowrap;color:var(--text-body)} .tbl .str{font-weight:850;color:var(--text-strong)} .tbl .muted{font-size:11px;color:var(--text-muted)} .tbl .pos{color:var(--status-positive);font-weight:800} .tbl .neg{color:var(--status-negative);font-weight:800}
+.split{display:grid;grid-template-columns:.9fr 1.1fr;gap:var(--space-5)}
+.detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-3);margin-bottom:var(--space-4)}
+.detail-stat{background:var(--surface-muted);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:.85rem}
+.detail-stat .v{font-family:var(--font-mono);font-size:1.05rem;font-weight:750;color:var(--text-strong)} .detail-stat .l{font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;color:var(--text-muted);margin-top:.3rem}
+.inline-row{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap;margin-bottom:var(--space-4)}
+.micro{font-size:.75rem;color:var(--text-muted);display:flex;align-items:center;gap:6px;line-height:1.45}
+.pill-row{display:flex;gap:var(--space-2);flex-wrap:wrap}
+.page-footer{background:var(--surface-darker);border-top:3px solid var(--color-accent);padding:var(--space-6) 0;margin-top:var(--space-6)}
+.footer-inner{max-width:1240px;margin:0 auto;padding:0 var(--space-6);display:grid;grid-template-columns:auto 1fr auto;gap:var(--space-6);align-items:center}
+.footer-logo img{height:44px;width:auto;opacity:.95} .footer-line1{font-size:.8rem;font-weight:800;color:#fff} .footer-line2{font-size:.7rem;color:var(--text-on-dark-muted);margin-top:3px;letter-spacing:.01em}
+.empty{padding:2rem;text-align:center;color:var(--text-muted)}
+.lg{display:flex;flex-wrap:wrap;gap:14px;font-size:.72rem;color:var(--text-muted);margin-bottom:10px}
+.lg span.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+@media(max-width:1050px){.controls{grid-template-columns:1fr 1fr}.g2,.split{grid-template-columns:1fr}.kpi-grid,.hdr-kpi-row{grid-template-columns:1fr 1fr}.g3,.g4,.detail-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.page-wrap,.topbar-inner,.jnav-inner,.footer-inner{padding-left:var(--space-4);padding-right:var(--space-4)}.hdr-title{font-size:1.65rem}.kpi-grid,.hdr-kpi-row,.g3,.g4,.detail-grid,.controls{grid-template-columns:1fr}.topbar-chips .chip-outline{display:none}.jnav{top:50px}.footer-inner{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">
+      <div class="topbar-mark"><img src="data:image/png;base64,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" alt="NCGCL Falcon Mark"></div>
+      <div class="topbar-name">NCGCL<span>National Credit Guarantee Company Limited</span></div>
+    </div>
+    <div class="topbar-chips">
+      <span class="chip chip-rating">DAP Fertilizer Market</span>
+      <span class="chip chip-outline">2014–2026 Monthly Series</span>
+      <span class="chip chip-outline">Peak-Season Elasticity Update</span>
+    </div>
+  </div>
+</div>
+
+<header class="page-hdr">
+  <div class="page-wrap page-hdr-inner">
+    <div class="hdr-eyebrow"><i data-lucide="chart-no-axes-combined"></i> Fertilizer Policy Intelligence · Price, Demand &amp; Subsidy Design</div>
+    <h1 class="hdr-title">Pakistan's DAP Fertilizer Market: Price, Demand, Premium and Subsidy Design</h1>
+    <p class="hdr-sub">A full read of Pakistan's DAP market, 2014–2026: how local retail prices track international benchmarks, why local price sits well above parity, how demand responds to price by season, and what that means for the Punjab and federal subsidy designs currently under discussion.</p>
+    <div class="hdr-kpi-row">
+      <div><div class="hdr-kpi-val">2,513–14,687</div><div class="hdr-kpi-lbl">PKR/bag price range</div></div>
+      <div><div class="hdr-kpi-val">48%</div><div class="hdr-kpi-lbl">Avg. premium over parity</div></div>
+      <div><div class="hdr-kpi-val">−0.65</div><div class="hdr-kpi-lbl">Headline elasticity, real</div></div>
+      <div><div class="hdr-kpi-val">−0.55 / −1.20</div><div class="hdr-kpi-lbl">Off-peak / peak elasticity</div></div>
+      <div><div class="hdr-kpi-val">323–591k</div><div class="hdr-kpi-lbl">PKR per induced ton</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="jnav">
+  <div class="jnav-inner">
+    <a href="#overview"><i data-lucide="layout-grid"></i>A · Overview</a>
+    <a href="#price"><i data-lucide="scale"></i>B · Price &amp; Premium</a>
+    <a href="#demand"><i data-lucide="calendar-range"></i>C · Demand &amp; Seasonality</a>
+    <a href="#elasticity"><i data-lucide="trending-down"></i>D · Elasticity</a>
+    <a href="#policy"><i data-lucide="route"></i>E · Subsidy Design</a>
+    <a href="#method"><i data-lucide="book-open-check"></i>F · Methodology &amp; Sources</a>
+  </div>
+</nav>
+
+<main class="page-wrap">
+
+<section id="overview" class="sec">
+  <div class="sec-ey"><i data-lucide="layout-grid"></i>Section A</div>
+  <h2 class="sec-title">Executive overview</h2>
+  <p class="sec-sub">DAP is a mostly-imported fertilizer used primarily for wheat planting. Five questions drive this dashboard: how has price moved, why does local price sit above the world price, do farmers buy less when it's expensive, does that change by season, and what would a subsidy actually cost per extra bag sold.</p>
+
+  <div class="kpi-grid">
+    <div class="kbox primary"><div class="knum">2,513–14,687</div><div class="klbl">Price range (PKR/bag)</div><div class="knote primary">Dec-2016 low to Apr-2026 high</div></div>
+    <div class="kbox accent"><div class="knum">48%</div><div class="klbl">Avg. local premium</div><div class="knote pos">Over intl. parity price</div></div>
+    <div class="kbox teal"><div class="knum">r = 0.93</div><div class="klbl">Local-intl. correlation</div><div class="knote">Log-level, USD-equivalent</div></div>
+    <div class="kbox med"><div class="knum">−0.65</div><div class="klbl">Headline elasticity</div><div class="knote">Real price, seasonally adj.</div></div>
+    <div class="kbox neutral"><div class="knum">323–591k</div><div class="klbl">Rs / induced ton</div><div class="knote">Subsidy cost-effectiveness</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="ex">Exhibit A-1</div>
+    <div class="card-title">Local vs. international DAP price, indexed to 100 = Jul 2014 <span class="badge badge-primary">Monthly</span></div>
+    <div class="card-sub">Karandaaz weekly retail price (national avg.) vs. World Bank Pink Sheet international price.</div>
+    <div class="lg">
+      <span><span class="sw" style="background:#0C688D"></span>Local retail (Pakistan)</span>
+      <span><span class="sw" style="background:#39A935"></span>International</span>
+    </div>
+    <div class="ch h360"><canvas id="c-overview-idx"></canvas></div>
+  </div>
+
+  <div class="callout accent">
+    <div class="callout-head"><i data-lucide="badge-check"></i>Policy reading</div>
+    <div class="callout-body"><strong>Pakistani farmers pay well above the world price for DAP, they barely cut back even when it is expensive — except during the October–November planting rush, when price hikes bite noticeably harder.</strong> Policy design should treat peak-season pricing and off-season pricing as functionally different problems, not a single national price point.</div>
+  </div>
+</section>
+
+<section id="price" class="sec">
+  <div class="sec-ey"><i data-lucide="scale"></i>Section B</div>
+  <h2 class="sec-title">Price relationship and the local premium</h2>
+  <p class="sec-sub">Since Pakistan imports most of its DAP, local prices track world prices over the long run — but always sit above them. This section isolates how much of that premium is tax, timing lag, and structural cost.</p>
+
+  <div class="callout">
+    <div class="callout-head"><i data-lucide="message-circle"></i>In plain English</div>
+    <div class="callout-body">Local price is always higher than the world price, by 48% on average. Some of that gap is completely normal (shipping, moving the product around the country, the margin shops need to make). A small slice is government tax (5%, only since 2023). Part of it isn't a real cost at all — it's a timing lag: when world prices jump suddenly, local prices take a few months to catch up, which makes the gap look bigger or smaller than it really is for a while.</div>
+  </div>
+
+  <div class="g2" style="margin-bottom:1.5rem">
+    <div class="card">
+      <div class="ex">Exhibit B-1</div>
+      <div class="card-title">Local price vs. international price</div>
+      <div class="card-sub">Each point = one month, Jul 2014–Mar 2026 (n=136); fitted line shown.</div>
+      <div class="ch h320"><canvas id="c-price-scatter"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ex">Exhibit B-2</div>
+      <div class="card-title">Correlation, by measure <span class="badge badge-med">Diagnostic</span></div>
+      <div class="card-sub">Level correlation is high; month-to-month return correlation is much lower.</div>
+      <div class="ch h320"><canvas id="c-price-corr"></canvas></div>
+    </div>
+  </div>
+
+  <div class="callout neutral" style="margin-bottom:1.5rem">
+    <div class="callout-head"><i data-lucide="info"></i>Reading the correlation gap</div>
+    <div class="callout-body">Level correlation (0.81–0.93) is driven mostly by the shared long-run trend (global fertilizer cycle + rupee depreciation). Month-to-month <strong>return</strong> correlation is only ~0.30 — short-run pass-through is much looser, consistent with periodic subsidy intervention and inventory buffering. International price changes lead local retail changes by roughly four months.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="ex">Exhibit B-3</div>
+    <div class="card-title">Premium over international parity, monthly <span class="badge badge-accent">% premium</span></div>
+    <div class="card-sub">Average over the full period: 48%. Range: 7% (Apr-2022) to 98% (Dec-2019).</div>
+    <div class="ch h360"><canvas id="c-premium-line"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="ex">Exhibit B-4</div>
+    <div class="card-title">Premium decomposition, annual average <span class="badge badge-primary">Percentage points</span></div>
+    <div class="card-sub">Structural (freight/port/margin) · pass-through timing lag · statutory GST (0% pre-Jul-2023, 5% after) · residual. Black line = actual total.</div>
+    <div class="lg">
+      <span><span class="sw" style="background:#0C688D"></span>Structural</span>
+      <span><span class="sw" style="background:#39A935"></span>Pass-through timing</span>
+      <span><span class="sw" style="background:#BF9000"></span>Statutory tax</span>
+      <span><span class="sw" style="background:#7F7F7F"></span>Residual</span>
+    </div>
+    <div class="ch h360"><canvas id="c-premium-decomp"></canvas></div>
+  </div>
+</section>
+
+<section id="demand" class="sec">
+  <div class="sec-ey"><i data-lucide="calendar-range"></i>Section C</div>
+  <h2 class="sec-title">Demand and the seasonal pattern</h2>
+  <p class="sec-sub">Fertilizer buying is driven almost entirely by the farming calendar. This section shows the annual picture, then isolates the typical-year seasonal cycle.</p>
+
+  <div class="callout">
+    <div class="callout-head"><i data-lucide="message-circle"></i>In plain English</div>
+    <div class="callout-body">Farmers buy roughly four times as much DAP in October–November (wheat planting season) as in January–February — that's just when the crop needs it. Even though price has risen roughly five-fold since 2015, the total amount farmers buy each year has stayed in roughly the same range. Fertilizer is a "must-buy" tied to the growing season, not a discretionary purchase.</div>
+  </div>
+
+  <div class="g2" style="margin-bottom:1.5rem">
+    <div class="card">
+      <div class="ex">Exhibit C-1</div>
+      <div class="card-title">Annual average price <span class="badge badge-primary">PKR/bag</span></div>
+      <div class="card-sub">Full calendar years, 2015–2025.</div>
+      <div class="ch h280"><canvas id="c-annual-price"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ex">Exhibit C-2</div>
+      <div class="card-title">Annual total offtake <span class="badge badge-accent">'000 tons</span></div>
+      <div class="card-sub">No comparable trend despite the 5x price rise.</div>
+      <div class="ch h280"><canvas id="c-annual-qty"></canvas></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="ex">Exhibit C-3</div>
+      <div class="card-title">Quantity demanded — seasonal index <span class="badge badge-med">Typical year</span></div>
+      <div class="card-sub">100 = that year's own monthly average, pooled 2015–2025.</div>
+      <div class="ch h280"><canvas id="c-seas-qty"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ex">Exhibit C-4</div>
+      <div class="card-title">Price — seasonal index <span class="badge badge-neutral">Typical year</span></div>
+      <div class="card-sub">A far milder swing than quantity.</div>
+      <div class="ch h280"><canvas id="c-seas-price"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section id="elasticity" class="sec">
+  <div class="sec-ey"><i data-lucide="trending-down"></i>Section D</div>
+  <h2 class="sec-title">Price elasticity of demand</h2>
+  <p class="sec-sub">How much does quantity demanded fall when price rises? Comparing seasons of the same calendar month across years, at different price levels, real (CPI-deflated) price, seasonally controlled.</p>
+
+  <div class="callout">
+    <div class="callout-head"><i data-lucide="message-circle"></i>In plain English</div>
+    <div class="callout-body">"Elasticity" asks: if price is 10% higher, how much less do people buy? A number close to zero means people barely change behaviour. Here the numbers are consistently low — roughly 6–8% less bought for every 10% higher price — confirming farmers don't have a real substitute for DAP. The surprising finding: during the October–November planting rush, that price-sensitivity roughly doubles.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="ex">Exhibit D-1</div>
+    <div class="card-title">Elasticity estimate, by method <span class="badge badge-primary">Nominal vs. real</span></div>
+    <div class="card-sub">All results are inelastic (|e| &lt; 1); real / seasonally-adjusted specifications are the most credible.</div>
+    <div class="lg">
+      <span><span class="sw" style="background:#7F7F7F"></span>Nominal price</span>
+      <span><span class="sw" style="background:#0C688D"></span>Real (CPI-deflated) price</span>
+    </div>
+    <div class="ch h360"><canvas id="c-elast-methods"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="tbl-wrap" style="max-height:none">
+      <table class="tbl">
+        <thead><tr><th>Method</th><th class="val">Nominal</th><th class="val">Real (CPI-defl.)</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="str">Concurrent</td><td class="val">−0.22</td><td class="val">−0.64</td><td class="muted">Baseline, no season control</td></tr>
+          <tr><td class="str">Lagged 1–3 months</td><td class="val">−0.23</td><td class="val">−0.66 to −0.68</td><td class="muted">Stable across lags</td></tr>
+          <tr><td class="str">Seasonal FE (month dummies)</td><td class="val">−0.22</td><td class="val">−0.66</td><td class="muted">Most credible single estimate</td></tr>
+          <tr><td class="str">First-differenced (short-run)</td><td class="val">−1.84</td><td class="val">−1.79</td><td class="muted">Noisy, p≈0.09, low power</td></tr>
+          <tr><td class="str">+ urea &amp; wheat price controls</td><td class="val">−0.65</td><td class="val">−0.78</td><td class="muted">n=79, Sep-19–Mar-26 only</td></tr>
+          <tr><td class="str">2SLS (IV: intl. price + FX)</td><td class="val">−0.17 to −0.18</td><td class="val">—</td><td class="muted">Endogeneity check — confirms OLS not badly biased</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:1.5rem">
+    <div class="card">
+      <div class="ex">Exhibit D-2</div>
+      <div class="card-title">Elasticity: off-peak vs. peak (Oct–Nov) <span class="badge badge-med">Updated</span></div>
+      <div class="card-sub">Real price, month fixed effects, HAC standard errors.</div>
+      <div class="ch h280"><canvas id="c-peak-bar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ex">Exhibit D-3</div>
+      <div class="card-title">Log price vs. log quantity, by season</div>
+      <div class="card-sub">Peak fit is visibly steeper.</div>
+      <div class="ch h280"><canvas id="c-peak-scatter"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="ex">Exhibit D-4</div>
+    <div class="card-title">Was low peak-season offtake a price effect or a supply effect? <span class="badge badge-primary">Diagnostic</span></div>
+    <div class="card-sub">Cross-checked against the DAP production/import/export/inventory balance sheet. Bottom-left = supply-constrained · bottom-right = demand pullback (ample supply, buyers held back).</div>
+    <div class="ch h360"><canvas id="c-quadrant"></canvas></div>
+  </div>
+
+  <div class="callout accent">
+    <div class="callout-head"><i data-lucide="badge-check"></i>Key correction from earlier analysis</div>
+    <div class="callout-body">October 2022 sits at 23% of normal offtake with stock cover at <strong>441%</strong> of normal — supply was ample and piling up, not scarce. That is clean evidence of a genuine price-driven demand pullback at the highest price level in the series, not rationing. By contrast, Oct/Nov-2023 and Nov-2024 show low offtake <strong>and</strong> low stock cover together — genuine supply shortages tied to the 2023–24 import/LC restriction period. Excluding only those four genuinely supply-constrained months — rather than a coarser cut that drops all of 2022 — <strong>strengthens</strong> the peak elasticity estimate to −1.20 (p=0.014), up from an earlier, more conservative −1.11.</div>
+  </div>
+</section>
+
+<section id="policy" class="sec">
+  <div class="sec-ey"><i data-lucide="route"></i>Section E</div>
+  <h2 class="sec-title">Subsidy cost-effectiveness</h2>
+  <p class="sec-sub">Modeled against the two live proposals: Punjab's Rs 3,000/bag Rabi-season discount, and the federal "Kissan Package" negotiated price of Rs 11,250/bag vs. a ~Rs 14,900 market price.</p>
+
+  <div class="callout">
+    <div class="callout-head"><i data-lucide="message-circle"></i>In plain English</div>
+    <div class="callout-body">If the government makes DAP cheaper, a lot of that money goes to farmers who would have bought it anyway — that's how subsidies work when people don't change their buying much. For every <strong>extra</strong> ton bought specifically because of the subsidy, it costs the government Rs 320,000 to Rs 590,000. Punjab's proposed Rs 20 billion budget looks large enough to cover the scheme even in the costlier scenarios. Whether the subsidy reaches the right farmers is an open question this data can't yet answer.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem">
+    <div class="ex">Exhibit E-1</div>
+    <div class="card-title">Fiscal cost per additional ton of offtake induced <span class="badge badge-med">Three elasticity scenarios</span></div>
+    <div class="card-sub">Low (off-peak, −0.55), mid (peak ex-crisis, −0.85), high (peak, −1.20).</div>
+    <div class="lg">
+      <span><span class="sw" style="background:#0C688D"></span>Punjab (Rs 3,000/bag)</span>
+      <span><span class="sw" style="background:#39A935"></span>Federal Kissan Package</span>
+    </div>
+    <div class="ch h360"><canvas id="c-subsidy-cost"></canvas></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="ex">Exhibit E-2</div>
+      <div class="card-title">Punjab scheme: modeled cost vs. Rs 20bn budget</div>
+      <div class="card-sub">At Rs 3,000/bag, scaled to Punjab's ~69% share of national offtake.</div>
+      <div class="detail-grid" style="grid-template-columns:1fr 1fr;margin-top:1rem">
+        <div class="detail-stat"><div class="v">Rs 11.9bn</div><div class="l">Low elasticity — 59% of budget</div></div>
+        <div class="detail-stat"><div class="v">Rs 13.1bn</div><div class="l">High elasticity — 66% of budget</div></div>
+      </div>
+      <p class="micro" style="margin-top:.85rem"><i data-lucide="info"></i>Budget appears adequately sized against modeled demand response in every scenario tested, with headroom.</p>
+    </div>
+    <div class="card">
+      <div class="ex">Exhibit E-3</div>
+      <div class="card-title">Regional price dispersion over time <span class="badge badge-neutral">CV, %</span></div>
+      <div class="card-sub">Coefficient of variation across Punjab/Sindh/KP/Balochistan retail prices.</div>
+      <div class="ch h250"><canvas id="c-regional-cv"></canvas></div>
+    </div>
+  </div>
+
+  <div class="callout neutral" style="margin-top:1.5rem">
+    <div class="callout-head"><i data-lucide="alert-triangle"></i>Targeting caveat</div>
+    <div class="callout-body">No farm-size or province-segmented offtake data exists in this project, so the ≤12-acre eligibility cap cannot be directly elasticity-tested. Regional retail price dispersion is low in normal years (~2–3% CV) — ruling out stable regional price gaps as the explanation for differential targeting — but it widened to 6.8–8.1% in 2022–24, consistent with hoarding/black-marketing during the supply-crisis years. Confirming whether the acreage cap is well-calibrated needs Agriculture Census farm-size data cross-referenced with district-level offtake.</div>
+  </div>
+</section>
+
+<section id="method" class="sec">
+  <div class="sec-ey"><i data-lucide="book-open-check"></i>Section F</div>
+  <h2 class="sec-title">Methodology and sources</h2>
+  <p class="sec-sub">Every figure on this dashboard traces to one of the sources below; caveats are stated where estimation, interpolation, or a proxy was required.</p>
+
+  <div class="g4">
+    <div class="callout"><div class="callout-head"><i data-lucide="database"></i>Price &amp; demand data</div><div class="callout-body">Karandaaz weekly retail DAP price (national avg.), 2013–2026; NFDC/company monthly offtake, production, import, export and inventory balance sheet.</div></div>
+    <div class="callout accent"><div class="callout-head"><i data-lucide="globe-2"></i>International benchmark</div><div class="callout-body">World Bank Pink Sheet DAP price (USD/mt); SBP monthly PKR/USD exchange rate.</div></div>
+    <div class="callout neutral"><div class="callout-head"><i data-lucide="calculator"></i>CPI deflator</div><div class="callout-body">World Bank/IMF annual Pakistan inflation, interpolated to monthly — an approximation, not PBS's official monthly index.</div></div>
+    <div class="callout"><div class="callout-head"><i data-lucide="landmark"></i>Tax &amp; subsidy facts</div><div class="callout-body">FBR circulars (0% customs duty throughout; 0% GST pre-Jul-2023, 5% after). Punjab and federal subsidy terms from current press reporting.</div></div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="ex">Limitations</div>
+    <div class="card-title">What this dashboard cannot show</div>
+    <div class="card-sub">Stated plainly so downstream use doesn't overreach the data.</div>
+    <div class="callout-body">No freight invoices, customs assessment values, or dealer-margin surveys exist in-house — the "structural" premium component is a bundled residual, not a line-item cost build-up. No farm-size or province-segmented offtake data exists — smallholder-specific elasticity is not directly testable. The CPI deflator is an annual-to-monthly interpolation, not PBS's actual monthly index. Peak-season elasticity is estimated on a thin sample (23 observations, two months × ~11 years) — directionally robust but not precisely pinned down.</div>
+  </div>
+</section>
+
+</main>
+
+<footer class="page-footer">
+  <div class="footer-inner">
+    <div class="footer-logo"><img src="data:image/png;base64,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" alt="NCGCL"></div>
+    <div><div class="footer-line1">National Credit Guarantee Company Limited</div><div class="footer-line2">DAP Fertilizer Market Analytics · Price, Demand &amp; Subsidy Design · 2014–2026</div></div>
+    <div class="footer-line2">Prepared as a policy decision tool</div>
+  </div>
+</footer>
+
+<script>
+const PAL = { blue:'#0C688D', amber:'#BF9000', green:'#39A935', gold:'#4FA0BC', slate:'#5B6B7A', red:'#C00000', muted:'#7F7F7F', grid:'#EEF1F4' };
+const baseOpts = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display:false }, tooltip: { backgroundColor:'rgba(6,22,38,0.95)', padding:8, titleFont:{size:11}, bodyFont:{size:11} } },
+  scales: { x: { grid:{display:false}, ticks:{color:PAL.slate, font:{size:10}} },
+            y: { grid:{color:PAL.grid}, ticks:{color:PAL.slate, font:{size:10}} } }
+};
+function opts(extra){ return Object.assign({}, baseOpts, extra); }
+
+/* ============ A: local vs intl indexed ============ */
+const ovLabels = ["2014-07","2014-08","2014-09","2014-10","2015-01","2015-02","2015-03","2015-04","2015-05","2015-06","2015-07","2015-08","2015-09","2015-10","2015-11","2015-12","2016-02","2016-04","2016-05","2016-06","2016-07","2016-08","2016-09","2016-10","2016-11","2016-12","2017-01","2017-02","2017-03","2017-04","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12","2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12","2020-01","2020-02","2020-03","2020-04","2020-05","2020-06","2020-07","2020-08","2020-09","2020-10","2020-11","2020-12","2021-01","2021-02","2021-03","2021-04","2021-05","2021-06","2021-07","2021-08","2021-09","2021-10","2021-11","2021-12","2022-01","2022-02","2022-03","2022-04","2022-05","2022-06","2022-07","2022-08","2022-09","2022-10","2022-11","2022-12","2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03"];
+const ovLocalIdx = [100.0,100.1,101.9,103.5,108.0,107.3,106.1,105.7,104.9,105.2,105.9,106.4,106.5,104.5,98.3,98.0,89.7,85.6,82.9,81.7,78.6,76.6,75.9,74.2,72.2,71.7,72.7,71.9,72.1,73.3,73.8,74.3,74.2,74.6,75.5,79.6,82.1,82.4,83.8,86.5,89.5,91.7,92.3,93.3,96.4,97.7,100.3,102.0,101.9,102.1,101.7,100.7,101.1,101.1,101.3,102.1,103.5,105.2,105.7,105.8,104.1,102.6,100.1,96.5,97.1,96.7,96.3,96.8,98.8,105.0,112.2,113.6,114.5,120.2,133.6,151.9,154.7,156.8,158.0,160.0,174.2,185.0,197.1,228.4,238.0,263.2,266.4,265.5,267.8,278.2,294.0,345.4,361.9,357.1,357.1,307.6,272.8,277.1,297.4,300.5,296.5,289.3,274.5,264.2,304.6,343.5,347.2,372.5,389.2,356.7,351.6,351.9,346.4,329.2,311.8,323.5,336.2,336.9,340.3,342.9,340.3,356.9,343.3,345.9,352.3,360.3,363.9,371.4,385.0,393.5,410.8,416.4,415.8,409.2,401.5,406.4];
+const ovIntlIdx = [100.0,101.3,99.4,95.0,99.9,100.8,97.3,92.8,93.9,95.6,97.9,98.6,97.1,96.2,87.1,77.3,74.0,75.0,71.1,69.6,69.3,72.2,72.6,70.4,67.6,67.3,69.9,74.0,73.9,71.1,70.4,71.2,72.8,74.0,73.2,78.1,81.1,81.8,84.0,85.8,87.3,87.2,88.9,91.0,92.8,95.7,95.5,93.1,88.4,86.7,81.1,76.0,73.5,71.1,71.5,69.8,66.5,64.9,63.0,56.3,54.1,60.1,63.4,62.7,64.0,59.7,62.0,69.2,77.6,81.3,81.0,81.6,88.2,95.6,120.0,121.2,123.3,130.4,137.2,139.1,136.9,146.1,152.7,164.9,169.1,158.7,169.6,212.9,216.5,191.2,177.9,177.9,170.1,170.7,164.5,151.1,141.8,143.2,139.0,137.5,144.6,115.7,103.2,104.1,120.0,119.8,121.4,121.6,127.9,135.3,132.5,140.1,123.7,118.5,123.2,122.4,123.9,125.9,130.1,130.4,129.0,132.2,137.0,139.6,144.1,151.9,162.4,167.0,180.4,177.2,171.1,160.7,142.4,140.5,142.2,149.4];
+
+new Chart(document.getElementById('c-overview-idx'), {
+  type:'line',
+  data:{ labels:ovLabels, datasets:[
+    { data:ovLocalIdx, borderColor:PAL.blue, borderWidth:2, pointRadius:0, tension:0.15 },
+    { data:ovIntlIdx, borderColor:PAL.green, borderWidth:2, pointRadius:0, tension:0.15, borderDash:[5,3] }
+  ]},
+  options: opts({ scales:{ x:{ grid:{display:false}, ticks:{maxTicksLimit:12,color:PAL.slate,font:{size:10}} },
+                            y:{ grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}}, title:{display:true,text:'Index (Jul 2014=100)',color:PAL.slate,font:{size:11}} } } })
+});
+
+/* ============ B: price scatter, correlation, premium, decomposition ============ */
+const localPrice = [3509,3514,3575,3632,3788,3767,3725,3708,3682,3693,3715,3734,3738,3667,3449,3438,3149,3004,2910,2865,2757,2687,2663,2603,2534,2517,2553,2523,2531,2572,2589,2606,2605,2618,2648,2794,2880,2890,2940,3037,3140,3219,3240,3276,3382,3428,3520,3581,3576,3582,3569,3535,3547,3549,3554,3581,3632,3690,3710,3713,3654,3600,3512,3385,3408,3394,3378,3395,3467,3686,3937,3985,4016,4218,4686,5330,5427,5502,5546,5615,6113,6491,6917,8014,8351,9237,9347,9316,9396,9761,10316,12120,12698,12532,12529,10793,9571,9724,10434,10544,10404,10152,9633,9270,10689,12054,12182,13071,13658,12516,12336,12347,12156,11553,10941,11352,11798,11820,11940,12033,11940,12525,12046,12136,12363,12642,12768,13031,13508,13809,14414,14612,14591,14360,14090,14259];
+const intlPrice = [440.6,446.5,438.1,418.8,440.2,444.1,428.8,409.0,413.6,421.4,431.5,434.6,428.0,423.8,383.9,340.6,326.0,330.5,313.5,306.6,305.2,318.1,320.0,310.0,298.0,296.6,308.0,326.0,325.6,313.1,310.3,313.8,320.8,325.9,322.4,344.0,357.2,360.4,370.0,378.0,384.8,384.4,391.6,400.8,409.0,421.6,420.8,410.2,389.7,382.1,357.4,335.0,323.8,313.4,314.9,307.5,292.9,285.8,277.4,248.0,238.2,264.9,279.4,276.2,282.0,263.0,273.0,305.1,341.9,358.4,357.1,359.6,388.5,421.3,528.9,534.1,543.4,574.6,604.8,613.0,603.1,643.8,672.9,726.7,745.0,699.4,747.1,938.1,954.0,842.5,783.8,784.0,749.4,752.0,725.0,665.6,625.0,631.0,612.5,606.0,637.0,510.0,454.6,458.8,528.8,527.9,534.8,535.6,563.8,596.2,583.8,617.5,545.0,522.0,543.0,539.4,546.0,554.8,573.4,574.5,568.3,582.7,603.8,615.1,635.0,669.2,715.4,736.0,795.1,780.6,754.0,708.2,627.5,619.2,626.5,658.2];
+const scatterPts = localPrice.map((v,i)=>({x:intlPrice[i], y:v}));
+const mx = intlPrice.reduce((a,b)=>a+b,0)/intlPrice.length, my = localPrice.reduce((a,b)=>a+b,0)/localPrice.length;
+let num=0, den=0; scatterPts.forEach(p=>{ num+=(p.x-mx)*(p.y-my); den+=(p.x-mx)*(p.x-mx); });
+const slope=num/den, intercept=my-slope*mx, xMin=Math.min(...intlPrice), xMax=Math.max(...intlPrice);
+const fitLine = [{x:xMin,y:slope*xMin+intercept},{x:xMax,y:slope*xMax+intercept}];
+
+new Chart(document.getElementById('c-price-scatter'), {
+  type:'scatter',
+  data:{ datasets:[
+    { data:scatterPts, backgroundColor:'rgba(12,104,141,0.5)', pointRadius:3 },
+    { data:fitLine, type:'line', borderColor:PAL.green, borderWidth:2, pointRadius:0, fill:false }
+  ]},
+  options: opts({ scales:{ x:{ grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}}, title:{display:true,text:'Intl. price (USD/mt)',color:PAL.slate,font:{size:11}} },
+                            y:{ grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}}, title:{display:true,text:'Local price (PKR/bag)',color:PAL.slate,font:{size:11}} } } })
+});
+
+new Chart(document.getElementById('c-price-corr'), {
+  type:'bar',
+  data:{ labels:['Level (nominal)','Level (USD-equiv)','Log-level','MoM return'],
+    datasets:[{ data:[0.81,0.92,0.86,0.30], backgroundColor:[PAL.blue,PAL.blue,PAL.blue,PAL.amber], borderRadius:4, maxBarThickness:44 }] },
+  options: opts({ indexAxis:'y', scales:{ x:{ min:0,max:1, grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}} },
+                                            y:{ grid:{display:false}, ticks:{color:PAL.slate,font:{size:10}} } } })
+});
+
+const premLabels = ovLabels;
+const premium = [61.4,57.3,59.5,68.8,70.9,67.3,70.7,78.3,74.9,72.2,69.3,67.9,67.6,65.7,70.5,92.9,84.7,73.7,77.4,78.7,72.5,61.5,59.2,60.6,62.5,62.1,58.3,47.8,48.4,56.8,59.3,57.6,54.3,52.6,56.0,54.2,48.3,45.3,43.9,43.4,41.4,45.1,39.2,31.5,33.6,31.0,28.3,30.8,32.5,35.2,44.2,51.6,55.2,55.5,45.4,46.6,56.9,65.4,71.5,92.7,98.1,75.8,63.0,54.7,47.0,61.2,49.9,33.5,20.9,24.0,35.4,39.2,29.2,25.0,11.4,27.9,30.5,24.9,17.4,14.8,23.5,20.0,19.7,27.5,26.5,49.8,42.6,10.6,6.8,18.5,28.8,40.9,53.4,44.6,56.7,45.9,36.3,31.6,27.8,24.2,14.6,39.4,47.9,43.8,37.6,53.4,62.5,70.9,71.0,49.8,51.4,43.5,60.4,59.1,44.7,51.2,55.2,53.2,50.0,50.8,51.1,54.3,42.9,40.9,38.7,34.1,26.1,24.6,20.4,25.6,35.9,46.9,65.8,65.6,60.8,55.0];
+
+new Chart(document.getElementById('c-premium-line'), {
+  type:'line',
+  data:{ labels:premLabels, datasets:[{ data:premium, borderColor:PAL.blue, backgroundColor:'rgba(12,104,141,0.08)', borderWidth:2, pointRadius:0, tension:0.15, fill:true }] },
+  options: opts({ scales:{ x:{ grid:{display:false}, ticks:{maxTicksLimit:12,color:PAL.slate,font:{size:10}} },
+                            y:{ grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10},callback:v=>v+'%'}, title:{display:true,text:'Premium (%)',color:PAL.slate,font:{size:11}} } } })
+});
+
+const decompYears = ["2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025","2026"];
+const structural = [59.7,57.4,55.2,52.9,50.5,48.2,45.8,43.5,41.1,38.8,36.5,35.0];
+const passthrough = [2.5,9.0,-2.1,-5.8,10.8,-6.7,-17.3,-1.9,8.4,-1.8,-7.3,10.5];
+const taxc = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.5,5.0,5.0,5.0];
+const residual = [10.8,2.9,0.8,-10.0,-1.5,3.0,-6.1,-5.3,-8.3,9.7,3.8,9.9];
+const totalPrem = [73.0,69.3,54.0,37.2,59.9,44.5,22.4,36.2,43.7,51.7,38.0,60.4];
+
+new Chart(document.getElementById('c-premium-decomp'), {
+  data:{ labels:decompYears, datasets:[
+    { type:'bar', data:structural, backgroundColor:PAL.blue, stack:'s' },
+    { type:'bar', data:passthrough, backgroundColor:PAL.green, stack:'s' },
+    { type:'bar', data:taxc, backgroundColor:PAL.amber, stack:'s' },
+    { type:'bar', data:residual, backgroundColor:PAL.muted, stack:'s' },
+    { type:'line', data:totalPrem, borderColor:'#061626', borderWidth:2, pointRadius:3, pointBackgroundColor:'#061626', fill:false }
+  ]},
+  options: opts({ scales:{ x:{ stacked:true, grid:{display:false}, ticks:{color:PAL.slate,font:{size:10}} },
+                            y:{ stacked:true, grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}}, title:{display:true,text:'Percentage points',color:PAL.slate,font:{size:11}} } } })
+});
+
+/* ============ C: demand & seasonality ============ */
+const dYears = ["2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025"];
+const annualPrice = [3675.0,2769.0,2629.0,3269.0,3610.0,3597.0,6017.0,10635.0,10985.0,11894.0,13204.0];
+const annualQty = [1764.4,2183.7,2377.5,2238.5,2029.2,2170.9,1882.4,1209.8,1575.1,1622.5,1332.8];
+const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const seasQty = [52.8,52.7,59.4,58.1,66.0,86.0,111.3,85.4,98.5,201.8,229.5,98.5];
+const seasPrice = [93.3,95.8,95.0,96.9,96.5,96.3,98.1,101.6,104.2,106.2,107.3,107.3];
+
+new Chart(document.getElementById('c-annual-price'), {
+  type:'bar', data:{ labels:dYears, datasets:[{ data:annualPrice, backgroundColor:PAL.blue, borderRadius:4, maxBarThickness:34 }] },
+  options: opts({})
+});
+new Chart(document.getElementById('c-annual-qty'), {
+  type:'bar', data:{ labels:dYears, datasets:[{ data:annualQty, backgroundColor:PAL.green, borderRadius:4, maxBarThickness:34 }] },
+  options: opts({})
+});
+new Chart(document.getElementById('c-seas-qty'), {
+  type:'bar', data:{ labels:months, datasets:[{ data:seasQty, backgroundColor:months.map(m=>(m==='Oct'||m==='Nov')?PAL.red:PAL.amber), borderRadius:4, maxBarThickness:30 }] },
+  options: opts({ scales:{ x:{grid:{display:false},ticks:{color:PAL.slate,font:{size:10}}}, y:{grid:{color:PAL.grid},ticks:{color:PAL.slate,font:{size:10}},title:{display:true,text:'Index (100=year avg)',color:PAL.slate,font:{size:11}}} } })
+});
+new Chart(document.getElementById('c-seas-price'), {
+  type:'line', data:{ labels:months, datasets:[{ data:seasPrice, borderColor:PAL.blue, backgroundColor:'rgba(12,104,141,0.08)', borderWidth:2, pointRadius:4, pointBackgroundColor:PAL.blue, fill:true, tension:0.25 }] },
+  options: opts({ scales:{ x:{grid:{display:false},ticks:{color:PAL.slate,font:{size:10}}}, y:{min:85,max:115,grid:{color:PAL.grid},ticks:{color:PAL.slate,font:{size:10}},title:{display:true,text:'Index (100=year avg)',color:PAL.slate,font:{size:11}}} } })
+});
+
+/* ============ D: elasticity ============ */
+new Chart(document.getElementById('c-elast-methods'), {
+  type:'bar',
+  data:{ labels:['Concurrent','Lagged 1-3mo','Seasonal FE','First-diff (short-run)','+ controls (n=79)','2SLS (IV)'],
+    datasets:[
+      { data:[-0.22,-0.23,-0.22,-1.84,-0.65,-0.175], backgroundColor:PAL.muted, borderRadius:4, maxBarThickness:26 },
+      { data:[-0.64,-0.67,-0.66,-1.79,-0.78,null], backgroundColor:PAL.blue, borderRadius:4, maxBarThickness:26 }
+    ] },
+  options: opts({ scales:{ x:{grid:{display:false},ticks:{color:PAL.slate,font:{size:9}}}, y:{grid:{color:PAL.grid},ticks:{color:PAL.slate,font:{size:10}},title:{display:true,text:'Elasticity',color:PAL.slate,font:{size:11}}} } })
+});
+
+new Chart(document.getElementById('c-peak-bar'), {
+  type:'bar',
+  data:{ labels:['Off-peak','Peak (Oct-Nov)'], datasets:[{ data:[-0.551,-1.197], backgroundColor:[PAL.green,PAL.red], borderRadius:4, maxBarThickness:60 }] },
+  options: opts({ scales:{ x:{grid:{display:false},ticks:{color:PAL.slate,font:{size:11}}}, y:{grid:{color:PAL.grid},ticks:{color:PAL.slate,font:{size:10}},title:{display:true,text:'Elasticity',color:PAL.slate,font:{size:11}}} } })
+});
+
+const offpeakPrice = [3274,3271,3321,3490,3463,3417,3395,3364,3367,3381,3387,3380,3080,2803,2658,2568,2520,2417,2348,2319,2170,2193,2160,2161,2188,2188,2195,2186,2187,2376,2374,2405,2475,2548,2602,2608,2626,2687,2700,2745,2727,2694,2648,2635,2615,2597,2596,2612,2632,2546,2489,2409,2304,2303,2276,2248,2243,2272,2397,2552,2659,2932,3312,3347,3369,3370,3388,3627,3789,4651,5066,5049,4964,4933,5053,5264,6101,6229,5995,4267,4238,4446,4405,4255,4068,3781,3568,4071,4543,4994,4530,4421,4384,4274,4023,3774,3880,4020,4016,4021,4206,4033,4052,4116,4197,4227,4302,4425,4490,4642,4535,4417,4442];
+const offpeakQty = [144677,121373,87574,72050,63602,47871,67704,109545,104342,81532,33776,6803,132359,71342,104833,106292,42892,199088,134423,106954,155296,61111,96762,154051,95697,111754,283116,82766,383524,150476,92208,122431,150156,68719,58721,189898,301790,79090,198945,189045,74620,46533,65475,86170,213024,157743,202033,105295,209871,193311,43724,87562,79220,150721,60857,175949,247483,295012,229115,205300,82172,88084,143705,45712,173233,67766,192789,186534,221133,116545,112823,55362,79643,94512,94383,145501,73582,26005,62634,157519,95180,97607,51238,50763,65951,158127,112559,263002,105668,137492,66814,115262,106632,92645,36367,123038,163012,88932,133819,136647,61443,40143,48541,95048,95320,114861,106467,136220,96653,74467,39457,99740,149351];
+const peakPrice = [3367,3306,3099,2259,2192,2203,2314,2749,2772,2626,2607,2541,2551,3975,4532,5853,4923,4545,4827,4045,4064,4653,4682];
+const peakQty = [292263,535974,508839,468425,631435,387095,501796,521724,265760,270917,404219,229374,366541,342287,222469,71460,236405,158865,278639,309147,250189,219112,244552];
+function toLog(px,qx){ return px.map((p,i)=>({x:Math.log(p),y:Math.log(qx[i])})); }
+function fit(pts){ const n=pts.length, mx=pts.reduce((a,p)=>a+p.x,0)/n, my=pts.reduce((a,p)=>a+p.y,0)/n; let num=0,den=0;
+  pts.forEach(p=>{num+=(p.x-mx)*(p.y-my); den+=(p.x-mx)*(p.x-mx);}); const s=num/den, i=my-s*mx;
+  const xs=pts.map(p=>p.x), xn=Math.min(...xs), xx=Math.max(...xs);
+  return [{x:xn,y:s*xn+i},{x:xx,y:s*xx+i}]; }
+const offPts = toLog(offpeakPrice, offpeakQty), peakPts = toLog(peakPrice, peakQty);
+const offLine = fit(offPts), peakLine = fit(peakPts);
+
+new Chart(document.getElementById('c-peak-scatter'), {
+  type:'scatter',
+  data:{ datasets:[
+    { data:offPts, backgroundColor:'rgba(57,169,53,0.45)', pointRadius:3 },
+    { data:peakPts, backgroundColor:'rgba(192,0,0,0.6)', pointRadius:4.5 },
+    { data:offLine, type:'line', borderColor:PAL.green, borderWidth:2, pointRadius:0, fill:false },
+    { data:peakLine, type:'line', borderColor:PAL.red, borderWidth:2, pointRadius:0, fill:false }
+  ]},
+  options: opts({ scales:{ x:{ grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}}, title:{display:true,text:'log(real price)',color:PAL.slate,font:{size:11}} },
+                            y:{ grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}}, title:{display:true,text:'log(quantity)',color:PAL.slate,font:{size:11}} } } })
+});
+
+const qpts = [{year:2014,month:10,x:92.1,y:67.6},{year:2015,month:10,x:169.0,y:35.1},{year:2015,month:11,x:142.3,y:37.6},
+  {year:2016,month:10,x:147.7,y:40.2},{year:2016,month:11,x:176.6,y:15.0},{year:2017,month:10,x:122.0,y:47.6},
+  {year:2017,month:11,x:140.3,y:36.9},{year:2018,month:10,x:164.5,y:61.1},{year:2018,month:11,x:74.3,y:239.3},
+  {year:2019,month:10,x:85.4,y:154.0},{year:2019,month:11,x:113.0,y:167.8},{year:2020,month:10,x:72.3,y:68.2},
+  {year:2020,month:11,x:102.5,y:33.8},{year:2021,month:10,x:107.9,y:67.2},{year:2021,month:11,x:62.2,y:134.4},
+  {year:2022,month:10,x:22.5,y:441.1},{year:2022,month:11,x:66.1,y:325.9},{year:2023,month:10,x:50.1,y:49.0},
+  {year:2023,month:11,x:77.9,y:14.3},{year:2024,month:10,x:97.5,y:63.4},{year:2024,month:11,x:70.0,y:68.2},
+  {year:2025,month:10,x:69.1,y:105.5},{year:2025,month:11,x:68.4,y:95.7}];
+function cls(p){ const lo=p.x<90, ho=p.x>110, lc=p.y<90, hc=p.y>110;
+  if(lo&&lc) return PAL.red; if(lo&&hc) return PAL.amber; if(ho&&lc) return PAL.blue; if(ho&&hc) return PAL.green; return PAL.muted; }
+const qds = qpts.map(p => ({x:p.x, y:Math.min(p.y,300), label:p.year+'-'+(p.month===10?'Oct':'Nov')}));
+
+new Chart(document.getElementById('c-quadrant'), {
+  type:'scatter',
+  data:{ datasets:[{ data:qds, backgroundColor:qpts.map(cls), pointRadius:6, pointHoverRadius:8 }] },
+  options: opts({ layout:{padding:16},
+    scales:{ x:{ min:0,max:200, grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}}, title:{display:true,text:'Offtake anomaly (100=normal)',color:PAL.slate,font:{size:11}} },
+             y:{ min:0,max:310, grid:{color:PAL.grid}, ticks:{color:PAL.slate,font:{size:10}}, title:{display:true,text:'Stock cover anomaly (100=normal)',color:PAL.slate,font:{size:11}} } } })
+});
+
+/* ============ E: policy / subsidy ============ */
+new Chart(document.getElementById('c-subsidy-cost'), {
+  type:'bar',
+  data:{ labels:['Low elasticity (-0.55)','Mid elasticity (-0.85)','High elasticity (-1.20)'],
+    datasets:[
+      { data:[591,404,323], backgroundColor:PAL.blue, borderRadius:4, maxBarThickness:40 },
+      { data:[615,424,341], backgroundColor:PAL.green, borderRadius:4, maxBarThickness:40 }
+    ] },
+  options: opts({ scales:{ x:{grid:{display:false},ticks:{color:PAL.slate,font:{size:10}}}, y:{grid:{color:PAL.grid},ticks:{color:PAL.slate,font:{size:10}},title:{display:true,text:"Rs '000 / additional ton",color:PAL.slate,font:{size:11}}} } })
+});
+
+new Chart(document.getElementById('c-regional-cv'), {
+  type:'line',
+  data:{ labels:['2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','2026'],
+    datasets:[{ data:[1.8,1.7,5.4,2.1,2.3,2.1,3.2,1.9,6.8,8.1,7.3,3.4,3.1], borderColor:PAL.red, backgroundColor:'rgba(192,0,0,0.08)', borderWidth:2, pointRadius:3, fill:true, tension:0.2 }] },
+  options: opts({ scales:{ x:{grid:{display:false},ticks:{color:PAL.slate,font:{size:10}}}, y:{grid:{color:PAL.grid},ticks:{color:PAL.slate,font:{size:10},callback:v=>v+'%'},title:{display:true,text:'Cross-region CV (%)',color:PAL.slate,font:{size:11}}} } })
+});
+
+/* jump-nav active state */
+const sections = [...document.querySelectorAll('main .sec')];
+const navLinks = [...document.querySelectorAll('.jnav a')];
+window.addEventListener('scroll', () => {
+  let current = sections[0].id;
+  for (const s of sections) { if (window.scrollY >= s.offsetTop - 110) current = s.id; }
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+});
+
+if (window.lucide) lucide.createIcons();
+</script>
+</body>
+</html>
