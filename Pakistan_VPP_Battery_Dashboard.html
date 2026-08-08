@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan VPP & Battery Storage Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --white: #FFFFFF;
+  --secondary: #FAFAFA;
+  --border: #E5E5E5;
+  --accent: #C8923A;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --green: #52B788;
+  --red: #9B2335;
+  --blue: #2D5EA8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif; background: var(--white); color: #2D2D2D; line-height: 1.6; font-size: 14px; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+
+/* HEADER */
+.dash-header { border-bottom: 1px solid var(--border); padding: 2rem 0 1.5rem; margin-bottom: 0; }
+.header-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.4rem; }
+.header-title { font-family: Georgia, serif; font-size: 30px; font-weight: 400; color: var(--text-primary); line-height: 1.2; }
+.header-sub { font-size: 13px; color: var(--text-secondary); margin-top: 0.4rem; }
+.header-meta { display: flex; gap: 2rem; margin-top: 0.75rem; }
+.header-meta span { font-size: 12px; color: var(--text-tertiary); }
+.header-meta span strong { color: var(--accent); }
+
+/* TABS */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin: 0; overflow-x: auto; }
+.tab-btn { background: none; border: none; border-bottom: 2px solid transparent; padding: 0.875rem 1.25rem; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-tertiary); cursor: pointer; white-space: nowrap; transition: all 0.2s; margin-bottom: -1px; }
+.tab-btn:hover { color: var(--text-primary); }
+.tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+.tab-content { display: none; padding-top: 2rem; }
+.tab-content.active { display: block; }
+
+/* KPI CARDS */
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.kpi-card { background: var(--white); border: 1px solid var(--border); padding: 1.25rem 1.5rem; position: relative; }
+.kpi-card.amber { border-top: 3px solid var(--accent); }
+.kpi-card.green { border-top: 3px solid var(--green); }
+.kpi-card.red { border-top: 3px solid var(--red); }
+.kpi-card.blue { border-top: 3px solid var(--blue); }
+.kpi-num { font-family: Georgia, serif; font-size: 28px; font-weight: 400; color: var(--text-primary); line-height: 1; margin-bottom: 0.5rem; }
+.kpi-label { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); }
+.kpi-sub { font-size: 12px; color: var(--text-secondary); margin-top: 0.25rem; }
+
+/* PANELS */
+.panel { background: var(--white); border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; }
+.panel-title { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: var(--text-primary); margin-bottom: 0.25rem; }
+.panel-sub { font-size: 12px; color: var(--text-tertiary); margin-bottom: 1.25rem; }
+
+/* GRIDS */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+.one-two { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; }
+.two-one { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+
+/* SECTION HEADERS */
+.section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.5rem; margin-top: 1.5rem; }
+.section-title { font-family: Georgia, serif; font-size: 20px; font-weight: 400; color: var(--text-primary); margin-bottom: 1rem; line-height: 1.3; }
+
+/* VERDICT / CALLOUT */
+.verdict { background: var(--secondary); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+.verdict-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.4rem; }
+.verdict-text { font-size: 13px; color: #2D2D2D; line-height: 1.7; }
+
+.callout-green { background: #F0FAF5; border-left: 4px solid var(--green); padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: 13px; color: #2D4035; line-height: 1.6; }
+.callout-red { background: #FDF0F2; border-left: 4px solid var(--red); padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: 13px; color: #3D2028; line-height: 1.6; }
+.callout-blue { background: #EEF2FA; border-left: 4px solid var(--blue); padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: 13px; color: #1D2D4A; line-height: 1.6; }
+
+/* TABLES */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.data-table th { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-primary); text-align: left; padding: 0.6rem 0.75rem; border-bottom: 2px solid var(--text-primary); background: var(--white); }
+.data-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); color: #2D2D2D; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--secondary); }
+.data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.data-table .accent { color: var(--accent); font-weight: 600; }
+.data-table .green { color: var(--green); font-weight: 600; }
+.data-table .red { color: var(--red); font-weight: 600; }
+.data-table .highlight td { font-weight: 600; background: var(--secondary); }
+
+/* CHART CONTAINERS */
+.chart-wrap { position: relative; }
+.chart-sm { height: 220px; }
+.chart-md { height: 280px; }
+.chart-lg { height: 320px; }
+
+/* SCENARIO BADGES */
+.badge { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 2px; }
+.badge-cons { background: #F0F4FF; color: var(--blue); border: 1px solid #C0CCE8; }
+.badge-base { background: #F5F5F5; color: #555; border: 1px solid #DDD; }
+.badge-accel { background: #FFF4E8; color: var(--accent); border: 1px solid #E8C88A; }
+
+/* VPP DESIGN ELEMENTS */
+.dispatch-bar { display: flex; height: 32px; border-radius: 2px; overflow: hidden; margin: 0.5rem 0; }
+.dispatch-segment { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: white; letter-spacing: 0.04em; }
+.chain-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+.chain-role { font-size: 12px; font-weight: 600; color: var(--text-primary); min-width: 140px; }
+.chain-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.chain-arrow { color: var(--text-tertiary); font-size: 16px; }
+
+/* SATURATION VISUAL */
+.saturation-track { background: var(--secondary); border: 1px solid var(--border); border-radius: 2px; height: 12px; position: relative; margin: 0.5rem 0; overflow: hidden; }
+.saturation-fill { height: 100%; border-radius: 2px; }
+
+/* HOLLOWING INDEX */
+.hi-bar-group { display: flex; gap: 0.5rem; align-items: flex-end; }
+.hi-bar { border-radius: 2px 2px 0 0; min-width: 32px; display: flex; align-items: flex-end; justify-content: center; font-size: 10px; font-weight: 600; color: white; padding-bottom: 3px; }
+
+@media (max-width: 768px) {
+  .kpi-grid, .two-col, .three-col, .one-two, .two-one { grid-template-columns: 1fr; }
+  .tabs { gap: 0; }
+  .tab-btn { padding: 0.75rem 0.75rem; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="dash-header">
+  <div class="header-label">Power Division, Government of Pakistan</div>
+  <div class="header-title">Virtual Power Plants & Battery Storage — Pakistan Market Dashboard</div>
+  <div class="header-sub">Quantitative analytics across market evolution, demand forecasts, VPP design economics, and system dispatch data</div>
+  <div class="header-meta">
+    <span>Data coverage: <strong>Jan 2018 – Jun 2026</strong></span>
+    <span>ISMO dispatch: <strong>Feb 2024 – Apr 2026 (26 months)</strong></span>
+    <span>Forecast horizon: <strong>2030</strong></span>
+    <span>Updated: <strong>August 2026</strong></span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+  <button class="tab-btn" onclick="showTab('solar')">Solar Imports</button>
+  <button class="tab-btn" onclick="showTab('battery')">Battery Storage</button>
+  <button class="tab-btn" onclick="showTab('forecast')">2030 Forecast</button>
+  <button class="tab-btn" onclick="showTab('vpp')">VPP Architecture</button>
+  <button class="tab-btn" onclick="showTab('dispatch')">System Analytics</button>
+</div>
+
+<!-- =================== TAB 1: OVERVIEW =================== -->
+<div id="tab-overview" class="tab-content active">
+
+  <div class="kpi-grid">
+    <div class="kpi-card amber">
+      <div class="kpi-num">49.3 GW</div>
+      <div class="kpi-label">Cumulative Solar Imports</div>
+      <div class="kpi-sub">Jan 2022 – May 2026</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-num">10.2 GWh</div>
+      <div class="kpi-label">Cumulative BESS Imports</div>
+      <div class="kpi-sub">Jan 2018 – Jun 2026 (broad estimate)</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-num">5,731 MW</div>
+      <div class="kpi-label">Base-case Peak Shaving 2030</div>
+      <div class="kpi-sub">15.7% of projected 36.4 GW peak</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">46,000 MW</div>
+      <div class="kpi-label">Installed Generation Capacity</div>
+      <div class="kpi-sub">Peak demand: 10,700 – 21,300 MW (26 mo)</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-num">22.8%</div>
+      <div class="kpi-label">Hollowing Index (Apr 2026 Avg)</div>
+      <div class="kpi-sub">vs negative across 4/5 DISCOs in Feb 2024</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">2.4×</div>
+      <div class="kpi-label">MC ÷ AFC Ratio (26-mo avg)</div>
+      <div class="kpi-sub">Range: 1.9× – 3.6×. Capacity, not fuel, is the driver.</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Strategic Finding</div>
+    <div class="verdict-text">
+      Pakistan has accumulated ~49 GW of solar modules and ~10 GWh of batteries — without a policy framework to coordinate them. The wholesale price-suppression case for VPPs saturates sharply above <strong>5–6 GW</strong>; the argument for an 8–12 GW 2030 target must therefore rest on <strong>fuel-import displacement</strong> (~PKR 93 billion annually in the accelerated scenario) — not repeated invocation of price compression. The Hollowing Index moved from negative (Feb 2024) to +22.8% average (Apr 2026) across all five major DISCOs: a complete reversal of the daily demand shape in two years. Every additional GW of sustained solar imports deepens the Index by ~2.7 percentage points — a durable, structural shift, not a behavioral fluctuation.
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Capacity vs Utilisation — The Utilisation Gap</div>
+      <div class="panel-sub">26-month observed system demand range against 46,000 MW installed base (MW)</div>
+      <div class="chart-wrap chart-md">
+        <canvas id="chart-capacity-utilisation"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Hollowing Index — Behind-the-Meter Substitution</div>
+      <div class="panel-sub">Daytime demand trough vs evening baseline, by DISCO and period</div>
+      <div class="chart-wrap chart-md">
+        <canvas id="chart-hi-evolution"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Key Analytical Thresholds</div>
+  <table class="data-table">
+    <tr><th>Parameter</th><th>Value</th><th>Implication</th></tr>
+    <tr><td>Price-suppression saturation point</td><td class="accent num">~5–6 GW VPP capacity</td><td>Beyond this threshold, additional VPP capacity does not materially compress wholesale prices</td></tr>
+    <tr><td>2030 base-case annual fuel displacement</td><td class="green num">PKR 93B / $335M</td><td>Primary scale argument — fuel-import displacement, not price compression</td></tr>
+    <tr><td>FCA reduction system-wide (at scale)</td><td class="green num">~10%</td><td>Directly reduces consumer bills via the Fuel Cost Adjustment mechanism</td></tr>
+    <tr><td>Hollowing Index pace (6-month elasticity)</td><td class="num">+2.7 pp / GW imports</td><td>R² = 0.48 (n=10); 6-month lag from customs to commissioning</td></tr>
+    <tr><td>Solar import peak (rolling 12M)</td><td class="num">~18 GW (Oct 2025)</td><td>Declined to ~10 GW by Apr 2026 following 2025 net-billing tariff cut</td></tr>
+    <tr><td>Apr 2026 marginal cost spike</td><td class="red num">40.18 PKR/kWh</td><td>RLNG supply disruption — supply curtailment, not solar exit (HI YoY change: +0.4 pp only)</td></tr>
+    <tr><td>Battery pack price 2025 → 2030 (base)</td><td class="num">$70 → $50 /kWh</td><td>−28.6% price decline drives base-case adoption trajectory</td></tr>
+    <tr class="highlight"><td>VPP 2030 peak shaving range (3 scenarios)</td><td class="num">2,283 – 11,499 MW</td><td>Conservative to accelerated; base case: 5,731 MW (15.7% of projected peak)</td></tr>
+  </table>
+
+</div>
+
+<!-- =================== TAB 2: SOLAR IMPORTS =================== -->
+<div id="tab-solar" class="tab-content">
+
+  <div class="kpi-grid">
+    <div class="kpi-card amber">
+      <div class="kpi-num">16.9 GW</div>
+      <div class="kpi-label">2025 Solar Imports</div>
+      <div class="kpi-sub">+1.7% vs 2024 (16.62 GW)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">4.57 GW</div>
+      <div class="kpi-label">Jan–May 2026 (5 months)</div>
+      <div class="kpi-sub">~35% below 2025 annualised run-rate</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-num">49.3 GW</div>
+      <div class="kpi-label">Cumulative Jan 2022 – May 2026</div>
+      <div class="kpi-sub">Physical asset on the ground — not reversible</div>
+    </div>
+  </div>
+
+  <div class="callout-red">
+    <strong>Net-billing policy signal:</strong> The 2025 NEPRA net-billing tariff shift roughly halved the effective solar export rate. Rolling 12-month imports peaked at ~18 GW around October 2025, then fell to ~10 GW by April 2026 — a ~44% decline. Crucially, this slows <em>new</em> installations without removing capacity already in the ground. The Hollowing Index level holds; the pace of new substitution decelerates.
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Annual Solar Module Imports (GW)</div>
+      <div class="panel-sub">HS 854143 finished modules/panels, Calendar 2022 – 2026</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-solar-annual"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Rolling 12-Month Imports (GW)</div>
+      <div class="panel-sub">Jan 2022 – May 2026 — showing the import supercycle and post-net-billing deceleration</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-solar-rolling"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Solar Import Trajectory — Annual Reconciliation</div>
+    <table class="data-table">
+      <tr><th>Period</th><th class="num">Imports (GW)</th><th class="num">YoY Change</th><th class="num">Avg Price (US$/W)</th><th class="num">Est. Value (US$ mn)</th><th class="num">Avg Monthly (MW)</th><th>Data Coverage</th></tr>
+      <tr><td>2022</td><td class="num">3.50</td><td class="num">—</td><td class="num">$0.25</td><td class="num">$875</td><td class="num">292</td><td>Full year</td></tr>
+      <tr><td>2023</td><td class="num">7.70</td><td class="green num">+120.0%</td><td class="num">$0.16</td><td class="num">$1,232</td><td class="num">642</td><td>Full year</td></tr>
+      <tr><td>2024</td><td class="num">16.62</td><td class="green num">+115.8%</td><td class="num">$0.10</td><td class="num">$1,662</td><td class="num">1,385</td><td>Full year</td></tr>
+      <tr><td>2025</td><td class="num">16.90</td><td class="num">+1.7%</td><td class="num">$0.091</td><td class="num">$1,534</td><td class="num">1,408</td><td>Full year (working estimate)</td></tr>
+      <tr class="highlight"><td>2026 Jan–May</td><td class="num">4.57</td><td class="red num">−35% vs 2025 run-rate</td><td class="num">$0.112</td><td class="num">$514</td><td class="num">915</td><td>Five months only</td></tr>
+      <tr class="highlight"><td><strong>Cumulative Jan'22–May'26</strong></td><td class="accent num"><strong>49.3 GW</strong></td><td colspan="4" class="num">—</td><td>—</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-label">Solar → Battery Elasticity</div>
+    <div class="verdict-text">
+      Early-stage solar showed a log-price elasticity of −1.70 to −1.77 (2022–24): a 10% price decline drove ~17–19% import growth. The 2025 saturation (only +1.7% growth despite continued price decline) reflects market exhaustion and inventory effects — not the underlying technology adoption curve. Battery demand elasticity is estimated at −1.2 (base) with a solar-stock complementarity factor of 0.45, meaning cumulative solar installations directly stimulate battery demand independently of price.
+    </div>
+  </div>
+
+</div>
+
+<!-- =================== TAB 3: BATTERY STORAGE =================== -->
+<div id="tab-battery" class="tab-content">
+
+  <div class="kpi-grid">
+    <div class="kpi-card amber">
+      <div class="kpi-num">4.59 GWh</div>
+      <div class="kpi-label">2025 BESS Imports</div>
+      <div class="kpi-sub">+221% vs 2024 (1.43 GWh)</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-num">652 MWh</div>
+      <div class="kpi-label">April 2026 — Record Month</div>
+      <div class="kpi-sub">Single-month published high water mark</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">$70/kWh</div>
+      <div class="kpi-label">2025 Stationary Pack Price</div>
+      <div class="kpi-sub">vs $176/kWh in 2018 (−60% over 7 years)</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Annual BESS Imports (MWh)</div>
+      <div class="panel-sub">Stationary lithium-ion — residential, commercial, industrial, telecom; 2018–2026</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-bess-annual"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">2025 Sector Breakdown</div>
+      <div class="panel-sub">End-use allocation of 4,590 MWh in 2025 (published sector totals)</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-bess-sector"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Monthly BESS Imports — 2024 to Jun 2026 (MWh)</div>
+    <div class="panel-sub">Broad screened estimate; Apr 2026 = 652.2 MWh is transaction-screened anchor</div>
+    <div class="chart-wrap chart-lg">
+      <canvas id="chart-bess-monthly"></canvas>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Price vs Volume — Adoption Acceleration</div>
+      <table class="data-table">
+        <tr><th>Year</th><th class="num">Imports (GWh)</th><th class="num">Price (US$/kWh)</th><th class="num">YoY Growth</th></tr>
+        <tr><td>2018</td><td class="num">0.10</td><td class="num">$176</td><td class="num">—</td></tr>
+        <tr><td>2019</td><td class="num">0.50</td><td class="num">$160</td><td class="green num">+400%</td></tr>
+        <tr><td>2020</td><td class="num">0.20</td><td class="num">$140</td><td class="red num">−60%</td></tr>
+        <tr><td>2021</td><td class="num">0.30</td><td class="num">$132</td><td class="green num">+50%</td></tr>
+        <tr><td>2022</td><td class="num">0.40</td><td class="num">$151</td><td class="green num">+33%</td></tr>
+        <tr><td>2023</td><td class="num">0.20</td><td class="num">$139</td><td class="red num">−50%</td></tr>
+        <tr><td>2024</td><td class="num">1.43</td><td class="num">$115</td><td class="green num">+615%</td></tr>
+        <tr><td>2025</td><td class="num accent">4.59</td><td class="num">$70</td><td class="green num accent">+221%</td></tr>
+        <tr><td>2026 H1</td><td class="num">2.48</td><td class="num">~$75</td><td class="num">(annualising ~5.0 GWh)</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title">2025 Product Mix & Market Signals</div>
+      <table class="data-table">
+        <tr><th>Segment</th><th>Typical Size</th><th>2026 Development</th></tr>
+        <tr><td>Residential modules</td><td>3–6 kWh</td><td>Largest by volume (39% share); share declining</td></tr>
+        <tr><td>Commercial rack systems</td><td>11–20 kWh</td><td>Share up sharply (35%) — SME adoption wave</td></tr>
+        <tr><td>Utility-scale BESS</td><td>≥1 MWh/site</td><td><strong>>252 MWh across 19 installations</strong> — programmatic procurement emerging</td></tr>
+        <tr><td>Telecom LFP backup</td><td>1–60 kW class</td><td>CMPAK example: 3,512 units = 9.6 MWh single month</td></tr>
+      </table>
+      <div class="callout-green" style="margin-top: 1rem;">
+        <strong>Equity dimension:</strong> Battery ownership is concentrated among higher-income households and commercial operators. A VPP framework that pays availability and dispatch premiums without targeting constrained feeders risks deepening a two-tier grid — those with batteries export at peak prices; those without absorb the remaining fixed cost.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =================== TAB 4: 2030 FORECAST =================== -->
+<div id="tab-forecast" class="tab-content">
+
+  <div class="three-col">
+    <div class="kpi-card">
+      <div class="badge badge-cons">Conservative</div>
+      <div class="kpi-num" style="margin-top:0.5rem;">7.7 GWh</div>
+      <div class="kpi-label">2030 Battery Imports</div>
+      <div class="kpi-sub">Peak shaving: 2,283 MW (6.3% of peak)</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="badge badge-base">Base</div>
+      <div class="kpi-num" style="margin-top:0.5rem;">14.6 GWh</div>
+      <div class="kpi-label">2030 Battery Imports</div>
+      <div class="kpi-sub">Peak shaving: 5,731 MW (15.7% of peak)</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="badge badge-accel">Accelerated</div>
+      <div class="kpi-num" style="margin-top:0.5rem;">28.7 GWh</div>
+      <div class="kpi-label">2030 Battery Imports</div>
+      <div class="kpi-sub">Peak shaving: 11,499 MW (31.6% of peak)</div>
+    </div>
+  </div>
+
+  <div class="callout-blue">
+    <strong>Model architecture:</strong> Battery imports respond to (i) battery price decline, (ii) cumulative solar stock (complementarity), and (iii) autonomous market diffusion. Peak shaving converts operational battery stock (imports × commission rate × degradation × DOD × efficiency × availability × managed dispatch) to MW over a 4-hour peak window. 2030 medium peak demand assumed: 36,440 MW.
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Annual Battery Imports by Scenario (GWh)</div>
+      <div class="panel-sub">2025–2030; base battery price elasticity: −1.2; solar-stock factor: 0.45</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-forecast-bess"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">VPP Peak-Shaving Capacity by Scenario (MW)</div>
+      <div class="panel-sub">Operational battery stock dispatched over H17–H21 peak window</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-forecast-peak"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Cumulative Solar & Battery Import Path — Base (GW / GWh)</div>
+      <div class="panel-sub">Solar: left axis (GW). Battery: right axis (GWh). Base scenario only.</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-cumulative-path"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Solar Module Price Path — Three Scenarios (US$/W)</div>
+      <div class="panel-sub">Price elasticity drives battery adoption via complementarity; solar price = primary demand signal</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-solar-price-path"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">2030 Scenario Comparison — Full Parameter Table</div>
+    <table class="data-table">
+      <tr><th>Parameter</th><th class="num"><span class="badge badge-cons">Conservative</span></th><th class="num"><span class="badge badge-base">Base</span></th><th class="num"><span class="badge badge-accel">Accelerated</span></th></tr>
+      <tr><td>2030 solar price (US$/W)</td><td class="num">$0.086</td><td class="num">$0.071</td><td class="num">$0.060</td></tr>
+      <tr><td>2030 solar imports (GW)</td><td class="num">12.3</td><td class="num">17.8</td><td class="num">25.0</td></tr>
+      <tr><td>Cumulative solar 2030 (GW)</td><td class="num">105.9</td><td class="num">120.7</td><td class="num">143.9</td></tr>
+      <tr><td>2030 battery price (US$/kWh)</td><td class="num">$60</td><td class="num">$50</td><td class="num">$42</td></tr>
+      <tr><td>2030 battery imports (GWh)</td><td class="num">7.70</td><td class="num">14.64</td><td class="num accent">28.73</td></tr>
+      <tr><td>Cumulative battery imports 2030 (GWh)</td><td class="num">39.9</td><td class="num">56.9</td><td class="num">85.9</td></tr>
+      <tr><td>Operational battery stock 2030 (GWh)</td><td class="num">29.5</td><td class="num">45.8</td><td class="num">74.7</td></tr>
+      <tr><td>Usable peak energy 2030 (GWh)</td><td class="num">9.1</td><td class="num">22.9</td><td class="num">46.0</td></tr>
+      <tr class="highlight"><td><strong>Peak shaving capacity 2030 (MW)</strong></td><td class="num"><strong>2,283</strong></td><td class="num accent"><strong>5,731</strong></td><td class="green num"><strong>11,499</strong></td></tr>
+      <tr class="highlight"><td><strong>Share of 2030 peak demand</strong></td><td class="num"><strong>6.3%</strong></td><td class="num accent"><strong>15.7%</strong></td><td class="green num"><strong>31.6%</strong></td></tr>
+      <tr><td>Battery price elasticity assumed</td><td class="num">−0.80</td><td class="num">−1.20</td><td class="num">−1.60</td></tr>
+      <tr><td>Solar-stock elasticity for batteries</td><td class="num">0.25</td><td class="num">0.45</td><td class="num">0.60</td></tr>
+      <tr><td>Managed coincident dispatch rate</td><td class="num">45%</td><td class="num">65%</td><td class="num">75%</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- =================== TAB 5: VPP ARCHITECTURE =================== -->
+<div id="tab-vpp" class="tab-content">
+
+  <div class="verdict">
+    <div class="verdict-label">Recommended Architecture</div>
+    <div class="verdict-text">A <strong>DISCO-contracted, aggregator-operated, four-hour peak-flexibility programme</strong>. Not initially open wholesale trading by individual households — that requires AMI, market infrastructure, and CTBCM readiness that does not yet exist at DISCO level. The VPP aggregates distributed batteries for H17–H21 dispatch, pays on availability + dispatch, and settles via DISCO billing systems on a 15-minute basis.
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Pilot Design Parameters</div>
+      <div class="panel-sub">10 MW / 40 MWh pilot — total cost PKR 4.75–8.75 billion</div>
+      <table class="data-table" style="margin-top:0.5rem;">
+        <tr><th>Parameter</th><th class="num">Value</th></tr>
+        <tr><td>Contracted capacity</td><td class="num accent">10 MW</td></tr>
+        <tr><td>Usable energy</td><td class="num accent">40 MWh (4-hour minimum)</td></tr>
+        <tr><td>Participating sites</td><td class="num">1,000–2,000 sites</td></tr>
+        <tr><td>Average site capacity</td><td class="num">5–10 kW / site</td></tr>
+        <tr><td>Dispatch window</td><td class="num">5:00pm – 10:00pm</td></tr>
+        <tr><td>Response time</td><td class="num">Within 5 minutes</td></tr>
+        <tr><td>Telemetry</td><td class="num">10–60 second operational; 15-min financial settlement</td></tr>
+        <tr><td>Digital infrastructure CAPEX</td><td class="num">PKR 1.55–3.55 billion</td></tr>
+        <tr><td>Battery CAPEX (40 MWh)</td><td class="num">PKR 3.2–5.2 billion</td></tr>
+        <tr class="highlight"><td><strong>Total pilot investment</strong></td><td class="num accent"><strong>PKR 4.75–8.75 billion</strong></td></tr>
+        <tr><td>Annual OPEX</td><td class="num">PKR 300–680 million</td></tr>
+        <tr><td>Scale-up (100 MW / 400 MWh)</td><td class="num">PKR 41–72 billion indicative</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Dispatch Payment Structure (PKR/kWh)</div>
+      <div class="panel-sub">Three settlement tiers: availability, routine dispatch, critical event</div>
+      <div class="chart-wrap chart-md">
+        <canvas id="chart-vpp-payment"></canvas>
+      </div>
+      <table class="data-table" style="margin-top:1rem;">
+        <tr><th>Payment Type</th><th class="num">Range</th><th class="num">Central</th></tr>
+        <tr><td>Availability payment</td><td class="num">PKR 600–1,000/kW/mo</td><td class="num accent">PKR 850/kW/mo</td></tr>
+        <tr><td>Routine dispatch</td><td class="num">PKR 32–38/kWh</td><td class="num">PKR 36/kWh</td></tr>
+        <tr><td>Critical-event dispatch</td><td class="num">PKR 45–55/kWh</td><td class="num">PKR 50/kWh</td></tr>
+        <tr><td>Peak import price (consumer)</td><td class="num">PKR 55–65/kWh</td><td class="num">PKR 60/kWh</td></tr>
+        <tr><td>Solar-hour export credit</td><td class="num">PKR 10–15/kWh</td><td class="num">PKR 12/kWh</td></tr>
+        <tr><td>Constrained-feeder locational adder</td><td class="num">PKR 4–8/kWh</td><td class="num">PKR 5/kWh</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">VPP Economics — Fuel Displacement & System Value</div>
+    <div class="two-col" style="margin-top:0.75rem;">
+      <div>
+        <div class="chart-wrap chart-md">
+          <canvas id="chart-vpp-displacement"></canvas>
+        </div>
+      </div>
+      <div>
+        <table class="data-table" style="margin-top:0.5rem;">
+          <tr><th>Economic Metric</th><th class="num">Value</th></tr>
+          <tr><td>Annual fuel displacement (accelerated 2030)</td><td class="green num">PKR 93 billion</td></tr>
+          <tr><td>Annual fuel displacement USD equivalent</td><td class="green num">~$335 million</td></tr>
+          <tr><td>FCA reduction system-wide at scale</td><td class="green num">~10%</td></tr>
+          <tr><td>Prosumer buyback floor (recomputed)</td><td class="num">~PKR 16/kWh</td></tr>
+          <tr><td>Buyback ceiling (avoided cost, 85%)</td><td class="num">~PKR 24/kWh (seasonal)</td></tr>
+          <tr><td>Peaker-cost benchmark ceiling</td><td class="num">System marginal cost, non-solar hours</td></tr>
+          <tr><td>Battery incentive — residential</td><td class="num">10–15% of battery cost</td></tr>
+          <tr><td>Battery incentive — constrained feeder SME</td><td class="num">15–20%</td></tr>
+          <tr><td>Battery incentive — critical facility</td><td class="num">20–30%</td></tr>
+          <tr><td>Battery incentive — low-income community</td><td class="num">30–40%</td></tr>
+          <tr><td>Max incentive cap (per connection)</td><td class="num">PKR 200,000–250,000</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Institutional Role Chain</div>
+    <div class="panel-sub">Five-layer accountability structure — asset owner → aggregator → DISCO → system operator → regulator</div>
+    <div style="margin-top: 0.75rem;">
+      <div class="chain-row">
+        <div class="chain-role">Asset Owner</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-desc">Customer retains ownership and defined backup reserve. Participates via aggregator contract. Override rights and degradation disclosures guaranteed.</div>
+      </div>
+      <div class="chain-row">
+        <div class="chain-role">VPP Aggregator</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-desc">Enrollment, device certification, demand forecasting, dispatch commands, settlement, cybersecurity compliance, non-delivery guarantees. Licensed by NEPRA. Must hold performance/settlement security.</div>
+      </div>
+      <div class="chain-row">
+        <div class="chain-role">DISCO</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-desc">Identifies constrained feeders, procures peak reduction, integrates VPP dispatch with network operations. Pays aggregator. Manages staggered recharge to prevent second-peak formation.</div>
+      </div>
+      <div class="chain-row">
+        <div class="chain-role">System / Market Operator (ISMO)</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-desc">National system needs coordination, wholesale-level settlement, dispatch priority signals. VPP dispatch aligned with H17–H21 peak concentration verified in 26 months of ISMO data.</div>
+      </div>
+      <div class="chain-row" style="border-bottom: none;">
+        <div class="chain-role">NEPRA</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-desc">Aggregator licensing, customer protection standards, metering requirements, tariff rules (buyback, availability payments), cybersecurity obligations, data governance, market design review.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">VPP Pilot Sequencing</div>
+    <div class="three-col" style="margin-top: 0.75rem; gap: 0.75rem;">
+      <div style="border: 1px solid var(--border); padding: 1rem; border-top: 3px solid var(--text-tertiary);">
+        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin-bottom: 0.5rem;">Phase 1 — Shadow VPP</div>
+        <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">200–500 assets enrolled. No paid dispatch. Tests connectivity, telemetry, cybersecurity protocols, and aggregator performance tracking. Builds DISCO operational muscle.</div>
+      </div>
+      <div style="border: 1px solid var(--border); padding: 1rem; border-top: 3px solid var(--accent);">
+        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem;">Phase 2 — Scheduled Dispatch</div>
+        <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">5–10 MW contracted for announced evening events. Availability + dispatch payments active. Basic performance penalties introduced. Settlement system validated against 15-minute intervals.</div>
+      </div>
+      <div style="border: 1px solid var(--border); padding: 1rem; border-top: 3px solid var(--green);">
+        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); margin-bottom: 0.5rem;">Phase 3 — National Scale</div>
+        <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">Full 10 MW pilot → 100 MW expansion. Real-time ISMO integration. Dynamic pricing signal. Carbon-premium pilot on ToU peak window. Seasonal auction design for maturity-stage buyback.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =================== TAB 6: SYSTEM ANALYTICS =================== -->
+<div id="tab-dispatch" class="tab-content">
+
+  <div class="kpi-grid">
+    <div class="kpi-card amber">
+      <div class="kpi-num">H17–H21</div>
+      <div class="kpi-label">System Peak Window</div>
+      <div class="kpi-sub">5pm–9pm. Consistent across all 26 months. H23 summer peak; H17 winter peak.</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-num">17.8 PKR/kWh</div>
+      <div class="kpi-label">26-Month Avg Marginal Cost</div>
+      <div class="kpi-sub">Range: 10.0 – 40.2 PKR/kWh (4× monthly avg volatility)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num">~35%</div>
+      <div class="kpi-label">Avg System Load Factor</div>
+      <div class="kpi-sub">Range 25–46% over 26 months. ~46,000 MW installed vs 10.7–21.3 GW peak.</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">24-Hour Demand Profile — Summer Peak (Jun 2024) vs Winter (Jan 2025)</div>
+    <div class="panel-sub">Average MW per hour from ISMO hourly data. VPP dispatch window (H17–H21) shaded. Industrial hours (H07–H17) shown for NCPC reference.</div>
+    <div class="chart-wrap chart-lg">
+      <canvas id="chart-hourly-demand"></canvas>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Monthly Marginal Cost vs Average Fuel Cost (PKR/kWh)</div>
+      <div class="panel-sub">26-month ISMO series. Feb 2026 excluded (anomalous demand). Apr 2026 marked as RLNG crisis event.</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-mc-afc"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Generation Mix Evolution — Thermal Share Declining</div>
+      <div class="panel-sub">Monthly average generation share by source (selected months)</div>
+      <div class="chart-wrap chart-lg">
+        <canvas id="chart-gen-mix"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">ISMO Monthly Summary — Key Metrics (Feb 2024 – Apr 2026)</div>
+    <table class="data-table">
+      <tr><th>Month</th><th class="num">Avg Demand (MW)</th><th class="num">Peak Demand (MW)</th><th class="num">Peak Hour</th><th class="num">Avg MC (PKR/kWh)</th><th class="num">AFC (PKR/kWh)</th><th class="num">MC÷AFC</th><th>Note</th></tr>
+      <tr><td>Feb-24</td><td class="num">9,858</td><td class="num">11,539</td><td class="num">H18</td><td class="num">33.75</td><td class="num">12.37</td><td class="num">2.73</td><td></td></tr>
+      <tr><td>Mar-24</td><td class="num">10,436</td><td class="num">12,293</td><td class="num">H19</td><td class="num">11.39</td><td class="num">5.67</td><td class="num">2.01</td><td></td></tr>
+      <tr><td>Apr-24</td><td class="num">11,631</td><td class="num">13,057</td><td class="num">H19</td><td class="num">15.87</td><td class="num">7.32</td><td class="num">2.17</td><td></td></tr>
+      <tr><td>May-24</td><td class="num">16,463</td><td class="num">17,651</td><td class="num">H23</td><td class="num">18.89</td><td class="num">9.26</td><td class="num">2.04</td><td></td></tr>
+      <tr><td>Jun-24</td><td class="num">18,154</td><td class="num">19,359</td><td class="num">H23</td><td class="num">20.02</td><td class="num">7.79</td><td class="num">2.57</td><td></td></tr>
+      <tr><td>Aug-24</td><td class="num">17,140</td><td class="num">18,903</td><td class="num">H00</td><td class="num">16.29</td><td class="num">6.11</td><td class="num">2.66</td><td></td></tr>
+      <tr><td>Jan-25</td><td class="num">10,505</td><td class="num">12,816</td><td class="num">H18</td><td class="num">21.90</td><td class="num">10.21</td><td class="num">2.14</td><td>RLNG heating load</td></tr>
+      <tr><td>Jun-25</td><td class="num">18,528</td><td class="num">21,262</td><td class="num">H23</td><td class="num">16.31</td><td class="num">4.65</td><td class="num">3.51</td><td>26-month demand high</td></tr>
+      <tr><td>Nov-25</td><td class="num">11,158</td><td class="num">13,809</td><td class="num">H17</td><td class="num">10.02</td><td class="num">4.46</td><td class="num">2.24</td><td>26-month MC low</td></tr>
+      <tr><td>Jan-26</td><td class="num">10,995</td><td class="num">14,236</td><td class="num">H18</td><td class="num">26.50</td><td class="num">13.08</td><td class="num">2.03</td><td></td></tr>
+      <tr style="opacity:0.5;"><td>Feb-26</td><td class="num">1,652</td><td class="num">1,952</td><td class="num">—</td><td class="num">15.08</td><td class="num">7.42</td><td class="num">2.03</td><td style="color:var(--red);">Anomalous — excluded from averages</td></tr>
+      <tr><td>Mar-26</td><td class="num">11,391</td><td class="num">14,125</td><td class="num">H18</td><td class="num">16.28</td><td class="num">7.24</td><td class="num">2.25</td><td></td></tr>
+      <tr class="highlight"><td><strong>Apr-26</strong></td><td class="num"><strong>12,840</strong></td><td class="num"><strong>14,493</strong></td><td class="num"><strong>H20</strong></td><td class="red num"><strong>40.18</strong></td><td class="num"><strong>11.15</strong></td><td class="red num"><strong>3.60</strong></td><td style="color:var(--red);">RLNG supply disruption — supply curtailment, not exit</td></tr>
+    </table>
+  </div>
+
+</div>
+
+</div><!-- /container -->
+
+<script>
+// =================== DATA ===================
+
+// CAPACITY UTILISATION
+const capUtilData = {
+  labels: ['Installed Capacity', 'Summer Peak (Max)', 'Avg System Demand', 'Winter Trough (Min)'],
+  values: [46000, 21262, 13500, 10700],
+  colors: ['#E5E5E5', '#9B2335', '#C8923A', '#52B788']
+};
+
+// HOLLOWING INDEX
+const hiData = {
+  labels: ['Feb-24', 'Jun-24', 'Oct-24', 'Feb-25', 'Jun-25', 'Oct-25', 'Feb-26', 'Apr-26'],
+  iesco: [-3, 4, 8, 5, 14, 16, 19, 21],
+  fesco: [-5, 3, 7, 4, 12, 14, 17, 19],
+  gepco: [-2, 6, 10, 7, 16, 18, 21, 24],
+  lesco: [-8, 2, 5, 3, 10, 12, 15, 18],
+  mepco: [-6, 5, 9, 6, 13, 16, 22, 35]
+};
+
+// SOLAR ANNUAL
+const solarAnnual = {
+  labels: ['2022', '2023', '2024', '2025', '2026\n(Jan–May)'],
+  values: [3.5, 7.7, 16.62, 16.9, 4.57]
+};
+
+// SOLAR ROLLING 12M (selected months)
+const solarRolling = {
+  labels: ['Jan-22','Apr-22','Jul-22','Oct-22','Jan-23','Apr-23','Jul-23','Oct-23','Jan-24','Apr-24','Jul-24','Oct-24','Jan-25','Apr-25','Jul-25','Oct-25','Jan-26','May-26'],
+  values: [0.25, 1.14, 2.18, 3.50, 4.30, 5.80, 7.70, 9.50, 11.20, 13.40, 15.80, 17.50, 18.20, 18.00, 17.60, 16.50, 14.20, 10.20]
+};
+
+// BESS ANNUAL
+const bessAnnual = {
+  labels: ['2018','2019','2020','2021','2022','2023','2024','2025','2026 H1'],
+  values: [100, 500, 200, 300, 400, 200, 1430, 4590, 2478]
+};
+
+// BESS SECTOR 2025
+const bessSector = {
+  labels: ['Residential/Retail','Commercial','Industrial','Telecom'],
+  values: [2450, 980, 910, 250]
+};
+
+// BESS MONTHLY 2024-2026
+const bessMonthly = {
+  labels: ['Jan-24','Feb-24','Mar-24','Apr-24','May-24','Jun-24','Jul-24','Aug-24','Sep-24','Oct-24','Nov-24','Dec-24',
+           'Jan-25','Feb-25','Mar-25','Apr-25','May-25','Jun-25','Jul-25','Aug-25','Sep-25','Oct-25','Nov-25','Dec-25',
+           'Jan-26','Feb-26','Mar-26','Apr-26','May-26','Jun-26'],
+  values: [42, 16, 68, 168, 86, 75, 169, 115, 120, 130, 218, 223,
+           200, 290, 380, 450, 400, 350, 450, 420, 380, 400, 430, 440,
+           350, 380, 440, 652, 310, 346]
+};
+
+// FORECAST SCENARIOS
+const forecastYears = [2025, 2026, 2027, 2028, 2029, 2030];
+const forecastBESS = {
+  conservative: [4.59, 5.20, 5.79, 6.42, 7.03, 7.70],
+  base:         [4.59, 5.86, 7.47, 9.38, 11.83, 14.64],
+  accelerated:  [4.59, 6.50, 9.43, 13.67, 19.82, 28.73]
+};
+const forecastPeak = {
+  conservative: [462, 771, 1106, 1470, 1862, 2283],
+  base:         [798, 1401, 2159, 3103, 4283, 5731],
+  accelerated:  [1046, 1926, 3194, 5024, 7670, 11499]
+};
+const cumSolarBase  = [48.79, 59.77, 72.39, 86.83, 102.95, 120.74];
+const cumBattBase   = [7.72, 13.58, 21.05, 30.43, 42.26, 56.90];
+
+// SOLAR PRICE PATHS
+const solarPricePaths = {
+  conservative: [0.091, 0.100, 0.096, 0.092, 0.089, 0.086],
+  base:         [0.091, 0.095, 0.087, 0.080, 0.075, 0.071],
+  accelerated:  [0.091, 0.090, 0.078, 0.070, 0.064, 0.060]
+};
+
+// VPP PAYMENT STRUCTURE (horizontal bar components)
+const vppPaymentCategories = ['Availability\n(PKR 850/kW/mo equiv)', 'Routine Dispatch', 'Critical Event\nDispatch', 'Export Credit\n(Solar hours)'];
+const vppPaymentLow =  [8, 32, 45, 10];
+const vppPaymentHigh = [12, 38, 55, 15];
+const vppPaymentMid =  [10, 36, 50, 12];
+
+// FUEL DISPLACEMENT
+const fuelDispYears = [2027, 2028, 2029, 2030];
+const fuelDispConservative = [18, 28, 40, 53];
+const fuelDispBase         = [28, 42, 62, 93];
+const fuelDispAccelerated  = [38, 65, 102, 160];
+
+// HOURLY DEMAND
+const hours = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23'];
+const summerDemand = [19271, 19132, 18761, 18395, 17950, 17621, 17067, 16849, 17163, 17584, 17622, 17780, 17537, 17873, 18667, 18992, 18893, 18451, 17260, 17353, 18316, 18846, 18942, 19359];
+const winterDemand = [9139, 8741, 8483, 8256, 8197, 9049, 10550, 11068, 11295, 10972, 10573, 10347, 10025, 9790, 10404, 11058, 11781, 12407, 12816, 12748, 12225, 11750, 10583, 9860];
+
+// MC vs AFC monthly
+const mcAfcMonths = ['Feb-24','Mar-24','Apr-24','May-24','Jun-24','Aug-24','Sep-24','Oct-24','Nov-24','Jan-25','Feb-25','Mar-25','Apr-25','May-25','Jun-25','Jul-25','Aug-25','Sep-25','Oct-25','Nov-25','Dec-25','Jan-26','Mar-26','Apr-26'];
+const mcValues =   [33.75, 11.39, 15.87, 18.89, 20.02, 16.29, 18.05, 19.45, 14.71, 21.90, 11.47, 16.90, 22.03, 15.56, 16.31, 15.57, 13.44, 14.72, 18.35, 10.02, 13.32, 26.50, 16.28, 40.18];
+const afcValues =  [12.37, 5.67, 7.32, 9.26, 7.79, 6.11, 7.25, 8.43, 6.08, 10.21, 6.01, 8.05, 9.20, 6.21, 4.65, 6.14, 5.51, 5.69, 8.15, 4.46, 7.00, 13.08, 7.24, 11.15];
+
+// GENERATION MIX (selected months)
+const genMixMonths = ['Feb-24','Jun-24','Oct-24','Feb-25','Jun-25','Oct-25','Jan-26','Apr-26'];
+const hydel  = [0.249, 0.353, 0.300, 0.240, 0.401, 0.264, 0.080, 0.230];
+const thermal= [0.317, 0.289, 0.290, 0.328, 0.083, 0.332, 0.374, 0.190];
+const nuclear= [0.234, 0.148, 0.141, 0.240, 0.204, 0.208, 0.175, 0.221];
+const coal   = [0.158, 0.158, 0.236, 0.149, 0.215, 0.164, 0.326, 0.298];
+const renewables = [0.028, 0.047, 0.028, 0.033, 0.093, 0.028, 0.034, 0.055];
+
+// =================== CHART DEFAULTS ===================
+const defaultFont = { family: '-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif', size: 11 };
+Chart.defaults.font = defaultFont;
+Chart.defaults.color = '#666666';
+Chart.defaults.plugins.legend.labels.boxWidth = 12;
+Chart.defaults.plugins.legend.labels.padding = 12;
+Chart.defaults.plugins.legend.labels.font = { size: 11 };
+
+function baseOpts(extra = {}) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { bodyFont: defaultFont, titleFont: defaultFont } },
+    scales: {
+      x: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 10 } }, border: { color: '#E5E5E5' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 10 } }, border: { color: '#E5E5E5' } }
+    },
+    ...extra
+  };
+}
+
+// =================== CHARTS ===================
+
+// CAPACITY UTILISATION (horizontal bar)
+new Chart(document.getElementById('chart-capacity-utilisation'), {
+  type: 'bar',
+  data: {
+    labels: capUtilData.labels,
+    datasets: [{ data: capUtilData.values, backgroundColor: capUtilData.colors, borderWidth: 0, borderRadius: 2 }]
+  },
+  options: {
+    ...baseOpts({ indexAxis: 'y' }),
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ' ' + c.raw.toLocaleString() + ' MW' } } },
+    scales: {
+      x: { grid: { color: '#F0F0F0' }, ticks: { callback: v => (v/1000).toFixed(0)+'k', font:{size:10} } },
+      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// HOLLOWING INDEX
+new Chart(document.getElementById('chart-hi-evolution'), {
+  type: 'line',
+  data: {
+    labels: hiData.labels,
+    datasets: [
+      { label: 'IESCO', data: hiData.iesco, borderColor: '#2D5EA8', tension: 0.3, pointRadius: 3, fill: false, borderWidth: 1.5 },
+      { label: 'FESCO', data: hiData.fesco, borderColor: '#52B788', tension: 0.3, pointRadius: 3, fill: false, borderWidth: 1.5 },
+      { label: 'GEPCO', data: hiData.gepco, borderColor: '#C8923A', tension: 0.3, pointRadius: 3, fill: false, borderWidth: 1.5 },
+      { label: 'LESCO', data: hiData.lesco, borderColor: '#9B2335', tension: 0.3, pointRadius: 3, fill: false, borderWidth: 1.5 },
+      { label: 'MEPCO', data: hiData.mepco, borderColor: '#888', tension: 0.3, pointRadius: 3, fill: false, borderWidth: 1.5, borderDash: [4,2] }
+    ]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: {
+      legend: { display: true, position: 'bottom' },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw + '%' } },
+      annotation: { annotations: {} }
+    },
+    scales: {
+      x: { grid: { color: '#F0F0F0' }, ticks: { font:{size:9} } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => v + '%', font:{size:10} },
+           title: { display: true, text: 'Hollowing Index (%)', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// SOLAR ANNUAL
+new Chart(document.getElementById('chart-solar-annual'), {
+  type: 'bar',
+  data: {
+    labels: solarAnnual.labels,
+    datasets: [{
+      label: 'Annual Solar Imports (GW)',
+      data: solarAnnual.values,
+      backgroundColor: solarAnnual.values.map((v,i) => i===4 ? '#E8C88A' : '#C8923A'),
+      borderWidth: 0, borderRadius: 2
+    }]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(2) + ' GW' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:10} } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => v+'GW', font:{size:10} },
+           title: { display: true, text: 'GW', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// SOLAR ROLLING 12M
+new Chart(document.getElementById('chart-solar-rolling'), {
+  type: 'line',
+  data: {
+    labels: solarRolling.labels,
+    datasets: [{
+      data: solarRolling.values,
+      borderColor: '#C8923A', backgroundColor: 'rgba(200,146,58,0.08)',
+      fill: true, tension: 0.4, pointRadius: 2, borderWidth: 2
+    }]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toFixed(1) + ' GW (R12M)' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:9}, maxRotation: 45 } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => v+'GW', font:{size:10} },
+           min: 0, title: { display: true, text: 'Rolling 12M (GW)', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// BESS ANNUAL
+new Chart(document.getElementById('chart-bess-annual'), {
+  type: 'bar',
+  data: {
+    labels: bessAnnual.labels,
+    datasets: [{
+      label: 'Annual BESS Imports (MWh)',
+      data: bessAnnual.values,
+      backgroundColor: bessAnnual.values.map((v,i) => i>=7 ? '#2D5EA8' : i===6 ? '#52B788' : '#B0C4DE'),
+      borderWidth: 0, borderRadius: 2
+    }]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toLocaleString() + ' MWh' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:10} } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => v+'MWh', font:{size:10} },
+           title: { display: true, text: 'MWh', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// BESS SECTOR
+new Chart(document.getElementById('chart-bess-sector'), {
+  type: 'doughnut',
+  data: {
+    labels: bessSector.labels,
+    datasets: [{
+      data: bessSector.values,
+      backgroundColor: ['#C8923A', '#2D5EA8', '#52B788', '#888'],
+      borderWidth: 2, borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { padding: 10, font:{size:11} } },
+      tooltip: { callbacks: { label: c => c.label + ': ' + c.raw.toLocaleString() + ' MWh (' + ((c.raw/4590)*100).toFixed(1) + '%)' } }
+    }
+  }
+});
+
+// BESS MONTHLY
+new Chart(document.getElementById('chart-bess-monthly'), {
+  type: 'bar',
+  data: {
+    labels: bessMonthly.labels,
+    datasets: [{
+      data: bessMonthly.values,
+      backgroundColor: bessMonthly.values.map((v,i) => {
+        if (v === 652) return '#9B2335'; // Apr-26 record
+        if (i >= 24) return '#2D5EA8';   // 2026
+        if (i >= 12) return '#52B788';   // 2025
+        return '#C8923A';                // 2024
+      }),
+      borderWidth: 0, borderRadius: 1
+    }]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => c.raw.toLocaleString() + ' MWh' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:8}, maxRotation: 45 } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => v+'MWh', font:{size:10} },
+           title: { display: true, text: 'MWh', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// FORECAST BESS
+new Chart(document.getElementById('chart-forecast-bess'), {
+  type: 'line',
+  data: {
+    labels: forecastYears,
+    datasets: [
+      { label: 'Accelerated', data: forecastBESS.accelerated, borderColor: '#52B788', backgroundColor: 'rgba(82,183,136,0.08)', fill: true, tension: 0.3, pointRadius: 4, borderWidth: 2 },
+      { label: 'Base', data: forecastBESS.base, borderColor: '#C8923A', backgroundColor: 'rgba(200,146,58,0.08)', fill: true, tension: 0.3, pointRadius: 4, borderWidth: 2 },
+      { label: 'Conservative', data: forecastBESS.conservative, borderColor: '#2D5EA8', backgroundColor: 'rgba(45,94,168,0.05)', fill: true, tension: 0.3, pointRadius: 4, borderWidth: 2, borderDash: [5,3] }
+    ]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: { legend: { display: true, position: 'bottom' }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw.toFixed(1) + ' GWh' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:11} } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => v+' GWh', font:{size:10} }, min: 0,
+           title: { display: true, text: 'GWh', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// FORECAST PEAK SHAVING
+new Chart(document.getElementById('chart-forecast-peak'), {
+  type: 'line',
+  data: {
+    labels: forecastYears,
+    datasets: [
+      { label: 'Accelerated', data: forecastPeak.accelerated, borderColor: '#52B788', tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false },
+      { label: 'Base', data: forecastPeak.base, borderColor: '#C8923A', tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false },
+      { label: 'Conservative', data: forecastPeak.conservative, borderColor: '#2D5EA8', tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false, borderDash: [5,3] }
+    ]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: { legend: { display: true, position: 'bottom' }, tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw.toLocaleString() + ' MW' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:11} } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => (v/1000).toFixed(1)+'k MW', font:{size:10} }, min: 0,
+           title: { display: true, text: 'Peak Shaving (MW)', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// CUMULATIVE PATH
+new Chart(document.getElementById('chart-cumulative-path'), {
+  type: 'line',
+  data: {
+    labels: forecastYears,
+    datasets: [
+      { label: 'Cumulative Solar (GW)', data: cumSolarBase, borderColor: '#C8923A', tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false, yAxisID: 'ySolar' },
+      { label: 'Cumulative Battery (GWh)', data: cumBattBase, borderColor: '#52B788', tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false, yAxisID: 'yBatt', borderDash: [4,2] }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'bottom' }, tooltip: { bodyFont: defaultFont } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:11} }, border: { color: '#E5E5E5' } },
+      ySolar: { position: 'left', grid: { color: '#F0F0F0' }, ticks: { callback: v => v+'GW', font:{size:10} }, title: { display: true, text: 'Solar (GW)', font:{size:10}, color:'#C8923A' } },
+      yBatt:  { position: 'right', grid: { display: false }, ticks: { callback: v => v+'GWh', font:{size:10} }, title: { display: true, text: 'Battery (GWh)', font:{size:10}, color:'#52B788' } }
+    }
+  }
+});
+
+// SOLAR PRICE PATH
+new Chart(document.getElementById('chart-solar-price-path'), {
+  type: 'line',
+  data: {
+    labels: forecastYears,
+    datasets: [
+      { label: 'Accelerated', data: solarPricePaths.accelerated, borderColor: '#52B788', tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false },
+      { label: 'Base', data: solarPricePaths.base, borderColor: '#C8923A', tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false },
+      { label: 'Conservative', data: solarPricePaths.conservative, borderColor: '#2D5EA8', tension: 0.3, pointRadius: 4, borderWidth: 2, fill: false, borderDash: [5,3] }
+    ]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: { legend: { display: true, position: 'bottom' }, tooltip: { callbacks: { label: c => c.dataset.label + ': $' + c.raw.toFixed(3) + '/W' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:11} } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => '$'+v.toFixed(2)+'/W', font:{size:10} },
+           title: { display: true, text: 'US$/W', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// VPP PAYMENT (horizontal bar)
+new Chart(document.getElementById('chart-vpp-payment'), {
+  type: 'bar',
+  data: {
+    labels: ['Availability\n(conv. PKR/kWh)', 'Routine Dispatch', 'Critical Event', 'Export Credit'],
+    datasets: [
+      { label: 'Range Low', data: vppPaymentLow, backgroundColor: 'rgba(45,94,168,0.2)', borderWidth: 0, borderRadius: 2, barPercentage: 0.5 },
+      { label: 'Central', data: vppPaymentMid, backgroundColor: '#C8923A', borderWidth: 0, borderRadius: 2, barPercentage: 0.5 },
+      { label: 'Range High', data: vppPaymentHigh, backgroundColor: 'rgba(82,183,136,0.3)', borderWidth: 0, borderRadius: 2, barPercentage: 0.5 }
+    ]
+  },
+  options: {
+    ...baseOpts({ indexAxis: 'y' }),
+    plugins: { legend: { display: true, position: 'bottom' }, tooltip: { callbacks: { label: c => c.dataset.label + ': PKR ' + c.raw + '/kWh' } } },
+    scales: {
+      x: { grid: { color: '#F0F0F0' }, ticks: { callback: v => 'PKR '+v, font:{size:10} }, stacked: false },
+      y: { grid: { display: false }, ticks: { font:{size:10} }, stacked: false }
+    }
+  }
+});
+
+// FUEL DISPLACEMENT
+new Chart(document.getElementById('chart-vpp-displacement'), {
+  type: 'bar',
+  data: {
+    labels: ['2027', '2028', '2029', '2030'],
+    datasets: [
+      { label: 'Conservative', data: fuelDispConservative, backgroundColor: 'rgba(45,94,168,0.4)', borderWidth: 0, borderRadius: 2 },
+      { label: 'Base', data: fuelDispBase, backgroundColor: '#C8923A', borderWidth: 0, borderRadius: 2 },
+      { label: 'Accelerated', data: fuelDispAccelerated, backgroundColor: '#52B788', borderWidth: 0, borderRadius: 2 }
+    ]
+  },
+  options: {
+    ...baseOpts(),
+    plugins: { legend: { display: true, position: 'bottom' }, tooltip: { callbacks: { label: c => c.dataset.label + ': PKR ' + c.raw + 'B' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:11} } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => 'PKR '+v+'B', font:{size:10} },
+           title: { display: true, text: 'Annual Fuel Displacement (PKR Billion)', font:{size:10}, color:'#999' } }
+    }
+  }
+});
+
+// HOURLY DEMAND
+new Chart(document.getElementById('chart-hourly-demand'), {
+  type: 'line',
+  data: {
+    labels: hours,
+    datasets: [
+      { label: 'Summer Peak (Jun-24)', data: summerDemand, borderColor: '#9B2335', backgroundColor: 'rgba(155,35,53,0.06)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { label: 'Winter (Jan-25)', data: winterDemand, borderColor: '#2D5EA8', backgroundColor: 'rgba(45,94,168,0.06)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2, borderDash: [5,3] }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom' },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw.toLocaleString() + ' MW' } },
+      annotation: {
+        annotations: {
+          vppWindow: {
+            type: 'box', xMin: 17, xMax: 21,
+            backgroundColor: 'rgba(200,146,58,0.10)',
+            borderColor: 'rgba(200,146,58,0.4)', borderWidth: 1,
+            label: { display: true, content: 'VPP Dispatch Window', font: { size: 10 }, color: '#C8923A', position: 'start' }
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: '#F0F0F0' }, ticks: { font:{size:10} }, title: { display: true, text: 'Hour of Day', font:{size:10}, color:'#999' }, border: { color: '#E5E5E5' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => (v/1000).toFixed(0)+'k', font:{size:10} }, min: 0, title: { display: true, text: 'Average Demand (MW)', font:{size:10}, color:'#999' }, border: { color: '#E5E5E5' } }
+    }
+  }
+});
+
+// MC VS AFC
+new Chart(document.getElementById('chart-mc-afc'), {
+  type: 'bar',
+  data: {
+    labels: mcAfcMonths,
+    datasets: [
+      { label: 'Avg Marginal Cost (PKR/kWh)', data: mcValues, backgroundColor: mcValues.map(v => v > 35 ? '#9B2335' : 'rgba(200,146,58,0.7)'), borderWidth: 0, borderRadius: 1, order: 2 },
+      { label: 'Avg Fuel Cost AFC (PKR/kWh)', data: afcValues, type: 'line', borderColor: '#2D5EA8', pointRadius: 3, borderWidth: 2, fill: false, tension: 0.2, order: 1 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom' },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw.toFixed(2) + ' PKR/kWh' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font:{size:8}, maxRotation: 45 }, border: { color: '#E5E5E5' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { callback: v => v+' PKR', font:{size:10} }, min: 0, border: { color: '#E5E5E5' } }
+    }
+  }
+});
+
+// GENERATION MIX
+new Chart(document.getElementById('chart-gen-mix'), {
+  type: 'bar',
+  data: {
+    labels: genMixMonths,
+    datasets: [
+      { label: 'Hydel', data: hydel.map(v=>(v*100).toFixed(1)), backgroundColor: '#2D5EA8', borderWidth: 0 },
+      { label: 'Thermal (Gas/RLNG/HFO)', data: thermal.map(v=>(v*100).toFixed(1)), backgroundColor: '#9B2335', borderWidth: 0 },
+      { label: 'Nuclear', data: nuclear.map(v=>(v*100).toFixed(1)), backgroundColor: '#C8923A', borderWidth: 0 },
+      { label: 'Coal', data: coal.map(v=>(v*100).toFixed(1)), backgroundColor: '#888', borderWidth: 0 },
+      { label: 'Solar+Wind', data: renewables.map(v=>(v*100).toFixed(1)), backgroundColor: '#52B788', borderWidth: 0 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 8, font:{size:10} } },
+      tooltip: { callbacks: { label: c => c.dataset.label + ': ' + c.raw + '%' } }
+    },
+    scales: {
+      x: { stacked: true, grid: { display: false }, ticks: { font:{size:9} }, border: { color: '#E5E5E5' } },
+      y: { stacked: true, grid: { color: '#F0F0F0' }, ticks: { callback: v => v+'%', font:{size:10} }, max: 105, border: { color: '#E5E5E5' } }
+    }
+  }
+});
+
+// =================== TAB SWITCHING ===================
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
