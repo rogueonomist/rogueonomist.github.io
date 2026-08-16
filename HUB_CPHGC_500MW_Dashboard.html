@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hub Case — CPHGC 500 MW VLC Off-take</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --primary:#FFFFFF; --secondary:#FAFAFA; --border:#E5E5E5; --accent:#C8923A;
+  --text-primary:#1A1A1A; --text-secondary:#666666; --text-tertiary:#999999;
+  --success:#52B788; --warning:#9B2335;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:var(--primary);color:#2D2D2D;line-height:1.6;}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem;}
+
+/* ===== Header ===== */
+.hero{background:var(--text-primary);color:#fff;padding:4rem 0 3rem;}
+.hero .container{display:flex;flex-direction:column;gap:0.75rem;}
+.hero-kicker{font-size:12px;font-weight:600;letter-spacing:0.12em;color:#C8923A;text-transform:uppercase;}
+.hero h1{font-family:Georgia,serif;font-size:38px;font-weight:400;line-height:1.2;max-width:820px;}
+.hero p{font-size:15px;color:#C9C9C9;max-width:700px;margin-top:0.5rem;}
+.hero-meta{display:flex;flex-wrap:wrap;gap:1.5rem;margin-top:1.75rem;font-size:12px;color:#999;border-top:1px solid #333;padding-top:1.25rem;}
+.hero-meta span strong{color:#fff;font-weight:500;}
+
+/* ===== Nav ===== */
+.nav{position:sticky;top:0;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);z-index:50;backdrop-filter:blur(6px);}
+.nav .container{display:flex;gap:1.75rem;overflow-x:auto;padding:0.85rem 1.5rem;}
+.nav a{font-size:12px;font-weight:600;letter-spacing:0.03em;color:var(--text-secondary);text-decoration:none;white-space:nowrap;}
+.nav a:hover{color:var(--accent);}
+
+/* ===== Sections ===== */
+.section{padding:3.5rem 0;border-bottom:1px solid var(--border);}
+.section-label{font-size:12px;font-weight:600;letter-spacing:0.1em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:0.5rem;}
+.section-title{font-family:Georgia,serif;font-size:28px;font-weight:400;color:var(--text-primary);margin-bottom:1rem;line-height:1.25;}
+.section-lead{font-size:15px;color:var(--text-secondary);max-width:800px;margin-bottom:1.75rem;line-height:1.7;}
+
+/* ===== Grids ===== */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;}
+.four-col{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+@media (max-width:768px){.two-col,.three-col,.four-col{grid-template-columns:1fr;}}
+
+/* ===== Panels / cards ===== */
+.panel{background:var(--secondary);border:1px solid var(--border);border-radius:8px;padding:1.5rem;}
+.panel-title{font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:0.25rem;}
+.panel-sub{font-size:12px;color:var(--text-tertiary);margin-bottom:1rem;}
+
+.kpi-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.35rem 1.25rem;text-align:left;transition:all .2s;}
+.kpi-card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.kpi-num{font-family:Georgia,serif;font-size:26px;font-weight:400;color:var(--text-primary);}
+.kpi-label{font-size:11px;color:var(--text-tertiary);margin-top:0.4rem;letter-spacing:0.05em;text-transform:uppercase;line-height:1.4;}
+.kpi-sub{font-size:11.5px;color:var(--text-secondary);margin-top:0.35rem;}
+
+.insight-box{background:var(--secondary);border:1px solid var(--border);border-top:3px solid var(--success);padding:1.5rem;}
+.insight-box.amber{border-top-color:var(--accent);}
+.insight-box.warn{border-top-color:var(--warning);}
+.insight-num{font-family:Georgia,serif;font-size:27px;font-weight:400;color:var(--text-primary);}
+.insight-text{font-size:12.5px;color:var(--text-secondary);margin-top:0.6rem;line-height:1.5;}
+
+/* ===== Plant card ===== */
+.plant-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.35rem;}
+.plant-card.hl{border-color:var(--accent);border-width:1.5px;}
+.plant-name{font-family:Georgia,serif;font-size:17px;color:var(--text-primary);}
+.plant-loc{font-size:11.5px;color:var(--text-tertiary);margin-top:0.15rem;margin-bottom:0.85rem;}
+.plant-row{display:flex;justify-content:space-between;font-size:12.5px;padding:0.35rem 0;border-bottom:1px dashed var(--border);}
+.plant-key{color:var(--text-secondary);}
+.plant-val{color:var(--text-primary);font-weight:600;}
+.bar-wrap{margin-top:0.9rem;}
+.bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-tertiary);margin-bottom:0.3rem;}
+.bar-bg{height:8px;background:#EDEDED;border-radius:5px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:5px;}
+
+/* ===== Tables ===== */
+.est-table{width:100%;border-collapse:collapse;font-size:12.8px;}
+.est-table th{font-size:11px;font-weight:600;letter-spacing:0.05em;color:var(--text-primary);text-align:left;padding:0.65rem 0.7rem;border-bottom:1px solid var(--border);background:#fff;text-transform:uppercase;}
+.est-table td{padding:0.65rem 0.7rem;border-bottom:1px solid var(--border);color:#2D2D2D;}
+.est-table tr:hover td{background:var(--secondary);}
+.est-table td.num, .est-table th.num{text-align:right;}
+.est-table tr.hl td{background:#FBF3E7;font-weight:600;}
+
+/* ===== Narrative / callouts ===== */
+.narrative{font-size:14.5px;color:#3D3D3D;line-height:1.75;margin-bottom:1.1rem;}
+.narrative strong{color:var(--text-primary);}
+.callout{background:var(--secondary);border-left:4px solid var(--accent);padding:1.25rem 1.5rem;border-radius:4px;margin:1.5rem 0;font-size:13.5px;line-height:1.7;}
+.callout.warn{border-left-color:var(--warning);}
+.callout.good{border-left-color:var(--success);}
+.callout-label{font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:0.4rem;}
+
+.verdict{background:var(--secondary);border:1px solid var(--border);border-left:4px solid var(--accent);padding:1.5rem;margin:1.75rem 0;}
+.verdict-label{font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:0.5rem;}
+.verdict-text{font-size:14.5px;color:#2D2D2D;line-height:1.75;font-weight:500;}
+
+/* ===== Formula box ===== */
+.formula{background:#fff;border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;font-size:13px;color:var(--text-primary);font-family:'SF Mono',Consolas,monospace;overflow-x:auto;margin:1rem 0;}
+
+/* ===== Timeline ===== */
+.tl{border-left:2px solid var(--border);margin-left:6px;padding-left:1.5rem;}
+.tl-item{position:relative;padding-bottom:1.75rem;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-dot{position:absolute;left:-1.6rem;top:2px;width:11px;height:11px;border-radius:50%;background:var(--accent);}
+.tl-phase{font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--accent);text-transform:uppercase;}
+.tl-title{font-family:Georgia,serif;font-size:16px;color:var(--text-primary);margin:0.2rem 0 0.35rem;}
+.tl-body{font-size:13px;color:var(--text-secondary);line-height:1.65;}
+
+/* ===== Status chips ===== */
+.chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:3px;}
+.chip.verified{background:#E7F5EE;color:#2A7A54;}
+.chip.illustrative{background:#FBF3E7;color:#8A5F1E;}
+.chip.gap{background:#FBEBEC;color:#9B2335;}
+
+/* ===== Chart wrap ===== */
+.chart-wrap{position:relative;height:280px;}
+.chart-wrap.tall{height:320px;}
+
+/* ===== Footer ===== */
+.footer{padding:2.5rem 0;text-align:center;}
+.footer p{font-size:11.5px;color:var(--text-tertiary);}
+
+h4.sub{font-family:Georgia,serif;font-size:17px;font-weight:400;color:var(--text-primary);margin:1.75rem 0 0.75rem;}
+ul.plain{margin:0.5rem 0 0.5rem 1.1rem;font-size:13.5px;color:#3D3D3D;line-height:1.8;}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-kicker">Site-Specific VLC Case Study &nbsp;·&nbsp; Confidential Working Paper</div>
+    <h1>The Hub Case: Anchoring a 500 MW Secondary Aluminium Cluster at CPHGC</h1>
+    <p>China Power Hub Generation Company runs at 6.13% of its dependable capacity. A single co-located 500 MW off-taker cuts its own capacity cost by 84.7% — and, through the same mechanism illustrated at Port Qasim, begins compressing the tariff every consumer on the southern pool pays.</p>
+    <div class="hero-meta">
+      <span>Plant <strong>CPHGCL, Hub, Lasbela, Balochistan</strong></span>
+      <span>Dated <strong>August 2026</strong></span>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="container">
+    <a href="#s1">01 The Asset</a>
+    <a href="#s2">02 The Waterfall</a>
+    <a href="#s3">03 The 500 MW Case</a>
+    <a href="#s4">04 Tariff &amp; Economics</a>
+    <a href="#s5">05 System-Wide Effect</a>
+    <a href="#s6">06 Macro Impact</a>
+    <a href="#s7">07 Site &amp; Roadmap</a>
+    <a href="#s8">08 Risks &amp; Gaps</a>
+  </div>
+</div>
+
+<!-- ================= S1: THE ASSET ================= -->
+<div class="section" id="s1">
+  <div class="container">
+    <div class="section-label">Section 01</div>
+    <h2 class="section-title">CPHGC at Hub — an efficient plant with almost no customer</h2>
+    <p class="section-lead">China Power Hub Generation Company sits roughly 40&nbsp;km northwest of Karachi in Lasbela district, Balochistan — inside KE/NTDC network reach, close to Gadani's ship-breaking yards, and on FY2024–25 data, the single most underutilised large thermal plant in Pakistan's south.</p>
+
+    <div class="four-col" style="margin-bottom:1.75rem;">
+      <div class="kpi-card"><div class="kpi-num">1,250 MW</div><div class="kpi-label">Dependable Capacity</div></div>
+      <div class="kpi-card"><div class="kpi-num">6.13%</div><div class="kpi-label">Actual FY24–25 Capacity Factor</div></div>
+      <div class="kpi-card"><div class="kpi-num">PKR 124.46bn</div><div class="kpi-label">Fixed Annual Capacity Payment</div></div>
+      <div class="kpi-card"><div class="kpi-num">PKR 185.27</div><div class="kpi-label">Current Capacity Cost / kWh</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="plant-card hl">
+        <div class="plant-name">China Power Hub (CPHGCL)</div>
+        <div class="plant-loc">Hub, Lasbela · Imported Coal · Commissioned 2019 (CPEC)</div>
+        <div class="plant-row"><span class="plant-key">Dependable capacity</span><span class="plant-val">1,250 MW</span></div>
+        <div class="plant-row"><span class="plant-key">FY24–25 generation</span><span class="plant-val">671.77 GWh</span></div>
+        <div class="plant-row"><span class="plant-key">Target generation @ 85% CF</span><span class="plant-val">9,307.50 GWh</span></div>
+        <div class="plant-row"><span class="plant-key">Annual headroom @ 85% CF</span><span class="plant-val">8,635.73 GWh</span></div>
+        <div class="bar-wrap">
+          <div class="bar-label"><span>Actual CF: 6.13%</span><span>Target: 85%</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:6.13%;background:var(--warning);"></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Why underutilisation, not inefficiency, is the story</div>
+        <p class="narrative" style="margin-bottom:0;">CPHGC is not an expensive plant to run — it is an efficient plant whose enormous fixed capacity charge is divided across almost no output. The same PKR 124.46 billion, divided by 9,307.50&nbsp;GWh instead of 671.77&nbsp;GWh, turns a PKR 185.27/kWh asset into a PKR 13.37/kWh asset — a 92.8% collapse with no change to the debt schedule, ROE, or O&amp;M contract. <strong>The plant does not need to get cheaper. It needs a customer.</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= S2: THE WATERFALL ================= -->
+<div class="section" id="s2">
+  <div class="container">
+    <div class="section-label">Section 02 <span class="chip verified" style="margin-left:0.5rem;">Verified — project capacity cost model</span></div>
+    <h2 class="section-title">The capacity-cost waterfall: why the charge can only be diluted, not negotiated away</h2>
+    <p class="section-lead">Every component of CPHGC's capacity payment is fixed in rupee terms for the contract year. None of it falls because the plant dispatches less. What falls, mechanically, as more kWh are sold, is the per-unit burden — the denominator.</p>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Capacity cost by component — current vs. 85% CF</div>
+        <div class="panel-sub">PKR per kWh</div>
+        <table class="est-table">
+          <thead><tr><th>Component</th><th class="num">Current</th><th class="num">At 85% CF</th><th class="num">Reduction</th></tr></thead>
+          <tbody>
+            <tr><td>Debt repayment</td><td class="num">40.76</td><td class="num">2.94</td><td class="num">37.82</td></tr>
+            <tr><td>Interest on debt</td><td class="num">46.32</td><td class="num">3.34</td><td class="num">42.98</td></tr>
+            <tr><td>ROE / ROEDC</td><td class="num">27.79</td><td class="num">2.01</td><td class="num">25.79</td></tr>
+            <tr><td>Fixed O&amp;M</td><td class="num">22.23</td><td class="num">1.60</td><td class="num">20.63</td></tr>
+            <tr><td>Insurance</td><td class="num">7.41</td><td class="num">0.53</td><td class="num">6.88</td></tr>
+            <tr><td>Depreciation</td><td class="num">33.35</td><td class="num">2.41</td><td class="num">30.94</td></tr>
+            <tr><td>Working capital</td><td class="num">7.41</td><td class="num">0.53</td><td class="num">6.88</td></tr>
+            <tr class="hl"><td>Total</td><td class="num">185.27</td><td class="num">13.37</td><td class="num">171.90</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Same components, visualised</div>
+        <div class="chart-wrap tall"><canvas id="waterfallChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= S3: THE 500MW CASE ================= -->
+<div class="section" id="s3">
+  <div class="container">
+    <div class="section-label">Section 03 <span class="chip verified" style="margin-left:0.5rem;">Mechanical calculation from stated assumptions</span></div>
+    <h2 class="section-title">What a 500 MW off-taker does to CPHGC's numbers</h2>
+    <p class="section-lead">Assumption set: 500 MW contracted, 85% load factor (VLC Tier-1 anchor standard), co-located at CPHGC's fence line, secondary aluminium off-taker. Annual energy consumed: 500&nbsp;MW × 8,760&nbsp;h × 0.85 = <strong>3,723 GWh/year</strong>.</p>
+
+    <div class="two-col" style="margin-bottom:1.75rem;">
+      <div class="panel">
+        <div class="panel-title">Before → After</div>
+        <table class="est-table">
+          <thead><tr><th>Metric</th><th class="num">Before</th><th class="num">After +500 MW</th></tr></thead>
+          <tbody>
+            <tr><td>Annual generation</td><td class="num">671.77 GWh</td><td class="num">4,394.77 GWh</td></tr>
+            <tr><td>Capacity factor</td><td class="num">6.13%</td><td class="num">40.13%</td></tr>
+            <tr class="hl"><td>Capacity cost / kWh</td><td class="num">PKR 185.27</td><td class="num">PKR 28.32</td></tr>
+            <tr><td>Remaining headroom to 85% CF</td><td class="num">8,635.73 GWh</td><td class="num">4,912.73 GWh (≈660 MW)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Capacity factor: before, after, target</div>
+        <div class="chart-wrap"><canvas id="cfChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-label">The core mechanism</div>
+      <div class="verdict-text">Pakistan already pays PKR 124.46 billion a year for CPHGC, whether it generates 671.77 GWh or 4,394.77 GWh. A 500 MW off-taker creates no new fiscal liability — the liability is already fully committed under a take-or-pay contract. What it creates is a buyer for capacity the country has already bought and is not using, cutting the plant's own per-unit cost by <strong>84.7%</strong> — from PKR 185.27/kWh to PKR 28.32/kWh — using headroom the plant has today, with roughly 660 MW of further headroom left for a Phase 2 allocation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= S4: TARIFF & ECONOMICS ================= -->
+<div class="section" id="s4">
+  <div class="container">
+    <div class="section-label">Section 04 <span class="chip verified" style="margin-left:0.5rem;">Verified — backward-induction tariff model</span></div>
+    <h2 class="section-title">Pricing the off-take: what the off-taker pays, and what flows back</h2>
+    <p class="section-lead">Secondary aluminium needs only 500–1,000 kWh/tonne — 95%+ less than primary smelting — which is what makes it viable at a tariff far below Pakistan's current industrial rate. Co-location at CPHGC's fence line all but eliminates the wheeling charge that would otherwise erode this advantage.</p>
+
+    <div class="three-col" style="margin-bottom:1.75rem;">
+      <div class="insight-box amber">
+        <div class="insight-num">$0.055–0.070/kWh</div>
+        <div class="insight-text">Delivered tariff — backward-induction optimal range for export-competitive secondary aluminium (PKR 15.40–19.60/kWh @ 280/USD)</div>
+      </div>
+      <div class="insight-box">
+        <div class="insight-num">PKR 6.50/kWh</div>
+        <div class="insight-text">Implied fixed-cost contribution to the capacity pool (tariff minus PQEPCL/LEPCL-proxy marginal cost of PKR 8.5–13.5/kWh)</div>
+      </div>
+      <div class="insight-box amber">
+        <div class="insight-num">≈ 0</div>
+        <div class="insight-text">Wheeling charge — vs. the standard PKR 1.5–2.0/kWh for a non-co-located VLC connection</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Annual cost and contribution</div>
+        <table class="est-table">
+          <thead><tr><th></th><th class="num">Low</th><th class="num">High</th></tr></thead>
+          <tbody>
+            <tr><td>Off-taker's annual power bill (USD)</td><td class="num">204.8 mn</td><td class="num">260.6 mn</td></tr>
+            <tr><td>Off-taker's annual power bill (PKR)</td><td class="num">57.3 bn</td><td class="num">73.0 bn</td></tr>
+            <tr class="hl"><td>Fixed-cost contribution to pool (PKR/yr)</td><td class="num">18.6 bn</td><td class="num">29.8 bn</td></tr>
+            <tr><td>Share of CPHGC's total capacity payment</td><td class="num">14.9%</td><td class="num">23.9%</td></tr>
+          </tbody>
+        </table>
+        <p class="narrative" style="margin-top:1rem;margin-bottom:0;font-size:13px;">This single off-taker would fund 15–24% of CPHGC's entire annual fixed-cost obligation — from a revenue source that does not exist today. At the offered tariff, the project's own EBITDA waterfall shows secondary aluminium margins of ≈23%, comparable to what the sector earns in the GCC and Malaysia's SCORE Sarawak product.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Tariff build vs. current Pakistan industrial rate</div>
+        <div class="chart-wrap"><canvas id="tariffChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= S5: SYSTEM-WIDE EFFECT ================= -->
+<div class="section" id="s5">
+  <div class="container">
+    <div class="section-label">Section 05</div>
+    <h2 class="section-title">Why this also means lower tariffs across the board — the Port Qasim parallel</h2>
+    <p class="section-lead">The identical mechanism applies wherever southern surplus capacity is offtaken. Port Qasim (PQEPCL) illustrates it starting from a less extreme baseline than CPHGC — and shows the effect compounding across the three-plant pool even before Port Qasim itself is touched.</p>
+
+    <div class="panel" style="margin-bottom:1.75rem;">
+      <div class="panel-title">Same mechanism, applied illustratively to PQEPCL</div>
+      <div class="panel-sub">A hypothetical 500 MW addition at Port Qasim, on the identical assumptions — presented as a parallel illustration, not a second contracted transaction</div>
+      <table class="est-table">
+        <thead><tr><th>Metric</th><th class="num">Before</th><th class="num">After +500 MW</th><th class="num">Change</th></tr></thead>
+        <tbody>
+          <tr><td>Annual generation</td><td class="num">2,718.43 GWh</td><td class="num">6,441.43 GWh</td><td class="num">+3,723 GWh</td></tr>
+          <tr><td>Capacity factor</td><td class="num">24.83%</td><td class="num">58.83%</td><td class="num">+34.0 pp</td></tr>
+          <tr class="hl"><td>Capacity cost / kWh</td><td class="num">PKR 47.36</td><td class="num">PKR 19.99</td><td class="num">−57.8%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col" style="margin-bottom:1.75rem;">
+      <div class="panel">
+        <div class="panel-title">Three-plant weighted capacity cost</div>
+        <div class="panel-sub">CPHGCL + PQEPCL + LEPCL combined — PKR/kWh</div>
+        <div class="chart-wrap"><canvas id="poolChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">The pool effect from the Hub allocation alone</div>
+        <table class="est-table">
+          <thead><tr><th></th><th class="num">Agg. GWh</th><th class="num">PKR/kWh</th></tr></thead>
+          <tbody>
+            <tr><td>FY24–25 baseline</td><td class="num">4,401.86</td><td class="num">68.75</td></tr>
+            <tr class="hl"><td>After Hub +500 MW only</td><td class="num">8,124.86</td><td class="num">37.24</td></tr>
+            <tr><td>Full 3-plant headroom absorbed</td><td class="num">23,134.72</td><td class="num">13.08</td></tr>
+          </tbody>
+        </table>
+        <p class="narrative" style="margin-top:1rem;margin-bottom:0;font-size:13px;">One 500 MW allocation at Hub — without touching Port Qasim or Lucky Electric — cuts the <strong>combined</strong> weighted capacity cost of the southern fleet by 45.8%. The full-headroom scenario across all three plants takes this to PKR 13.08/kWh; Hub alone gets roughly a third of the way there.</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-label">The caveat that matters</div>
+      The PKR 68.75 → 37.24/kWh compression is real <em>within the three-plant pool's own accounting</em>. Whether it reaches Pakistan's general DISCO consumer tariff depends on a regulatory design choice that does not yet exist: the fixed-cost contribution must be explicitly credited into the national capacity-payment pool CPPA-G settles against — the project's policy work calls this the <strong>Incremental Load Capacity Contribution (ILCC)</strong>. Without a NEPRA-embedded settlement rule requiring this crediting, the benefit can remain with the generator rather than reaching all consumers. Scale honesty also matters: national capacity payments run to roughly PKR 2.4–2.6 trillion/year against 100+ TWh of national sales — so this one transaction's PKR 18.6–29.8bn/year contribution is large for CPHGC specifically (15–24% of its own payment) but a modest ≈0.7–1.2% of the <em>national</em> pool. The case for a phased corridor, not a single allocation, follows directly from this.
+    </div>
+  </div>
+</div>
+
+<!-- ================= S6: MACRO IMPACT ================= -->
+<div class="section" id="s6">
+  <div class="container">
+    <div class="section-label">Section 06 <span class="chip illustrative" style="margin-left:0.5rem;">Illustrative — scaled from project benchmarks</span></div>
+    <h2 class="section-title">Macroeconomic case for the Hub cluster</h2>
+    <p class="section-lead">Employment figures below are drawn directly from the project's contracted-MW employment scaling table, which already covers 500 MW. Output, value, and FDI figures are scaled from the project's 250 MW secondary-aluminium benchmark — flagged clearly as illustrative pending a dedicated feasibility study.</p>
+
+    <div class="four-col" style="margin-bottom:1.75rem;">
+      <div class="kpi-card">
+        <div class="kpi-num">6,000–12,500</div>
+        <div class="kpi-label">Direct Jobs</div>
+        <div class="kpi-sub">Project-verified, 500 MW scaling table</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">22,500–40,000</div>
+        <div class="kpi-label">Total Jobs (incl. downstream)</div>
+        <div class="kpi-sub">Direct + indirect + induced + downstream</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">0.6–1.6 Mt/yr</div>
+        <div class="kpi-label">Practical Output Range</div>
+        <div class="kpi-sub">Scaled ×2 from 250 MW → 0.3–0.8 Mt benchmark</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-num">$240–800 mn</div>
+        <div class="kpi-label">Domestic Value Added / Year</div>
+        <div class="kpi-sub">At $400–500/tonne, per project EBITDA waterfall</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">Gross value vs. domestic value added</div>
+        <div class="panel-sub">USD million / year — why these two numbers should never be collapsed into one</div>
+        <div class="chart-wrap"><canvas id="valueChart"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Why 500 MW isn't a single furnace</div>
+        <p class="narrative" style="font-size:13.5px;">Secondary aluminium's 500–1,000 kWh/tonne intensity, applied mechanically to 3,723 GWh, implies an output ceiling of 3.7–7.4 million tonnes/year — larger than most countries' entire annual secondary aluminium output. That ceiling is not achievable; scrap supply and sorting are the binding constraint, not electricity. The realistic 0.6–1.6 Mt/year range is only achievable as a <strong>multi-line cluster</strong> — remelting/alloying, casting, rolling/extrusion, cable and profile fabrication — not one furnace.</p>
+        <p class="narrative" style="font-size:13.5px;margin-bottom:0;"><strong>Gadani</strong>, 50 km along the coast, is a genuine but partial feedstock advantage: it generates 1.0–1.5 Mt/year of scrap, but overwhelmingly <em>steel</em> scrap. Aluminium content exists (fittings, wiring, superstructure) but at far lower, unquantified volume — a useful complementary source, not a primary one, unlike its role for EAF steel.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= S7: SITE & ROADMAP ================= -->
+<div class="section" id="s7">
+  <div class="container">
+    <div class="section-label">Section 07</div>
+    <h2 class="section-title">Site considerations and implementation path</h2>
+    <p class="section-lead">This case study applies the existing VLC framework and auction design to one specific configuration — it does not require new policy architecture, only a sequence of confirmations at Hub itself.</p>
+
+    <div class="two-col" style="margin-bottom:2rem;">
+      <div class="panel">
+        <div class="panel-title">Site factors</div>
+        <table class="est-table">
+          <tbody>
+            <tr><td>Location</td><td>Hub, Lasbela · ≈40 km NW of Karachi</td></tr>
+            <tr><td>Grid connectivity</td><td>Within KE/NTDC reach; co-location minimises wheeling</td></tr>
+            <tr><td>Land</td><td>Hub Industrial Estate has capacity — site allocation <span class="chip gap">Gap</span></td></tr>
+            <tr><td>Water</td><td>Process water for casting/extrusion <span class="chip gap">Gap</span></td></tr>
+            <tr><td>Feedstock</td><td>Gadani (partial) + domestic collection + import</td></tr>
+            <tr><td>Jurisdiction</td><td>Balochistan site, Sindh-based CPPA-G/NTDC settlement</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Implementation roadmap</div>
+        <div class="tl" style="margin-top:0.5rem;">
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--text-tertiary);"></div>
+            <div class="tl-phase">Months 0–3</div>
+            <div class="tl-title">Verify &amp; confirm</div>
+            <div class="tl-body">CPHGC plant-specific merit-order cost and heat rate from CPPA-G; land and water availability at the co-location site.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-phase">Months 3–12</div>
+            <div class="tl-title">PSA &amp; settlement rule</div>
+            <div class="tl-body">Negotiate the 500 MW Power Supply Agreement; confirm the ILCC settlement-crediting rule with NEPRA/CPPA-G before signing.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--success);"></div>
+            <div class="tl-phase">Months 12–24</div>
+            <div class="tl-title">Commission &amp; monitor</div>
+            <div class="tl-body">Commission the co-located feeder; begin off-taker construction; publish first monthly monitoring dashboard.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:var(--success);"></div>
+            <div class="tl-phase">Months 24+</div>
+            <div class="tl-title">Phase 2 evaluation</div>
+            <div class="tl-body">Evaluate the remaining ≈660 MW of CPHGC headroom for a second allocation once pilot mechanics are validated.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= S8: RISKS & GAPS ================= -->
+<div class="section" id="s8">
+  <div class="container">
+    <div class="section-label">Section 08</div>
+    <h2 class="section-title">Risks, data gaps, and open questions</h2>
+    <p class="section-lead">A checklist before this note is escalated from an illustrative case study to a regulatory or investment-committee submission.</p>
+
+    <div class="three-col">
+      <div class="panel">
+        <div class="panel-title">Data not yet verified</div>
+        <ul class="plain">
+          <li>CPHGC-specific marginal cost — currently proxied from PQEPCL/LEPCL</li>
+          <li>Land and water availability at the specific co-location site</li>
+          <li>Wheeling cost for the co-located configuration, formally costed</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Regulatory precondition</div>
+        <ul class="plain">
+          <li>ILCC settlement-crediting rule does not yet exist in NEPRA regulation</li>
+          <li>Without it, Section 05's pool-wide benefit may not reach general consumers</li>
+          <li>Inter-provincial coordination (Balochistan site, Sindh settlement) unassessed</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Illustrative, not verified</div>
+        <ul class="plain">
+          <li>Output, export value, and FDI figures are scaled, not bottom-up feasibility figures</li>
+          <li>Gadani aluminium-content scrap volume has not been separately quantified</li>
+          <li>A dedicated capex and scrap-sourcing study is required before investment-committee use</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="verdict" style="margin-top:2rem;">
+      <div class="verdict-label">Summary</div>
+      <div class="verdict-text">A 500 MW secondary-aluminium anchor at CPHGC lifts the plant's capacity factor from 6.13% to 40.13%, cuts its capacity cost by 84.7%, and funds 15–24% of its annual capacity payment from revenue that does not exist today — while compressing the combined southern three-plant capacity cost by 45.8%, illustrated identically at Port Qasim. It is bankable as a first tranche, not the full story: CPHGC alone retains ≈660 MW of further headroom, and Port Qasim and Lucky Electric remain almost untouched. Hub is Phase 1 of a corridor, not its destination.</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Illustrative working paper · August 2026<br>Figures sourced from NEPRA State of Industry FY2024–25 and the project's Capacity Cost Dilution and Macroeconomic Impact models, except where marked illustrative or data gap.</p>
+</div>
+
+<script>
+Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+Chart.defaults.color = '#666666';
+Chart.defaults.font.size = 11;
+
+const amber = '#C8923A', dark='#1A1A1A', green='#52B788', red='#9B2335', gray='#999999';
+
+// Waterfall chart — component reduction
+new Chart(document.getElementById('waterfallChart'), {
+  type:'bar',
+  data:{
+    labels:['Debt repay','Interest','ROE/ROEDC','Fixed O&M','Insurance','Depreciation','Working cap.'],
+    datasets:[
+      {label:'Current (PKR/kWh)', data:[40.76,46.32,27.79,22.23,7.41,33.35,7.41], backgroundColor:red},
+      {label:'At 85% CF (PKR/kWh)', data:[2.94,3.34,2.01,1.60,0.53,2.41,0.53], backgroundColor:green}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{beginAtZero:true,grid:{color:'#EFEFEF'}},x:{grid:{display:false}}},
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}}}
+});
+
+// Capacity factor chart
+new Chart(document.getElementById('cfChart'), {
+  type:'bar',
+  data:{
+    labels:['Before (6.13%)','After +500 MW (40.13%)','85% CF target'],
+    datasets:[{data:[6.13,40.13,85], backgroundColor:[red,amber,green], borderRadius:4}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    scales:{x:{beginAtZero:true,max:100,grid:{color:'#EFEFEF'},ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}},
+    plugins:{legend:{display:false}}}
+});
+
+// Tariff comparison chart
+new Chart(document.getElementById('tariffChart'), {
+  type:'bar',
+  data:{
+    labels:['Secondary Al. optimal (low)','Secondary Al. optimal (high)','Malaysia SCORE','China inland off-peak','Pakistan current all-in'],
+    datasets:[{data:[0.055,0.070,0.062,0.077,0.135], backgroundColor:[amber,amber,gray,gray,red], borderRadius:4}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    scales:{x:{beginAtZero:true,grid:{color:'#EFEFEF'},ticks:{callback:v=>'$'+v}},y:{grid:{display:false}}},
+    plugins:{legend:{display:false}}}
+});
+
+// Three-plant pool chart
+new Chart(document.getElementById('poolChart'), {
+  type:'bar',
+  data:{
+    labels:['FY24–25 baseline','After Hub +500 MW only','Full 3-plant headroom'],
+    datasets:[{data:[68.75,37.24,13.08], backgroundColor:[red,amber,green], borderRadius:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{beginAtZero:true,grid:{color:'#EFEFEF'},ticks:{callback:v=>'PKR '+v}},x:{grid:{display:false}}},
+    plugins:{legend:{display:false}}}
+});
+
+// Value chart
+new Chart(document.getElementById('valueChart'), {
+  type:'bar',
+  data:{
+    labels:['Low case','High case'],
+    datasets:[
+      {label:'Gross throughput value', data:[1080,3520], backgroundColor:'#D8D8D8'},
+      {label:'Domestic value added', data:[240,800], backgroundColor:amber}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{y:{beginAtZero:true,grid:{color:'#EFEFEF'},ticks:{callback:v=>'$'+v+'m'}},x:{grid:{display:false}}},
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}}}
+});
+</script>
+
+</body>
+</html>
