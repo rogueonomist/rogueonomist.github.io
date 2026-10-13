@@ -1,0 +1,630 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Property vs Portfolio</title>
+<style>
+/* Layout concept: a sticky scoreboard over a two-column workspace. Assumptions sit on the left;
+   headline figures, charts and year-by-year tables on the right. White ground, Georgia headlines and amber
+   accent follow the homepage system; a slate tone marks the portfolio path, amber marks the property. */
+:root{
+  --bg:#FFFFFF; --panel:#FAFAFA; --line:#E5E5E5;
+  --fg:#1A1A1A; --fg2:#5C5C5C; --fg3:#767676;
+  --accent:#C8923A; --accent-ink:#8A5F14;
+  --buy:#C8923A; --invest:#2F4858;
+  --good:#2D6A4F; --bad:#9B2335; --rent:#9B2335;
+  --field:#FFFFFF; --focus:#C8923A; --ring:rgba(200,146,58,.28);
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141516; --panel:#1B1D1F; --line:#303437;
+    --fg:#ECEAE6; --fg2:#B0B3B6; --fg3:#8F9396;
+    --accent:#D9A64F; --accent-ink:#E6BC72;
+    --buy:#D9A64F; --invest:#8DB1C4;
+    --good:#6FCF97; --bad:#E58597; --rent:#E58597;
+    --field:#101112; --focus:#D9A64F; --ring:rgba(217,166,79,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141516; --panel:#1B1D1F; --line:#303437;
+  --fg:#ECEAE6; --fg2:#B0B3B6; --fg3:#8F9396;
+  --accent:#D9A64F; --accent-ink:#E6BC72;
+  --buy:#D9A64F; --invest:#8DB1C4;
+  --good:#6FCF97; --bad:#E58597; --rent:#E58597;
+  --field:#101112; --focus:#D9A64F; --ring:rgba(217,166,79,.3);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.55;font-size:14px}
+a{color:var(--accent-ink)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+
+.wrap{max-width:1280px;margin-inline:auto;padding-inline:16px;padding-block:20px 56px}
+.head{padding-bottom:16px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg3)}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.4vw,38px);line-height:1.15;margin:6px 0 8px;text-wrap:balance}
+.lede{max-width:72ch;color:var(--fg2);margin:0;font-size:15px}
+
+/* scoreboard */
+.score{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:10px;
+  background:var(--bg);border-block:1px solid var(--line);margin-inline:-16px;padding:8px 16px}
+.sc{min-width:0}
+.sc-l{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--fg3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sw{display:inline-block;width:9px;height:9px;border-radius:2px;flex:none}
+.sw.buy{background:var(--buy)} .sw.inv{background:var(--invest)}
+.sc-v{display:block;font-family:var(--serif);font-size:clamp(15px,3.6vw,22px);line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sBuy{color:var(--accent-ink)} #sInv{color:var(--invest)}
+#sEdge.buy{color:var(--accent-ink)} #sEdge.inv{color:var(--invest)} #sEdge.tie{color:var(--fg2)}
+
+/* layout */
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;margin-top:20px}
+@media (min-width:980px){
+  .layout{grid-template-columns:340px minmax(0,1fr);align-items:start}
+  .inputs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px);max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:thin}
+}
+
+/* inputs */
+.inputs{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 16px 10px;min-width:0}
+.inputs-head{display:flex;justify-content:space-between;align-items:center;padding-block:10px 6px}
+.inputs h2{font-family:var(--serif);font-weight:400;font-size:20px;margin:0}
+.btn{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+details.sec{border-top:1px solid var(--line)}
+details.sec>summary{cursor:pointer;list-style:none;padding:12px 0;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg2);display:flex;justify-content:space-between;align-items:center}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::after{content:'+';font-weight:400;font-size:18px;line-height:1}
+details.sec[open]>summary::after{content:'\2212'}
+.f{padding-bottom:14px}
+.f-l{display:block;font-size:13px;font-weight:500;margin-bottom:4px}
+.f-in{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:6px;background:var(--field);overflow:hidden}
+.f-in:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+.f-in input{flex:1;min-width:0;border:0;background:transparent;padding:7px 10px;font-size:14px;font-variant-numeric:tabular-nums}
+.f-in input:focus{outline:none}
+.u{padding:7px 10px;font-size:12px;color:var(--fg3);white-space:nowrap;border-left:1px solid var(--line);background:var(--panel);display:flex;align-items:center}
+select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--field)}
+input[type=range]{width:100%;margin:8px 0 0;accent-color:var(--accent)}
+.hint{font-size:12px;color:var(--fg3);margin-top:4px;line-height:1.4}
+
+/* results */
+.results{min-width:0;display:flex;flex-direction:column;gap:20px}
+.basis{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.basis-l{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg3)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;max-width:100%}
+.seg button{background:var(--bg);border:0;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--fg2)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.basis-note{font-size:12px;color:var(--fg3);flex-basis:100%}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--line);padding:16px 18px;min-width:0}
+.kpi.buy{border-top-color:var(--buy)} .kpi.inv{border-top-color:var(--invest)} .kpi.acc{border-top-color:var(--accent)}
+.kpi-l{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg3);font-weight:600}
+.kpi-n{font-family:var(--serif);font-size:27px;line-height:1.1;margin:6px 0;font-variant-numeric:tabular-nums}
+.kpi-t{font-size:12.5px;color:var(--fg2);line-height:1.45}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 18px 12px;min-width:0}
+.panel h3{font-family:var(--serif);font-weight:400;font-size:18px;margin:0 0 2px}
+.panel .cap{font-size:12.5px;color:var(--fg2);margin:0 0 10px}
+.chart-box{position:relative;height:300px}
+@media (max-width:600px){.chart-box{height:250px}}
+.chart-msg{font-size:13px;color:var(--fg2)}
+
+/* tabs */
+.tabs{display:flex;gap:24px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:12px 0;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--fg2);cursor:pointer;white-space:nowrap}
+.tab-btn:hover{color:var(--fg)}
+.tab-btn[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--fg)}
+.tabpanel{padding-top:18px;min-width:0}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px;font-variant-numeric:tabular-nums}
+th{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--fg2);text-align:right;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--panel);white-space:nowrap}
+td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--panel)}
+td:first-child{background:var(--bg);font-weight:600}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--panel)}
+.neg{color:var(--bad)} .pb{color:var(--accent-ink);font-weight:600} .pi{color:var(--invest);font-weight:600}
+.tnote{font-size:12px;color:var(--fg3);margin:8px 0 0}
+
+/* sensitivity */
+.sens-ctl{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:12px}
+.sens th,.sens td{text-align:center}
+.sens th:first-child,.sens td:first-child{text-align:left}
+.sens td.c{--k:0%;--c:var(--panel);background:color-mix(in srgb,var(--c) var(--k),var(--panel));font-weight:500}
+.sens td.c.b{--c:var(--buy)} .sens td.c.i{--c:var(--invest)}
+.sens td.c.base{outline:2px solid var(--fg);outline-offset:-2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;color:var(--fg2);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+/* method */
+.method{max-width:78ch}
+.method h3{font-family:var(--serif);font-weight:400;font-size:19px;margin:22px 0 8px}
+.method h3:first-child{margin-top:0}
+.method dl{margin:0;display:grid;gap:12px}
+.method dt{font-weight:600;font-size:13px}
+.method dd{margin:2px 0 0;color:var(--fg2)}
+.method ul{margin:0;padding-left:18px;color:var(--fg2);display:grid;gap:6px}
+.method p{color:var(--fg2);margin:0 0 8px}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="eyebrow">Decision model &middot; commercial property, DHA / CBC Karachi</div>
+    <h1>Property or portfolio?</h1>
+    <p class="lede" id="lede"></p>
+  </header>
+
+  <div class="score" role="status" aria-live="polite">
+    <div class="sc"><span class="sc-l"><i class="sw buy"></i>Buy &middot; Year <span id="sYear">10</span></span><span class="sc-v" id="sBuy"></span></div>
+    <div class="sc"><span class="sc-l"><i class="sw inv"></i>Invest &amp; rent</span><span class="sc-v" id="sInv"></span></div>
+    <div class="sc"><span class="sc-l">Edge</span><span class="sc-v" id="sEdge"></span></div>
+  </div>
+
+  <div class="layout">
+    <aside class="inputs" aria-label="Assumptions">
+      <div class="inputs-head"><h2>Assumptions</h2><button class="btn" id="reset" type="button">Reset</button></div>
+      <div id="fields"></div>
+    </aside>
+
+    <main class="results">
+      <div class="basis">
+        <span class="basis-l">Compare on</span>
+        <div class="seg" role="group" aria-label="Valuation basis">
+          <button type="button" id="bHold" aria-pressed="true">Hold</button>
+          <button type="button" id="bSell" aria-pressed="false">Sell everything</button>
+        </div>
+        <span class="basis-note" id="basisNote"></span>
+      </div>
+
+      <div class="kpis" id="kpis"></div>
+
+      <section class="panel">
+        <h3>Net worth over time</h3>
+        <p class="cap">PKR million, nominal. Buy is property value less the costs of owning it; Invest &amp; rent is the portfolio after paying the rent.</p>
+        <div class="chart-box"><canvas id="ch1" role="img" aria-label="Net worth of the two options by year"></canvas></div>
+        <p class="chart-msg" id="chartMsg" hidden>The chart library did not load. The tables below carry the same numbers.</p>
+      </section>
+
+      <section class="panel">
+        <h3>Does the fixed income sleeve pay the rent?</h3>
+        <p class="cap">PKR million a year. Solid red bars mark years when the rent is more than the after-tax fixed income profit.</p>
+        <div class="chart-box"><canvas id="ch2" role="img" aria-label="Rent versus fixed income profit by year"></canvas></div>
+      </section>
+
+      <section>
+        <div class="tabs" role="tablist" aria-label="Detail">
+          <button class="tab-btn" role="tab" id="t_cmp" data-tab="cmp" aria-selected="true">Comparison</button>
+          <button class="tab-btn" role="tab" id="t_inv" data-tab="inv" aria-selected="false">Invest &amp; rent</button>
+          <button class="tab-btn" role="tab" id="t_buy" data-tab="buy" aria-selected="false">Buy</button>
+          <button class="tab-btn" role="tab" id="t_sens" data-tab="sens" aria-selected="false">Sensitivity</button>
+          <button class="tab-btn" role="tab" id="t_method" data-tab="method" aria-selected="false">Method and sources</button>
+        </div>
+
+        <div class="tabpanel" id="p_cmp" role="tabpanel" aria-labelledby="t_cmp"></div>
+        <div class="tabpanel" id="p_inv" role="tabpanel" aria-labelledby="t_inv" hidden></div>
+        <div class="tabpanel" id="p_buy" role="tabpanel" aria-labelledby="t_buy" hidden></div>
+        <div class="tabpanel" id="p_sens" role="tabpanel" aria-labelledby="t_sens" hidden>
+          <div class="sens-ctl">
+            <span class="basis-l">Vary appreciation against</span>
+            <div class="seg" role="group" aria-label="Second variable">
+              <button type="button" data-sens="equity" aria-pressed="true">Equity return</button>
+              <button type="button" data-sens="fi" aria-pressed="false">Fixed income share</button>
+              <button type="button" data-sens="esc" aria-pressed="false">Rent escalation</button>
+            </div>
+          </div>
+          <div id="sensOut"></div>
+        </div>
+        <div class="tabpanel" id="p_method" role="tabpanel" aria-labelledby="t_method" hidden>
+          <div class="method">
+            <h3>How the two paths are built</h3>
+            <dl>
+              <dt>Buy</dt>
+              <dd>You pay the price at Year 0 and occupy the property. Purchase costs are paid at Year 0, and each year you pay property tax, service charges, maintenance and insurance from outside the portfolio. That cash could have earned a return, so every outflow is compounded at the opportunity rate (default: the net fixed income yield) and deducted from the property's value.</dd>
+              <dt>Invest &amp; rent</dt>
+              <dd>The same amount goes into the portfolio. Fixed income earns its return on the opening balance, withholding tax comes off the profit, and the rent is paid from what is left. A surplus is reinvested; a shortfall is drawn from fixed income principal first, then equity. Equity compounds without tax until it is sold.</dd>
+              <dt>Hold or sell everything</dt>
+              <dd>Hold compares mark-to-market values, as in your brief: no tax on unrealised equity gains and no selling costs on the property. Sell everything deducts selling costs and CGT on the property gain, and CGT on the equity gain.</dd>
+              <dt>Timing</dt>
+              <dd>Annual steps. Income accrues on opening balances and payments fall at year end, so monthly rent is treated as one annual payment.</dd>
+            </dl>
+            <h3>Left out</h3>
+            <ul>
+              <li>Tax relief on rent or property costs if the premises are used in a business, and depreciation.</li>
+              <li>Borrowing. Both paths use the full amount in cash.</li>
+              <li>Equity dividends, rebalancing, and fund or brokerage charges on the portfolio.</li>
+              <li>Adjustability of the advance taxes on purchase and sale: the purchase tax is counted as a cost, the sale-side advance tax is ignored in favour of CGT.</li>
+              <li>Vacancy, fit-out and relocation costs, and any difference in how a landlord and a tenant would treat the premises.</li>
+            </ul>
+            <h3>Tax and cost inputs</h3>
+            <p>Rates below come from secondary summaries of the Finance Act 2026, last checked October 2026. Confirm them with your tax adviser before relying on them.</p>
+            <ul>
+              <li>The deemed-income tax on property (Section 7E) was struck down in May 2026 and omitted from 1 July 2026, so it is not modelled. <a href="https://www.ict.edu.pk/blogs/section-7e-deemed-income-tax-property-pakistan-2026" target="_blank" rel="noopener">ICT summary</a>.</li>
+              <li>Advance tax on purchase (Section 236K) is a flat 1.25% for filers from 1 July 2026. <a href="https://www.ict.edu.pk/blogs/property-tax-236c-236k-rates-pakistan-2026" target="_blank" rel="noopener">ICT rate guide</a>.</li>
+              <li>Capital gains tax is a flat 15% on property acquired after 1 July 2024 and on listed shares for filers. <a href="https://bacoconsultants.com/blogs/capital-gains-tax-pakistan-2026-property-shares-section-37" target="_blank" rel="noopener">Baco Consultants</a>.</li>
+              <li>The CBC property tax is assessed on an FBR-notified annual rental value and has been revised steeply, with some notices up 100% or more. I could not find a published rate schedule, so the property tax default is a placeholder: use "Fixed PKR per year" with your actual bill. <a href="https://propakistani.pk/proproperty/strong-backlash-erupts-as-cantonment-board-clifton-increases-property-tax-rates/" target="_blank" rel="noopener">ProPakistani</a>.</li>
+              <li>Stamp duty, registration, CVT, service charges, maintenance and insurance are placeholders. Replace them with quotes.</li>
+            </ul>
+            <p style="margin-top:14px">This is a decision aid, not tax or investment advice.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+/*ENGINE_START*/
+function sim(p){
+  var N=p.years, A=p.amount*1e6;
+  var rFI=p.fiRet/100, rEq=p.eqRet/100, wht=p.wht/100;
+  var netFI=rFI*(1-wht);
+  var fiW=p.fiShare/100;
+  var ropp=(p.opp===null||p.opp===undefined)?netFI:p.opp/100;
+  var g=p.apprec/100, rEsc=p.rentEsc/100, cEsc=p.chargeEsc/100;
+  var F=A*fiW, E=A*(1-fiW), Eb=E, firstShort=null, t;
+  var inv=[{t:0,Fo:F,gross:0,tax:0,net:0,rent:0,surplus:0,F:F,E:E,Eb:Eb,nwM:F+E,nwL:F+E,drawEq:false}];
+  for(t=1;t<=N;t++){
+    var Fo=F;
+    var gross=Fo*rFI, tax=gross*wht, net=gross-tax;
+    var rent=p.rent*12*Math.pow(1+rEsc,t-1);
+    var surplus=net-rent;
+    if(surplus<0&&firstShort===null)firstShort=t;
+    E=E*(1+rEq);
+    var drawEq=false;
+    if(surplus>=0){
+      if(p.surplus==='mix'){F=Fo+surplus*fiW;var add=surplus*(1-fiW);E+=add;Eb+=add;}
+      else F=Fo+surplus;
+    }else{
+      F=Fo+surplus;
+      if(F<0){var need=-F;F=0;var before=E;var take=Math.min(E,need);E-=take;if(before>0)Eb*=E/before;drawEq=true;}
+    }
+    var gainE=Math.max(0,E-Eb);
+    inv.push({t:t,Fo:Fo,gross:gross,tax:tax,net:net,rent:rent,surplus:surplus,F:F,E:E,Eb:Eb,nwM:F+E,nwL:F+E-gainE*p.cgtEq/100,drawEq:drawEq});
+  }
+  var acq=A*(p.stamp+p.adv+p.brokerBuy)/100;
+  var costBasis=A+acq;
+  function liq(P,carry){var sale=P*(1-p.sellCost/100);var gain=Math.max(0,sale-costBasis);return sale-gain*p.cgtProp/100-carry;}
+  var P=A, carry=acq;
+  var buy=[{t:0,P:P,ptax:0,svc:0,upkeep:0,cost:0,rentAvoided:0,saved:0,carry:carry,nwM:P-carry,nwL:liq(P,carry)}];
+  for(t=1;t<=N;t++){
+    var Po=P; P=Po*(1+g);
+    var rentT=p.rent*12*Math.pow(1+rEsc,t-1);
+    var ptax;
+    if(p.ptaxBasis==='value')ptax=Po*p.ptaxRate/100;
+    else if(p.ptaxBasis==='rental')ptax=rentT*p.ptaxRate/100;
+    else ptax=p.ptaxRate*Math.pow(1+cEsc,t-1);
+    var svc=p.svc*Math.pow(1+cEsc,t-1);
+    var upkeep=Po*(p.maint+p.insur)/100;
+    var cost=ptax+svc+upkeep;
+    carry=carry*(1+ropp)+cost;
+    buy.push({t:t,P:P,ptax:ptax,svc:svc,upkeep:upkeep,cost:cost,rentAvoided:rentT,saved:rentT-cost,carry:carry,nwM:P-carry,nwL:liq(P,carry)});
+  }
+  return{inv:inv,buy:buy,acq:acq,ropp:ropp,netFI:netFI,firstShort:firstShort};
+}
+function gapAt(p,k){var r=sim(p);return r.buy[p.years][k]-r.inv[p.years][k];}
+function bisect(f,lo,hi){
+  if(f(lo)>0)return{s:'below',v:lo};
+  if(f(hi)<0)return{s:'above',v:hi};
+  for(var i=0;i<60;i++){var m=(lo+hi)/2;if(f(m)<0)lo=m;else hi=m;}
+  return{s:'ok',v:(lo+hi)/2};
+}
+/*ENGINE_END*/
+
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id);};
+var clamp=function(v,a,b){return Math.min(b,Math.max(a,v));};
+var state={basis:'hold',sens:'equity'};
+var KEY=function(){return state.basis==='hold'?'nwM':'nwL';};
+
+/* ---------- formatting ---------- */
+function lc(x,d){return Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function f1(x,d){d=d===undefined?1:d;return lc(x/1e6,d);}
+function sg(x,d){d=d===undefined?1:d;return (x>=0?'+':'−')+lc(x/1e6,d);}
+function n2(x,d){d=d===undefined?2:d;var v=x/1e6;return (v<0&&Math.abs(v)>=Math.pow(10,-d)/2?'−':'')+lc(v,d);}
+function pk(x){return Math.round(x).toLocaleString('en-US');}
+function pc(x,d){d=d===undefined?1:d;return (x<0?'−':'')+Math.abs(x).toFixed(d)+'%';}
+
+/* ---------- fields ---------- */
+var PT={
+  value:{label:'Property tax rate',unit:'% of value',def:0.5,step:0.05,note:'Placeholder. CBC assesses on an annual rental value and has revised sharply; for accuracy switch to "Fixed PKR per year" and enter your bill.'},
+  rental:{label:'Property tax rate',unit:'% of rental value',def:12,step:0.5,note:'Applied to each year’s market rent. Placeholder rate.'},
+  fixed:{label:'Property tax, Year 1',unit:'PKR / year',def:375000,step:10000,note:'Escalates with the fixed-charge escalation below.'}
+};
+var SECTIONS=[
+ {title:'Capital and portfolio',open:true,mob:true,fields:[
+  {id:'amount',label:'Amount (also the property price)',unit:'PKR m',def:75,step:1,min:1,slider:[10,300]},
+  {id:'fiShare',label:'Fixed income share',unit:'%',def:75,step:1,min:0,max:100,slider:[0,100]},
+  {id:'fiRet',label:'Fixed income return',unit:'% p.a.',def:11.5,step:0.1,slider:[4,20]},
+  {id:'eqRet',label:'Equity return',unit:'% p.a.',def:18,step:0.5,slider:[0,35],note:'No tax until sold, as in your brief.'},
+  {id:'wht',label:'Withholding tax on fixed income profit',unit:'%',def:15,step:0.5,min:0,max:60}
+ ]},
+ {title:'Renting, if you invest',open:true,mob:false,fields:[
+  {id:'rent',label:'Monthly rent, Year 1',unit:'PKR',def:300000,step:10000,min:0},
+  {id:'rentEsc',label:'Rent escalation',unit:'% p.a.',def:10,step:0.5,slider:[0,20]},
+  {id:'surplus',type:'select',label:'Reinvest surplus fixed income profit in',def:'mix',options:[['fi','Fixed income sleeve'],['mix','Target mix of both sleeves']],note:'Surplus is what is left of the after-tax profit once the rent is paid.'}
+ ]},
+ {title:'Owning the property',open:true,mob:false,fields:[
+  {id:'apprec',label:'Property appreciation',unit:'% p.a.',def:5,step:0.5,slider:[-5,25],note:'The main swing factor in the comparison.'},
+  {id:'ptaxBasis',type:'select',label:'Property tax basis (DHA / CBC)',def:'value',options:[['value','% of property value'],['rental','% of annual rental value'],['fixed','Fixed PKR per year']]},
+  {id:'ptaxRate',label:'Property tax rate',unit:'% of value',def:0.5,step:0.05,min:0},
+  {id:'svc',label:'DHA / CBC service charges',unit:'PKR / year',def:250000,step:10000,min:0,note:'Conservancy, water, security. Placeholder.'},
+  {id:'chargeEsc',label:'Escalation of fixed charges',unit:'% p.a.',def:10,step:0.5,min:0},
+  {id:'maint',label:'Maintenance and repairs',unit:'% of value',def:0.5,step:0.05,min:0},
+  {id:'insur',label:'Insurance',unit:'% of value',def:0.1,step:0.05,min:0}
+ ]},
+ {title:'Purchase and exit costs',open:false,mob:false,fields:[
+  {id:'stamp',label:'Stamp duty, registration and CVT',unit:'% of price',def:3,step:0.25,min:0,note:'Placeholder for Sindh duties. Confirm with your conveyancer.'},
+  {id:'adv',label:'Advance tax at purchase (s.236K)',unit:'% of price',def:1.25,step:0.05,min:0,note:'Filer rate. Adjustable against tax, but counted as a cost here.'},
+  {id:'brokerBuy',label:'Brokerage and legal at purchase',unit:'% of price',def:1,step:0.25,min:0},
+  {id:'sellCost',label:'Selling costs at exit',unit:'% of price',def:1,step:0.25,min:0,note:'Used only under "Sell everything".'},
+  {id:'cgtProp',label:'CGT on property gain',unit:'%',def:15,step:0.5,min:0,max:60,note:'Flat rate for filers on property acquired after 1 July 2024.'},
+  {id:'cgtEq',label:'CGT on equity gain',unit:'%',def:15,step:0.5,min:0,max:60,note:'Used only under "Sell everything".'}
+ ]},
+ {title:'Model settings',open:false,mob:false,fields:[
+  {id:'years',label:'Horizon',unit:'years',def:10,step:1,min:1,max:20,slider:[3,20]},
+  {id:'opp',label:'Return on cash spent outside the portfolio',unit:'% p.a.',def:'',step:0.1,ph:'auto'}
+ ]}
+];
+var ALL=[];SECTIONS.forEach(function(s){s.fields.forEach(function(f){ALL.push(f);});});
+
+function fieldHTML(f){
+  if(f.type==='select'){
+    var opts=f.options.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===f.def?' selected':'')+'>'+o[1]+'</option>';}).join('');
+    return '<div class="f"><label class="f-l" for="in_'+f.id+'">'+f.label+'</label><select id="in_'+f.id+'">'+opts+'</select><div class="hint" id="h_'+f.id+'">'+(f.note||'')+'</div></div>';
+  }
+  var sl=f.slider?'<input type="range" class="rg" id="rg_'+f.id+'" min="'+f.slider[0]+'" max="'+f.slider[1]+'" step="'+f.step+'" value="'+f.def+'" aria-label="'+f.label+' slider">':'';
+  return '<div class="f"><label class="f-l" id="lb_'+f.id+'" for="in_'+f.id+'">'+f.label+'</label>'+
+    '<div class="f-in"><input type="number" id="in_'+f.id+'" step="'+f.step+'"'+(f.min!==undefined?' min="'+f.min+'"':'')+(f.max!==undefined?' max="'+f.max+'"':'')+' value="'+f.def+'"'+(f.ph?' placeholder="'+f.ph+'"':'')+'><span class="u" id="u_'+f.id+'">'+f.unit+'</span></div>'+
+    sl+'<div class="hint" id="h_'+f.id+'">'+(f.note||'')+'</div></div>';
+}
+function buildFields(){
+  var wide=window.matchMedia('(min-width:980px)').matches;
+  $('fields').innerHTML=SECTIONS.map(function(s){
+    var open=wide?s.open:s.mob;
+    return '<details class="sec"'+(open?' open':'')+'><summary>'+s.title+'</summary>'+s.fields.map(fieldHTML).join('')+'</details>';
+  }).join('');
+}
+function applyPtax(reset){
+  var c=PT[$('in_ptaxBasis').value];
+  $('lb_ptaxRate').textContent=c.label;
+  $('u_ptaxRate').textContent=c.unit;
+  $('in_ptaxRate').step=c.step;
+  if(reset)$('in_ptaxRate').value=c.def;
+}
+function read(){
+  var p={};
+  ALL.forEach(function(f){
+    var el=$('in_'+f.id);
+    if(f.type==='select'){p[f.id]=el.value;return;}
+    var v=parseFloat(el.value);
+    if(f.id==='opp'){p.opp=isNaN(v)?null:v;return;}
+    if(isNaN(v))v=(f.id==='ptaxRate')?PT[$('in_ptaxBasis').value].def:f.def;
+    p[f.id]=v;
+  });
+  p.years=clamp(Math.round(p.years),1,20);
+  p.fiShare=clamp(p.fiShare,0,100);
+  p.amount=Math.max(p.amount,0.1);
+  p.wht=clamp(p.wht,0,100);
+  ['rent','svc','ptaxRate','maint','insur','stamp','adv','brokerBuy','sellCost','cgtProp','cgtEq','chargeEsc'].forEach(function(k){p[k]=Math.max(0,p[k]);});
+  return p;
+}
+function resetAll(){
+  ALL.forEach(function(f){
+    var el=$('in_'+f.id);el.value=f.def;
+    var rg=$('rg_'+f.id);if(rg)rg.value=f.def;
+  });
+  applyPtax(true);
+  state.basis='hold';
+  update();
+}
+
+/* ---------- grids ---------- */
+function gridDef(kind,p){
+  var cols,baseVal,title,apply;
+  if(kind==='equity'){cols=[-12,-8,-4,0,4].map(function(d){return Math.max(0,p.eqRet+d);});baseVal=p.eqRet;title='Equity return, % p.a.';apply=function(q,v){q.eqRet=v;};}
+  else if(kind==='fi'){cols=[-25,-10,0,10,25].map(function(d){return clamp(p.fiShare+d,0,100);});baseVal=p.fiShare;title='Fixed income share, %';apply=function(q,v){q.fiShare=v;};}
+  else{cols=[-4,-2,0,2,4].map(function(d){return Math.max(0,p.rentEsc+d);});baseVal=p.rentEsc;title='Rent escalation, % p.a.';apply=function(q,v){q.rentEsc=v;};}
+  var seen={};cols=cols.filter(function(v){var key=v.toFixed(6);if(seen[key])return false;seen[key]=1;return true;}).sort(function(a,b){return a-b;});
+  var baseIdx=cols.findIndex(function(v){return Math.abs(v-baseVal)<1e-9;});
+  return{cols:cols,baseIdx:baseIdx,title:title,apply:apply};
+}
+function computeGrid(kind,p,k){
+  var d=gridDef(kind,p);
+  var rows=[-4,-2,0,2,4].map(function(x){return p.apprec+x;});
+  var cells=rows.map(function(g){
+    return d.cols.map(function(v){
+      var q=Object.assign({},p,{apprec:g});d.apply(q,v);
+      var r=sim(q);var b=r.buy[q.years][k],i=r.inv[q.years][k];
+      return{gap:b-i,rel:Math.abs(b-i)/Math.max(Math.abs(b),Math.abs(i),1)};
+    });
+  });
+  return{d:d,rows:rows,cells:cells};
+}
+function renderGrid(gr,p,N){
+  var maxAbs=1;gr.cells.forEach(function(row){row.forEach(function(c){maxAbs=Math.max(maxAbs,Math.abs(c.gap));});});
+  var h='<div class="tbl-wrap"><table class="sens"><thead><tr><th>Appreciation ↓ &nbsp; '+gr.d.title+' →</th>'+
+    gr.d.cols.map(function(v){return '<th>'+(Math.abs(v-Math.round(v))<1e-9?v.toFixed(0):v.toFixed(1))+'%</th>';}).join('')+'</tr></thead><tbody>';
+  gr.rows.forEach(function(g,ri){
+    h+='<tr><td>'+pc(g,1)+' p.a.</td>';
+    gr.cells[ri].forEach(function(c,ci){
+      var cls='c '+(c.rel<0.03?'':(c.gap>0?'b':'i'))+((ri===2&&ci===gr.d.baseIdx)?' base':'');
+      var k=Math.min(40,6+34*Math.abs(c.gap)/maxAbs);
+      h+='<td class="'+cls+'" style="--k:'+(c.rel<0.03?0:k.toFixed(0))+'%">'+sg(c.gap)+'</td>';
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div><div class="legend"><span><i class="sw buy"></i>Buy ahead</span><span><i class="sw inv"></i>Invest &amp; rent ahead</span><span>Unshaded: within 3%</span><span>Outlined: your assumptions</span></div>'+
+    '<p class="tnote">Cells show Buy minus Invest &amp; rent, PKR million at Year '+N+', on the "'+(state.basis==='hold'?'Hold':'Sell everything')+'" basis. Positive means buying finishes ahead.</p>';
+  return h;
+}
+
+/* ---------- charts ---------- */
+var c1=null,c2=null;
+function themeColors(){
+  var cs=getComputedStyle(document.documentElement);
+  var g=function(n){return cs.getPropertyValue(n).trim();};
+  return{fg:g('--fg2'),line:g('--line'),buy:g('--buy'),inv:g('--invest'),rent:g('--rent')};
+}
+function drawCharts(r,p,k){
+  if(!window.Chart){$('chartMsg').hidden=false;return;}
+  var th=themeColors(),N=p.years;
+  Chart.defaults.font.family="-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif";
+  Chart.defaults.font.size=12;
+  var labels=r.inv.map(function(x){return x.t;});
+  var buyD=r.buy.map(function(x){return x[k]/1e6;});
+  var invD=r.inv.map(function(x){return x[k]/1e6;});
+  var rents=r.inv.slice(1).map(function(x){return x.rent/1e6;});
+  var nets=r.inv.slice(1).map(function(x){return x.net/1e6;});
+  var yrs=r.inv.slice(1).map(function(x){return x.t;});
+  var barCols=r.inv.slice(1).map(function(x){return th.rent+(x.rent>x.net?'F2':'55');});
+  function axes(xt,yt){return{x:{title:{display:true,text:xt,color:th.fg},ticks:{color:th.fg},grid:{display:false},border:{color:th.line}},
+    y:{beginAtZero:true,title:{display:true,text:yt,color:th.fg},ticks:{color:th.fg},grid:{color:th.line},border:{display:false}}};}
+  var legend={position:'top',align:'start',labels:{color:th.fg,usePointStyle:true,boxWidth:8,boxHeight:8}};
+  if(!c1){
+    c1=new Chart($('ch1'),{type:'line',data:{labels:labels,datasets:[
+      {label:'Buy',data:buyD,borderColor:th.buy,backgroundColor:th.buy,borderWidth:2.5,pointRadius:0,pointHoverRadius:4,tension:0.15},
+      {label:'Invest & rent',data:invD,borderColor:th.inv,backgroundColor:th.inv,borderWidth:2.5,pointRadius:0,pointHoverRadius:4,tension:0.15}]},
+      options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
+        plugins:{legend:legend,tooltip:{callbacks:{title:function(i){return 'Year '+i[0].label;},label:function(c){return ' '+c.dataset.label+': PKR '+c.parsed.y.toFixed(1)+'m';}}}},
+        scales:axes('Year','PKR m')}});
+  }else{
+    c1.data.labels=labels;c1.data.datasets[0].data=buyD;c1.data.datasets[1].data=invD;
+    c1.data.datasets[0].borderColor=c1.data.datasets[0].backgroundColor=th.buy;
+    c1.data.datasets[1].borderColor=c1.data.datasets[1].backgroundColor=th.inv;
+    c1.options.plugins.legend=legend;c1.options.scales=axes('Year','PKR m');c1.update('none');
+  }
+  if(!c2){
+    c2=new Chart($('ch2'),{type:'bar',data:{labels:yrs,datasets:[
+      {type:'bar',label:'Rent paid',data:rents,backgroundColor:barCols,borderWidth:0,order:2},
+      {type:'line',label:'After-tax fixed income profit',data:nets,borderColor:th.inv,backgroundColor:th.inv,borderWidth:2.5,pointRadius:2,pointHoverRadius:4,tension:0.15,order:1}]},
+      options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
+        plugins:{legend:legend,tooltip:{callbacks:{title:function(i){return 'Year '+i[0].label;},label:function(c){return ' '+c.dataset.label+': PKR '+c.parsed.y.toFixed(2)+'m';}}}},
+        scales:axes('Year','PKR m a year')}});
+  }else{
+    c2.data.labels=yrs;c2.data.datasets[0].data=rents;c2.data.datasets[0].backgroundColor=barCols;
+    c2.data.datasets[1].data=nets;c2.data.datasets[1].borderColor=c2.data.datasets[1].backgroundColor=th.inv;
+    c2.options.plugins.legend=legend;c2.options.scales=axes('Year','PKR m a year');c2.update('none');
+  }
+}
+
+/* ---------- tables ---------- */
+function tblCmp(r,k){
+  var h='<div class="tbl-wrap"><table><thead><tr><th>Year</th><th>Buy</th><th>Invest &amp; rent</th><th>Buy − Invest</th><th>Ahead</th></tr></thead><tbody>';
+  r.inv.forEach(function(i){
+    var b=r.buy[i.t],gap=b[k]-i[k],buyAhead=gap>0;
+    h+='<tr><td>'+i.t+'</td><td>'+n2(b[k],1)+'</td><td>'+n2(i[k],1)+'</td><td class="'+(buyAhead?'pb':'pi')+'">'+sg(gap)+'</td><td class="'+(buyAhead?'pb':'pi')+'">'+(buyAhead?'Buy':'Invest & rent')+'</td></tr>';
+  });
+  return h+'</tbody></table></div><p class="tnote">PKR million. Year 0 shows the purchase costs paid up front by the buyer.</p>';
+}
+function tblInv(r){
+  var h='<div class="tbl-wrap"><table><thead><tr><th>Year</th><th>Fixed income, opening</th><th>Gross profit</th><th>Withholding tax</th><th>Net profit</th><th>Rent paid</th><th>Surplus / (shortfall)</th><th>Fixed income, closing</th><th>Equity</th><th>Portfolio</th></tr></thead><tbody>';
+  var dagger=false;
+  r.inv.forEach(function(i){
+    if(i.t===0){h+='<tr><td>0</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>'+n2(i.F)+'</td><td>'+n2(i.E)+'</td><td>'+n2(i.F+i.E)+'</td></tr>';return;}
+    if(i.drawEq)dagger=true;
+    h+='<tr><td>'+i.t+(i.drawEq?' †':'')+'</td><td>'+n2(i.Fo)+'</td><td>'+n2(i.gross)+'</td><td>'+n2(i.tax)+'</td><td>'+n2(i.net)+'</td><td>'+n2(i.rent)+'</td><td class="'+(i.surplus<0?'neg':'')+'">'+n2(i.surplus)+'</td><td>'+n2(i.F)+'</td><td>'+n2(i.E)+'</td><td>'+n2(i.F+i.E)+'</td></tr>';
+  });
+  return h+'</tbody></table></div><p class="tnote">PKR million. Red shortfalls are drawn from fixed income principal.'+(dagger?' † Fixed income was exhausted and equity was sold to pay the rent.':'')+'</p>';
+}
+function tblBuy(r,k){
+  var h='<div class="tbl-wrap"><table><thead><tr><th>Year</th><th>Property value</th><th>Property tax</th><th>Service charges</th><th>Upkeep and insurance</th><th>Holding cost</th><th>Rent avoided</th><th>Saved vs renting</th><th>Costs carried</th><th>Net worth</th></tr></thead><tbody>';
+  r.buy.forEach(function(b){
+    if(b.t===0){h+='<tr><td>0</td><td>'+n2(b.P)+'</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td><td>'+n2(b.carry)+'</td><td>'+n2(b[k])+'</td></tr>';return;}
+    h+='<tr><td>'+b.t+'</td><td>'+n2(b.P)+'</td><td>'+n2(b.ptax)+'</td><td>'+n2(b.svc)+'</td><td>'+n2(b.upkeep)+'</td><td>'+n2(b.cost)+'</td><td>'+n2(b.rentAvoided)+'</td><td class="'+(b.saved<0?'neg':'')+'">'+n2(b.saved)+'</td><td>'+n2(b.carry)+'</td><td>'+n2(b[k])+'</td></tr>';
+  });
+  return h+'</tbody></table></div><p class="tnote">PKR million. Costs carried are the purchase costs plus every holding cost, compounded at '+pc(r.ropp*100,2)+' a year. Net worth = property value (after selling costs and CGT under "Sell everything") less costs carried.</p>';
+}
+
+function kpiHTML(p,r,k,be){
+  var N=p.years,b=r.buy[N],i=r.inv[N],sell=state.basis==='sell';
+  var rentCover=r.firstShort===null?'All '+N+' years':(r.firstShort===1?'None':'Years 1–'+(r.firstShort-1));
+  var rentTxt=r.firstShort===null?'After-tax fixed income profit exceeds the rent every year.':'Rent overtakes the after-tax profit in Year '+r.firstShort+'; the gap is drawn from principal.';
+  var beN=be.s==='ok'?pc(be.v)+' p.a.':(be.s==='below'?'below −20%':'above 60%');
+  return '<div class="kpi buy"><div class="kpi-l">Buy &middot; net worth, Year '+N+'</div><div class="kpi-n">PKR '+f1(b[k])+'m</div><div class="kpi-t">Property '+(sell?'sale proceeds after CGT':'value')+' PKR '+f1(b[k]+b.carry)+'m, less PKR '+f1(b.carry)+'m of costs carried.</div></div>'+
+    '<div class="kpi inv"><div class="kpi-l">Invest &amp; rent &middot; net worth, Year '+N+'</div><div class="kpi-n">PKR '+f1(i[k])+'m</div><div class="kpi-t">Fixed income PKR '+f1(i.F)+'m plus equity PKR '+f1(i.E)+'m'+(sell?', less PKR '+f1(i.nwM-i.nwL)+'m of CGT':'')+'.</div></div>'+
+    '<div class="kpi acc"><div class="kpi-l">Break-even appreciation</div><div class="kpi-n">'+beN+'</div><div class="kpi-t">The property growth rate at which the two paths end level. You assumed '+pc(p.apprec)+'.</div></div>'+
+    '<div class="kpi acc"><div class="kpi-l">Rent paid from fixed income</div><div class="kpi-n">'+rentCover+'</div><div class="kpi-t">'+rentTxt+'</div></div>';
+}
+
+/* ---------- main update ---------- */
+var pending=false;
+function schedule(){if(pending)return;pending=true;requestAnimationFrame(function(){pending=false;update();});}
+function update(){
+  var p=read(),r=sim(p),k=KEY(),N=p.years;
+  var be=bisect(function(g){return gapAt(Object.assign({},p,{apprec:g}),k);},-20,60);
+  var gEq=computeGrid('equity',p,k);
+
+  var b=r.buy[N][k],i=r.inv[N][k],gap=b-i,rel=Math.abs(gap)/Math.max(Math.abs(b),Math.abs(i),1);
+  var lead=rel<0.03?'tie':(gap>0?'buy':'inv');
+  $('lede').textContent='Buy: you occupy the property and pay its holding costs. Invest & rent: the same PKR '+f1(p.amount*1e6,p.amount%1?1:0)+'m goes into a '+pc(p.fiShare,0)+' fixed income and '+pc(100-p.fiShare,0)+' equity portfolio, and you rent equivalent space, paying the rent from the portfolio’s after-tax fixed income profit. Compared over '+N+' years, in nominal PKR.';
+  $('sYear').textContent=N;
+  $('sBuy').textContent='PKR '+f1(b)+'m';
+  $('sInv').textContent='PKR '+f1(i)+'m';
+  var edge=$('sEdge');edge.className='sc-v '+lead;
+  edge.textContent=lead==='tie'?'Level ('+sg(gap)+'m)':(lead==='buy'?'Buy '+sg(gap)+'m':'Invest '+sg(-gap)+'m');
+  $('bHold').setAttribute('aria-pressed',state.basis==='hold');
+  $('bSell').setAttribute('aria-pressed',state.basis==='sell');
+  $('basisNote').textContent=state.basis==='hold'?'Hold: mark-to-market values with no exit costs or tax on unrealised gains, as in your brief.':'Sell everything: after selling costs and CGT on both the property and the equity gain at Year '+N+'.';
+
+  $('kpis').innerHTML=kpiHTML(p,r,k,be);
+  drawCharts(r,p,k);
+  $('p_cmp').innerHTML=tblCmp(r,k);
+  $('p_inv').innerHTML=tblInv(r);
+  $('p_buy').innerHTML=tblBuy(r,k);
+  var gr=state.sens==='equity'?gEq:computeGrid(state.sens,p,k);
+  $('sensOut').innerHTML=renderGrid(gr,p,N);
+
+  /* hints */
+  var netFI=r.netFI;
+  $('h_fiShare').textContent='Equity share: '+pc(100-p.fiShare,0)+'.';
+  $('h_wht').textContent='Net fixed income yield after tax: '+pc(netFI*100,2)+'.';
+  $('h_rent').textContent='Gross rental yield '+pc(p.rent*12/(p.amount*1e6)*100,1)+' of price. Year '+N+' rent: PKR '+pk(r.inv[N].rent/12)+' a month.';
+  $('h_ptaxRate').textContent='Year 1: PKR '+pk(r.buy[1].ptax)+'. '+PT[p.ptaxBasis].note;
+  $('h_brokerBuy').textContent='Total at purchase: PKR '+f1(r.acq,2)+'m ('+pc(p.stamp+p.adv+p.brokerBuy,2)+' of price).';
+  $('h_opp').textContent=p.opp===null?'Blank: using the net fixed income yield, '+pc(r.ropp*100,2)+'. Applied to every cash outlay the buyer makes.':'Applied to every cash outlay the buyer makes.';
+}
+
+/* ---------- events ---------- */
+function onFieldInput(e){
+  var t=e.target,id=t.id||'';
+  if(id.indexOf('rg_')===0){var f=id.slice(3);$('in_'+f).value=t.value;}
+  else if(id.indexOf('in_')===0){var rg=$('rg_'+id.slice(3));if(rg&&t.value!=='')rg.value=t.value;}
+  if(id==='in_ptaxBasis')applyPtax(true);
+  schedule();
+}
+function bind(){
+  $('fields').addEventListener('input',onFieldInput);
+  $('fields').addEventListener('change',onFieldInput);
+  $('reset').addEventListener('click',resetAll);
+  $('bHold').addEventListener('click',function(){state.basis='hold';update();});
+  $('bSell').addEventListener('click',function(){state.basis='sell';update();});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-sens]'),function(b){
+    b.addEventListener('click',function(){
+      state.sens=b.getAttribute('data-sens');
+      Array.prototype.forEach.call(document.querySelectorAll('[data-sens]'),function(x){x.setAttribute('aria-pressed',x===b);});
+      update();
+    });
+  });
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('.tab-btn'));
+  tabs.forEach(function(b){
+    b.addEventListener('click',function(){
+      tabs.forEach(function(x){var on=x===b;x.setAttribute('aria-selected',on);$('p_'+x.getAttribute('data-tab')).hidden=!on;});
+    });
+  });
+  try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',update);}catch(e){}
+  try{new MutationObserver(update).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});}catch(e){}
+}
+
+buildFields();
+applyPtax(false);
+bind();
+update();
+})();
+</script>
+
+</body></html>
